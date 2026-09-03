@@ -139,8 +139,23 @@ button.reset{ flex:1; background:var(--p-lavender); border:1.5px solid var(--p-l
 .qui-btn[data-qui="Jean-Marc"].active, .resaqui-btn[data-qui="Jean-Marc"].active, .paidby-btn[data-paidby="Jean-Marc"].active{ background:var(--p-blue); border-color:var(--p-blue-dark); color:#215678; }
 .qui-btn[data-qui="Gil"].active, .resaqui-btn[data-qui="Gil"].active, .paidby-btn[data-paidby="Gil"].active{ background:var(--p-peach); border-color:var(--p-peach-dark); color:#8C4E1E; }
 .qui-btn[data-qui="Les deux"].active{ background:var(--p-lavender); border-color:var(--p-lavender-dark); color:#5B4E8C; }
+.qui-btn[data-qui="Les deux"].active, .paidby-btn[data-paidby="Les deux"].active{ background:var(--p-lavender); border-color:var(--p-lavender-dark); color:#5B4E8C; }
+.btnrow.wrap{ flex-wrap:wrap; }
+.btnrow.wrap button{ flex:1 1 calc(50% - 5px); }
 .type-btn[data-type="fixe"].active{ background:var(--p-mint); border-color:var(--p-mint-dark); color:#2A7A5F; }
-.type-btn[data-type="variable"].active{ background:var(--p-yellow); border-color:var(--p-yellow-dark); color:#8A6A10; }
+.type-btn[data-type="carburant"].active{ background:var(--p-yellow); border-color:var(--p-yellow-dark); color:#8A6A10; }
+.type-btn[data-type="entretien"].active{ background:var(--p-blue); border-color:var(--p-blue-dark); color:#215678; }
+.type-btn[data-type="divers"].active{ background:var(--p-peach); border-color:var(--p-peach-dark); color:#8C4E1E; }
+.tag.poste-fixe{ background:var(--p-mint); color:#2A7A5F; }
+.tag.poste-carburant{ background:var(--p-yellow); color:#8A6A10; }
+.tag.poste-entretien{ background:var(--p-blue); color:#215678; }
+.tag.poste-divers{ background:var(--p-peach); color:#8C4E1E; }
+button.nav-compte{ flex:1; padding:13px; border-radius:12px; border:1.5px solid var(--p-lavender-dark); background:var(--p-lavender); color:#5B4E8C; font-weight:800; font-size:14.5px; }
+.deux-boutons{ display:flex; gap:10px; margin-bottom:16px; }
+.solde-card{ background:linear-gradient(135deg, var(--p-lavender), rgba(225,216,247,0.4)); border:1.5px solid var(--p-lavender-dark); border-radius:16px; padding:18px 16px; margin-bottom:16px; text-align:center; }
+.solde-card .gros{ font-size:19px; font-weight:800; color:#5B4E8C; line-height:1.35; }
+.solde-card .petit{ font-size:12.5px; color:#5B4E8C; opacity:.8; margin-top:6px; }
+.total-general{ display:flex; justify-content:space-between; padding:11px 12px; margin-top:8px; border-radius:12px; background:var(--p-lavender); color:#5B4E8C; font-weight:800; font-size:15px; }
 
 button.add-btn{ width:100%; margin-top:15px; padding:13px; border:none; border-radius:12px; background:linear-gradient(135deg, var(--p-pink), var(--p-peach)); color:#7A3050; font-size:15.5px; font-weight:800; }
 
@@ -371,7 +386,10 @@ button.cloud-btn:disabled{ opacity:.55; }
         <button class="owner-btn" id="ownerBtnGil" data-owner="Gil">Gil</button>
       </div>
     </div>
-    <div id="globalBalance"></div>
+    <div class="deux-boutons">
+      <button class="nav-compte" data-go="balance">⚖️ Balance</button>
+      <button class="nav-compte" data-go="depenses">📊 Dépenses</button>
+    </div>
     <div class="form-card">
       <label for="expDate">Date</label>
       <input type="date" id="expDate">
@@ -379,23 +397,57 @@ button.cloud-btn:disabled{ opacity:.55; }
       <input type="text" id="expDesc" placeholder="Ex : assurance, carburant, place de port...">
       <label for="expAmount">Montant (€)</label>
       <input type="number" id="expAmount" placeholder="0.00" step="0.01" inputmode="decimal">
-      <label>Type de dépense</label>
-      <div class="btnrow">
-        <button type="button" class="type-btn active" data-type="fixe">Fixe (assurance, port...)</button>
-        <button type="button" class="type-btn" data-type="variable">Variable (carburant...)</button>
+      <label>Poste de dépense</label>
+      <div class="btnrow wrap">
+        <button type="button" class="type-btn active" data-type="fixe">Fixe</button>
+        <button type="button" class="type-btn" data-type="carburant">Carburant</button>
+        <button type="button" class="type-btn" data-type="entretien">Entretien</button>
+        <button type="button" class="type-btn" data-type="divers">Divers</button>
       </div>
       <label>Payé par</label>
       <div class="btnrow">
         <button type="button" class="paidby-btn active" data-paidby="Jean-Marc">Jean-Marc</button>
         <button type="button" class="paidby-btn" data-paidby="Gil">Gil</button>
+        <button type="button" class="paidby-btn" data-paidby="Les deux">Les deux</button>
       </div>
       <label for="expFacture">Facture (photo ou PDF)</label>
       <input type="file" id="expFacture" accept="image/*,application/pdf">
       <div id="factureName" class="maint-sub" style="margin-top:6px;"></div>
-      <p class="hint">Le partage reste 50/50 quel que soit le type. Le type sert au détail fixe / variable du récapitulatif annuel.</p>
+      <p class="hint">Le partage reste 50/50 quel que soit le poste. « Les deux » signifie que vous avez sorti la moitié chacun : la dépense compte dans les totaux mais ne pèse pas sur la balance.</p>
       <button class="add-btn" id="addExpenseBtn">Ajouter la dépense</button>
     </div>
     <div id="expenseYears"></div>
+  </div>
+</div>
+
+<!-- ================= BALANCE ================= -->
+<div class="screen" id="screen-balance">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Balance</span></div>
+  <div class="body-wrap">
+    <div id="balanceResume"></div>
+    <div class="form-card">
+      <div class="section-title" style="margin-top:0;">Enregistrer un remboursement</div>
+      <label for="rbDate">Date</label>
+      <input type="date" id="rbDate">
+      <label>Qui rembourse qui ?</label>
+      <div class="btnrow">
+        <button type="button" class="sens-btn active" data-sens="gil-vers-jm">Gil → Jean-Marc</button>
+        <button type="button" class="sens-btn" data-sens="jm-vers-gil">Jean-Marc → Gil</button>
+      </div>
+      <label for="rbMontant">Montant (€)</label>
+      <input type="number" id="rbMontant" placeholder="0.00" step="0.01" inputmode="decimal">
+      <p class="hint">Le montant proposé est celui qui solde exactement les comptes. Modifie-le pour un versement partiel.</p>
+      <button class="add-btn" id="addRembBtn">Enregistrer le remboursement</button>
+    </div>
+    <div id="rembListe"></div>
+  </div>
+</div>
+
+<!-- ================= DEPENSES ================= -->
+<div class="screen" id="screen-depenses">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Dépenses</span></div>
+  <div class="body-wrap">
+    <div id="depensesSynthese"></div>
   </div>
 </div>
 
@@ -485,9 +537,9 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v6";
+const VERSION = "v7";
 
-const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel"];
+const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses"];
 
 /* Webhook du scénario Make "Kat-a-Mar" (routes save et import).
    Déclarée une seule fois dans tout le fichier. */
@@ -508,6 +560,8 @@ function showScreen(id){
   if(id === "checklist") renderChecklist();
   if(id === "donnees") refreshStorageInfo();
   if(id === "manuel") renderManuel();
+  if(id === "balance") renderBalance();
+  if(id === "depenses") renderDepenses();
 }
 function currentScreen(){ return (location.hash || "").replace("#","") || "accueil"; }
 function openScreen(id){ navDepth++; location.hash = "#" + id; }
@@ -948,11 +1002,22 @@ function renderEntretien(){
 /* ---------- COMPTES ---------- */
 const COMPTES_KEY = "checklist-bateau-comptes";
 const SPLIT = 0.5;
+/* Quatre postes de dépense. Le poste ne change rien au partage, qui reste 50/50. */
+const POSTES = [
+  { id: "fixe",      label: "Fixe" },
+  { id: "carburant", label: "Carburant" },
+  { id: "entretien", label: "Entretien" },
+  { id: "divers",    label: "Divers" }
+];
+function posteLabel(id){ const p = POSTES.find(x => x.id === id); return p ? p.label : "Divers"; }
+function posteId(id){ return POSTES.some(x => x.id === id) ? id : "divers"; }
+
 function loadComptes(){
   try{ const raw = localStorage.getItem(COMPTES_KEY); const c = raw ? JSON.parse(raw) : null;
-       if(!c || !Array.isArray(c.expenses)) return { moi: null, expenses: [] };
-       return { moi: c.moi || null, expenses: c.expenses };
-  }catch(e){ return { moi: null, expenses: [] }; }
+       if(!c || !Array.isArray(c.expenses)) return { moi: null, expenses: [], remboursements: [] };
+       return { moi: c.moi || null, expenses: c.expenses,
+                remboursements: Array.isArray(c.remboursements) ? c.remboursements : [] };
+  }catch(e){ return { moi: null, expenses: [], remboursements: [] }; }
 }
 /* Ne masque plus l'erreur : l'appelant doit savoir si l'écriture a échoué. */
 function saveComptes(c){ writeLS(COMPTES_KEY, JSON.stringify(c)); }
@@ -1033,7 +1098,7 @@ document.getElementById("addExpenseBtn").addEventListener("click", () => {
   const desc = document.getElementById("expDesc").value.trim();
   const amount = parseFloat(document.getElementById("expAmount").value);
   if(!desc || isNaN(amount) || amount <= 0){ alert("Renseigne une description et un montant valide."); return; }
-  const entry = { id: Date.now().toString(36), date, desc, amount, paidBy: currentPaidBy, type: currentType };
+  const entry = { id: Date.now().toString(36), date, desc, amount, paidBy: currentPaidBy, type: posteId(currentType) };
   if(pendingFacture) entry.facture = pendingFacture;
   comptes.expenses.push(entry);
   try{
@@ -1080,6 +1145,46 @@ function saveFacture(entry){
   }catch(e){ alert("Facture illisible."); }
 }
 
+/* Solde global, remboursements déduits. Positif : Gil doit à Jean-Marc.
+   Tout le calcul se fait en CENTIMES : additionner des euros en virgule
+   flottante produit des écarts d'un centime sur certaines combinaisons.
+   Une dépense payée à deux vaut un demi-centime près, exact en binaire ;
+   l'arrondi n'intervient qu'une seule fois, à la toute fin. */
+function cents(v){ return Math.round((Number(v) || 0) * 100); }
+function avanceCents(e, qui){
+  const c = cents(e.amount);
+  if(e.paidBy === qui) return c;
+  if(e.paidBy === "Les deux") return c / 2;
+  return 0;
+}
+function arrondiCentimes(c){ return (c < 0 ? -Math.round(-c) : Math.round(c)) / 100; }
+function calculBalance(){
+  let totalC = 0, avanceJMc = 0;
+  comptes.expenses.forEach(e => {
+    totalC += cents(e.amount);
+    avanceJMc += avanceCents(e, "Jean-Marc");
+  });
+  let versJMc = 0, versGilc = 0;
+  (comptes.remboursements || []).forEach(r => {
+    const c = cents(r.montant);
+    if(r.sens === "gil-vers-jm") versJMc += c; else versGilc += c;
+  });
+  /* Un seul des deux montants est arrondi, l'autre s'en déduit : sans cela,
+     une dépense « Les deux » d'un nombre impair de centimes ferait afficher
+     deux moitiés arrondies chacune vers le haut, dont la somme dépasserait
+     le total affiché juste au-dessus. */
+  const total = arrondiCentimes(totalC);
+  const avanceJM = arrondiCentimes(avanceJMc);
+  return {
+    total: total,
+    part: arrondiCentimes(totalC / 2),
+    avanceJM: avanceJM,
+    avanceGil: Math.round((total - avanceJM) * 100) / 100,
+    versJM: arrondiCentimes(versJMc),
+    versGil: arrondiCentimes(versGilc),
+    solde: arrondiCentimes(avanceJMc - totalC / 2 - versJMc + versGilc)
+  };
+}
 function balancePhrase(balanceJM, periodLabel){
   const moi = comptes.moi;
   if(Math.abs(balanceJM) < 0.01) return "Comptes équilibrés " + periodLabel;
@@ -1094,53 +1199,41 @@ function balancePhrase(balanceJM, periodLabel){
 }
 
 function renderComptes(){
-  const glob = document.getElementById("globalBalance"); glob.innerHTML = "";
   const container = document.getElementById("expenseYears"); container.innerHTML = "";
-  if(comptes.expenses.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune dépense enregistrée. Ajoute la première ci-dessous.</p>'; return; }
-
-  const totalAll = comptes.expenses.reduce((s,e)=>s+(Number(e.amount)||0),0);
-  const paidJMAll = comptes.expenses.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+(Number(e.amount)||0),0);
-  const balanceAll = paidJMAll - totalAll * SPLIT;
-  glob.innerHTML = '<div class="global-card"><div class="gtitle">Solde cumulé, toutes années</div>'
-    + '<div class="summary-row"><span class="label">Total des dépenses</span><span class="val">'+fmtEUR(totalAll)+'</span></div>'
-    + '<div class="balance-line">'+esc(balancePhrase(balanceAll, "au global"))+'</div></div>';
+  if(comptes.expenses.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune dépense enregistrée. Ajoute la première ci-dessus.</p>'; return; }
 
   const byYear = {};
   comptes.expenses.forEach(e => { const y=(isISODate(e.date) ? e.date : todayStr()).slice(0,4); (byYear[y] = byYear[y] || []).push(e); });
   Object.keys(byYear).sort((a,b)=>b.localeCompare(a)).forEach(year => {
     const list = byYear[year].slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
     const num = e => Number(e.amount)||0;
-    const totalYear = list.reduce((s,e)=>s+num(e),0);
-    const paidJM = list.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+num(e),0);
-    const paidGil = list.filter(e=>e.paidBy==="Gil").reduce((s,e)=>s+num(e),0);
-    const totFixe = list.filter(e=>e.type==="fixe").reduce((s,e)=>s+num(e),0);
-    const totVar = totalYear - totFixe;
-    const shareEach = totalYear * SPLIT;
-    const balanceJM = paidJM - shareEach;
+    const totalYearC = list.reduce((s,e)=>s+cents(e.amount),0);
+    const totalYear = arrondiCentimes(totalYearC);
+    const paidJM = arrondiCentimes(list.reduce((s,e)=>s+avanceCents(e,"Jean-Marc"),0));
+    const paidGil = Math.round((totalYear - paidJM) * 100) / 100;
+    const shareEach = arrondiCentimes(totalYearC / 2);
     const block = document.createElement("div"); block.className = "year-block";
     const title = document.createElement("div"); title.className = "year-title"; title.textContent = year; block.appendChild(title);
     list.forEach(e => {
+      const p = posteId(e.type);
       const row = document.createElement("div"); row.className = "row-card";
-      row.innerHTML = '<div class="desc"><span class="tag">'+esc(e.paidBy)+'</span><span class="tag">'+(e.type==="fixe"?"Fixe":"Variable")+'</span>'
+      row.innerHTML = '<div class="desc"><span class="tag">'+esc(e.paidBy)+'</span><span class="tag poste-'+p+'">'+esc(posteLabel(p))+'</span>'
         + '<span class="d-label">'+esc(e.desc)+'</span><br><span class="d-date">'+esc(e.date)+'</span>'
         + (e.facture ? '<br><button class="facture-btn" data-id="'+esc(e.id)+'">📎 Voir la facture</button>' : '')
         + '</div><div class="amt">'+fmtEUR(e.amount)+'</div><button class="del" data-id="'+esc(e.id)+'" aria-label="Supprimer">✕</button>';
       block.appendChild(row);
     });
     const summary = document.createElement("div"); summary.className = "summary-card";
-    const balanceText = balancePhrase(balanceJM, "pour " + year);
-    summary.innerHTML =
-      '<div class="summary-row"><span class="label">Total dépenses '+esc(year)+'</span><span class="val">'+fmtEUR(totalYear)+'</span></div>'+
-      '<div class="summary-row"><span class="label">dont frais fixes</span><span class="val">'+fmtEUR(totFixe)+'</span></div>'+
-      '<div class="summary-row"><span class="label">dont frais variables</span><span class="val">'+fmtEUR(totVar)+'</span></div>'+
-      '<div class="summary-row"><span class="label">Part de chacun (50/50)</span><span class="val">'+fmtEUR(shareEach)+'</span></div>'+
-      '<div class="summary-row"><span class="label">Payé par Jean-Marc</span><span class="val">'+fmtEUR(paidJM)+'</span></div>'+
-      '<div class="summary-row"><span class="label">Payé par Gil</span><span class="val">'+fmtEUR(paidGil)+'</span></div>'+
-      '<div class="balance-line">'+esc(balanceText)+'</div>';
+    let lignes = '<div class="summary-row"><span class="label">Total dépenses '+esc(year)+'</span><span class="val">'+fmtEUR(totalYear)+'</span></div>';
+    POSTES.forEach(p => {
+      const t = list.filter(e => posteId(e.type) === p.id).reduce((s,e)=>s+num(e),0);
+      lignes += '<div class="summary-row"><span class="label">dont '+esc(p.label.toLowerCase())+'</span><span class="val">'+fmtEUR(t)+'</span></div>';
+    });
+    lignes += '<div class="summary-row"><span class="label">Part de chacun (50/50)</span><span class="val">'+fmtEUR(shareEach)+'</span></div>'
+            + '<div class="summary-row"><span class="label">Avancé par Jean-Marc</span><span class="val">'+fmtEUR(paidJM)+'</span></div>'
+            + '<div class="summary-row"><span class="label">Avancé par Gil</span><span class="val">'+fmtEUR(paidGil)+'</span></div>';
+    summary.innerHTML = lignes;
     block.appendChild(summary);
-    const exportBtn = document.createElement("button"); exportBtn.className = "export-btn"; exportBtn.textContent = "Envoyer le récapitulatif " + year;
-    exportBtn.addEventListener("click", () => exportYear(year, list, totalYear, paidJM, paidGil, shareEach, balanceText));
-    block.appendChild(exportBtn);
     container.appendChild(block);
   });
   container.querySelectorAll(".del").forEach(btn => {
@@ -1158,14 +1251,122 @@ function renderComptes(){
     });
   });
 }
-function exportYear(year, list, totalYear, paidJM, paidGil, shareEach, balanceText){
-  let text = "Comptes Kat-a-Mar — " + year + "\n\n";
-  list.forEach(e => { text += e.date + " — " + e.desc + " [" + e.type + "] — " + fmtEUR(e.amount) + " (payé par " + e.paidBy + ")\n"; });
-  text += "\nTotal " + year + " : " + fmtEUR(totalYear) + "\nPart de chacun (50/50) : " + fmtEUR(shareEach)
-       + "\nPayé par Jean-Marc : " + fmtEUR(paidJM) + "\nPayé par Gil : " + fmtEUR(paidGil) + "\n" + balanceText + "\n";
-  if(navigator.share){ navigator.share({ title: "Comptes Kat-a-Mar " + year, text }).catch(()=>{}); }
-  else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>alert("Récapitulatif copié.")).catch(()=>alert(text)); }
-  else alert(text);
+
+/* ---------- ECRAN BALANCE ---------- */
+let currentSens = "gil-vers-jm";
+document.querySelectorAll(".sens-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".sens-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active"); currentSens = btn.dataset.sens;
+  });
+});
+function renderBalance(){
+  const b = calculBalance();
+  const zone = document.getElementById("balanceResume");
+  zone.innerHTML = '<div class="solde-card"><div class="gros">'+esc(balancePhrase(b.solde, "au global"))+'</div>'
+    + '<div class="petit">Remboursements enregistrés déduits</div></div>'
+    + '<div class="summary-card">'
+    + '<div class="summary-row"><span class="label">Total des dépenses</span><span class="val">'+fmtEUR(b.total)+'</span></div>'
+    + '<div class="summary-row"><span class="label">Part de chacun (50/50)</span><span class="val">'+fmtEUR(b.part)+'</span></div>'
+    + '<div class="summary-row"><span class="label">Avancé par Jean-Marc</span><span class="val">'+fmtEUR(b.avanceJM)+'</span></div>'
+    + '<div class="summary-row"><span class="label">Avancé par Gil</span><span class="val">'+fmtEUR(b.avanceGil)+'</span></div>'
+    + '<div class="summary-row"><span class="label">Déjà remboursé par Gil</span><span class="val">'+fmtEUR(b.versJM)+'</span></div>'
+    + '<div class="summary-row"><span class="label">Déjà remboursé par Jean-Marc</span><span class="val">'+fmtEUR(b.versGil)+'</span></div>'
+    + '</div>';
+
+  /* Pré-remplissage : le montant et le sens qui soldent exactement. */
+  const champ = document.getElementById("rbMontant");
+  if(document.activeElement !== champ){
+    champ.value = Math.abs(b.solde) >= 0.01 ? Math.abs(b.solde).toFixed(2) : "";
+    currentSens = b.solde >= 0 ? "gil-vers-jm" : "jm-vers-gil";
+    document.querySelectorAll(".sens-btn").forEach(x => x.classList.toggle("active", x.dataset.sens === currentSens));
+  }
+  if(!document.getElementById("rbDate").value) document.getElementById("rbDate").value = todayStr();
+
+  const liste = document.getElementById("rembListe"); liste.innerHTML = "";
+  const rembs = (comptes.remboursements || []).slice().sort((x,y)=>(y.date||"").localeCompare(x.date||""));
+  if(rembs.length === 0){
+    liste.innerHTML = '<p class="empty-msg">Aucun remboursement enregistré.</p>';
+    return;
+  }
+  const t = document.createElement("div"); t.className = "year-title"; t.textContent = "Remboursements"; liste.appendChild(t);
+  rembs.forEach(r => {
+    const sens = r.sens === "gil-vers-jm" ? "Gil → Jean-Marc" : "Jean-Marc → Gil";
+    const row = document.createElement("div"); row.className = "row-card";
+    row.innerHTML = '<div class="desc"><span class="d-label">'+esc(sens)+'</span><br><span class="d-date">'+esc(r.date)+'</span></div>'
+      + '<div class="amt">'+fmtEUR(r.montant)+'</div><button class="del" data-id="'+esc(r.id)+'" aria-label="Supprimer">✕</button>';
+    liste.appendChild(row);
+  });
+  liste.querySelectorAll(".del").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if(!confirm("Supprimer ce remboursement ? La balance en tiendra compte immédiatement.")) return;
+      comptes.remboursements = comptes.remboursements.filter(r => r.id !== btn.dataset.id);
+      try{ saveComptes(comptes); }catch(e){ alert("Impossible d'enregistrer la suppression."); }
+      renderBalance(); refreshHome();
+    });
+  });
+}
+document.getElementById("addRembBtn").addEventListener("click", () => {
+  const date = document.getElementById("rbDate").value || todayStr();
+  const montant = parseFloat(document.getElementById("rbMontant").value);
+  if(isNaN(montant) || montant <= 0){ alert("Indique un montant valide."); return; }
+  if(!comptes.remboursements) comptes.remboursements = [];
+  comptes.remboursements.push({ id: Date.now().toString(36), date, sens: currentSens, montant: Math.round(montant*100)/100 });
+  try{
+    saveComptes(comptes);
+  }catch(e){
+    comptes.remboursements.pop();
+    alert("Mémoire du téléphone saturée : le remboursement n'a pas pu être enregistré.");
+    return;
+  }
+  document.getElementById("rbMontant").value = "";
+  renderBalance(); refreshHome();
+});
+
+/* ---------- ECRAN DEPENSES ---------- */
+function renderDepenses(){
+  const zone = document.getElementById("depensesSynthese"); zone.innerHTML = "";
+  if(comptes.expenses.length === 0){
+    zone.innerHTML = '<p class="empty-msg">Aucune dépense enregistrée.</p>';
+    return;
+  }
+  const num = e => Number(e.amount) || 0;
+  const byYear = {};
+  comptes.expenses.forEach(e => { const y=(isISODate(e.date) ? e.date : todayStr()).slice(0,4); (byYear[y] = byYear[y] || []).push(e); });
+  const annees = Object.keys(byYear).sort((a,b)=>b.localeCompare(a));
+  annees.forEach(year => {
+    const list = byYear[year];
+    const block = document.createElement("div"); block.className = "year-block";
+    const t = document.createElement("div"); t.className = "year-title"; t.textContent = year; block.appendChild(t);
+    const card = document.createElement("div"); card.className = "summary-card";
+    let html = "";
+    POSTES.forEach(p => {
+      const lignes = list.filter(e => posteId(e.type) === p.id);
+      const tot = lignes.reduce((s,e)=>s+num(e),0);
+      html += '<div class="summary-row"><span class="label"><span class="tag poste-'+p.id+'">'+esc(p.label)+'</span> '
+            + lignes.length + (lignes.length > 1 ? " dépenses" : " dépense") + '</span><span class="val">'+fmtEUR(tot)+'</span></div>';
+    });
+    card.innerHTML = html;
+    block.appendChild(card);
+    const tot = list.reduce((s,e)=>s+num(e),0);
+    const tg = document.createElement("div"); tg.className = "total-general";
+    tg.innerHTML = '<span>Total '+esc(year)+'</span><span>'+fmtEUR(tot)+'</span>';
+    block.appendChild(tg);
+    zone.appendChild(block);
+  });
+  const totalGeneral = comptes.expenses.reduce((s,e)=>s+num(e),0);
+  const t2 = document.createElement("div"); t2.className = "year-title"; t2.style.marginTop = "22px";
+  t2.textContent = "Toutes années"; zone.appendChild(t2);
+  const card2 = document.createElement("div"); card2.className = "summary-card";
+  let html2 = "";
+  POSTES.forEach(p => {
+    const tot = comptes.expenses.filter(e => posteId(e.type) === p.id).reduce((s,e)=>s+num(e),0);
+    html2 += '<div class="summary-row"><span class="label"><span class="tag poste-'+p.id+'">'+esc(p.label)+'</span></span><span class="val">'+fmtEUR(tot)+'</span></div>';
+  });
+  card2.innerHTML = html2; zone.appendChild(card2);
+  const tg2 = document.createElement("div"); tg2.className = "total-general";
+  tg2.innerHTML = '<span>Total général</span><span>'+fmtEUR(totalGeneral)+'</span>';
+  zone.appendChild(tg2);
 }
 
 /* ---------- SAUVEGARDE / RESTAURATION ---------- */
@@ -1446,7 +1647,16 @@ const MANUEL = [
 <p>« Fait aujourd'hui » enregistre la date du jour et les heures retenues. « Saisir une autre date » sert à rattraper une intervention passée : le format attendu est AAAA-MM-JJ, et il faut aussi le relevé du compteur ce jour-là.</p>
 <p>Une ligne marquée <b>concessionnaire</b> figure au calendrier Mercury comme réservée à un atelier agréé. Elle reste dans la liste pour que tu suives son échéance, même si tu ne la fais pas toi-même.</p>
 <p>Une section <b>Hors calendrier Mercury</b> apparaît si tu avais enregistré une intervention sur une ligne qui ne figure plus dans le calendrier. Rien n'est effacé, mais aucune échéance n'est calculée pour elle.</p>
-<div class="man-note">Après avoir renseigné des interventions, pense à la sauvegarde OneDrive : rien ne part automatiquement.</div>` }
+<div class="man-note">Après avoir renseigné des interventions, pense à la sauvegarde OneDrive : rien ne part automatiquement.</div>` },
+
+{ t:"Les comptes, les postes et la balance", c:`
+<p><b>Quatre postes</b> classent chaque dépense : Fixe pour l'assurance et la place de port, Carburant, Entretien, et Divers pour tout le reste. Le poste ne change rien au partage, qui reste 50/50 dans tous les cas. Il sert aux totaux.</p>
+<p><b>Payé par</b> a trois valeurs. « Les deux » signifie que vous avez sorti la moitié chacun : la dépense compte normalement dans les totaux, mais elle ne pèse pas sur la balance puisque personne n'a avancé pour l'autre.</p>
+<p><b>Le bouton Balance</b> donne en une phrase qui doit combien à l'autre, puis le détail : total des dépenses, part de chacun, ce que chacun a avancé, et ce qui a déjà été remboursé.</p>
+<p><b>Enregistrer un remboursement</b> sert quand l'un vire de l'argent à l'autre pour égaliser. Le montant proposé est celui qui solde exactement les comptes, et le sens est pré-sélectionné dans le bon sens ; modifie le montant pour un versement partiel. Chaque remboursement s'affiche dans la liste en dessous et peut être supprimé, la balance se recalcule aussitôt.</p>
+<div class="man-note">Sans cette étape, la balance afficherait éternellement la même dette, même une fois l'argent versé.</div>
+<p><b>Le bouton Dépenses</b> donne une section par année, avec le sous-total de chaque poste et le total de l'année, puis un récapitulatif toutes années confondues.</p>
+<p>Vous utilisez la même application et le même fichier OneDrive : il n'y a donc rien à s'envoyer. Il suffit que celui qui vient de saisir appuie sur Sauvegarder, et que l'autre appuie sur Restaurer avant de saisir à son tour. Le dernier qui sauvegarde écrase le fichier : ne saisissez pas chacun de votre côté en même temps.</p>` }
 ];
 
 function sansAccent(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
@@ -1586,11 +1796,7 @@ function refreshHome(){
   });
   document.getElementById("tileEntretien").textContent = late ? late + " en retard" : (unknown ? unknown + " à renseigner" : "À jour");
   if(comptes.expenses.length === 0){ document.getElementById("tileComptes").textContent = "Aucune dépense"; }
-  else{
-    const totalAll = comptes.expenses.reduce((s,e)=>s+(Number(e.amount)||0),0);
-    const paidJMAll = comptes.expenses.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+(Number(e.amount)||0),0);
-    document.getElementById("tileComptes").textContent = balancePhrase(paidJMAll - totalAll*SPLIT, "au global");
-  }
+  else{ document.getElementById("tileComptes").textContent = balancePhrase(calculBalance().solde, "au global"); }
 }
 
 /* ---------- DEMARRAGE ---------- */
