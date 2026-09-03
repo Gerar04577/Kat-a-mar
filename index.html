@@ -2,14 +2,15 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#BFE3F5">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Kat a Mar">
+<meta name="apple-mobile-web-app-title" content="Kat-a-Mar">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
-<title>Kat a Mar — Quicksilver 755</title>
+<title>Kat-a-Mar — Quicksilver 755</title>
 <style>
 :root{
   --p-blue:#BFE3F5; --p-blue-dark:#4E9BC7;
@@ -31,10 +32,16 @@ body{
   background-size:170px 170px;
 }
 body{ font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; color:var(--ink); min-height:100vh; padding-bottom: 48px; }
+button{ font-family:inherit; }
+button:focus-visible, input:focus-visible{ outline:3px solid var(--p-blue-dark); outline-offset:2px; }
+
+/* ---------- ECRANS ---------- */
+.screen{ display:none; }
+.screen.active{ display:block; }
 
 .hero-top{
   background: linear-gradient(135deg, var(--p-blue) 0%, var(--p-lavender) 100%);
-  padding: calc(env(safe-area-inset-top,0px) + 18px) 20px 16px; text-align:center;
+  padding: calc(env(safe-area-inset-top,0px) + 22px) 20px 22px; text-align:center;
   position:relative; overflow:hidden;
 }
 .hero-top::after{
@@ -48,14 +55,43 @@ body{ font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", 
 }
 .hero-eyebrow, .hero-top h1{ position:relative; z-index:1; }
 .hero-eyebrow{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5B5A78; font-weight:700; margin-bottom:6px; }
-.hero-top h1{ font-family: Georgia, serif; font-size: 28px; margin:0; font-weight:700; color:#3C3B4E; }
+.hero-top h1{ font-family: Georgia, serif; font-size: 32px; margin:0; font-weight:700; color:#3C3B4E; letter-spacing:-0.5px; }
 
-.tabs{ display:flex; overflow-x:auto; gap:0; background:var(--sand); border-bottom:2px solid var(--line); position:sticky; top:0; z-index:20; -webkit-overflow-scrolling: touch; }
-.tab-btn{ flex:0 0 auto; padding:13px 14px; font-size:13.5px; font-weight:700; color:var(--ink-soft); background:none; border:none; border-bottom:3px solid transparent; white-space:nowrap; }
-.tab-btn.active{ color:var(--p-blue-dark); border-bottom-color:var(--p-blue-dark); }
-.tab-panel{ display:none; } .tab-panel.active{ display:block; }
+/* barre de retour */
+.topbar{
+  position:sticky; top:0; z-index:30;
+  display:flex; align-items:center; gap:8px;
+  background:var(--sand); border-bottom:2px solid var(--line);
+  padding: calc(env(safe-area-inset-top,0px) + 10px) 12px 10px;
+}
+.back-btn{
+  display:flex; align-items:center; gap:3px;
+  background:var(--p-blue); border:1.5px solid var(--p-blue-dark); color:#215678;
+  font-size:14.5px; font-weight:800; padding:9px 14px 9px 11px; border-radius:11px;
+}
+.back-btn .chev{ font-size:18px; line-height:1; margin-top:-2px; }
+.topbar-title{ font-size:16px; font-weight:800; flex:1; text-align:center; padding-right:76px; }
 
-header{ padding: 14px 20px 14px; background: var(--sand); border-bottom: 2px solid var(--line); }
+/* ---------- MENU ACCUEIL ---------- */
+.menu{ max-width:600px; margin:0 auto; padding:18px 16px 8px; display:grid; grid-template-columns:1fr 1fr; gap:12px; position:relative; z-index:1; }
+.tile{
+  text-align:left; border-radius:18px; padding:15px 14px; border:1.5px solid var(--line);
+  background:var(--card); box-shadow:0 3px 10px rgba(60,59,78,0.06); min-height:104px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.tile .ic{ font-size:22px; line-height:1; }
+.tile .tname{ font-size:16px; font-weight:800; margin-top:8px; color:var(--ink); }
+.tile .tsub{ font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:3px; line-height:1.35; }
+.tile.wide{ grid-column:1 / -1; min-height:0; flex-direction:row; align-items:center; gap:12px; }
+.tile.wide .tname{ margin-top:0; }
+.tile.c-blue{ background:linear-gradient(135deg, var(--p-blue), rgba(191,227,245,0.35)); border-color:var(--p-blue-dark); }
+.tile.c-mint{ background:linear-gradient(135deg, var(--p-mint), rgba(198,238,221,0.35)); border-color:var(--p-mint-dark); }
+.tile.c-peach{ background:linear-gradient(135deg, var(--p-peach), rgba(255,220,194,0.35)); border-color:var(--p-peach-dark); }
+.tile.c-pink{ background:linear-gradient(135deg, var(--p-pink), rgba(255,211,222,0.35)); border-color:var(--p-pink-dark); }
+.tile.c-lav{ background:linear-gradient(135deg, var(--p-lavender), rgba(225,216,247,0.35)); border-color:var(--p-lavender-dark); }
+.tile.c-yellow{ background:linear-gradient(135deg, var(--p-yellow), rgba(255,238,179,0.35)); border-color:var(--p-yellow-dark); }
+
+header.pagehead{ padding: 14px 20px 14px; background: var(--sand); border-bottom: 2px solid var(--line); }
 .eyebrow{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--p-blue-dark); font-weight:800; margin-bottom:4px; }
 .sub{ font-size:14px; color:var(--ink-soft); margin:0; font-weight:500;}
 .progress-wrap{ margin-top:12px;}
@@ -63,7 +99,7 @@ header{ padding: 14px 20px 14px; background: var(--sand); border-bottom: 2px sol
 .progress-fill{ height:100%; background: linear-gradient(90deg, var(--p-mint), var(--p-mint-dark)); width:0%; border-radius:5px; }
 .progress-label{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-soft); margin-top:6px; font-weight:600; }
 
-main{ padding: 16px 16px 8px; max-width:600px; margin:0 auto; position:relative; z-index:1; }
+.body-wrap{ padding: 16px 16px 8px; max-width:600px; margin:0 auto; position:relative; z-index:1; }
 .section-title{ font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--p-blue-dark); font-weight:800; margin: 22px 4px 10px; }
 .section-title:first-child{ margin-top:6px; }
 ul.items{ list-style:none; margin:0; padding:0; }
@@ -80,6 +116,9 @@ footer.pagefoot{ max-width:600px; margin: 22px auto 0; padding: 0 16px; display:
 button.reset{ flex:1; background:var(--p-lavender); border:1.5px solid var(--p-lavender-dark); color:#5B4E8C; font-size:14px; padding:12px; border-radius:12px; font-weight:700; }
 .done-banner{ max-width:600px; margin: 16px auto 0; padding: 14px 16px; background: linear-gradient(135deg, var(--p-mint), rgba(198,238,221,0.5)); border:1.5px solid var(--p-mint-dark); border-radius:14px; font-size:14px; font-weight:700; color:#2A7A5F; text-align:center; display:none; position:relative; z-index:1; }
 .done-banner.show{ display:block; }
+.newday-banner{ max-width:600px; margin:14px auto 0; padding:12px 14px; background:var(--p-yellow); border:1.5px solid var(--p-yellow-dark); border-radius:14px; font-size:13.5px; font-weight:700; color:#8A6A10; text-align:center; display:none; position:relative; z-index:1; }
+.newday-banner.show{ display:block; }
+.newday-banner button{ margin-top:8px; width:100%; padding:9px; border-radius:10px; border:1.5px solid var(--p-yellow-dark); background:#FFF8DE; color:#8A6A10; font-weight:800; font-size:13.5px; }
 .date-tag{ font-size:12px; color:var(--ink-soft); text-align:center; margin-top:22px; position:relative; z-index:1; }
 
 .owner-picker{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:15px; margin-bottom:14px; }
@@ -93,6 +132,7 @@ button.reset{ flex:1; background:var(--p-lavender); border:1.5px solid var(--p-l
 .form-card label{ display:block; font-size:12px; font-weight:700; color:var(--ink-soft); margin:11px 0 5px; text-transform:uppercase; letter-spacing:.04em; }
 .form-card label:first-child{ margin-top:0; }
 .form-card input, .form-card select{ width:100%; padding:11px; border-radius:12px; border:1.5px solid var(--line); font-size:16px; color:var(--ink); background:var(--sand); font-family:inherit; }
+.hint{ font-size:12px; color:var(--ink-soft); margin-top:6px; line-height:1.45; }
 .btnrow{ display:flex; gap:9px; }
 .btnrow button{ flex:1; padding:10px; border-radius:12px; border:2px solid var(--line); background:var(--sand); font-weight:700; color:var(--ink-soft); font-size:14px; }
 
@@ -107,65 +147,97 @@ button.add-btn{ width:100%; margin-top:15px; padding:13px; border:none; border-r
 .year-block{ margin-bottom:20px; }
 .year-title{ font-size:16px; font-weight:800; margin:0 0 10px 4px; }
 .row-card{ display:flex; justify-content:space-between; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:8px; font-size:13.5px; }
-.row-card .desc{ flex:1; } .row-card .desc .d-date{ font-size:11px; color:var(--ink-soft); }
+.row-card .desc{ flex:1; min-width:0; } .row-card .desc .d-date{ font-size:11px; color:var(--ink-soft); }
 .row-card .desc .d-label{ font-weight:700; }
 .row-card .amt{ font-weight:800; margin:0 8px; white-space:nowrap; text-align:right; }
 .row-card .del{ background:none; border:none; color:var(--p-pink-dark); font-size:17px; font-weight:900; padding:4px 6px; }
-.tag{ font-size:10.5px; padding:2px 7px; border-radius:8px; background:var(--p-blue); color:#215678; font-weight:700; margin-right:4px; }
+.tag{ font-size:10.5px; padding:2px 7px; border-radius:8px; background:var(--p-blue); color:#215678; font-weight:700; margin-right:4px; display:inline-block; }
 .tag.conflict{ background:var(--p-pink); color:#8C2F4C; }
-.facture-btn{ background:var(--p-mint) !important; }
+.tag.past{ background:rgba(60,59,78,0.08); color:var(--ink-soft); }
+button.facture-btn{ margin-top:6px; font-size:12px; padding:6px 10px; border-radius:8px; border:1.5px solid var(--p-mint-dark); background:var(--p-mint); color:#2A7A5F; font-weight:700; }
 
 .summary-card{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:15px; margin-top:10px; }
-.summary-row{ display:flex; justify-content:space-between; padding:7px 0; font-size:14px; border-bottom:1px solid var(--line); }
+.summary-row{ display:flex; justify-content:space-between; padding:7px 0; font-size:14px; border-bottom:1px solid var(--line); gap:10px; }
 .summary-row:last-child{ border-bottom:none; }
-.summary-row .label{ color:var(--ink-soft); } .summary-row .val{ font-weight:800; }
+.summary-row .label{ color:var(--ink-soft); } .summary-row .val{ font-weight:800; white-space:nowrap; }
 .balance-line{ margin-top:10px; padding:11px; border-radius:12px; background:var(--p-lavender); color:#5B4E8C; font-weight:800; text-align:center; font-size:14px; }
+.global-card{ background:linear-gradient(135deg, var(--p-lavender), rgba(225,216,247,0.4)); border:1.5px solid var(--p-lavender-dark); border-radius:16px; padding:15px; margin-bottom:16px; }
+.global-card .gtitle{ font-size:12.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:#5B4E8C; margin-bottom:8px; }
 button.export-btn{ width:100%; margin-top:13px; padding:12px; border-radius:12px; border:1.5px solid var(--p-mint-dark); background:var(--p-mint); color:#2A7A5F; font-weight:800; font-size:14px; }
-.empty-msg{ text-align:center; color:var(--ink-soft); font-size:13.5px; padding:18px 0; }
+button.import-btn{ width:100%; margin-top:11px; padding:12px; border-radius:12px; border:1.5px solid var(--p-blue-dark); background:var(--p-blue); color:#215678; font-weight:800; font-size:14px; }
+.empty-msg{ text-align:center; color:var(--ink-soft); font-size:13.5px; padding:18px 0; line-height:1.5; }
 
 .info-card{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px; }
-.info-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.info-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; gap:12px; }
 .info-row:last-child{ border-bottom:none; }
 .info-row .k{ color:var(--ink-soft); font-weight:600; } .info-row .v{ font-weight:700; text-align:right; }
 
 .maint-card{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:15px; margin-bottom:12px; }
 .maint-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
 .maint-title{ font-size:15.5px; font-weight:800; }
-.maint-sub{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+.maint-sub{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.4; }
 .maint-status{ font-size:11.5px; font-weight:800; padding:4px 9px; border-radius:10px; white-space:nowrap; }
 .maint-status.ok{ background:var(--p-mint); color:#2A7A5F; }
 .maint-status.soon{ background:var(--p-yellow); color:#8A6A10; }
 .maint-status.late{ background:var(--p-pink); color:#8C2F4C; }
+.maint-status.unknown{ background:rgba(60,59,78,0.08); color:var(--ink-soft); }
 .maint-bar-track{ height:6px; background:rgba(60,59,78,0.08); border-radius:4px; margin-top:10px; overflow:hidden; }
 .maint-bar-fill{ height:100%; border-radius:4px; }
 button.done-btn{ margin-top:11px; width:100%; padding:10px; border-radius:12px; border:1.5px solid var(--p-mint-dark); background:var(--p-mint); color:#2A7A5F; font-weight:800; font-size:13.5px; }
+button.edit-btn{ margin-top:7px; width:100%; padding:9px; border-radius:12px; border:1.5px solid var(--line); background:var(--sand); color:var(--ink-soft); font-weight:700; font-size:12.5px; }
 .hours-card{ background:linear-gradient(135deg, var(--p-peach), var(--p-pink)); color:#7A3050; border-radius:16px; padding:16px; margin-bottom:16px; text-align:center; position:relative; z-index:1; }
 .hours-card .big{ font-size:30px; font-weight:800; }
 .hours-card .lbl{ font-size:12.5px; opacity:0.75; margin-top:2px; }
 .hours-manual{ margin-top:12px; }
-.hours-manual input{ width:100%; padding:10px; border-radius:10px; border:none; font-size:15px; text-align:center; }
-
+.hours-manual input{ width:100%; padding:10px; border-radius:10px; border:none; font-size:15px; text-align:center; font-family:inherit; }
+.hours-manual .lbl2{ font-size:11.5px; opacity:.8; margin-top:5px; }
 </style>
 </head>
 <body>
 
-<div class="hero-top">
-  <div class="hero-eyebrow">Quicksilver 755 Cruiser · Mercury 250 CV</div>
-  <h1>Kat a Mar</h1>
+<!-- ================= ACCUEIL ================= -->
+<div class="screen active" id="screen-accueil">
+  <div class="hero-top">
+    <div class="hero-eyebrow">Quicksilver 755 · Mercury 250 CV</div>
+    <h1>Kat-a-Mar</h1>
+  </div>
+  <div class="menu">
+    <button class="tile c-blue" data-go="checklist">
+      <div class="ic">⚓️</div>
+      <div><div class="tname">Checklist</div><div class="tsub" id="tileChecklist">Retour au port</div></div>
+    </button>
+    <button class="tile c-peach" data-go="sorties">
+      <div class="ic">🌊</div>
+      <div><div class="tname">Sorties</div><div class="tsub" id="tileSorties">Heures moteur</div></div>
+    </button>
+    <button class="tile c-lav" data-go="resa">
+      <div class="ic">📅</div>
+      <div><div class="tname">Réservations</div><div class="tsub" id="tileResa">Qui prend le bateau</div></div>
+    </button>
+    <button class="tile c-mint" data-go="entretien">
+      <div class="ic">🔧</div>
+      <div><div class="tname">Entretien</div><div class="tsub" id="tileEntretien">Échéances moteur</div></div>
+    </button>
+    <button class="tile c-pink" data-go="comptes">
+      <div class="ic">💶</div>
+      <div><div class="tname">Comptes</div><div class="tsub" id="tileComptes">Dépenses et solde</div></div>
+    </button>
+    <button class="tile c-yellow" data-go="infos">
+      <div class="ic">📖</div>
+      <div><div class="tname">Infos</div><div class="tsub">Bateau et assurance</div></div>
+    </button>
+    <button class="tile wide" data-go="donnees">
+      <div class="ic">💾</div>
+      <div><div class="tname">Sauvegarde</div><div class="tsub" id="tileDonnees">Exporter et restaurer les données</div></div>
+    </button>
+  </div>
+  <p class="date-tag" id="dateTag"></p>
 </div>
 
-<div class="tabs">
-  <button class="tab-btn active" data-tab="checklist">Checklist</button>
-  <button class="tab-btn" data-tab="sorties">Sorties</button>
-  <button class="tab-btn" data-tab="resa">Réservations</button>
-  <button class="tab-btn" data-tab="entretien">Entretien</button>
-  <button class="tab-btn" data-tab="comptes">Comptes</button>
-  <button class="tab-btn" data-tab="infos">Infos</button>
-</div>
-
-<!-- CHECKLIST -->
-<div class="tab-panel active" id="tab-checklist">
-  <header>
+<!-- ================= CHECKLIST ================= -->
+<div class="screen" id="screen-checklist">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Checklist</span></div>
+  <header class="pagehead">
     <div class="eyebrow">Retour au port</div>
     <p class="sub">À faire à chaque rentrée</p>
     <div class="progress-wrap">
@@ -173,21 +245,30 @@ button.done-btn{ margin-top:11px; width:100%; padding:10px; border-radius:12px; 
       <div class="progress-label"><span id="progressText">0 / 0 complétées</span><span id="progressPct">0%</span></div>
     </div>
   </header>
-  <main id="main"></main>
+  <div class="newday-banner" id="newDayBanner">
+    <span id="newDayText"></span>
+    <button id="newDayBtn">Repartir d'une checklist vierge</button>
+  </div>
+  <div class="body-wrap" id="checklistBody"></div>
   <div class="done-banner" id="doneBanner">✅ Checklist complète — bateau paré.</div>
   <footer class="pagefoot"><button class="reset" id="resetBtn">Réinitialiser la checklist</button></footer>
-  <p class="date-tag" id="dateTag"></p>
 </div>
 
-<!-- SORTIES -->
-<div class="tab-panel" id="tab-sorties">
-  <main>
+<!-- ================= SORTIES ================= -->
+<div class="screen" id="screen-sorties">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Sorties</span></div>
+  <div class="body-wrap">
     <div class="hours-card">
       <div class="big" id="hoursDisplay">0 h</div>
       <div class="lbl">Heures moteur actuelles (dernier relevé)</div>
     </div>
     <div class="form-card">
-      <label>Date</label>
+      <label for="heuresDepart">Compteur au début du suivi</label>
+      <input type="number" id="heuresDepart" placeholder="Ex : 138.4" step="0.1" inputmode="decimal">
+      <p class="hint">Relevé du compteur le jour où tu commences à utiliser l'application. Sans lui, la première sortie enregistre l'intégralité des heures du moteur.</p>
+    </div>
+    <div class="form-card">
+      <label for="sortDate">Date</label>
       <input type="date" id="sortDate">
       <label>Qui était à bord ?</label>
       <div class="btnrow">
@@ -195,67 +276,73 @@ button.done-btn{ margin-top:11px; width:100%; padding:10px; border-radius:12px; 
         <button type="button" class="qui-btn" data-qui="Gil">Gil</button>
         <button type="button" class="qui-btn" data-qui="Les deux">Les deux</button>
       </div>
-      <label>Relevé compteur moteur en fin de sortie (h)</label>
+      <label for="sortHeures">Relevé compteur en fin de sortie (h)</label>
       <input type="number" id="sortHeures" placeholder="Ex : 142.5" step="0.1" inputmode="decimal">
-      <label>Note (optionnel)</label>
+      <label for="sortNote">Note (facultatif)</label>
       <input type="text" id="sortNote" placeholder="Ex : sortie pêche, essai moteur...">
       <button class="add-btn" id="addSortieBtn">Ajouter la sortie</button>
     </div>
     <div id="sortiesYears"></div>
-  </main>
+  </div>
 </div>
 
-<!-- RESERVATIONS -->
-<div class="tab-panel" id="tab-resa">
-  <main>
+<!-- ================= RESERVATIONS ================= -->
+<div class="screen" id="screen-resa">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Réservations</span></div>
+  <div class="body-wrap">
     <div class="form-card">
-      <label>Du</label>
+      <label for="resaDebut">Du</label>
       <input type="date" id="resaDebut">
-      <label>Au</label>
+      <label for="resaFin">Au</label>
       <input type="date" id="resaFin">
       <label>Qui réserve ?</label>
       <div class="btnrow">
         <button type="button" class="resaqui-btn active" data-qui="Jean-Marc">Jean-Marc</button>
         <button type="button" class="resaqui-btn" data-qui="Gil">Gil</button>
       </div>
-      <label>Note (optionnel)</label>
+      <label for="resaNote">Note (facultatif)</label>
       <input type="text" id="resaNote" placeholder="Ex : week-end famille">
       <button class="add-btn" id="addResaBtn">Ajouter la réservation</button>
     </div>
     <div id="resaList"></div>
-  </main>
+  </div>
 </div>
 
-<!-- ENTRETIEN -->
-<div class="tab-panel" id="tab-entretien">
-  <main>
+<!-- ================= ENTRETIEN ================= -->
+<div class="screen" id="screen-entretien">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Entretien</span></div>
+  <div class="body-wrap">
     <div class="hours-card">
       <div class="big" id="hoursDisplay2">0 h</div>
-      <div class="lbl">Heures moteur actuelles</div>
+      <div class="lbl">Heures moteur retenues</div>
       <div class="hours-manual">
-        <input type="number" id="manualHours" placeholder="Saisir manuellement si aucune sortie enregistrée" step="0.1" inputmode="decimal">
+        <input type="number" id="manualHours" placeholder="Relevé manuel du compteur" step="0.1" inputmode="decimal">
+        <div class="lbl2">L'application retient la valeur la plus élevée entre ce relevé et tes sorties.</div>
       </div>
     </div>
     <div id="maintList"></div>
-  </main>
+    <p class="empty-msg">Intervalles indicatifs. Vérifie-les dans le manuel d'utilisation Mercury du F250 Verado avant de t'y fier.</p>
+  </div>
 </div>
 
-<!-- COMPTES -->
-<div class="tab-panel" id="tab-comptes">
-  <main>
+<!-- ================= COMPTES ================= -->
+<div class="screen" id="screen-comptes">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Comptes</span></div>
+  <div class="body-wrap">
     <div class="owner-picker">
-      <p>Qui es-tu ?</p>
+      <p>Qui es-tu ? (pré-sélectionne « Payé par » et personnalise le solde)</p>
       <div class="owner-btns">
         <button class="owner-btn" id="ownerBtnJM" data-owner="Jean-Marc">Jean-Marc</button>
         <button class="owner-btn" id="ownerBtnGil" data-owner="Gil">Gil</button>
       </div>
     </div>
+    <div id="globalBalance"></div>
     <div class="form-card">
-      <label>Date</label>
+      <label for="expDate">Date</label>
       <input type="date" id="expDate">
-      <label>Description</label>
-      <input type="text" id="expDesc" placeholder="Ex : Rinçage moteur, assurance, carburant...">
-      <label>Montant (€)</label>
+      <label for="expDesc">Description</label>
+      <input type="text" id="expDesc" placeholder="Ex : assurance, carburant, place de port...">
+      <label for="expAmount">Montant (€)</label>
       <input type="number" id="expAmount" placeholder="0.00" step="0.01" inputmode="decimal">
       <label>Type de dépense</label>
       <div class="btnrow">
@@ -267,28 +354,29 @@ button.done-btn{ margin-top:11px; width:100%; padding:10px; border-radius:12px; 
         <button type="button" class="paidby-btn active" data-paidby="Jean-Marc">Jean-Marc</button>
         <button type="button" class="paidby-btn" data-paidby="Gil">Gil</button>
       </div>
-      <label>Facture (photo ou PDF)</label>
+      <label for="expFacture">Facture (photo ou PDF)</label>
       <input type="file" id="expFacture" accept="image/*,application/pdf">
       <div id="factureName" class="maint-sub" style="margin-top:6px;"></div>
+      <p class="hint">Le partage reste 50/50 quel que soit le type. Le type sert au détail fixe / variable du récapitulatif annuel.</p>
       <button class="add-btn" id="addExpenseBtn">Ajouter la dépense</button>
     </div>
-    <button class="export-btn" id="exportAllBtn" style="margin-bottom:16px;">Exporter toutes les données (JSON) vers Fichiers / OneDrive</button>
     <div id="expenseYears"></div>
-  </main>
+  </div>
 </div>
 
-<!-- INFOS -->
-<div class="tab-panel" id="tab-infos">
-  <main>
+<!-- ================= INFOS ================= -->
+<div class="screen" id="screen-infos">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Infos</span></div>
+  <div class="body-wrap">
     <div class="section-title">Le bateau</div>
     <div class="info-card">
-      <div class="info-row"><span class="k">Nom</span><span class="v">Kat a Mar</span></div>
+      <div class="info-row"><span class="k">Nom</span><span class="v">Kat-a-Mar</span></div>
       <div class="info-row"><span class="k">Marque / modèle</span><span class="v">Quicksilver 755 Activ Cruiser</span></div>
       <div class="info-row"><span class="k">Moteur</span><span class="v">Mercury F250 XL Verado — 250 CV</span></div>
       <div class="info-row"><span class="k">Année de construction</span><span class="v">2020</span></div>
-      <div class="info-row"><span class="k">Eslora</span><span class="v">6,91 m</span></div>
+      <div class="info-row"><span class="k">Longueur</span><span class="v">6,91 m</span></div>
       <div class="info-row"><span class="k">Port d'attache</span><span class="v">Sotogrande / Costa del Sol, Espagne</span></div>
-      <div class="info-row"><span class="k">Propriétaires</span><span class="v">Jean-Marc & Gil</span></div>
+      <div class="info-row"><span class="k">Propriétaires</span><span class="v">Jean-Marc &amp; Gil</span></div>
     </div>
     <div class="section-title">Assurance</div>
     <div class="info-card">
@@ -296,46 +384,93 @@ button.done-btn{ margin-top:11px; width:100%; padding:10px; border-radius:12px; 
       <div class="info-row"><span class="k">Intermédiaire</span><span class="v">Bel Casas Consulting SL</span></div>
       <div class="info-row"><span class="k">Contact</span><span class="v">david@zapinvest.be</span></div>
     </div>
-    <p class="empty-msg">Les documents officiels (facture, contrat, assurance) contiennent des données sensibles (passeports, numéros d'identité) — ils ne sont volontairement pas publiés ici. Gardez-les dans un espace privé partagé (Drive, iCloud...).</p>
-  </main>
+    <p class="empty-msg">Les documents officiels (facture d'achat, contrat, police d'assurance) contiennent des données sensibles — ils ne sont volontairement pas publiés ici. Garde-les dans un espace privé partagé (OneDrive, iCloud).</p>
+  </div>
+</div>
+
+<!-- ================= DONNEES ================= -->
+<div class="screen" id="screen-donnees">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Sauvegarde</span></div>
+  <div class="body-wrap">
+    <div class="info-card">
+      <p class="hint" style="margin-top:0;">Les données sont stockées uniquement sur cet iPhone. Elles ne se synchronisent pas avec l'appareil de Gil et disparaissent si tu effaces les données de Safari. Exporte régulièrement vers Fichiers ou OneDrive.</p>
+      <button class="export-btn" id="exportAllBtn">Exporter toutes les données (JSON)</button>
+      <button class="import-btn" id="importBtn">Restaurer depuis un fichier JSON</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+      <p class="hint" id="storageInfo"></p>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ---------- TABS ---------- */
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    if(btn.dataset.tab === 'entretien') renderEntretien();
-  });
-});
+"use strict";
 
+/* ---------- OUTILS ---------- */
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
 function todayStr(){
   const d = new Date();
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
-function fmtEUR(n){ return n.toLocaleString("fr-BE", { style: "currency", currency: "EUR" }); }
-function fmtH(n){ return (Math.round(n*10)/10).toLocaleString("fr-BE") + " h"; }
+function fmtEUR(n){ return (Number(n)||0).toLocaleString("fr-BE", { style: "currency", currency: "EUR" }); }
+function fmtH(n){ return (Math.round((Number(n)||0)*10)/10).toLocaleString("fr-BE") + " h"; }
+function isISODate(s){ return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+/* Écrit dans localStorage et REMONTE l'erreur (quota) au lieu de l'avaler. */
+function writeLS(key, value){ localStorage.setItem(key, value); }
+
+/* ---------- NAVIGATION AVEC RETOUR ---------- */
+const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees"];
+let navDepth = 0;
+
+function showScreen(id){
+  if(SCREENS.indexOf(id) === -1) id = "accueil";
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById("screen-" + id);
+  if(el) el.classList.add("active");
+  window.scrollTo(0,0);
+  if(id === "accueil"){ navDepth = 0; refreshHome(); }
+  if(id === "entretien") renderEntretien();
+  if(id === "sorties") renderSorties();
+  if(id === "comptes") renderComptes();
+  if(id === "resa") renderResa();
+  if(id === "checklist") renderChecklist();
+  if(id === "donnees") refreshStorageInfo();
+}
+function currentScreen(){ return (location.hash || "").replace("#","") || "accueil"; }
+function openScreen(id){ navDepth++; location.hash = "#" + id; }
+function goBack(){
+  if(navDepth > 0){ history.back(); }
+  else { location.hash = "#accueil"; }
+}
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => openScreen(b.dataset.go)));
+document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", goBack));
+window.addEventListener("hashchange", () => {
+  const id = currentScreen();
+  if(id === "accueil") navDepth = 0; else navDepth = Math.max(navDepth, 1);
+  showScreen(id);
+});
 
 /* ---------- CHECKLIST ---------- */
 const DATA = [
   { section: "Moteur", items: [
     { id: "flush", title: "Brancher le rinçage moteur (eau douce)", note: "Utilise le raccord de rinçage situé sur le carter du moteur. Moteur en position verticale, à l'arrêt. Branche le tuyau, ouvre l'eau et laisse couler <span class='warn-txt'>environ 15 minutes</span> jusqu'à voir l'eau ressortir clairement. Ne fais jamais tourner le moteur avec ce seul raccord." },
     { id: "flush-ext", title: "Rincer l'extérieur du moteur", note: "Rince au tuyau le capot, le support de fixation et la zone du vérin de trim. Garde le moteur vertical." },
-    { id: "oil", title: "Vérifier le niveau d'huile moteur", note: "Retire la jauge et vérifie le niveau entre min et max." },
-    { id: "prop", title: "Contrôler l'hélice", note: "Chocs, déformations, filasse ou algues enroulées." },
+    { id: "oil", title: "Vérifier le niveau d'huile moteur", note: "Retire la jauge et vérifie le niveau entre le repère mini et le repère maxi." },
+    { id: "prop", title: "Contrôler l'hélice", note: "Chocs, déformations, bouts ou algues enroulés autour de l'arbre." },
+    { id: "anodes", title: "Contrôler les anodes", note: "Anodes d'embase et de plaque anti-cavitation. En eau salée, remplace-les dès qu'elles ont perdu environ la moitié de leur volume." },
     { id: "leak", title: "Vérifier l'absence de fuite", note: "Sous le moteur et dans le puits moteur." },
   ]},
   { section: "Coque & pont", items: [
     { id: "hull-rinse", title: "Rincer la coque et le pont", note: "À l'eau douce, surtout après une sortie en mer." },
-    { id: "hull-check", title: "Contrôler la coque et le safran", note: "Chocs, éraflures, trace d'impact." },
+    { id: "hull-check", title: "Contrôler la coque et l'embase", note: "Chocs, éraflures, traces d'impact sur la coque et sur l'embase du hors-bord." },
     { id: "bilge", title: "Contrôler la cale", note: "Doit être sèche. Teste la pompe manuellement." },
   ]},
   { section: "Carburant & batteries", items: [
-    { id: "fuel", title: "Faire le plein ou noter le niveau", note: "Limite la condensation si prochaine sortie proche." },
-    { id: "battery", title: "Couper l'interrupteur général batterie", note: "Si arrêt de plus d'une journée." },
+    { id: "fuel", title: "Faire le plein ou noter le niveau", note: "Limite la condensation si la prochaine sortie est proche." },
+    { id: "battery", title: "Couper l'interrupteur général batterie", note: "Si l'arrêt dépasse une journée." },
   ]},
   { section: "Rangement & sécurité", items: [
     { id: "safety", title: "Ranger les équipements de sécurité", note: "Gilets, extincteur, fusées, VHF portable." },
@@ -351,56 +486,110 @@ function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return { date: todayStr(), checked: {} };
     const parsed = JSON.parse(raw);
-    if(parsed.date !== todayStr()) return { date: todayStr(), checked: {} };
-    return parsed;
+    if(!parsed || typeof parsed !== "object" || typeof parsed.checked !== "object") return { date: todayStr(), checked: {} };
+    return { date: parsed.date || todayStr(), checked: parsed.checked || {} };
   }catch(e){ return { date: todayStr(), checked: {} }; }
 }
-function saveState(s){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }catch(e){} }
+function saveState(s){ try{ writeLS(STORAGE_KEY, JSON.stringify(s)); }catch(e){} }
 let state = loadState();
 function allIds(){ return DATA.flatMap(s => s.items.map(i => i.id)); }
+function countDone(){ return allIds().filter(id => state.checked[id]).length; }
 function renderChecklist(){
-  const main = document.getElementById("main"); main.innerHTML = "";
+  const body = document.getElementById("checklistBody"); body.innerHTML = "";
   DATA.forEach(section => {
-    const h = document.createElement("div"); h.className = "section-title"; h.textContent = section.section; main.appendChild(h);
+    const h = document.createElement("div"); h.className = "section-title"; h.textContent = section.section; body.appendChild(h);
     const ul = document.createElement("ul"); ul.className = "items";
     section.items.forEach(item => {
       const li = document.createElement("li"); li.className = "item" + (state.checked[item.id] ? " done" : ""); li.dataset.id = item.id;
       const btn = document.createElement("button"); btn.className = "check-btn"; btn.textContent = "✓";
-      btn.addEventListener("click", () => toggle(item.id));
+      btn.setAttribute("aria-label", "Cocher : " + item.title);
+      btn.addEventListener("click", (e) => { e.stopPropagation(); toggle(item.id); });
       const textWrap = document.createElement("div"); textWrap.className = "item-text";
       const t = document.createElement("div"); t.className = "item-title"; t.textContent = item.title; textWrap.appendChild(t);
       if(item.note){ const n = document.createElement("div"); n.className = "item-note"; n.innerHTML = item.note; textWrap.appendChild(n); }
       li.appendChild(btn); li.appendChild(textWrap);
-      li.addEventListener("click", (e) => { if(e.target === btn) return; toggle(item.id); });
+      li.addEventListener("click", () => toggle(item.id));
       ul.appendChild(li);
     });
-    main.appendChild(ul);
+    body.appendChild(ul);
   });
   updateProgress();
+  updateNewDayBanner();
 }
 function toggle(id){
-  state.checked[id] = !state.checked[id]; saveState(state);
+  state.checked[id] = !state.checked[id];
+  state.date = state.date || todayStr();
+  saveState(state);
   const li = document.querySelector('li[data-id="'+id+'"]'); if(li) li.classList.toggle("done", !!state.checked[id]);
   updateProgress();
 }
 function updateProgress(){
-  const ids = allIds(); const done = ids.filter(id => state.checked[id]).length; const total = ids.length;
+  const total = allIds().length; const done = countDone();
   const pct = total ? Math.round((done/total)*100) : 0;
   document.getElementById("progressFill").style.width = pct + "%";
   document.getElementById("progressText").textContent = done + " / " + total + " complétées";
   document.getElementById("progressPct").textContent = pct + "%";
   document.getElementById("doneBanner").classList.toggle("show", done === total && total > 0);
 }
-document.getElementById("resetBtn").addEventListener("click", () => { state = { date: todayStr(), checked: {} }; saveState(state); renderChecklist(); });
-document.getElementById("dateTag").textContent = "Journée du " + new Date().toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long" });
-renderChecklist();
+/* La checklist ne s'efface plus toute seule : on propose la remise à zéro. */
+function updateNewDayBanner(){
+  const banner = document.getElementById("newDayBanner");
+  const stale = state.date && state.date !== todayStr() && countDone() > 0;
+  banner.classList.toggle("show", !!stale);
+  if(stale) document.getElementById("newDayText").textContent = "Cette checklist date du " + state.date + ".";
+}
+function resetChecklist(){
+  state = { date: todayStr(), checked: {} };
+  saveState(state); renderChecklist();
+}
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(countDone() === 0 || confirm("Décocher toutes les cases de la checklist ?")) resetChecklist();
+});
+document.getElementById("newDayBtn").addEventListener("click", resetChecklist);
+document.getElementById("dateTag").textContent = new Date().toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
 /* ---------- SORTIES ---------- */
 const SORTIES_KEY = "checklist-bateau-sorties";
-function loadSorties(){ try{ const raw = localStorage.getItem(SORTIES_KEY); return raw ? JSON.parse(raw) : { entries: [] }; }catch(e){ return { entries: [] }; } }
-function saveSorties(s){ try{ localStorage.setItem(SORTIES_KEY, JSON.stringify(s)); }catch(e){} }
+const DEPART_KEY  = "checklist-bateau-heures-depart";
+function loadSorties(){
+  try{ const raw = localStorage.getItem(SORTIES_KEY); const s = raw ? JSON.parse(raw) : null;
+       return (s && Array.isArray(s.entries)) ? s : { entries: [] };
+  }catch(e){ return { entries: [] }; }
+}
+function saveSorties(s){ try{ writeLS(SORTIES_KEY, JSON.stringify(s)); }catch(e){ alert("Impossible d'enregistrer : mémoire du téléphone saturée."); } }
 let sorties = loadSorties();
 let currentQui = "Jean-Marc";
+
+function getHeuresDepart(){ const v = parseFloat(localStorage.getItem(DEPART_KEY)); return isNaN(v) ? 0 : v; }
+function setHeuresDepart(v){ try{ writeLS(DEPART_KEY, String(v)); }catch(e){} }
+
+/* Recalcule toute la chaîne des durées, chronologiquement, à partir du compteur de départ. */
+function rebuildChain(){
+  sorties.entries.sort((a,b) => {
+    const da = a.date || "", db = b.date || "";
+    if(da !== db) return da.localeCompare(db);
+    return (a.heures||0) - (b.heures||0);
+  });
+  let prev = getHeuresDepart();
+  sorties.entries.forEach(e => {
+    const h = Number(e.heures) || 0;
+    e.dureeDepuisPrec = Math.max(0, h - prev);
+    prev = Math.max(prev, h);
+  });
+}
+function getCurrentHours(){
+  const maxEntry = sorties.entries.reduce((m,e) => Math.max(m, Number(e.heures)||0), 0);
+  return Math.max(maxEntry, getHeuresDepart());
+}
+
+const departInput = document.getElementById("heuresDepart");
+departInput.value = getHeuresDepart() || "";
+departInput.addEventListener("change", () => {
+  const v = parseFloat(departInput.value);
+  setHeuresDepart(isNaN(v) ? 0 : v);
+  rebuildChain(); saveSorties(sorties); renderSorties();
+});
+
 document.getElementById("sortDate").value = todayStr();
 document.querySelectorAll(".qui-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -408,18 +597,15 @@ document.querySelectorAll(".qui-btn").forEach(btn => {
     btn.classList.add("active"); currentQui = btn.dataset.qui;
   });
 });
-function getCurrentHours(){
-  if(sorties.entries.length === 0) return 0;
-  return Math.max(...sorties.entries.map(e => e.heures || 0));
-}
 document.getElementById("addSortieBtn").addEventListener("click", () => {
   const date = document.getElementById("sortDate").value || todayStr();
   const heures = parseFloat(document.getElementById("sortHeures").value);
   const note = document.getElementById("sortNote").value.trim();
-  if(isNaN(heures) || heures <= 0){ alert("Merci d'indiquer le relevé du compteur moteur en heures."); return; }
+  if(isNaN(heures) || heures <= 0){ alert("Indique le relevé du compteur moteur en heures."); return; }
   const prevMax = getCurrentHours();
-  if(heures < prevMax){ if(!confirm("Ce relevé (" + heures + "h) est inférieur au dernier relevé enregistré (" + prevMax + "h). Continuer quand même ?")) return; }
-  sorties.entries.push({ id: Date.now().toString(36), date, qui: currentQui, heures, note, dureeDepuisPrec: Math.max(0, heures - prevMax) });
+  if(heures < prevMax && !confirm("Ce relevé (" + heures + " h) est inférieur au dernier relevé connu (" + prevMax + " h). Continuer ?")) return;
+  sorties.entries.push({ id: Date.now().toString(36), date, qui: currentQui, heures, note, dureeDepuisPrec: 0 });
+  rebuildChain();
   saveSorties(sorties);
   document.getElementById("sortHeures").value = ""; document.getElementById("sortNote").value = "";
   renderSorties();
@@ -427,52 +613,53 @@ document.getElementById("addSortieBtn").addEventListener("click", () => {
 function renderSorties(){
   document.getElementById("hoursDisplay").textContent = fmtH(getCurrentHours());
   const container = document.getElementById("sortiesYears"); container.innerHTML = "";
-  if(sorties.entries.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune sortie enregistrée. Ajoute la première ci-dessus.</p>'; return; }
+  if(sorties.entries.length === 0){
+    container.innerHTML = '<p class="empty-msg">Aucune sortie enregistrée. Renseigne le compteur de départ, puis ajoute ta première sortie.</p>';
+    return;
+  }
   const byYear = {};
-  sorties.entries.forEach(e => { const y = (e.date||todayStr()).slice(0,4); if(!byYear[y]) byYear[y]=[]; byYear[y].push(e); });
-  const years = Object.keys(byYear).sort((a,b)=>b.localeCompare(a));
-  years.forEach(year => {
-    const list = byYear[year].slice().sort((a,b)=>b.date.localeCompare(a.date));
+  sorties.entries.forEach(e => { const y = (isISODate(e.date) ? e.date : todayStr()).slice(0,4); (byYear[y] = byYear[y] || []).push(e); });
+  Object.keys(byYear).sort((a,b)=>b.localeCompare(a)).forEach(year => {
+    const list = byYear[year].slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
     let hJM=0, hGil=0, hCommun=0;
     list.forEach(e => {
-      if(e.qui === "Jean-Marc") hJM += e.dureeDepuisPrec||0;
-      else if(e.qui === "Gil") hGil += e.dureeDepuisPrec||0;
-      else hCommun += e.dureeDepuisPrec||0;
+      const d = Number(e.dureeDepuisPrec) || 0;
+      if(e.qui === "Jean-Marc") hJM += d; else if(e.qui === "Gil") hGil += d; else hCommun += d;
     });
     const block = document.createElement("div"); block.className = "year-block";
     const title = document.createElement("div"); title.className = "year-title"; title.textContent = year; block.appendChild(title);
     list.forEach(e => {
       const row = document.createElement("div"); row.className = "row-card";
-      row.innerHTML = `<div class="desc"><span class="tag">${e.qui}</span><span class="d-label">${e.note || 'Sortie'}</span><br><span class="d-date">${e.date} · +${fmtH(e.dureeDepuisPrec||0)}</span></div><div class="amt">${fmtH(e.heures)}</div><button class="del" data-id="${e.id}">✕</button>`;
+      row.innerHTML = '<div class="desc"><span class="tag">'+esc(e.qui)+'</span><span class="d-label">'+esc(e.note || "Sortie")+'</span><br><span class="d-date">'+esc(e.date)+' · +'+fmtH(e.dureeDepuisPrec)+'</span></div>'
+                    + '<div class="amt">'+fmtH(e.heures)+'</div><button class="del" data-id="'+esc(e.id)+'" aria-label="Supprimer">✕</button>';
       block.appendChild(row);
     });
     const summary = document.createElement("div"); summary.className = "summary-card";
-    summary.innerHTML = `
-      <div class="summary-row"><span class="label">Heures Jean-Marc (seul)</span><span class="val">${fmtH(hJM)}</span></div>
-      <div class="summary-row"><span class="label">Heures Gil (seul)</span><span class="val">${fmtH(hGil)}</span></div>
-      <div class="summary-row"><span class="label">Heures communes (ensemble)</span><span class="val">${fmtH(hCommun)}</span></div>
-      <div class="summary-row"><span class="label">Total ${year}</span><span class="val">${fmtH(hJM+hGil+hCommun)}</span></div>
-    `;
+    summary.innerHTML =
+      '<div class="summary-row"><span class="label">Heures Jean-Marc (seul)</span><span class="val">'+fmtH(hJM)+'</span></div>'+
+      '<div class="summary-row"><span class="label">Heures Gil (seul)</span><span class="val">'+fmtH(hGil)+'</span></div>'+
+      '<div class="summary-row"><span class="label">Heures à deux</span><span class="val">'+fmtH(hCommun)+'</span></div>'+
+      '<div class="summary-row"><span class="label">Total '+esc(year)+'</span><span class="val">'+fmtH(hJM+hGil+hCommun)+'</span></div>';
     block.appendChild(summary);
     container.appendChild(block);
   });
   container.querySelectorAll(".del").forEach(btn => {
     btn.addEventListener("click", () => {
+      if(!confirm("Supprimer cette sortie ? Les heures seront recalculées.")) return;
       sorties.entries = sorties.entries.filter(e => e.id !== btn.dataset.id);
-      // recompute dureeDepuisPrec chain
-      sorties.entries.sort((a,b)=>a.heures-b.heures);
-      let prev = 0;
-      sorties.entries.forEach(e => { e.dureeDepuisPrec = Math.max(0, e.heures - prev); prev = e.heures; });
-      saveSorties(sorties); renderSorties();
+      rebuildChain(); saveSorties(sorties); renderSorties();
     });
   });
 }
-renderSorties();
 
 /* ---------- RESERVATIONS ---------- */
 const RESA_KEY = "checklist-bateau-resa";
-function loadResa(){ try{ const raw = localStorage.getItem(RESA_KEY); return raw ? JSON.parse(raw) : { entries: [] }; }catch(e){ return { entries: [] }; } }
-function saveResa(r){ try{ localStorage.setItem(RESA_KEY, JSON.stringify(r)); }catch(e){} }
+function loadResa(){
+  try{ const raw = localStorage.getItem(RESA_KEY); const r = raw ? JSON.parse(raw) : null;
+       return (r && Array.isArray(r.entries)) ? r : { entries: [] };
+  }catch(e){ return { entries: [] }; }
+}
+function saveResa(r){ try{ writeLS(RESA_KEY, JSON.stringify(r)); }catch(e){ alert("Impossible d'enregistrer : mémoire du téléphone saturée."); } }
 let resa = loadResa();
 let currentResaQui = "Jean-Marc";
 document.getElementById("resaDebut").value = todayStr();
@@ -488,7 +675,9 @@ document.getElementById("addResaBtn").addEventListener("click", () => {
   const debut = document.getElementById("resaDebut").value;
   const fin = document.getElementById("resaFin").value;
   const note = document.getElementById("resaNote").value.trim();
-  if(!debut || !fin || fin < debut){ alert("Merci de vérifier les dates."); return; }
+  if(!debut || !fin || fin < debut){ alert("Vérifie les dates : la fin doit être postérieure ou égale au début."); return; }
+  const conflit = resa.entries.some(o => o.qui !== currentResaQui && datesOverlap(debut, fin, o.debut, o.fin));
+  if(conflit && !confirm("Ces dates chevauchent une réservation de l'autre propriétaire. Ajouter quand même ?")) return;
   resa.entries.push({ id: Date.now().toString(36), debut, fin, qui: currentResaQui, note });
   saveResa(resa);
   document.getElementById("resaNote").value = "";
@@ -497,19 +686,34 @@ document.getElementById("addResaBtn").addEventListener("click", () => {
 function renderResa(){
   const container = document.getElementById("resaList"); container.innerHTML = "";
   if(resa.entries.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune réservation. Ajoute la première ci-dessus.</p>'; return; }
-  const list = resa.entries.slice().sort((a,b)=>a.debut.localeCompare(b.debut));
-  list.forEach(e => {
+  const today = todayStr();
+  const list = resa.entries.slice().sort((a,b)=>(a.debut||"").localeCompare(b.debut||""));
+  const futures = list.filter(e => (e.fin || "") >= today);
+  const passees = list.filter(e => (e.fin || "") < today).reverse();
+  function rowFor(e, past){
     const conflict = list.some(o => o.id !== e.id && o.qui !== e.qui && datesOverlap(e.debut,e.fin,o.debut,o.fin));
-    const row = document.createElement("div"); row.className = "row-card";
     const dateLabel = e.debut === e.fin ? e.debut : (e.debut + " → " + e.fin);
-    row.innerHTML = `<div class="desc"><span class="tag${conflict?' conflict':''}">${conflict ? '⚠ Conflit · ' : ''}${e.qui}</span><span class="d-label">${e.note || 'Réservation'}</span><br><span class="d-date">${dateLabel}</span></div><button class="del" data-id="${e.id}">✕</button>`;
-    container.appendChild(row);
-  });
+    const row = document.createElement("div"); row.className = "row-card";
+    row.innerHTML = '<div class="desc"><span class="tag'+(conflict?" conflict":(past?" past":""))+'">'+(conflict?"⚠ Conflit · ":"")+esc(e.qui)+'</span>'
+                  + '<span class="d-label">'+esc(e.note || "Réservation")+'</span><br><span class="d-date">'+esc(dateLabel)+'</span></div>'
+                  + '<button class="del" data-id="'+esc(e.id)+'" aria-label="Supprimer">✕</button>';
+    return row;
+  }
+  if(futures.length){
+    const t = document.createElement("div"); t.className = "year-title"; t.textContent = "À venir"; container.appendChild(t);
+    futures.forEach(e => container.appendChild(rowFor(e,false)));
+  }
+  if(passees.length){
+    const t = document.createElement("div"); t.className = "year-title"; t.style.marginTop = "18px"; t.textContent = "Passées"; container.appendChild(t);
+    passees.forEach(e => container.appendChild(rowFor(e,true)));
+  }
   container.querySelectorAll(".del").forEach(btn => {
-    btn.addEventListener("click", () => { resa.entries = resa.entries.filter(e => e.id !== btn.dataset.id); saveResa(resa); renderResa(); });
+    btn.addEventListener("click", () => {
+      if(!confirm("Supprimer cette réservation ?")) return;
+      resa.entries = resa.entries.filter(e => e.id !== btn.dataset.id); saveResa(resa); renderResa();
+    });
   });
 }
-renderResa();
 
 /* ---------- ENTRETIEN ---------- */
 const ENTRETIEN_KEY = "checklist-bateau-entretien";
@@ -524,115 +728,163 @@ const MAINT_ITEMS = [
   { id: "courroies", label: "Courroies", intervalH: 300, intervalY: 3 },
   { id: "compresseur-vidange", label: "Vidange huile du compresseur", intervalH: 300, intervalY: 3 },
 ];
-function loadEntretien(){ try{ const raw = localStorage.getItem(ENTRETIEN_KEY); return raw ? JSON.parse(raw) : {}; }catch(e){ return {}; } }
-function saveEntretien(e){ try{ localStorage.setItem(ENTRETIEN_KEY, JSON.stringify(e)); }catch(err){} }
+function loadEntretien(){ try{ const raw = localStorage.getItem(ENTRETIEN_KEY); const e = raw ? JSON.parse(raw) : null; return (e && typeof e === "object") ? e : {}; }catch(e){ return {}; } }
+function saveEntretien(e){ try{ writeLS(ENTRETIEN_KEY, JSON.stringify(e)); }catch(err){ alert("Impossible d'enregistrer : mémoire du téléphone saturée."); } }
 let entretien = loadEntretien();
 
-function getManualHours(){ try{ return parseFloat(localStorage.getItem(MANUAL_HOURS_KEY)) || 0; }catch(e){ return 0; } }
-function setManualHours(v){ try{ localStorage.setItem(MANUAL_HOURS_KEY, v); }catch(e){} }
+function getManualHours(){ const v = parseFloat(localStorage.getItem(MANUAL_HOURS_KEY)); return isNaN(v) ? 0 : v; }
+function setManualHours(v){ try{ writeLS(MANUAL_HOURS_KEY, v); }catch(e){} }
 document.getElementById("manualHours").value = getManualHours() || "";
-document.getElementById("manualHours").addEventListener("input", (e) => { setManualHours(e.target.value); renderEntretien(); });
+document.getElementById("manualHours").addEventListener("change", (e) => { setManualHours(e.target.value); renderEntretien(); });
 
-function getEffectiveHours(){
-  const fromSorties = getCurrentHours();
-  if(fromSorties > 0) return fromSorties;
-  return getManualHours();
+/* On retient la valeur la plus élevée : sorties, compteur de départ ou relevé manuel. */
+function getEffectiveHours(){ return Math.max(getCurrentHours(), getManualHours()); }
+
+function yearsBetween(dateStr){
+  if(!isISODate(dateStr)) return null;
+  const d = new Date(dateStr + "T00:00:00");
+  if(isNaN(d.getTime())) return null;
+  return (Date.now() - d.getTime()) / (365.25 * 24 * 3600 * 1000);
 }
-
 function renderEntretien(){
   const hours = getEffectiveHours();
   document.getElementById("hoursDisplay2").textContent = fmtH(hours);
   const container = document.getElementById("maintList"); container.innerHTML = "";
   MAINT_ITEMS.forEach(item => {
-    const rec = entretien[item.id] || { lastHours: 0, lastDate: null };
-    const hoursSince = hours - (rec.lastHours || 0);
-    const remaining = item.intervalH - hoursSince;
-    let statusClass = "ok", statusLabel = "OK";
-    let pct = Math.min(100, Math.max(0, (hoursSince / item.intervalH) * 100));
-    if(remaining <= 0){ statusClass = "late"; statusLabel = "En retard"; }
-    else if(remaining <= 20){ statusClass = "soon"; statusLabel = "Bientôt"; }
+    const rec = entretien[item.id];
+    const known = rec && (typeof rec.lastHours === "number") && isISODate(rec.lastDate);
+    let statusClass, statusLabel, pct, detail;
+
+    if(!known){
+      statusClass = "unknown"; statusLabel = "À renseigner"; pct = 0;
+      detail = "Jamais enregistré — indique la dernière intervention.";
+    } else {
+      const hoursSince = Math.max(0, hours - rec.lastHours);
+      const yearsSince = yearsBetween(rec.lastDate) || 0;
+      const pctH = (hoursSince / item.intervalH) * 100;
+      const pctY = (yearsSince / item.intervalY) * 100;
+      pct = Math.min(100, Math.max(0, Math.max(pctH, pctY)));
+      const remainingH = item.intervalH - hoursSince;
+      const remainingY = item.intervalY - yearsSince;
+      if(remainingH <= 0 || remainingY <= 0){ statusClass = "late"; statusLabel = "En retard"; }
+      else if(remainingH <= 20 || remainingY <= 0.25){ statusClass = "soon"; statusLabel = "Bientôt"; }
+      else { statusClass = "ok"; statusLabel = "OK"; }
+      detail = "Dernier : " + rec.lastDate + " à " + fmtH(rec.lastHours)
+             + " · reste " + fmtH(Math.max(0, remainingH))
+             + " ou " + Math.max(0, Math.round(remainingY * 12)) + " mois";
+    }
 
     const card = document.createElement("div"); card.className = "maint-card";
-    const lastInfo = rec.lastDate ? `Dernier : ${rec.lastDate} à ${fmtH(rec.lastHours)}` : "Jamais enregistré";
-    card.innerHTML = `
-      <div class="maint-head">
-        <div>
-          <div class="maint-title">${item.label}</div>
-          <div class="maint-sub">Tous les ${item.intervalH} h ou ${item.intervalY} an${item.intervalY>1?'s':''} · ${lastInfo}</div>
-        </div>
-        <div class="maint-status ${statusClass}">${statusLabel}</div>
-      </div>
-      <div class="maint-bar-track"><div class="maint-bar-fill" style="width:${pct}%; background:${statusClass==='late'?'var(--bad)':statusClass==='soon'?'var(--warn)':'var(--ok)'}"></div></div>
-      <button class="done-btn" data-id="${item.id}">Marquer comme fait aujourd'hui (${fmtH(hours)})</button>
-    `;
+    card.innerHTML =
+      '<div class="maint-head"><div>'
+      + '<div class="maint-title">'+esc(item.label)+'</div>'
+      + '<div class="maint-sub">Tous les '+item.intervalH+' h ou '+item.intervalY+' an'+(item.intervalY>1?"s":"")+' · '+esc(detail)+'</div>'
+      + '</div><div class="maint-status '+statusClass+'">'+statusLabel+'</div></div>'
+      + '<div class="maint-bar-track"><div class="maint-bar-fill" style="width:'+pct+'%; background:'+(statusClass==="late"?"var(--bad)":statusClass==="soon"?"var(--warn)":statusClass==="ok"?"var(--ok)":"rgba(60,59,78,0.2)")+'"></div></div>'
+      + '<button class="done-btn" data-id="'+esc(item.id)+'">Fait aujourd\'hui ('+fmtH(hours)+')</button>'
+      + '<button class="edit-btn" data-edit="'+esc(item.id)+'">Saisir une autre date</button>';
     container.appendChild(card);
   });
   container.querySelectorAll(".done-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       entretien[btn.dataset.id] = { lastHours: getEffectiveHours(), lastDate: todayStr() };
-      saveEntretien(entretien);
-      renderEntretien();
+      saveEntretien(entretien); renderEntretien();
+    });
+  });
+  container.querySelectorAll("[data-edit]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.edit;
+      const prev = entretien[id] || {};
+      const d = prompt("Date de la dernière intervention (AAAA-MM-JJ) :", prev.lastDate || todayStr());
+      if(d === null) return;
+      if(!isISODate(d)){ alert("Format attendu : AAAA-MM-JJ."); return; }
+      const hStr = prompt("Compteur moteur ce jour-là (heures) :", prev.lastHours != null ? String(prev.lastHours) : String(getEffectiveHours()));
+      if(hStr === null) return;
+      const h = parseFloat(hStr);
+      if(isNaN(h) || h < 0){ alert("Nombre d'heures invalide."); return; }
+      entretien[id] = { lastHours: h, lastDate: d };
+      saveEntretien(entretien); renderEntretien();
     });
   });
 }
-renderEntretien();
 
 /* ---------- COMPTES ---------- */
 const COMPTES_KEY = "checklist-bateau-comptes";
 const SPLIT = 0.5;
-function loadComptes(){ try{ const raw = localStorage.getItem(COMPTES_KEY); return raw ? JSON.parse(raw) : { moi: null, expenses: [] }; }catch(e){ return { moi: null, expenses: [] }; } }
-function saveComptes(c){ try{ localStorage.setItem(COMPTES_KEY, JSON.stringify(c)); }catch(e){} }
+function loadComptes(){
+  try{ const raw = localStorage.getItem(COMPTES_KEY); const c = raw ? JSON.parse(raw) : null;
+       if(!c || !Array.isArray(c.expenses)) return { moi: null, expenses: [] };
+       return { moi: c.moi || null, expenses: c.expenses };
+  }catch(e){ return { moi: null, expenses: [] }; }
+}
+/* Ne masque plus l'erreur : l'appelant doit savoir si l'écriture a échoué. */
+function saveComptes(c){ writeLS(COMPTES_KEY, JSON.stringify(c)); }
 let comptes = loadComptes();
-let currentPaidBy = "Jean-Marc";
+let currentPaidBy = comptes.moi || "Jean-Marc";
 let currentType = "fixe";
+
+function setPaidByUI(){
+  document.querySelectorAll(".paidby-btn").forEach(b => b.classList.toggle("active", b.dataset.paidby === currentPaidBy));
+}
 function setOwnerUI(){
   document.getElementById("ownerBtnJM").classList.toggle("active", comptes.moi === "Jean-Marc");
   document.getElementById("ownerBtnGil").classList.toggle("active", comptes.moi === "Gil");
 }
-document.getElementById("ownerBtnJM").addEventListener("click", () => { comptes.moi = "Jean-Marc"; saveComptes(comptes); setOwnerUI(); });
-document.getElementById("ownerBtnGil").addEventListener("click", () => { comptes.moi = "Gil"; saveComptes(comptes); setOwnerUI(); });
-setOwnerUI();
+function pickOwner(name){
+  comptes.moi = name; currentPaidBy = name;
+  try{ saveComptes(comptes); }catch(e){ alert("Impossible d'enregistrer : mémoire du téléphone saturée."); }
+  setOwnerUI(); setPaidByUI(); renderComptes();
+}
+document.getElementById("ownerBtnJM").addEventListener("click", () => pickOwner("Jean-Marc"));
+document.getElementById("ownerBtnGil").addEventListener("click", () => pickOwner("Gil"));
+setOwnerUI(); setPaidByUI();
 document.getElementById("expDate").value = todayStr();
 document.querySelectorAll(".type-btn").forEach(btn => {
   btn.addEventListener("click", () => { document.querySelectorAll(".type-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); currentType = btn.dataset.type; });
 });
 document.querySelectorAll(".paidby-btn").forEach(btn => {
-  btn.addEventListener("click", () => { document.querySelectorAll(".paidby-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); currentPaidBy = btn.dataset.paidby; });
+  btn.addEventListener("click", () => { currentPaidBy = btn.dataset.paidby; setPaidByUI(); });
 });
 let pendingFacture = null;
 
 document.getElementById("expFacture").addEventListener("change", (e) => {
   const file = e.target.files[0];
-  if(!file){ pendingFacture = null; document.getElementById("factureName").textContent = ""; return; }
-  document.getElementById("factureName").textContent = "Chargement de " + file.name + "...";
+  const nameEl = document.getElementById("factureName");
+  if(!file){ pendingFacture = null; nameEl.textContent = ""; return; }
+  nameEl.textContent = "Lecture de " + file.name + "…";
+  const fail = () => { pendingFacture = null; nameEl.textContent = "Fichier illisible. Réessaie avec une photo JPEG ou un PDF."; };
   if(file.type.startsWith("image/")){
     compressImage(file, (dataUrl) => {
-      pendingFacture = { name: file.name, type: "image/jpeg", dataUrl };
-      document.getElementById("factureName").textContent = "📎 " + file.name + " (prête à joindre)";
-    });
+      pendingFacture = { name: file.name.replace(/\.[^.]+$/, "") + ".jpg", type: "image/jpeg", dataUrl };
+      nameEl.textContent = "📎 " + file.name + " (prête à joindre)";
+    }, fail);
   } else {
     const reader = new FileReader();
     reader.onload = () => {
       pendingFacture = { name: file.name, type: file.type || "application/pdf", dataUrl: reader.result };
-      document.getElementById("factureName").textContent = "📎 " + file.name + " (prête à joindre)";
+      nameEl.textContent = "📎 " + file.name + " (prête à joindre)";
     };
+    reader.onerror = fail;
     reader.readAsDataURL(file);
   }
 });
 
-function compressImage(file, callback){
+function compressImage(file, callback, onError){
   const reader = new FileReader();
+  reader.onerror = onError;
   reader.onload = (e) => {
     const img = new Image();
+    img.onerror = onError;
     img.onload = () => {
-      const maxW = 1200;
-      const scale = Math.min(1, maxW / img.width);
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      callback(canvas.toDataURL("image/jpeg", 0.72));
+      try{
+        const maxW = 1200;
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        callback(canvas.toDataURL("image/jpeg", 0.72));
+      }catch(err){ onError(); }
     };
     img.src = e.target.result;
   };
@@ -643,16 +895,22 @@ document.getElementById("addExpenseBtn").addEventListener("click", () => {
   const date = document.getElementById("expDate").value || todayStr();
   const desc = document.getElementById("expDesc").value.trim();
   const amount = parseFloat(document.getElementById("expAmount").value);
-  if(!desc || isNaN(amount) || amount <= 0){ alert("Merci de remplir une description et un montant valide."); return; }
+  if(!desc || isNaN(amount) || amount <= 0){ alert("Renseigne une description et un montant valide."); return; }
   const entry = { id: Date.now().toString(36), date, desc, amount, paidBy: currentPaidBy, type: currentType };
   if(pendingFacture) entry.facture = pendingFacture;
   comptes.expenses.push(entry);
   try{
     saveComptes(comptes);
   }catch(err){
-    alert("La facture jointe est trop volumineuse pour la mémoire du téléphone. La dépense est ajoutée sans la facture — utilise plutôt l'export vers Fichiers/OneDrive pour la garder.");
     delete entry.facture;
-    saveComptes(comptes);
+    try{
+      saveComptes(comptes);
+      alert("La facture est trop volumineuse pour la mémoire du téléphone. La dépense est enregistrée sans la facture.");
+    }catch(err2){
+      comptes.expenses.pop();
+      alert("Mémoire du téléphone saturée : la dépense n'a pas pu être enregistrée. Exporte tes données puis supprime d'anciennes factures.");
+      return;
+    }
   }
   document.getElementById("expDesc").value = ""; document.getElementById("expAmount").value = "";
   document.getElementById("expFacture").value = ""; document.getElementById("factureName").textContent = "";
@@ -661,79 +919,100 @@ document.getElementById("addExpenseBtn").addEventListener("click", () => {
 });
 
 function dataUrlToBlob(dataUrl){
-  const [header, base64] = dataUrl.split(",");
-  const mime = header.match(/:(.*?);/)[1];
-  const bin = atob(base64);
+  const parts = String(dataUrl).split(",");
+  const m = parts[0].match(/:(.*?);/);
+  const mime = m ? m[1] : "application/octet-stream";
+  const bin = atob(parts[1] || "");
   const arr = new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
   return new Blob([arr], { type: mime });
 }
-
-function saveFacture(entry){
-  const blob = dataUrlToBlob(entry.facture.dataUrl);
-  const file = new File([blob], entry.facture.name, { type: entry.facture.type });
-  if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
-    navigator.share({ files: [file], title: entry.facture.name }).catch(()=>{});
+function shareOrDownload(file, title){
+  if(navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share){
+    navigator.share({ files: [file], title }).catch(()=>{});
   } else {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = entry.facture.name; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url), 5000);
-  }
-}
-
-document.getElementById("exportAllBtn").addEventListener("click", () => {
-  const payload = { comptes, sorties, resa, entretien, exportedAt: new Date().toISOString() };
-  const json = JSON.stringify(payload, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const file = new File([blob], "kat-a-mar-donnees-" + todayStr() + ".json", { type: "application/json" });
-  if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
-    navigator.share({ files: [file], title: "Données Kat a Mar" }).catch(()=>{});
-  } else {
-    const url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(file);
     const a = document.createElement("a"); a.href = url; a.download = file.name; a.click();
     setTimeout(()=>URL.revokeObjectURL(url), 5000);
   }
-});
+}
+function saveFacture(entry){
+  try{
+    const blob = dataUrlToBlob(entry.facture.dataUrl);
+    shareOrDownload(new File([blob], entry.facture.name, { type: entry.facture.type }), entry.facture.name);
+  }catch(e){ alert("Facture illisible."); }
+}
+
+function balancePhrase(balanceJM, periodLabel){
+  const moi = comptes.moi;
+  if(Math.abs(balanceJM) < 0.01) return "Comptes équilibrés " + periodLabel;
+  if(balanceJM > 0){
+    if(moi === "Jean-Marc") return "Gil te doit " + fmtEUR(balanceJM);
+    if(moi === "Gil") return "Tu dois " + fmtEUR(balanceJM) + " à Jean-Marc";
+    return "Gil doit " + fmtEUR(balanceJM) + " à Jean-Marc";
+  }
+  if(moi === "Jean-Marc") return "Tu dois " + fmtEUR(-balanceJM) + " à Gil";
+  if(moi === "Gil") return "Jean-Marc te doit " + fmtEUR(-balanceJM);
+  return "Jean-Marc doit " + fmtEUR(-balanceJM) + " à Gil";
+}
+
 function renderComptes(){
+  const glob = document.getElementById("globalBalance"); glob.innerHTML = "";
   const container = document.getElementById("expenseYears"); container.innerHTML = "";
-  if(comptes.expenses.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune dépense enregistrée. Ajoute la première ci-dessus.</p>'; return; }
+  if(comptes.expenses.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune dépense enregistrée. Ajoute la première ci-dessous.</p>'; return; }
+
+  const totalAll = comptes.expenses.reduce((s,e)=>s+(Number(e.amount)||0),0);
+  const paidJMAll = comptes.expenses.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+(Number(e.amount)||0),0);
+  const balanceAll = paidJMAll - totalAll * SPLIT;
+  glob.innerHTML = '<div class="global-card"><div class="gtitle">Solde cumulé, toutes années</div>'
+    + '<div class="summary-row"><span class="label">Total des dépenses</span><span class="val">'+fmtEUR(totalAll)+'</span></div>'
+    + '<div class="balance-line">'+esc(balancePhrase(balanceAll, "au global"))+'</div></div>';
+
   const byYear = {};
-  comptes.expenses.forEach(e => { const y=(e.date||todayStr()).slice(0,4); if(!byYear[y]) byYear[y]=[]; byYear[y].push(e); });
-  const years = Object.keys(byYear).sort((a,b)=>b.localeCompare(a));
-  years.forEach(year => {
-    const list = byYear[year].slice().sort((a,b)=>b.date.localeCompare(a.date));
-    const totalYear = list.reduce((s,e)=>s+e.amount,0);
-    const paidJM = list.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+e.amount,0);
-    const paidGil = list.filter(e=>e.paidBy==="Gil").reduce((s,e)=>s+e.amount,0);
-    const shareEach = totalYear * SPLIT; // fixes et variables toutes 50/50 (choix de l'utilisateur)
+  comptes.expenses.forEach(e => { const y=(isISODate(e.date) ? e.date : todayStr()).slice(0,4); (byYear[y] = byYear[y] || []).push(e); });
+  Object.keys(byYear).sort((a,b)=>b.localeCompare(a)).forEach(year => {
+    const list = byYear[year].slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    const num = e => Number(e.amount)||0;
+    const totalYear = list.reduce((s,e)=>s+num(e),0);
+    const paidJM = list.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+num(e),0);
+    const paidGil = list.filter(e=>e.paidBy==="Gil").reduce((s,e)=>s+num(e),0);
+    const totFixe = list.filter(e=>e.type==="fixe").reduce((s,e)=>s+num(e),0);
+    const totVar = totalYear - totFixe;
+    const shareEach = totalYear * SPLIT;
     const balanceJM = paidJM - shareEach;
     const block = document.createElement("div"); block.className = "year-block";
     const title = document.createElement("div"); title.className = "year-title"; title.textContent = year; block.appendChild(title);
     list.forEach(e => {
       const row = document.createElement("div"); row.className = "row-card";
-      row.innerHTML = `<div class="desc"><span class="tag">${e.paidBy}</span><span class="tag">${e.type==='fixe'?'Fixe':'Variable'}</span><span class="d-label">${e.desc}</span><br><span class="d-date">${e.date}</span>${e.facture ? '<br><button class="facture-btn" data-id="'+e.id+'" style="margin-top:5px;font-size:12px;padding:5px 9px;border-radius:7px;border:1.5px solid var(--sea);background:var(--sea-light);color:var(--sea-deep);font-weight:700;">📎 Voir / enregistrer la facture</button>' : ''}</div><div class="amt">${fmtEUR(e.amount)}</div><button class="del" data-id="${e.id}">✕</button>`;
+      row.innerHTML = '<div class="desc"><span class="tag">'+esc(e.paidBy)+'</span><span class="tag">'+(e.type==="fixe"?"Fixe":"Variable")+'</span>'
+        + '<span class="d-label">'+esc(e.desc)+'</span><br><span class="d-date">'+esc(e.date)+'</span>'
+        + (e.facture ? '<br><button class="facture-btn" data-id="'+esc(e.id)+'">📎 Voir la facture</button>' : '')
+        + '</div><div class="amt">'+fmtEUR(e.amount)+'</div><button class="del" data-id="'+esc(e.id)+'" aria-label="Supprimer">✕</button>';
       block.appendChild(row);
     });
     const summary = document.createElement("div"); summary.className = "summary-card";
-    let balanceText;
-    if(Math.abs(balanceJM) < 0.01) balanceText = "Comptes équilibrés pour " + year;
-    else if(balanceJM > 0) balanceText = "Gil doit " + fmtEUR(balanceJM) + " à Jean-Marc";
-    else balanceText = "Jean-Marc doit " + fmtEUR(-balanceJM) + " à Gil";
-    summary.innerHTML = `
-      <div class="summary-row"><span class="label">Total dépenses ${year}</span><span class="val">${fmtEUR(totalYear)}</span></div>
-      <div class="summary-row"><span class="label">Part de chacun (50/50)</span><span class="val">${fmtEUR(shareEach)}</span></div>
-      <div class="summary-row"><span class="label">Payé par Jean-Marc</span><span class="val">${fmtEUR(paidJM)}</span></div>
-      <div class="summary-row"><span class="label">Payé par Gil</span><span class="val">${fmtEUR(paidGil)}</span></div>
-      <div class="balance-line">${balanceText}</div>
-    `;
+    const balanceText = balancePhrase(balanceJM, "pour " + year);
+    summary.innerHTML =
+      '<div class="summary-row"><span class="label">Total dépenses '+esc(year)+'</span><span class="val">'+fmtEUR(totalYear)+'</span></div>'+
+      '<div class="summary-row"><span class="label">dont frais fixes</span><span class="val">'+fmtEUR(totFixe)+'</span></div>'+
+      '<div class="summary-row"><span class="label">dont frais variables</span><span class="val">'+fmtEUR(totVar)+'</span></div>'+
+      '<div class="summary-row"><span class="label">Part de chacun (50/50)</span><span class="val">'+fmtEUR(shareEach)+'</span></div>'+
+      '<div class="summary-row"><span class="label">Payé par Jean-Marc</span><span class="val">'+fmtEUR(paidJM)+'</span></div>'+
+      '<div class="summary-row"><span class="label">Payé par Gil</span><span class="val">'+fmtEUR(paidGil)+'</span></div>'+
+      '<div class="balance-line">'+esc(balanceText)+'</div>';
     block.appendChild(summary);
-    const exportBtn = document.createElement("button"); exportBtn.className = "export-btn"; exportBtn.textContent = "Exporter le résumé " + year;
+    const exportBtn = document.createElement("button"); exportBtn.className = "export-btn"; exportBtn.textContent = "Envoyer le récapitulatif " + year;
     exportBtn.addEventListener("click", () => exportYear(year, list, totalYear, paidJM, paidGil, shareEach, balanceText));
     block.appendChild(exportBtn);
     container.appendChild(block);
   });
   container.querySelectorAll(".del").forEach(btn => {
-    btn.addEventListener("click", () => { comptes.expenses = comptes.expenses.filter(e=>e.id!==btn.dataset.id); saveComptes(comptes); renderComptes(); });
+    btn.addEventListener("click", () => {
+      if(!confirm("Supprimer définitivement cette dépense ?")) return;
+      comptes.expenses = comptes.expenses.filter(e=>e.id!==btn.dataset.id);
+      try{ saveComptes(comptes); }catch(e){ alert("Impossible d'enregistrer la suppression."); }
+      renderComptes();
+    });
   });
   container.querySelectorAll(".facture-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -743,14 +1022,92 @@ function renderComptes(){
   });
 }
 function exportYear(year, list, totalYear, paidJM, paidGil, shareEach, balanceText){
-  let text = `Comptes bateau Kat a Mar — ${year}\n\n`;
-  list.forEach(e => { text += `${e.date} — ${e.desc} [${e.type}] — ${fmtEUR(e.amount)} (payé par ${e.paidBy})\n`; });
-  text += `\nTotal ${year} : ${fmtEUR(totalYear)}\nPart de chacun (50/50) : ${fmtEUR(shareEach)}\nPayé par Jean-Marc : ${fmtEUR(paidJM)}\nPayé par Gil : ${fmtEUR(paidGil)}\n${balanceText}\n`;
-  if(navigator.share){ navigator.share({ title: "Comptes bateau " + year, text }).catch(()=>{}); }
-  else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>alert("Résumé copié — colle-le dans un message à Gil.")).catch(()=>alert(text)); }
+  let text = "Comptes Kat-a-Mar — " + year + "\n\n";
+  list.forEach(e => { text += e.date + " — " + e.desc + " [" + e.type + "] — " + fmtEUR(e.amount) + " (payé par " + e.paidBy + ")\n"; });
+  text += "\nTotal " + year + " : " + fmtEUR(totalYear) + "\nPart de chacun (50/50) : " + fmtEUR(shareEach)
+       + "\nPayé par Jean-Marc : " + fmtEUR(paidJM) + "\nPayé par Gil : " + fmtEUR(paidGil) + "\n" + balanceText + "\n";
+  if(navigator.share){ navigator.share({ title: "Comptes Kat-a-Mar " + year, text }).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>alert("Récapitulatif copié.")).catch(()=>alert(text)); }
   else alert(text);
 }
+
+/* ---------- SAUVEGARDE / RESTAURATION ---------- */
+document.getElementById("exportAllBtn").addEventListener("click", () => {
+  const payload = { app: "kat-a-mar", version: 1, checklist: state, comptes, sorties, heuresDepart: getHeuresDepart(), resa, entretien, manualHours: getManualHours(), exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  shareOrDownload(new File([blob], "kat-a-mar-" + todayStr() + ".json", { type: "application/json" }), "Données Kat-a-Mar");
+});
+document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onerror = () => alert("Fichier illisible.");
+  reader.onload = () => {
+    let data;
+    try{ data = JSON.parse(reader.result); }
+    catch(err){ alert("Ce fichier n'est pas un export Kat-a-Mar valide."); return; }
+    if(!data || typeof data !== "object"){ alert("Ce fichier n'est pas un export Kat-a-Mar valide."); return; }
+    const nbDep = (data.comptes && Array.isArray(data.comptes.expenses)) ? data.comptes.expenses.length : 0;
+    const nbSor = (data.sorties && Array.isArray(data.sorties.entries)) ? data.sorties.entries.length : 0;
+    if(!confirm("Remplacer TOUTES les données de cet iPhone par le contenu du fichier ?\n\n" + nbDep + " dépense(s), " + nbSor + " sortie(s).\nCette action est irréversible.")) return;
+    try{
+      if(data.comptes && Array.isArray(data.comptes.expenses)) writeLS(COMPTES_KEY, JSON.stringify(data.comptes));
+      if(data.sorties && Array.isArray(data.sorties.entries)) writeLS(SORTIES_KEY, JSON.stringify(data.sorties));
+      if(data.resa && Array.isArray(data.resa.entries)) writeLS(RESA_KEY, JSON.stringify(data.resa));
+      if(data.entretien && typeof data.entretien === "object") writeLS(ENTRETIEN_KEY, JSON.stringify(data.entretien));
+      if(data.checklist && typeof data.checklist === "object") writeLS(STORAGE_KEY, JSON.stringify(data.checklist));
+      if(typeof data.heuresDepart === "number") writeLS(DEPART_KEY, String(data.heuresDepart));
+      if(typeof data.manualHours === "number") writeLS(MANUAL_HOURS_KEY, String(data.manualHours));
+    }catch(err){ alert("Restauration impossible : mémoire du téléphone saturée."); return; }
+    alert("Données restaurées. L'application va se recharger.");
+    location.reload();
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+function refreshStorageInfo(){
+  let bytes = 0;
+  try{
+    [STORAGE_KEY, SORTIES_KEY, RESA_KEY, ENTRETIEN_KEY, COMPTES_KEY].forEach(k => { bytes += (localStorage.getItem(k) || "").length; });
+  }catch(e){}
+  const ko = Math.round(bytes/1024);
+  document.getElementById("storageInfo").textContent = "Espace utilisé : environ " + ko + " Ko (limite pratique de Safari : environ 5 000 Ko).";
+}
+
+/* ---------- ACCUEIL : RESUMES ---------- */
+function refreshHome(){
+  const total = allIds().length;
+  document.getElementById("tileChecklist").textContent = countDone() + " / " + total + " cochées";
+  document.getElementById("tileSorties").textContent = fmtH(getCurrentHours()) + " au compteur";
+  const today = todayStr();
+  const aVenir = resa.entries.filter(e => (e.fin||"") >= today).length;
+  document.getElementById("tileResa").textContent = aVenir ? aVenir + " à venir" : "Aucune à venir";
+  let late = 0, unknown = 0;
+  const h = getEffectiveHours();
+  MAINT_ITEMS.forEach(item => {
+    const rec = entretien[item.id];
+    if(!rec || typeof rec.lastHours !== "number" || !isISODate(rec.lastDate)){ unknown++; return; }
+    const y = yearsBetween(rec.lastDate) || 0;
+    if((h - rec.lastHours) >= item.intervalH || y >= item.intervalY) late++;
+  });
+  document.getElementById("tileEntretien").textContent = late ? late + " en retard" : (unknown ? unknown + " à renseigner" : "À jour");
+  if(comptes.expenses.length === 0){ document.getElementById("tileComptes").textContent = "Aucune dépense"; }
+  else{
+    const totalAll = comptes.expenses.reduce((s,e)=>s+(Number(e.amount)||0),0);
+    const paidJMAll = comptes.expenses.filter(e=>e.paidBy==="Jean-Marc").reduce((s,e)=>s+(Number(e.amount)||0),0);
+    document.getElementById("tileComptes").textContent = balancePhrase(paidJMAll - totalAll*SPLIT, "au global");
+  }
+}
+
+/* ---------- DEMARRAGE ---------- */
+rebuildChain();
+renderChecklist();
+renderSorties();
+renderResa();
+renderEntretien();
 renderComptes();
+showScreen(currentScreen());
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
