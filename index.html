@@ -82,7 +82,9 @@ button:focus-visible, input:focus-visible{ outline:3px solid var(--p-blue-dark);
 .tile .ic{ font-size:22px; line-height:1; }
 .tile .tname{ font-size:16px; font-weight:800; margin-top:8px; color:var(--ink); }
 .tile .tsub{ font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:3px; line-height:1.35; }
-.tile.wide{ grid-column:1 / -1; min-height:0; flex-direction:row; align-items:center; gap:12px; }
+.tile.wide{ grid-column:1 / -1; min-height:0; flex-direction:row; align-items:center; justify-content:flex-start; gap:14px; }
+.tile.wide .ic{ flex:0 0 auto; }
+.tile.wide > div{ flex:1 1 auto; text-align:left; }
 .tile.wide .tname{ margin-top:0; }
 .tile.c-blue{ background:linear-gradient(135deg, var(--p-blue), rgba(191,227,245,0.35)); border-color:var(--p-blue-dark); }
 .tile.c-mint{ background:linear-gradient(135deg, var(--p-mint), rgba(198,238,221,0.35)); border-color:var(--p-mint-dark); }
@@ -139,6 +141,7 @@ button.reset{ flex:1; background:var(--p-lavender); border:1.5px solid var(--p-l
 .qui-btn[data-qui="Jean-Marc"].active, .resaqui-btn[data-qui="Jean-Marc"].active, .paidby-btn[data-paidby="Jean-Marc"].active{ background:var(--p-blue); border-color:var(--p-blue-dark); color:#215678; }
 .qui-btn[data-qui="Gil"].active, .resaqui-btn[data-qui="Gil"].active, .paidby-btn[data-paidby="Gil"].active{ background:var(--p-peach); border-color:var(--p-peach-dark); color:#8C4E1E; }
 .qui-btn[data-qui="Les deux"].active{ background:var(--p-lavender); border-color:var(--p-lavender-dark); color:#5B4E8C; }
+.liste-btn.active{ background:var(--p-blue); border-color:var(--p-blue-dark); color:#215678; }
 .qui-btn[data-qui="Les deux"].active, .paidby-btn[data-paidby="Les deux"].active{ background:var(--p-lavender); border-color:var(--p-lavender-dark); color:#5B4E8C; }
 .btnrow.wrap{ flex-wrap:wrap; }
 .btnrow.wrap button{ flex:1 1 calc(50% - 5px); }
@@ -272,11 +275,11 @@ button.cloud-btn:disabled{ opacity:.55; }
       <div class="ic">📖</div>
       <div><div class="tname">Infos</div><div class="tsub">Bateau et assurance</div></div>
     </button>
-    <button class="tile wide" data-go="manuel">
+    <button class="tile wide c-mint" data-go="manuel">
       <div class="ic">📖</div>
       <div><div class="tname">Mode d'emploi</div><div class="tsub">Manuel du propriétaire 755CR — consultable hors-ligne</div></div>
     </button>
-    <button class="tile wide" data-go="donnees">
+    <button class="tile wide c-blue" data-go="donnees">
       <div class="ic">💾</div>
       <div><div class="tname">Sauvegarde</div><div class="tsub" id="tileDonnees">Exporter et restaurer les données</div></div>
     </button>
@@ -288,8 +291,12 @@ button.cloud-btn:disabled{ opacity:.55; }
 <div class="screen" id="screen-checklist">
   <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Checklist</span></div>
   <header class="pagehead">
-    <div class="eyebrow">Retour au port</div>
-    <p class="sub">À faire à chaque rentrée</p>
+    <div class="btnrow" style="margin-bottom:12px;">
+      <button type="button" class="liste-btn" data-liste="depart">Avant de partir</button>
+      <button type="button" class="liste-btn active" data-liste="retour">Retour au port</button>
+    </div>
+    <div class="eyebrow" id="listeEyebrow">Retour au port</div>
+    <p class="sub" id="listeSub">À faire à chaque rentrée</p>
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
       <div class="progress-label"><span id="progressText">0 / 0 complétées</span><span id="progressPct">0%</span></div>
@@ -297,7 +304,7 @@ button.cloud-btn:disabled{ opacity:.55; }
   </header>
   <div class="newday-banner" id="newDayBanner">
     <span id="newDayText"></span>
-    <button id="newDayBtn">Repartir d'une checklist vierge</button>
+    <button id="newDayBtn">Décocher cette liste</button>
   </div>
   <div class="body-wrap" id="checklistBody"></div>
   <div class="done-banner" id="doneBanner">✅ Checklist complète — bateau paré.</div>
@@ -537,7 +544,7 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v7";
+const VERSION = "v8";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses"];
 
@@ -577,33 +584,78 @@ window.addEventListener("hashchange", () => {
   showScreen(id);
 });
 
-/* ---------- CHECKLIST ---------- */
-const DATA = [
-  { section: "Moteur", items: [
-    { id: "flush", title: "Brancher le rinçage moteur (eau douce)", note: "Utilise le raccord de rinçage situé sur le carter du moteur. Moteur en position verticale, à l'arrêt. Branche le tuyau, ouvre l'eau et laisse couler <span class='warn-txt'>environ 15 minutes</span> jusqu'à voir l'eau ressortir clairement. Ne fais jamais tourner le moteur avec ce seul raccord." },
-    { id: "flush-ext", title: "Rincer l'extérieur du moteur", note: "Rince au tuyau le capot, le support de fixation et la zone du vérin de trim. Garde le moteur vertical." },
-    { id: "oil", title: "Vérifier le niveau d'huile moteur", note: "Retire la jauge et vérifie le niveau entre le repère mini et le repère maxi." },
-    { id: "prop", title: "Contrôler l'hélice", note: "Chocs, déformations, bouts ou algues enroulés autour de l'arbre." },
-    { id: "anodes", title: "Contrôler les anodes", note: "Anodes d'embase et de plaque anti-cavitation. En eau salée, remplace-les dès qu'elles ont perdu environ la moitié de leur volume." },
-    { id: "leak", title: "Vérifier l'absence de fuite", note: "Sous le moteur et dans le puits moteur." },
-  ]},
-  { section: "Coque & pont", items: [
-    { id: "hull-rinse", title: "Rincer la coque et le pont", note: "À l'eau douce, surtout après une sortie en mer." },
-    { id: "hull-check", title: "Contrôler la coque et l'embase", note: "Chocs, éraflures, traces d'impact sur la coque et sur l'embase du hors-bord." },
-    { id: "bilge", title: "Contrôler la cale", note: "Doit être sèche. Teste la pompe manuellement." },
-  ]},
-  { section: "Carburant & batteries", items: [
-    { id: "fuel", title: "Faire le plein ou noter le niveau", note: "Limite la condensation si la prochaine sortie est proche." },
-    { id: "battery", title: "Couper l'interrupteur général batterie", note: "Si l'arrêt dépasse une journée." },
-  ]},
-  { section: "Rangement & sécurité", items: [
-    { id: "safety", title: "Ranger les équipements de sécurité", note: "Gilets, extincteur, fusées, VHF portable." },
-    { id: "electronics", title: "Éteindre les instruments", note: "GPS, sondeur, radio VHF fixe." },
-    { id: "ladder", title: "Relever la passerelle / échelle de bain", note: "Bien verrouillée." },
-    { id: "mooring", title: "Vérifier amarres et défenses", note: "Nœuds, positionnement." },
-    { id: "cover", title: "Bâcher le bateau", note: "Uniquement une fois sec." },
-  ]},
-];
+/* ---------- CHECKLIST ----------
+   Deux listes distinctes. Les contrôles « avant de partir » sont ceux que le
+   manuel Mercury impose quotidiennement ; ils n'ont rien à faire au retour,
+   notamment le niveau d'huile qui ne peut se lire que moteur froid.
+   Chaque note dit OÙ se trouve la chose et ce que le mot veut dire. */
+const CHECKLISTS = {
+  depart: {
+    titre: "Avant de partir",
+    sous: "Contrôles imposés par Mercury avant chaque sortie",
+    sections: [
+      { section: "Moteur", items: [
+        { id: "dep-oil", title: "Niveau d'huile moteur", note: "La <b>jauge</b> est sous le capot supérieur du moteur, qui se déverrouille en tirant le loquet vers le haut. <span class='warn-txt'>Moteur froid, ou arrêté depuis au moins une heure</span> : à chaud la lecture est fausse. Bascule d'abord le moteur au-delà de la verticale pendant une minute pour laisser l'huile redescendre, puis remets-le vertical. Le niveau doit tomber dans la zone hachurée, sans jamais la remplir jusqu'en haut." },
+        { id: "dep-lanyard", title: "Cordon coupe-circuit attaché", note: "Le <b>coupe-circuit</b> est le petit interrupteur rouge sur la commande de gaz, à droite du volant. Le cordon s'attache à ton poignet ou à ta cuisse : si tu passes par-dessus bord, il s'arrache et le moteur s'arrête. Vérifie aussi que le cordon n'est ni coupé ni usé." },
+        { id: "dep-fuel-leak", title: "Aucune fuite de carburant", note: "Regarde sous le capot moteur et dans le <b>puits moteur</b>, le renfoncement du tableau arrière où le moteur est boulonné. Une odeur d'essence suffit à annuler la sortie : les vapeurs sont plus lourdes que l'air et s'accumulent dans les fonds." },
+        { id: "dep-serrage", title: "Serrage du moteur sur le tableau arrière", note: "Les écrous qui tiennent le moteur au <b>tableau arrière</b>, la paroi verticale à l'arrière du bateau. Une étiquette collée sur le support te le rappelle. Un simple contrôle à la main suffit : rien ne doit bouger." },
+        { id: "dep-prop", title: "Hélice", note: "Chocs, pales tordues, bouts ou filets enroulés autour de l'arbre. Une pale déformée fait vibrer toute la transmission." },
+      ]},
+      { section: "Direction", items: [
+        { id: "dep-barre", title: "Direction sans point dur", note: "Tourne le volant d'une butée à l'autre : le mouvement doit être régulier, sans à-coup ni raideur." },
+        { id: "dep-hydro", title: "Flexibles de direction hydraulique", note: "Deux endroits : sous le volant, et sur le <b>vérin</b> fixé au moteur, le cylindre qui pousse le moteur à droite ou à gauche. Cherche des suintements d'huile ou des raccords desserrés." },
+        { id: "dep-hydro-niveau", title: "Niveau du liquide de direction", note: "Sur un Verado six cylindres comme le tien, le remplissage se fait sur la <b>pompe d'assistance</b>, dans le coffre arrière bâbord : ouvre la banquette en L côté bâbord, retire le couvercle de la pompe et dévisse le bouchon. Un niveau bas donne du jeu au volant et des bruits d'air." },
+      ]},
+      { section: "Sécurité et bateau", items: [
+        { id: "dep-nable", title: "Bouchon de nable vissé", note: "Le <b>nable</b> est le bouchon de vidange au point le plus bas de la coque, au bas du tableau arrière. On le dévisse à terre pour vider l'eau, et il doit impérativement être revissé avant la mise à l'eau. À vérifier seulement si le bateau vient d'être remis à l'eau." },
+        { id: "dep-cale", title: "Pompes de cale", note: "La <b>cale</b> est le fond du bateau, sous le plancher. Force les deux pompes depuis le tableau de bord et écoute qu'elles tournent. Elles ne sont pas faites pour te sauver d'une voie d'eau, seulement pour évacuer les infiltrations." },
+        { id: "dep-extincteur", title: "Extincteur en place et sous pression", note: "Sur le flanc tribord, entre le siège pilote et le meuble cuisine. Regarde le manomètre : l'aiguille doit être dans la zone verte, et la date de validité ne doit pas être dépassée." },
+        { id: "dep-gilets", title: "Un gilet par personne à bord", note: "À la bonne taille pour chacun, et accessible sans ouvrir un coffre bloqué." },
+        { id: "dep-feux", title: "Feu blanc 360° monté", note: "Uniquement si tu rentres de nuit ou par visibilité réduite. Le mât amovible se monte sur le dossier arrière ; il porte le feu blanc visible sur 2 milles." },
+        { id: "dep-carburant", title: "Carburant suffisant", note: "Le réservoir fait 280 litres. Garde au moins 25 % de réserve : en dessous, les dépôts du fond partent dans les durites et le moteur peut caler." },
+      ]},
+    ]
+  },
+  retour: {
+    titre: "Retour au port",
+    sous: "À faire à chaque rentrée",
+    sections: [
+      { section: "Moteur", items: [
+        { id: "flush", title: "Rincer le circuit de refroidissement", note: "Le <b>raccord de rinçage</b> est un embout fileté sur le capot inférieur du moteur : débranche-le et visse un tuyau d'arrosage à sa place. Moteur arrêté ; il peut rester relevé ou vertical, Mercury accepte les deux. Ouvre le robinet à la <span class='warn-txt'>moitié au maximum</span> et laisse couler <span class='warn-txt'>environ 15 minutes</span>. Par prudence, ne fais pas tourner le moteur pendant ce rinçage : la procédure du manuel se fait moteur éteint." },
+        { id: "flush-ext", title: "Rincer l'extérieur du moteur", note: "Au tuyau : le capot, le support de fixation, et la zone du <b>vérin de trim</b>, le piston qui relève et abaisse le moteur. Une fois par mois, pulvérise ensuite du Corrosion Guard sur les parties métalliques — jamais sur les anodes ni sur la courroie." },
+        { id: "anodes", title: "Coup d'œil aux anodes", note: "Les <b>anodes</b> sont des blocs de métal tendre vissés sur l'embase et sous la plaque anti-cavitation. Elles se rongent à la place du moteur : c'est leur rôle. Simple coup d'œil ici ; le vrai contrôle est à faire tous les 100 h ou 1 an, il figure dans l'écran Entretien. Remplace-les dès qu'elles ont perdu environ la moitié de leur volume." },
+        { id: "prop", title: "Contrôler l'hélice", note: "Chocs, déformations, bouts ou algues enroulés autour de l'arbre." },
+        { id: "leak", title: "Vérifier l'absence de fuite", note: "Sous le moteur et dans le puits moteur : huile, carburant, eau." },
+        { id: "tilt", title: "Relever le moteur hors de l'eau", note: "<span class='warn-txt'>Le point le plus important de cette liste.</span> Mercury l'exige pour tout bateau qui reste à flot : l'<b>embase</b>, la partie basse immergée du moteur, doit être complètement sortie de l'eau. Sinon, algues, coquillages et corrosion s'installent en quelques semaines. Utilise le bouton de trim de la commande, ou l'interrupteur auxiliaire posé sur le capot du moteur." },
+      ]},
+      { section: "Coque & pont", items: [
+        { id: "hull-rinse", title: "Rincer la coque et le pont", note: "À l'eau douce, surtout après une sortie en mer. Savon neutre, jamais de détergent agressif." },
+        { id: "hull-check", title: "Contrôler la coque et l'embase", note: "Chocs, éraflures, traces d'impact. Regarde aussi le bas de l'embase, la partie qui talonne en premier." },
+        { id: "bilge", title: "Contrôler la cale", note: "Elle doit être sèche. De l'eau libre au fond dégrade très vite la stabilité du bateau. Teste la pompe depuis le tableau de bord." },
+      ]},
+      { section: "Vannes et circuits", items: [
+        { id: "wc-vanne", title: "Fermer la vanne d'eau de mer du WC", note: "<span class='warn-txt'>Risque d'inondation de la cabine.</span> Cette <b>vanne</b> — un robinet quart de tour traversant la coque — alimente le WC en eau de mer. Elle se trouve sous la trappe centrale avant du plancher de cockpit. Le manuel Quicksilver impose de la refermer après chaque usage." },
+        { id: "macerateur", title: "Vanne du macérateur fermée", note: "Le <b>macérateur</b> est la pompe broyeuse qui vide la cuve des eaux noires à la mer. Sa vanne de coque doit rester fermée en dehors du rejet lui-même, autorisé seulement là où la loi espagnole le permet — renseigne-toi auprès de la capitainerie." },
+        { id: "pompe-eau-douce", title: "Couper la pompe à eau douce", note: "L'interrupteur <b>WATER PUMP</b> est sur le panneau du meuble cuisine, derrière le siège pilote tribord. Si tu l'oublies et que le réservoir se vide, la pompe tourne à sec et sa membrane est détruite." },
+        { id: "gaz", title: "Fermer le robinet de la bouteille de gaz", note: "Le robinet est sur la bouteille elle-même, dans le caisson sous le meuble cuisine. À fermer dès que le réchaud ne sert plus, pas seulement en fin de saison." },
+      ]},
+      { section: "Carburant & batteries", items: [
+        { id: "fuel", title: "Faire le plein ou noter le niveau", note: "Un réservoir plein limite la condensation, donc l'eau qui se sépare de l'essence à l'éthanol. Le <b>nable de remplissage</b> est sur le passavant tribord arrière." },
+        { id: "heures", title: "Noter les heures moteur", note: "Relève le compteur sur l'écran SmartCraft et saisis-le dans l'écran Sorties de cette application. C'est ce chiffre qui pilote toutes les échéances d'entretien." },
+        { id: "battery", title: "Couper l'interrupteur général batterie", note: "Le <b>coupe-batterie</b> est le gros bouton rotatif dans le bac technique du coffre arrière tribord. Tourne-le sur OFF si le bateau reste plus d'une journée. Les pompes de cale et le détecteur de monoxyde restent alimentés, c'est voulu." },
+      ]},
+      { section: "Rangement & sécurité", items: [
+        { id: "safety", title: "Ranger les équipements de sécurité", note: "Gilets, extincteur, fusées, VHF portable. Rangés, mais toujours accessibles." },
+        { id: "electronics", title: "Éteindre les instruments", note: "GPS et sondeur au tableau de bord, radio VHF fixe, stéréo sur le tableau bâbord. Les <b>disjoncteurs</b> correspondants, les petits boutons du panneau de la console, peuvent aussi être coupés : chaque instrument laissé en veille tire sur la batterie de servitude." },
+        { id: "ladder", title: "Relever l'échelle de bain", note: "Elle se replie sous le capot affleurant de la plateforme tribord. Vérifie qu'elle est bien verrouillée." },
+        { id: "mooring", title: "Vérifier amarres et défenses", note: "Les <b>défenses</b> sont les boudins qui protègent la coque du quai. Vérifie leur hauteur et les nœuds des amarres, en pensant au marnage." },
+        { id: "cover", title: "Bâcher le bateau", note: "Uniquement une fois sec : un taud replié humide moisit. Et ne prends jamais la route avec le bimini déployé." },
+      ]},
+    ]
+  }
+};
+let listeActive = "retour";
+function listeCourante(){ return CHECKLISTS[listeActive]; }
 const STORAGE_KEY = "checklist-bateau-state";
 function loadState(){
   try{
@@ -616,11 +668,23 @@ function loadState(){
 }
 function saveState(s){ try{ writeLS(STORAGE_KEY, JSON.stringify(s)); }catch(e){} }
 let state = loadState();
-function allIds(){ return DATA.flatMap(s => s.items.map(i => i.id)); }
-function countDone(){ return allIds().filter(id => state.checked[id]).length; }
+/* Identifiants d'une liste donnée, ou de la liste affichée par défaut. */
+function allIds(cle){ return CHECKLISTS[cle || listeActive].sections.flatMap(s => s.items.map(i => i.id)); }
+function countDone(cle){ return allIds(cle).filter(id => state.checked[id]).length; }
+document.querySelectorAll(".liste-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    listeActive = btn.dataset.liste;
+    document.querySelectorAll(".liste-btn").forEach(b => b.classList.toggle("active", b === btn));
+    renderChecklist();
+  });
+});
 function renderChecklist(){
+  const liste = listeCourante();
+  document.getElementById("listeEyebrow").textContent = liste.titre;
+  document.getElementById("listeSub").textContent = liste.sous;
+  document.getElementById("resetBtn").textContent = "Réinitialiser « " + liste.titre + " »";
   const body = document.getElementById("checklistBody"); body.innerHTML = "";
-  DATA.forEach(section => {
+  liste.sections.forEach(section => {
     const h = document.createElement("div"); h.className = "section-title"; h.textContent = section.section; body.appendChild(h);
     const ul = document.createElement("ul"); ul.className = "items";
     section.items.forEach(item => {
@@ -660,14 +724,17 @@ function updateNewDayBanner(){
   const banner = document.getElementById("newDayBanner");
   const stale = state.date && state.date !== todayStr() && countDone() > 0;
   banner.classList.toggle("show", !!stale);
-  if(stale) document.getElementById("newDayText").textContent = "Cette checklist date du " + state.date + ".";
+  if(stale) document.getElementById("newDayText").textContent = "Ces cases datent du " + state.date + ".";
 }
+/* La remise à zéro ne touche QUE la liste affichée : décocher le retour au
+   port ne doit pas effacer les contrôles d'avant-départ, et inversement. */
 function resetChecklist(){
-  state = { date: todayStr(), checked: {} };
+  allIds().forEach(id => { delete state.checked[id]; });
+  state.date = todayStr();
   saveState(state); renderChecklist();
 }
 document.getElementById("resetBtn").addEventListener("click", () => {
-  if(countDone() === 0 || confirm("Décocher toutes les cases de la checklist ?")) resetChecklist();
+  if(countDone() === 0 || confirm("Décocher toutes les cases de « " + listeCourante().titre + " » ?")) resetChecklist();
 });
 document.getElementById("newDayBtn").addEventListener("click", resetChecklist);
 document.getElementById("dateTag").textContent = new Date().toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " · " + VERSION;
@@ -1656,7 +1723,47 @@ const MANUEL = [
 <p><b>Enregistrer un remboursement</b> sert quand l'un vire de l'argent à l'autre pour égaliser. Le montant proposé est celui qui solde exactement les comptes, et le sens est pré-sélectionné dans le bon sens ; modifie le montant pour un versement partiel. Chaque remboursement s'affiche dans la liste en dessous et peut être supprimé, la balance se recalcule aussitôt.</p>
 <div class="man-note">Sans cette étape, la balance afficherait éternellement la même dette, même une fois l'argent versé.</div>
 <p><b>Le bouton Dépenses</b> donne une section par année, avec le sous-total de chaque poste et le total de l'année, puis un récapitulatif toutes années confondues.</p>
-<p>Vous utilisez la même application et le même fichier OneDrive : il n'y a donc rien à s'envoyer. Il suffit que celui qui vient de saisir appuie sur Sauvegarder, et que l'autre appuie sur Restaurer avant de saisir à son tour. Le dernier qui sauvegarde écrase le fichier : ne saisissez pas chacun de votre côté en même temps.</p>` }
+<p>Vous utilisez la même application et le même fichier OneDrive : il n'y a donc rien à s'envoyer. Il suffit que celui qui vient de saisir appuie sur Sauvegarder, et que l'autre appuie sur Restaurer avant de saisir à son tour. Le dernier qui sauvegarde écrase le fichier : ne saisissez pas chacun de votre côté en même temps.</p>` },
+
+{ t:"Les deux checklists", c:`
+<p>L'écran Checklist contient <b>deux listes séparées</b>, que l'on choisit avec les deux boutons en haut.</p>
+<p><b>Avant de partir</b> reprend les contrôles que Mercury impose quotidiennement, plus la sécurité du bateau. Ils se font à quai, moteur froid.</p>
+<p><b>Retour au port</b> est la liste d'après-sortie : rinçage, vannes à fermer, rangement.</p>
+<div class="man-note">Le niveau d'huile est passé dans la liste de départ. Mercury exige un moteur froid ou arrêté depuis au moins une heure : au retour, la lecture est fausse.</div>
+<p>Les deux listes ont leur propre avancement et leur propre bouton de remise à zéro. Décocher l'une ne touche pas l'autre. Rien ne s'efface tout seul : si les cases datent d'un autre jour, un bandeau jaune te le signale et te propose de les décocher.</p>
+<p>Trois lignes de la liste de retour ferment quelque chose qui, laissé ouvert, peut couler le bateau ou vider une batterie : la vanne d'eau de mer du WC, la vanne du macérateur, et le coupe-batterie. Une quatrième, relever le moteur hors de l'eau, décide de la durée de vie de l'embase.</p>` },
+
+{ t:"Glossaire des termes du bord", c:`
+<table>
+<tr><th>Amure, bâbord</th><td>le côté gauche du bateau quand on regarde vers l'avant</td></tr>
+<tr><th>Tribord</th><td>le côté droit</td></tr>
+<tr><th>Étrave</th><td>la pointe avant</td></tr>
+<tr><th>Tableau arrière</th><td>la paroi verticale à l'arrière, sur laquelle le moteur est boulonné</td></tr>
+<tr><th>Puits moteur</th><td>le renfoncement du tableau arrière où loge le moteur</td></tr>
+<tr><th>Embase</th><td>la partie basse et immergée du hors-bord, qui porte l'hélice</td></tr>
+<tr><th>Vérin de trim</th><td>le piston qui relève et abaisse le moteur</td></tr>
+<tr><th>Trim</th><td>l'angle du moteur : rentré, l'étrave baisse ; sorti, elle se lève</td></tr>
+<tr><th>Flaps</th><td>les volets au tableau arrière qui corrigent la gîte, l'inclinaison sur le côté</td></tr>
+<tr><th>Anode</th><td>bloc de métal tendre qui se ronge à la place du moteur, en eau salée</td></tr>
+<tr><th>Cale</th><td>le fond du bateau, sous le plancher, où l'eau s'accumule</td></tr>
+<tr><th>Nable</th><td>le bouchon de vidange au point le plus bas de la coque</td></tr>
+<tr><th>Dalot</th><td>l'évacuation qui vide le cockpit par gravité</td></tr>
+<tr><th>Passe-coque</th><td>tout orifice qui traverse la coque</td></tr>
+<tr><th>Vanne de coque</th><td>le robinet quart de tour qui ferme un passe-coque</td></tr>
+<tr><th>Macérateur</th><td>la pompe broyeuse qui vide la cuve des eaux noires</td></tr>
+<tr><th>Eaux noires</th><td>celles du WC ; les eaux grises viennent de l'évier</td></tr>
+<tr><th>Guindeau</th><td>le treuil d'étrave qui remonte l'ancre</td></tr>
+<tr><th>Barbotin</th><td>la roue crantée du guindeau où passe la chaîne</td></tr>
+<tr><th>Baille à mouillage</th><td>le coffre d'étrave où descend la chaîne</td></tr>
+<tr><th>Taquet</th><td>la pièce en T sur laquelle on frappe une amarre</td></tr>
+<tr><th>Défense</th><td>le boudin qui protège la coque du quai</td></tr>
+<tr><th>Taud</th><td>la toile de protection ; le bimini est le taud de soleil sur arceaux</td></tr>
+<tr><th>Gelcoat</th><td>la couche brillante de finition du polyester</td></tr>
+<tr><th>Farinage</th><td>l'aspect crayeux que prend un gelcoat non protégé</td></tr>
+<tr><th>Déjauger</th><td>passer sur le plan, quand la coque déchausse et glisse sur l'eau</td></tr>
+<tr><th>Marnage</th><td>l'écart entre marée haute et marée basse</td></tr>
+<tr><th>Talonner</th><td>toucher le fond avec la quille ou l'embase</td></tr>
+</table>` }
 ];
 
 function sansAccent(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
@@ -1779,8 +1886,9 @@ document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
 
 /* ---------- ACCUEIL : RESUMES ---------- */
 function refreshHome(){
-  const total = allIds().length;
-  document.getElementById("tileChecklist").textContent = countDone() + " / " + total + " cochées";
+  document.getElementById("tileChecklist").textContent =
+    "Départ " + countDone("depart") + "/" + allIds("depart").length
+    + " · Retour " + countDone("retour") + "/" + allIds("retour").length;
   document.getElementById("tileSorties").textContent = fmtH(getCurrentHours()) + " au compteur";
   const today = todayStr();
   const aVenir = resa.entries.filter(e => (e.fin||"") >= today).length;
