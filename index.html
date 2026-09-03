@@ -154,6 +154,7 @@ button.add-btn{ width:100%; margin-top:15px; padding:13px; border:none; border-r
 .tag{ font-size:10.5px; padding:2px 7px; border-radius:8px; background:var(--p-blue); color:#215678; font-weight:700; margin-right:4px; display:inline-block; }
 .tag.conflict{ background:var(--p-pink); color:#8C2F4C; }
 .tag.past{ background:rgba(60,59,78,0.08); color:var(--ink-soft); }
+.tag.pro{ background:var(--p-lavender); color:#5B4E8C; margin-left:6px; margin-right:0; vertical-align:middle; }
 button.facture-btn{ margin-top:6px; font-size:12px; padding:6px 10px; border-radius:8px; border:1.5px solid var(--p-mint-dark); background:var(--p-mint); color:#2A7A5F; font-weight:700; }
 
 .summary-card{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:15px; margin-top:10px; }
@@ -355,7 +356,7 @@ button.cloud-btn:disabled{ opacity:.55; }
       </div>
     </div>
     <div id="maintList"></div>
-    <p class="empty-msg">Intervalles indicatifs. Vérifie-les dans le manuel d'utilisation Mercury du F250 Verado avant de t'y fier.</p>
+    <p class="empty-msg">Calendrier repris du manuel Mercury « 200–350 Verado FourStroke », section Inspection and Maintenance Schedule. Les lignes marquées « concessionnaire » y sont réservées à un atelier agréé. Le détail figure dans le Mode d'emploi.</p>
   </div>
 </div>
 
@@ -484,7 +485,7 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v5";
+const VERSION = "v6";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel"];
 
@@ -787,16 +788,41 @@ function renderResa(){
 /* ---------- ENTRETIEN ---------- */
 const ENTRETIEN_KEY = "checklist-bateau-entretien";
 const MANUAL_HOURS_KEY = "checklist-bateau-manual-hours";
+/* Calendrier repris du manuel Mercury « 200–350 (Including Pro Series) Verado
+   FourStroke — Operation and Maintenance », section Inspection and Maintenance
+   Schedule. « pro » = opération réservée au concessionnaire par le manuel.
+   Les identifiants existants (transmission, courroies…) sont conservés tels
+   quels pour ne perdre aucune intervention déjà enregistrée. */
 const MAINT_ITEMS = [
-  { id: "vidange", label: "Vidange huile moteur + filtre à huile", intervalH: 100, intervalY: 1 },
-  { id: "transmission", label: "Lubrifiant de transmission (embase)", intervalH: 100, intervalY: 1 },
-  { id: "carburant", label: "Filtre à carburant", intervalH: 100, intervalY: 1 },
-  { id: "compresseur-huile", label: "Contrôle huile du compresseur (Verado)", intervalH: 100, intervalY: 1 },
-  { id: "pompe-eau", label: "Pompe à eau", intervalH: 300, intervalY: 3 },
-  { id: "bougies", label: "Bougies", intervalH: 300, intervalY: 3 },
-  { id: "courroies", label: "Courroies", intervalH: 300, intervalY: 3 },
-  { id: "compresseur-vidange", label: "Vidange huile du compresseur", intervalH: 300, intervalY: 3 },
+  { id: "vidange",      label: "Vidange huile moteur + filtre à huile", intervalH: 100, intervalY: 1 },
+  { id: "transmission", label: "Lubrifiant d'embase", intervalH: 100, intervalY: 1 },
+  { id: "anodes",       label: "Anodes anticorrosion", intervalH: 100, intervalY: 1 },
+  { id: "courroies",    label: "Courroie d'accessoires", intervalH: 100, intervalY: 1 },
+  { id: "graissage",    label: "Graissage du moteur", intervalH: 100, intervalY: 1 },
+  { id: "quickleen",    label: "Quickleen dans le réservoir", intervalH: 100, intervalY: 1 },
+  { id: "carburant",    label: "Filtres à carburant côté aspiration", intervalH: 100, intervalY: 1, pro: true },
+  { id: "thermostat",   label: "Thermostat (usage en eau salée)", intervalH: 100, intervalY: 1, pro: true },
+  { id: "cannelures",   label: "Cannelures d'arbre d'hélice et d'entraînement", intervalH: 100, intervalY: 1, pro: true },
+  { id: "visserie",     label: "Serrage de la visserie et du support moteur", intervalH: 100, intervalY: 1, pro: true },
+  { id: "batterie",     label: "État de la batterie et des cosses", intervalH: 100, intervalY: 1, pro: true },
+
+  { id: "bougies",      label: "Bougies", intervalH: 300, intervalY: 3 },
+  { id: "patins-trim",  label: "Patins d'usure de trim", intervalH: 300, intervalY: 3 },
+  { id: "pompe-eau",    label: "Turbine de pompe à eau", intervalH: 300, intervalY: 3, pro: true },
+  { id: "filtre-hp",    label: "Filtre à carburant haute pression", intervalH: 300, intervalY: 3, pro: true },
+  { id: "connecteurs",  label: "Connecteurs du faisceau électrique", intervalH: 300, intervalY: 3, pro: true },
+  { id: "power-trim",   label: "Niveau de liquide du power trim", intervalH: 300, intervalY: 3, pro: true },
+  { id: "silentblocs",  label: "Silentblocs moteur", intervalH: 300, intervalY: 3, pro: true },
+
+  { id: "soupapes",     label: "Jeu aux soupapes", intervalH: 600, intervalY: null, pro: true },
 ];
+/* Lignes qui figuraient dans une version antérieure de l'application et que le
+   calendrier Mercury ne contient pas. On ne les affiche plus comme échéances,
+   mais si une intervention y a été enregistrée elle reste visible. */
+const MAINT_RETIRES = {
+  "compresseur-huile": "Contrôle huile du compresseur",
+  "compresseur-vidange": "Vidange huile du compresseur"
+};
 function loadEntretien(){ try{ const raw = localStorage.getItem(ENTRETIEN_KEY); const e = raw ? JSON.parse(raw) : null; return (e && typeof e === "object") ? e : {}; }catch(e){ return {}; } }
 function saveEntretien(e){ try{ writeLS(ENTRETIEN_KEY, JSON.stringify(e)); }catch(err){ alert("Impossible d'enregistrer : mémoire du téléphone saturée."); } }
 let entretien = loadEntretien();
@@ -815,45 +841,87 @@ function yearsBetween(dateStr){
   if(isNaN(d.getTime())) return null;
   return (Date.now() - d.getTime()) / (365.25 * 24 * 3600 * 1000);
 }
+function etatEcheance(item, hours){
+  const rec = entretien[item.id];
+  const known = rec && (typeof rec.lastHours === "number") && isISODate(rec.lastDate);
+  if(!known){
+    return { classe: "unknown", libelle: "À renseigner", pct: 0,
+             detail: "Jamais enregistré — indique la dernière intervention." };
+  }
+  const hoursSince = Math.max(0, hours - rec.lastHours);
+  const yearsSince = yearsBetween(rec.lastDate) || 0;
+  const remainingH = item.intervalH - hoursSince;
+  /* intervalY à null : l'échéance ne dépend que des heures (jeu aux soupapes). */
+  const suitAnnees = typeof item.intervalY === "number" && item.intervalY > 0;
+  const remainingY = suitAnnees ? item.intervalY - yearsSince : Infinity;
+  const pctH = (hoursSince / item.intervalH) * 100;
+  const pctY = suitAnnees ? (yearsSince / item.intervalY) * 100 : 0;
+  const pct = Math.min(100, Math.max(0, Math.max(pctH, pctY)));
+  let classe, libelle;
+  if(remainingH <= 0 || remainingY <= 0){ classe = "late"; libelle = "En retard"; }
+  else if(remainingH <= 20 || remainingY <= 0.25){ classe = "soon"; libelle = "Bientôt"; }
+  else { classe = "ok"; libelle = "OK"; }
+  let detail = "Dernier : " + rec.lastDate + " à " + fmtH(rec.lastHours)
+             + " · reste " + fmtH(Math.max(0, remainingH));
+  if(suitAnnees) detail += " ou " + Math.max(0, Math.round(remainingY * 12)) + " mois";
+  return { classe, libelle, pct, detail };
+}
+function couleurBarre(classe){
+  return classe === "late" ? "var(--bad)" : classe === "soon" ? "var(--warn)"
+       : classe === "ok" ? "var(--ok)" : "rgba(60,59,78,0.2)";
+}
 function renderEntretien(){
   const hours = getEffectiveHours();
   document.getElementById("hoursDisplay2").textContent = fmtH(hours);
   const container = document.getElementById("maintList"); container.innerHTML = "";
-  MAINT_ITEMS.forEach(item => {
-    const rec = entretien[item.id];
-    const known = rec && (typeof rec.lastHours === "number") && isISODate(rec.lastDate);
-    let statusClass, statusLabel, pct, detail;
 
-    if(!known){
-      statusClass = "unknown"; statusLabel = "À renseigner"; pct = 0;
-      detail = "Jamais enregistré — indique la dernière intervention.";
-    } else {
-      const hoursSince = Math.max(0, hours - rec.lastHours);
-      const yearsSince = yearsBetween(rec.lastDate) || 0;
-      const pctH = (hoursSince / item.intervalH) * 100;
-      const pctY = (yearsSince / item.intervalY) * 100;
-      pct = Math.min(100, Math.max(0, Math.max(pctH, pctY)));
-      const remainingH = item.intervalH - hoursSince;
-      const remainingY = item.intervalY - yearsSince;
-      if(remainingH <= 0 || remainingY <= 0){ statusClass = "late"; statusLabel = "En retard"; }
-      else if(remainingH <= 20 || remainingY <= 0.25){ statusClass = "soon"; statusLabel = "Bientôt"; }
-      else { statusClass = "ok"; statusLabel = "OK"; }
-      detail = "Dernier : " + rec.lastDate + " à " + fmtH(rec.lastHours)
-             + " · reste " + fmtH(Math.max(0, remainingH))
-             + " ou " + Math.max(0, Math.round(remainingY * 12)) + " mois";
-    }
-
-    const card = document.createElement("div"); card.className = "maint-card";
-    card.innerHTML =
-      '<div class="maint-head"><div>'
-      + '<div class="maint-title">'+esc(item.label)+'</div>'
-      + '<div class="maint-sub">Tous les '+item.intervalH+' h ou '+item.intervalY+' an'+(item.intervalY>1?"s":"")+' · '+esc(detail)+'</div>'
-      + '</div><div class="maint-status '+statusClass+'">'+statusLabel+'</div></div>'
-      + '<div class="maint-bar-track"><div class="maint-bar-fill" style="width:'+pct+'%; background:'+(statusClass==="late"?"var(--bad)":statusClass==="soon"?"var(--warn)":statusClass==="ok"?"var(--ok)":"rgba(60,59,78,0.2)")+'"></div></div>'
-      + '<button class="done-btn" data-id="'+esc(item.id)+'">Fait aujourd\'hui ('+fmtH(hours)+')</button>'
-      + '<button class="edit-btn" data-edit="'+esc(item.id)+'">Saisir une autre date</button>';
-    container.appendChild(card);
+  const groupes = [
+    { h: 100, titre: "Tous les 100 h ou 1 an" },
+    { h: 300, titre: "Tous les 300 h ou 3 ans" },
+    { h: 600, titre: "Toutes les 600 h" }
+  ];
+  groupes.forEach(g => {
+    const lot = MAINT_ITEMS.filter(i => i.intervalH === g.h);
+    if(lot.length === 0) return;
+    const t = document.createElement("div"); t.className = "section-title"; t.textContent = g.titre;
+    container.appendChild(t);
+    lot.forEach(item => {
+      const e = etatEcheance(item, hours);
+      const card = document.createElement("div"); card.className = "maint-card";
+      card.innerHTML =
+        '<div class="maint-head"><div>'
+        + '<div class="maint-title">'+esc(item.label)+(item.pro ? ' <span class="tag pro">concessionnaire</span>' : '')+'</div>'
+        + '<div class="maint-sub">'+esc(e.detail)+'</div>'
+        + '</div><div class="maint-status '+e.classe+'">'+e.libelle+'</div></div>'
+        + '<div class="maint-bar-track"><div class="maint-bar-fill" style="width:'+e.pct+'%; background:'+couleurBarre(e.classe)+'"></div></div>'
+        + '<button class="done-btn" data-id="'+esc(item.id)+'">Fait aujourd\'hui ('+fmtH(hours)+')</button>'
+        + '<button class="edit-btn" data-edit="'+esc(item.id)+'">Saisir une autre date</button>';
+      container.appendChild(card);
+    });
   });
+
+  /* Interventions enregistrées sur des lignes qui ne figurent plus au calendrier :
+     jamais effacées de l'écran, seulement signalées comme telles. */
+  const orphelines = Object.keys(MAINT_RETIRES).filter(id => {
+    const r = entretien[id];
+    return r && typeof r.lastHours === "number" && isISODate(r.lastDate);
+  });
+  if(orphelines.length){
+    const t = document.createElement("div"); t.className = "section-title";
+    t.textContent = "Hors calendrier Mercury"; container.appendChild(t);
+    orphelines.forEach(id => {
+      const r = entretien[id];
+      const card = document.createElement("div"); card.className = "maint-card";
+      card.innerHTML =
+        '<div class="maint-head"><div>'
+        + '<div class="maint-title">'+esc(MAINT_RETIRES[id])+'</div>'
+        + '<div class="maint-sub">Dernier : '+esc(r.lastDate)+' à '+fmtH(r.lastHours)
+        + ' — cette opération ne figure pas au calendrier Mercury du Verado L6. '
+        + 'Conservée ici pour ne rien te faire perdre, sans échéance calculée.</div>'
+        + '</div><div class="maint-status unknown">Retirée</div></div>';
+      container.appendChild(card);
+    });
+  }
   container.querySelectorAll(".done-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       entretien[btn.dataset.id] = { lastHours: getEffectiveHours(), lastDate: todayStr() };
@@ -1325,7 +1393,60 @@ const MANUEL = [
 <li><b>Vitres acryliques</b> : jamais de chiffon sec, jamais d'acétone, de solvant ni de nettoyant à vitres.</li>
 </ul>
 <p><b>Hivernage</b> : dévisse le bouchon de nable pour vidanger, rince le moteur à l'eau douce, débranche les batteries en commençant par le négatif et mets-les en charge d'entretien, vidange le réservoir d'eau douce et les tuyauteries du WC.</p>
-<div class="man-note">Ne trailer jamais avec le bimini déployé : il doit être rangé dans son étui, rails en position basse.</div>` }
+<div class="man-note">Ne trailer jamais avec le bimini déployé : il doit être rangé dans son étui, rails en position basse.</div>` },
+
+{ t:"Entretien du moteur Mercury Verado L6", c:`
+<p>Calendrier du manuel Mercury « 200–350 Verado FourStroke ». C'est lui que reprend l'écran Entretien.</p>
+<p><b>Avant chaque sortie</b></p>
+<ul>
+<li>Niveau d'huile moteur</li>
+<li>Cordon coupe-circuit</li>
+<li>Absence de fuite sur le circuit carburant</li>
+<li>Serrage du moteur sur le tableau arrière</li>
+<li>Direction sans point dur</li>
+<li>Hélice sans choc ni déformation</li>
+<li>Raccords et flexibles de direction hydraulique</li>
+<li>Niveau du liquide de direction hydraulique</li>
+</ul>
+<p><b>Après chaque sortie</b> — laver l'extérieur à l'eau douce, et rincer le circuit de refroidissement après toute sortie en eau salée ou saumâtre.</p>
+<p><b>Tous les 100 h ou 1 an</b> — vidange huile et filtre, lubrifiant d'embase, anodes anticorrosion, courroie d'accessoires, graissage du moteur, Quickleen dans le réservoir une fois par an. Réservés au concessionnaire : filtres à carburant côté aspiration, thermostat en usage eau salée, cannelures d'arbre d'hélice et d'entraînement, serrage de la visserie et du support moteur, état de la batterie et des cosses.</p>
+<p><b>Tous les 300 h ou 3 ans</b> — bougies, patins d'usure de trim. Réservés au concessionnaire : turbine de pompe à eau, filtre à carburant haute pression, connecteurs du faisceau, niveau du power trim, silentblocs moteur.</p>
+<p><b>Toutes les 600 h</b> — jeu aux soupapes, chez le concessionnaire. Pas de règle annuelle sur cette ligne.</p>
+<div class="man-note">La courroie d'accessoires est bien à contrôler tous les 100 h ou 1 an, pas tous les 300 h. Et le contrôle des anodes suit le même rythme : en eau salée, c'est la ligne à ne pas oublier.</div>
+<p><b>Rinçage du circuit de refroidissement</b></p>
+<ol>
+<li>Moteur arrêté, en position verticale ou relevé.</li>
+<li>Débranche le raccord de rinçage du capot inférieur et visse le tuyau d'eau à sa place.</li>
+<li>Ouvre le robinet à la <b>moitié au maximum</b> et laisse couler environ 15 minutes.</li>
+<li>Ferme l'eau, débranche le tuyau, remets le raccord en place et serre-le.</li>
+</ol>
+<div class="man-danger">Ne fais jamais tourner le moteur alimenté par ce seul raccord de rinçage.</div>
+<p><b>Quelques repères techniques</b></p>
+<table>
+<tr><th>Huile recommandée</th><td>Mercury 25W-40 FC-W synthétique</td></tr>
+<tr><th>Capacité avec filtre</th><td>7,0 L</td></tr>
+<tr><th>Bougies</th><td>NGK ILFR6G-E, écartement 0,8 mm</td></tr>
+<tr><th>Batterie</th><td>AGM 12 V, 975 A à froid et 65 Ah minimum</td></tr>
+<tr><th>Essence (250 CV)</th><td>91 RON hors USA et Canada</td></tr>
+<tr><th>Régime plein gaz</th><td>5 800 à 6 400 tr/min</td></tr>
+</table>
+<p>Vérifie l'huile moteur froid, ou après au moins une heure d'arrêt : bascule d'abord le moteur au-delà de la verticale pendant une minute pour laisser l'huile redescendre, puis remets-le vertical avant de lire la jauge. Ne remplis jamais jusqu'en haut de la plage.</p>
+<p><b>Avertisseur sonore</b> — six secondes continues signalent un problème critique : rentre au port et appelle le concessionnaire. Des bips courts pendant six secondes signalent un problème non critique, dont trois sont à ta portée : eau dans le filtre à carburant, refroidissement (vérifie que les prises d'eau ne sont pas obstruées), niveau d'huile bas.</p>
+<p>En eau salée, pulvérise chaque mois du Corrosion Guard sur les surfaces métalliques externes du moteur. Jamais sur les anodes, dont cela réduirait l'efficacité, ni sur la courroie ou les poulies, qu'un lubrifiant ferait patiner.</p>` },
+
+{ t:"Comment fonctionne l'écran Entretien", c:`
+<p><b>Les heures retenues</b> sont la valeur la plus élevée entre trois sources : le compteur de départ saisi dans l'écran Sorties, le relevé le plus haut de tes sorties, et le relevé manuel de l'écran Entretien. Aucune ne peut faire baisser le compteur.</p>
+<p><b>Chaque échéance suit deux règles à la fois</b>, les heures et le calendrier. C'est la première atteinte qui compte. Un moteur peu utilisé sera donc signalé par la règle annuelle bien avant d'atteindre 100 h.</p>
+<table>
+<tr><th>À renseigner</th><td>aucune intervention enregistrée</td></tr>
+<tr><th>OK</th><td>rien à prévoir</td></tr>
+<tr><th>Bientôt</th><td>moins de 20 h ou moins de 3 mois</td></tr>
+<tr><th>En retard</th><td>échéance dépassée</td></tr>
+</table>
+<p>« Fait aujourd'hui » enregistre la date du jour et les heures retenues. « Saisir une autre date » sert à rattraper une intervention passée : le format attendu est AAAA-MM-JJ, et il faut aussi le relevé du compteur ce jour-là.</p>
+<p>Une ligne marquée <b>concessionnaire</b> figure au calendrier Mercury comme réservée à un atelier agréé. Elle reste dans la liste pour que tu suives son échéance, même si tu ne la fais pas toi-même.</p>
+<p>Une section <b>Hors calendrier Mercury</b> apparaît si tu avais enregistré une intervention sur une ligne qui ne figure plus dans le calendrier. Rien n'est effacé, mais aucune échéance n'est calculée pour elle.</p>
+<div class="man-note">Après avoir renseigné des interventions, pense à la sauvegarde OneDrive : rien ne part automatiquement.</div>` }
 ];
 
 function sansAccent(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
@@ -1460,7 +1581,8 @@ function refreshHome(){
     const rec = entretien[item.id];
     if(!rec || typeof rec.lastHours !== "number" || !isISODate(rec.lastDate)){ unknown++; return; }
     const y = yearsBetween(rec.lastDate) || 0;
-    if((h - rec.lastHours) >= item.intervalH || y >= item.intervalY) late++;
+    const parAnnees = typeof item.intervalY === "number" && item.intervalY > 0;
+    if((h - rec.lastHours) >= item.intervalH || (parAnnees && y >= item.intervalY)) late++;
   });
   document.getElementById("tileEntretien").textContent = late ? late + " en retard" : (unknown ? unknown + " à renseigner" : "À jour");
   if(comptes.expenses.length === 0){ document.getElementById("tileComptes").textContent = "Aucune dépense"; }
