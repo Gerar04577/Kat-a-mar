@@ -220,6 +220,20 @@ button.cloud-btn:disabled{ opacity:.55; }
 .cloud-status{ font-size:12.5px; color:var(--ink-soft); margin-top:9px; line-height:1.45; text-align:center; }
 .cloud-status.ok{ color:var(--ok); font-weight:700; }
 .cloud-status.bad{ color:var(--bad); font-weight:700; }
+
+/* ---------- BLOC TEMPORAIRE DE DIAGNOSTIC MAKE ---------- */
+.diag-card{ background:var(--card); border:2px dashed var(--p-yellow-dark); border-radius:16px; padding:15px; margin-bottom:16px; }
+.diag-title{ font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:800; color:#8A6A10; margin-bottom:8px; }
+.diag-lab{ display:block; font-size:12px; font-weight:700; color:var(--ink-soft); margin:11px 0 5px; text-transform:uppercase; letter-spacing:.04em; }
+.diag-input{ width:100%; padding:11px; border-radius:12px; border:1.5px solid var(--line); font-size:15px; background:var(--sand); font-family:inherit; color:var(--ink); }
+button.diag-btn{ width:100%; margin-top:10px; padding:12px; border-radius:12px; border:1.5px solid var(--p-yellow-dark); background:var(--p-yellow); color:#8A6A10; font-weight:800; font-size:14px; }
+button.diag-btn:disabled{ opacity:.55; }
+button.diag-clear{ width:100%; margin-top:10px; padding:9px; border-radius:12px; border:1.5px solid var(--line); background:var(--sand); color:var(--ink-soft); font-weight:700; font-size:12.5px; }
+.diag-verdict{ margin-top:12px; font-size:13.5px; font-weight:700; line-height:1.5; display:none; padding:11px 12px; border-radius:10px; }
+.diag-verdict.show{ display:block; }
+.diag-verdict.ok{ background:var(--p-mint); color:#2A7A5F; }
+.diag-verdict.bad{ background:var(--p-pink); color:#8C2F4C; }
+.diag-log{ margin-top:11px; background:var(--sand); border:1px solid var(--line); border-radius:10px; padding:10px; font-size:11px; line-height:1.5; white-space:pre-wrap; word-break:break-word; max-height:240px; overflow:auto; font-family:ui-monospace, Menlo, monospace; color:var(--ink); }
 </style>
 </head>
 <body>
@@ -450,6 +464,21 @@ button.cloud-btn:disabled{ opacity:.55; }
       <p class="cloud-status" id="cloudStatus"></p>
       <p class="hint">Le fichier <b>kat-a-mar.json</b> est écrasé à chaque sauvegarde : une seule version, toujours la plus récente.</p>
     </div>
+
+    <!-- ===== BLOC TEMPORAIRE — À RETIRER UNE FOIS MAKE VALIDÉ ===== -->
+    <div class="diag-card" id="blocDiagnostic">
+      <div class="diag-title">Réglage Make — bloc temporaire</div>
+      <p class="hint" style="margin-top:0;">À retirer une fois le scénario validé. Tant qu'une adresse est saisie ici, elle remplace celle du code : pas besoin de republier pour essayer.</p>
+      <label class="diag-lab" for="diagUrl">Adresse du webhook Make</label>
+      <input type="url" id="diagUrl" class="diag-input" placeholder="https://hook.eu1.make.com/…" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="diag-btn" id="diagJson">A — Test d'envoi en JSON</button>
+      <button class="diag-btn" id="diagForm">B — Test d'envoi en formulaire</button>
+      <button class="diag-btn" id="diagLire">C — Test de lecture</button>
+      <div class="diag-verdict" id="diagVerdict"></div>
+      <pre class="diag-log" id="diagLog"></pre>
+      <button class="diag-clear" id="diagClear">Effacer le journal</button>
+    </div>
+    <!-- ===== FIN DU BLOC TEMPORAIRE ===== -->
     <div class="info-card">
       <p class="hint" style="margin-top:0;">Sauvegarde de secours par fichier, sans réseau OneDrive.</p>
       <button class="export-btn" id="exportAllBtn">Exporter toutes les données (JSON)</button>
@@ -482,7 +511,7 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v3";
+const VERSION = "v4";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel"];
 
@@ -1348,6 +1377,14 @@ function renderManuel(filtre){
 document.getElementById("manuelSearch").addEventListener("input", (e) => renderManuel(e.target.value));
 
 /* ---------- ONEDRIVE VIA MAKE ---------- */
+const DIAG_URL_KEY = "katamar-webhook-url";
+const MODE_KEY = "katamar-mode-envoi";
+function urlWebhook(){
+  const saisie = (localStorage.getItem(DIAG_URL_KEY) || "").trim();
+  return saisie || WEBHOOK_URL;
+}
+function webhookPret(){ return urlWebhook().indexOf("REMPLACER") === -1 && /^https?:\/\//.test(urlWebhook()); }
+function modeEnvoi(){ return localStorage.getItem(MODE_KEY) === "form" ? "form" : "json"; }
 function versBase64(texte){
   const octets = new TextEncoder().encode(texte);
   let bin = "";
@@ -1374,18 +1411,25 @@ function cloudBoutons(actif){
   document.getElementById("cloudSaveBtn").disabled = !actif;
   document.getElementById("cloudLoadBtn").disabled = !actif;
 }
-async function appelMake(corps){
-  const rep = await fetch(WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(corps)
-  });
-  if(!rep.ok) throw new Error("Make a répondu " + rep.status);
-  return (await rep.text()).trim();
+async function appelMake(corps, mode){
+  const opt = { method: "POST" };
+  if((mode || modeEnvoi()) === "form"){
+    const p = new URLSearchParams();
+    Object.keys(corps).forEach(k => p.append(k, corps[k]));
+    opt.headers = { "Content-Type": "application/x-www-form-urlencoded" };
+    opt.body = p.toString();
+  } else {
+    opt.headers = { "Content-Type": "application/json" };
+    opt.body = JSON.stringify(corps);
+  }
+  const rep = await fetch(urlWebhook(), opt);
+  const texte = (await rep.text()).trim();
+  if(!rep.ok) throw new Error("Make a répondu " + rep.status + (texte ? " — " + texte.slice(0,120) : ""));
+  return texte;
 }
 
 document.getElementById("cloudSaveBtn").addEventListener("click", async () => {
-  if(WEBHOOK_URL.indexOf("REMPLACER") !== -1){ cloudStatut("Adresse du webhook Make pas encore renseignée dans le fichier.", "bad"); return; }
+  if(!webhookPret()){ cloudStatut("Adresse du webhook Make pas encore renseignée.", "bad"); return; }
   cloudBoutons(false);
   cloudStatut("Envoi en cours…");
   try{
@@ -1398,7 +1442,7 @@ document.getElementById("cloudSaveBtn").addEventListener("click", async () => {
 });
 
 document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
-  if(WEBHOOK_URL.indexOf("REMPLACER") !== -1){ cloudStatut("Adresse du webhook Make pas encore renseignée dans le fichier.", "bad"); return; }
+  if(!webhookPret()){ cloudStatut("Adresse du webhook Make pas encore renseignée.", "bad"); return; }
   cloudBoutons(false);
   cloudStatut("Lecture de OneDrive…");
   let data;
@@ -1440,6 +1484,59 @@ document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
   alert("Données restaurées. L'application va se recharger.");
   location.reload();
 });
+
+/* ===== BLOC TEMPORAIRE DE DIAGNOSTIC MAKE — À RETIRER ===== */
+const champUrl = document.getElementById("diagUrl");
+champUrl.value = (localStorage.getItem(DIAG_URL_KEY) || "");
+champUrl.addEventListener("change", () => {
+  const v = champUrl.value.trim();
+  try{ if(v) writeLS(DIAG_URL_KEY, v); else localStorage.removeItem(DIAG_URL_KEY); }catch(e){}
+  journal("Adresse enregistrée : " + (v || "(vide — celle du code est utilisée)"));
+});
+function journal(ligne){
+  const el = document.getElementById("diagLog");
+  const h = new Date().toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  el.textContent = (h + "  " + ligne + "\n" + el.textContent).split("\n").slice(0, 60).join("\n");
+}
+function verdict(texte, classe){
+  const el = document.getElementById("diagVerdict");
+  el.textContent = texte;
+  el.className = "diag-verdict show " + classe;
+}
+function diagBoutons(actif){
+  ["diagJson","diagForm","diagLire"].forEach(id => { document.getElementById(id).disabled = !actif; });
+}
+async function essai(mode, corps, etiquette){
+  if(!webhookPret()){ verdict("Aucune adresse de webhook valide. Colle-la dans le champ ci-dessus.", "bad"); return; }
+  diagBoutons(false);
+  journal("→ " + etiquette + " vers " + urlWebhook());
+  try{
+    const rep = await appelMake(corps, mode === "lecture" ? modeEnvoi() : mode);
+    journal("← réponse reçue : " + (rep ? rep.slice(0, 200) : "(vide)"));
+    if(mode !== "lecture"){
+      try{ writeLS(MODE_KEY, mode); }catch(e){}
+      verdict("Réussi en " + (mode === "form" ? "formulaire" : "JSON") + ". Make a reçu le message et Safari a accepté la réponse. L'application utilisera désormais ce mode. Retourne dans Make : la fenêtre doit afficher « Successfully determined ».", "ok");
+    } else {
+      verdict("Lecture réussie. La branche import répond." + (rep ? "" : " La réponse est vide : soit le fichier n'existe pas encore, soit le module Download a File n'a rien renvoyé."), "ok");
+    }
+  }catch(e){
+    const m = String(e.message || e);
+    journal("← ÉCHEC : " + m);
+    if(m.indexOf("Failed to fetch") !== -1 || m.indexOf("Load failed") !== -1 || m.indexOf("NetworkError") !== -1){
+      verdict("Safari a bloqué la requête avant même de l'envoyer, ou le réseau a échoué. Si le mode JSON échoue ici, essaie le bouton B : le mode formulaire évite la vérification préalable du navigateur. Vérifie aussi que le scénario Make est bien sur ON.", "bad");
+    } else {
+      verdict("La requête est arrivée jusqu'à Make, mais Make a renvoyé une erreur. Détail dans le journal ci-dessous.", "bad");
+    }
+  }finally{ diagBoutons(true); }
+}
+document.getElementById("diagJson").addEventListener("click", () => essai("json", { action: "save", data: "dGVzdA==" }, "test d'envoi JSON"));
+document.getElementById("diagForm").addEventListener("click", () => essai("form", { action: "save", data: "dGVzdA==" }, "test d'envoi formulaire"));
+document.getElementById("diagLire").addEventListener("click", () => essai("lecture", { action: "import" }, "test de lecture"));
+document.getElementById("diagClear").addEventListener("click", () => {
+  document.getElementById("diagLog").textContent = "";
+  document.getElementById("diagVerdict").className = "diag-verdict";
+});
+/* ===== FIN DU BLOC TEMPORAIRE ===== */
 
 /* ---------- ACCUEIL : RESUMES ---------- */
 function refreshHome(){
