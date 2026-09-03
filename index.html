@@ -191,6 +191,35 @@ button.edit-btn{ margin-top:7px; width:100%; padding:9px; border-radius:12px; bo
 .hours-manual{ margin-top:12px; }
 .hours-manual input{ width:100%; padding:10px; border-radius:10px; border:none; font-size:15px; text-align:center; font-family:inherit; }
 .hours-manual .lbl2{ font-size:11.5px; opacity:.8; margin-top:5px; }
+
+/* ---------- MODE D'EMPLOI ---------- */
+.urgence-card{ background:linear-gradient(135deg, var(--p-pink), rgba(255,211,222,0.45)); border:1.5px solid var(--p-pink-dark); border-radius:16px; padding:15px; margin-bottom:16px; }
+.urgence-card h3{ margin:0 0 10px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:#8C2F4C; }
+.urgence-item{ font-size:13.5px; line-height:1.5; margin-bottom:9px; color:#7A3050; }
+.urgence-item:last-child{ margin-bottom:0; }
+.urgence-item b{ display:block; }
+.manuel-search{ width:100%; padding:11px 13px; border-radius:12px; border:1.5px solid var(--line); font-size:16px; background:var(--card); font-family:inherit; color:var(--ink); margin-bottom:14px; }
+.man-sec{ background:var(--card); border:1.5px solid var(--line); border-radius:14px; margin-bottom:9px; overflow:hidden; }
+.man-head{ width:100%; text-align:left; background:none; border:none; padding:14px 15px; font-size:14.5px; font-weight:700; color:var(--ink); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.man-head .num{ color:var(--p-blue-dark); font-weight:800; margin-right:8px; }
+.man-head .chev2{ color:var(--ink-soft); font-size:15px; flex:0 0 auto; }
+.man-sec.open .man-head{ border-bottom:1.5px solid var(--line); }
+.man-body{ display:none; padding:4px 15px 15px; font-size:14px; line-height:1.6; color:var(--ink); }
+.man-sec.open .man-body{ display:block; }
+.man-body p{ margin:10px 0; }
+.man-body ul{ margin:10px 0; padding-left:20px; }
+.man-body li{ margin-bottom:7px; }
+.man-body table{ width:100%; border-collapse:collapse; font-size:13px; margin:10px 0; }
+.man-body th, .man-body td{ text-align:left; padding:6px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
+.man-body th{ color:var(--ink-soft); font-weight:700; }
+.man-body td:last-child, .man-body th:last-child{ text-align:right; white-space:nowrap; }
+.man-danger{ background:rgba(255,211,222,0.4); border-left:3px solid var(--p-pink-dark); padding:10px 12px; border-radius:8px; margin:12px 0; font-size:13.5px; color:#8C2F4C; font-weight:600; }
+.man-note{ background:rgba(255,238,179,0.45); border-left:3px solid var(--p-yellow-dark); padding:10px 12px; border-radius:8px; margin:12px 0; font-size:13.5px; color:#8A6A10; }
+button.cloud-btn{ width:100%; margin-top:11px; padding:12px; border-radius:12px; border:1.5px solid var(--p-lavender-dark); background:var(--p-lavender); color:#5B4E8C; font-weight:800; font-size:14px; }
+button.cloud-btn:disabled{ opacity:.55; }
+.cloud-status{ font-size:12.5px; color:var(--ink-soft); margin-top:9px; line-height:1.45; text-align:center; }
+.cloud-status.ok{ color:var(--ok); font-weight:700; }
+.cloud-status.bad{ color:var(--bad); font-weight:700; }
 </style>
 </head>
 <body>
@@ -225,6 +254,10 @@ button.edit-btn{ margin-top:7px; width:100%; padding:9px; border-radius:12px; bo
     <button class="tile c-yellow" data-go="infos">
       <div class="ic">📖</div>
       <div><div class="tname">Infos</div><div class="tsub">Bateau et assurance</div></div>
+    </button>
+    <button class="tile wide" data-go="manuel">
+      <div class="ic">📖</div>
+      <div><div class="tname">Mode d'emploi</div><div class="tsub">Manuel du propriétaire 755CR — consultable hors-ligne</div></div>
     </button>
     <button class="tile wide" data-go="donnees">
       <div class="ic">💾</div>
@@ -388,12 +421,37 @@ button.edit-btn{ margin-top:7px; width:100%; padding:9px; border-radius:12px; bo
   </div>
 </div>
 
+<!-- ================= MODE D'EMPLOI ================= -->
+<div class="screen" id="screen-manuel">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Mode d'emploi</span></div>
+  <div class="body-wrap">
+    <div class="urgence-card">
+      <h3>En cas d'urgence</h3>
+      <div class="urgence-item"><b>Alarme monoxyde de carbone</b>Sors de la cabine, coupe le moteur et tout appareil à combustion, ouvre hublots et capots, mets le bateau face au vent.</div>
+      <div class="urgence-item"><b>Incendie</b>Évacue les passagers, coupe les coupe-batteries et l'arrivée de carburant, attaque le foyer à la base. Si le feu ne faiblit pas en quelques secondes, abandonne le bateau avec les gilets.</div>
+      <div class="urgence-item"><b>Voie d'eau</b>Force les deux pompes de cale depuis le tableau de bord, sors la pompe manuelle du coffre en L (19 L pour 45 coups). Les pompes ne tiendront pas une brèche importante : appelle les secours.</div>
+      <div class="urgence-item"><b>Guindeau bloqué</b>Vérifie son disjoncteur près des coupe-batteries. Sinon, manivelle de secours dans l'empreinte étoile du barbotin, sens antihoraire pour laisser filer.</div>
+      <div class="urgence-item"><b>Odeur d'essence</b>Ne démarre rien, ne touche à aucun interrupteur, coupe les batteries et aère largement.</div>
+    </div>
+    <input type="search" class="manuel-search" id="manuelSearch" placeholder="Rechercher : nable, macérateur, GPL…">
+    <div id="manuelList"></div>
+    <p class="empty-msg">Résumé du manuel du propriétaire Quicksilver 755CR, réf. INT 2228522B (mars 2018). Pour l'entretien du moteur, réfère-toi au manuel Mercury.</p>
+  </div>
+</div>
+
 <!-- ================= DONNEES ================= -->
 <div class="screen" id="screen-donnees">
   <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Sauvegarde</span></div>
   <div class="body-wrap">
     <div class="info-card">
-      <p class="hint" style="margin-top:0;">Les données sont stockées uniquement sur cet iPhone. Elles ne se synchronisent pas avec l'appareil de Gil et disparaissent si tu effaces les données de Safari. Exporte régulièrement vers Fichiers ou OneDrive.</p>
+      <p class="hint" style="margin-top:0;">Les données sont stockées sur cet iPhone. Elles ne se synchronisent avec l'appareil de Gil que par OneDrive, et uniquement quand tu appuies sur un des deux boutons ci-dessous. Rien n'est jamais envoyé automatiquement.</p>
+      <button class="cloud-btn" id="cloudSaveBtn">☁️ Sauvegarder sur OneDrive</button>
+      <button class="cloud-btn" id="cloudLoadBtn">☁️ Restaurer depuis OneDrive</button>
+      <p class="cloud-status" id="cloudStatus"></p>
+      <p class="hint">Le fichier <b>kat-a-mar.json</b> est écrasé à chaque sauvegarde : une seule version, toujours la plus récente.</p>
+    </div>
+    <div class="info-card">
+      <p class="hint" style="margin-top:0;">Sauvegarde de secours par fichier, sans réseau OneDrive.</p>
       <button class="export-btn" id="exportAllBtn">Exporter toutes les données (JSON)</button>
       <button class="import-btn" id="importBtn">Restaurer depuis un fichier JSON</button>
       <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
@@ -422,7 +480,15 @@ function isISODate(s){ return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.tes
 function writeLS(key, value){ localStorage.setItem(key, value); }
 
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
-const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees"];
+/* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
+   correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
+const VERSION = "v3";
+
+const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel"];
+
+/* URL du webhook Make — à remplacer par celle de TON scénario Kat-a-Mar.
+   Déclarée une seule fois dans tout le fichier. */
+const WEBHOOK_URL = "https://hook.eu1.make.com/REMPLACER_PAR_TON_URL";
 let navDepth = 0;
 
 function showScreen(id){
@@ -438,6 +504,7 @@ function showScreen(id){
   if(id === "resa") renderResa();
   if(id === "checklist") renderChecklist();
   if(id === "donnees") refreshStorageInfo();
+  if(id === "manuel") renderManuel();
 }
 function currentScreen(){ return (location.hash || "").replace("#","") || "accueil"; }
 function openScreen(id){ navDepth++; location.hash = "#" + id; }
@@ -546,7 +613,7 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   if(countDone() === 0 || confirm("Décocher toutes les cases de la checklist ?")) resetChecklist();
 });
 document.getElementById("newDayBtn").addEventListener("click", resetChecklist);
-document.getElementById("dateTag").textContent = new Date().toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+document.getElementById("dateTag").textContent = new Date().toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " · " + VERSION;
 
 /* ---------- SORTIES ---------- */
 const SORTIES_KEY = "checklist-bateau-sorties";
@@ -1072,8 +1139,307 @@ function refreshStorageInfo(){
     [STORAGE_KEY, SORTIES_KEY, RESA_KEY, ENTRETIEN_KEY, COMPTES_KEY].forEach(k => { bytes += (localStorage.getItem(k) || "").length; });
   }catch(e){}
   const ko = Math.round(bytes/1024);
-  document.getElementById("storageInfo").textContent = "Espace utilisé : environ " + ko + " Ko (limite pratique de Safari : environ 5 000 Ko).";
+  document.getElementById("storageInfo").textContent = "Version " + VERSION + " · espace utilisé : environ " + ko + " Ko (limite pratique de Safari : environ 5 000 Ko).";
 }
+
+/* ---------- MODE D'EMPLOI ---------- */
+const MANUEL = [
+{ t:"Responsabilités et documents de bord", c:`
+<p>Le manuel doit rester à bord en permanence et être remis à l'acquéreur en cas de vente.</p>
+<ul>
+<li>Un permis est obligatoire dans de nombreux pays au-delà d'une certaine puissance. Vérifie la réglementation de ta zone de navigation.</li>
+<li>La <b>Déclaration de Conformité CE</b> fait partie des documents officiels du bateau et doit être conservée à bord.</li>
+<li>Le <b>numéro CIN</b> est gravé sur le tableau arrière tribord, ou sous le liston arrière tribord si le bateau a des plateformes de bain rapportées. Il est exigé pour toute correspondance administrative, d'assurance ou commande de pièces.</li>
+</ul>` },
+
+{ t:"Dimensions et capacités", c:`
+<table>
+<tr><th>Longueur de coque</th><td>6,91 m</td></tr>
+<tr><th>Hors-tout standard</th><td>6,99 m</td></tr>
+<tr><th>Hors-tout avec extensions</th><td>7,37 m</td></tr>
+<tr><th>Largeur de coque</th><td>2,49 m</td></tr>
+<tr><th>Largeur maximale</th><td>2,55 m</td></tr>
+<tr><th>Tirant d'eau coque</th><td>0,55 m</td></tr>
+<tr><th>Tirant d'eau moteur baissé</th><td>0,97 m</td></tr>
+<tr><th>Hauteur hors-tout</th><td>2,03 m</td></tr>
+<tr><th>Masse lège</th><td>2 155 kg</td></tr>
+<tr><th>Masse en charge</th><td>3 225 kg</td></tr>
+<tr><th>Masse sur remorque</th><td>2 429 kg</td></tr>
+<tr><th>Carburant</th><td>280 L</td></tr>
+<tr><th>Eau douce (option)</th><td>80 L</td></tr>
+<tr><th>Eaux noires (option)</th><td>27,8 L</td></tr>
+<tr><th>Eaux grises (option)</th><td>80 L</td></tr>
+<tr><th>Gasoil chauffage (option)</th><td>10 L</td></tr>
+<tr><th>Puissance maxi</th><td>221 kW (300 CV)</td></tr>
+<tr><th>Poids moteur maxi</th><td>294 kg</td></tr>
+<tr><th>Catégorie CE</th><td>C — 8 personnes</td></tr>
+</table>
+<p>Catégorie C : vents jusqu'à force 6 Beaufort, creux significatifs jusqu'à 2 m.</p>` },
+
+{ t:"Charge et stabilité", c:`
+<div class="man-danger">Ne jamais dépasser 8 personnes. La plaque constructeur limite à <b>960 kg</b> de passagers et bagages. La charge maximale de <b>1 070 kg</b> du manuel est un chiffre différent : elle inclut en plus les fluides des réservoirs. Les deux sont exacts, ils ne mesurent pas la même chose.</div>
+<ul>
+<li>Répartis les charges pour préserver l'assiette. Évite les poids lourds en hauteur.</li>
+<li>Garde les fonds de cale secs : l'eau libre qui se déplace dégrade très vite la stabilité transversale.</li>
+<li>Par mer agitée ou au déjaugeage, ferme panneaux, hublots, porte de cabine et coffres.</li>
+<li>Les vagues déferlantes sont le principal risque de chavirement. Réduis la vitesse et adapte le cap.</li>
+</ul>
+<div class="man-danger">Interdiction d'occuper le pont avant ou les passavants quand le bateau fait route. Accès toléré uniquement pour le mouillage, l'amarrage ou une urgence, en se tenant aux balcons.</div>` },
+
+{ t:"Passe-coques et vannes de fond", c:`
+<p>Deux points à vérifier avant chaque mise à l'eau et avant chaque départ :</p>
+<div class="man-danger">Le <b>bouchon de nable</b> (garboard), au point le plus bas du V de quille au tableau arrière, doit être vissé avant la mise à l'eau.<br><br>La <b>vanne d'aspiration d'eau de mer du WC</b>, sous la trappe avant de cockpit, doit être fermée hors usage.</div>
+<table>
+<tr><th>Évacuation cockpit arrière</th><td>dalots autovideurs</td></tr>
+<tr><th>Évent réservoir carburant</th><td>bâbord, pare-flamme, ne jamais obstruer</td></tr>
+<tr><th>Évent caisson bouteille gaz</th><td>sous meuble cuisine, évacue le GPL à la mer</td></tr>
+<tr><th>Pompe de cale avant</th><td>bâbord</td></tr>
+<tr><th>Pompe de cale arrière</th><td>tableau arrière</td></tr>
+<tr><th>Rejet macérateur</th><td>vanne sous-marine, à garder fermée</td></tr>
+<tr><th>Prise d'eau WC</th><td>trappe avant de cockpit</td></tr>
+<tr><th>Évent eaux noires</th><td>bâbord, filtre charbon actif</td></tr>
+<tr><th>Échappement chauffage</th><td>bâbord, très chaud, zone dégagée</td></tr>
+<tr><th>Drain baille à mouillage</th><td>étrave</td></tr>
+</table>` },
+
+{ t:"Tableau de bord et feux de navigation", c:`
+<p>Huit interrupteurs rétroéclairés sur la console : klaxon, pompe de cale avant, pompe de cale arrière, feux, essuie-glace bâbord, essuie-glace tribord, lave-glace, éclairage de courtoisie.</p>
+<p>L'interrupteur des feux a trois positions :</p>
+<ul>
+<li><b>Haut</b> — feux de route : rouge bâbord 112,5°, vert tribord 112,5°, blanc 360° sur mât amovible.</li>
+<li><b>Milieu</b> — tout éteint.</li>
+<li><b>Bas</b> — feu de mouillage : blanc 360° seul, visible 2 milles.</li>
+</ul>
+<p>Avant de naviguer de nuit, vérifie que le feu blanc 360° du dossier arrière est bien monté en position verticale.</p>
+<div class="man-note">La visibilité depuis le poste de barre peut être masquée par une assiette cabrée, le trim du moteur, la charge, la pluie ou les tauds. Le RIPAM impose une veille permanente.</div>` },
+
+{ t:"Circuit carburant et essence E10", c:`
+<p>Réservoir polyéthylène de 280 L dans l'axe de quille, nable de remplissage sur le passavant tribord arrière, évent avec pare-flamme, jauge SmartCraft, vanne anti-siphon et filtre séparateur eau/carburant.</p>
+<div class="man-danger">Les vapeurs d'essence sont plus lourdes que l'air et s'accumulent dans les fonds. Ne fume jamais pendant le ravitaillement. Inspecte réservoir, raccords et durites au moins une fois par an.</div>
+<ul>
+<li><b>Carburant agréé</b> : sans plomb, 87 AKI minimum, jusqu'à 10 % d'éthanol (E10).</li>
+<li><b>E85 interdit</b> : corrosion des métaux, destruction des joints, garantie annulée.</li>
+<li><b>Réserve</b> : garde au moins 25 % dans le réservoir. En dessous, les sédiments passent dans les durites.</li>
+<li><b>Démixtion</b> : l'éthanol attire l'humidité ; au-delà du point de saturation, eau et alcool tombent au fond du réservoir et sont aspirés par la pompe. Aucun additif ne rattrape le phénomène — il faut vidanger, purger et sécher.</li>
+<li><b>Prévention</b> : réservoir plein pendant les périodes d'inactivité, plus un stabilisateur de qualité marine.</li>
+</ul>
+<div class="man-danger">Ne retire ni ne modifie jamais la vanne anti-siphon : elle empêche l'essence de se déverser dans les fonds si la durite est coupée sous le niveau du réservoir.</div>` },
+
+{ t:"Eau douce et douchette", c:`
+<p>Réservoir alimentaire de 80 L à l'arrière, rempli par le nable sous le capot de la plateforme bâbord. Groupe d'eau 12V à pressostat, desservant le robinet de l'évier de cockpit et la douchette de tableau arrière.</p>
+<ul>
+<li>Enclenche l'interrupteur <b>WATER PUMP</b> du meuble cuisine ; la pompe se coupe seule quand les robinets sont fermés.</li>
+<li>Coupe toujours la pompe en quittant le bord ou dès que le réservoir est vide : le fonctionnement à sec détruit la membrane.</li>
+<li>Remplis uniquement à partir d'une source d'eau potable, avec un tuyau plastique.</li>
+<li>Hivernage : vidange complète, pompe tournée quelques secondes à sec, puis antigel au propylène glycol alimentaire.</li>
+</ul>` },
+
+{ t:"WC marin, cuve et macérateur", c:`
+<p>WC manuel, cuve de rétention de 27,8 L, filtre anti-odeurs sur l'évent, macérateur 12V et bouche de vidange à quai (symbole ISO WASTE) sur la plage arrière tribord.</p>
+<ol>
+<li>Ouvre la vanne d'aspiration d'eau de mer sous la trappe avant de cockpit.</li>
+<li>Actionne le levier : environ 20 mouvements complets pour refouler vers la cuve.</li>
+<li><b>Referme systématiquement la vanne après usage</b> — sinon risque de siphon et d'inondation de la cabine.</li>
+</ol>
+<p><b>Vidange à quai</b> : méthode privilégiée. Raccorde le flexible de la capitainerie sur le nable WASTE.</p>
+<p><b>Vidange à la mer</b> : vérifie d'abord que le rejet est légalement autorisé là où tu navigues — la règle est celle des eaux espagnoles, renseigne-toi auprès de la capitainerie. Ouvre la vanne du macérateur, maintiens l'interrupteur enfoncé jusqu'à vidange complète, referme la vanne immédiatement.</p>
+<p><b>Hivernage</b> : vider, rincer à l'eau via le WC, vider à nouveau, puis antigel au propylène glycol.</p>` },
+
+{ t:"Eaux grises et pompes de cale", c:`
+<p>Réservoir d'eaux grises de 80 L alimenté par gravité depuis l'évier de cockpit, vidangé uniquement à quai par le nable WASTE.</p>
+<p>Deux pompes de cale électriques de 500 GPH (avant et arrière) plus une pompe manuelle de secours (19 L pour 45 coups) rangée dans le coffre en L.</p>
+<ul>
+<li>Les pompes électriques sont branchées <b>avant</b> les coupe-batteries : elles fonctionnent même coupe-circuits sur OFF.</li>
+<li>Deux interrupteurs au tableau de bord permettent de les forcer en marche continue.</li>
+<li>Déclipse régulièrement le corps de pompe de sa crépine pour retirer les impuretés.</li>
+</ul>
+<div class="man-danger">Les pompes de cale ne sont pas dimensionnées pour maintenir le bateau à flot après un abordage ou un talonnage.</div>` },
+
+{ t:"Incendie et monoxyde de carbone", c:`
+<p>Extincteur normalisé <b>13A 89B C</b> à poste fixe sur le flanc tribord, entre le siège pilote et le meuble cuisine. Vérifie chaque saison la date de validité et la pression.</p>
+<p>Le monoxyde de carbone est incolore, inodore et mortel. Symptômes : maux de tête, vertiges, bourdonnements, somnolence, nausées, perte de conscience, peau rouge cerise — souvent confondus avec le mal de mer ou l'alcool.</p>
+<p>Le CO s'accumule notamment moteur tournant à l'arrêt dans un espace confiné, à couple d'un autre bateau moteur tournant, en marche avec l'étrave trop haute, ou avec les panneaux avant fermés.</p>
+<div class="man-danger">Ne navigue jamais avec le taud fermé sans ventilation : les panneaux avant et arrière doivent être retirés pour laisser l'air traverser.</div>
+<p>Le capteur du détecteur a une durée de vie de 7 ans. Au terme, un signal EOL retentit : remplace le bloc complet. Teste le détecteur avec son bouton TEST si le bateau n'a pas servi depuis 10 jours ou plus.</p>` },
+
+{ t:"Réchaud GPL, guindeau, chauffage", c:`
+<p><b>Réchaud GPL (option)</b> — bouteille de 2 kg dans le caisson étanche sous le meuble cuisine, drainé directement à la mer. Le bateau est livré sans bouteille ni détendeur.</p>
+<p>Test d'étanchéité avant chaque usage : ferme les brûleurs, ouvre le robinet de la bouteille, laisse la pression se stabiliser, referme le robinet, observe le manomètre pendant 3 minutes. L'aiguille doit rester strictement immobile.</p>
+<div class="man-danger">Si la pression baisse, il y a une fuite : n'allume pas. Jamais de flamme pour chercher une fuite, jamais de solution ammoniaquée. N'utilise jamais le réchaud comme chauffage d'appoint, et garde une aération ouverte.</div>
+<p><b>Guindeau (option)</b> — enclenche son disjoncteur près des coupe-batteries, puis la bascule au tableau de bord : haut pour remonter, bas pour descendre. Retire toujours la goupille de sécurité de l'ancre avant la manœuvre. En cas de panne : manivelle de secours dans l'empreinte étoile du barbotin, antihoraire pour laisser filer, horaire pour freiner.</p>
+<p><b>Chauffage diesel 2,2 kW (option)</b> — réservoir amovible de 10 L en cale moteur avec clapet magnétique anti-siphon. Sors toujours le réservoir du bateau pour le remplir. L'échappement bâbord devient brûlant : garde la zone dégagée sur au moins 200 mm, pas de pare-battage ni d'amarre à proximité.</p>` },
+
+{ t:"Direction et commandes moteur", c:`
+<p>Direction hydraulique à volant inclinable : pompe de barre sous le volant, flexibles haute pression, vérin sur le hors-bord.</p>
+<p>Ton bateau étant motorisé par un <b>Verado L6</b>, une pompe d'assistance électrique 12V est installée dans le coffre arrière bâbord. Le remplissage et la purge d'huile hydraulique se font sur cette pompe, pas sur la pompe de barre. Utilise l'huile hydraulique marine recommandée par Mercury. Un niveau bas donne du jeu au volant et des bruits d'air.</p>
+<p><b>Commande DTS</b> — passage électrique sans câble :</p>
+<ul>
+<li>Démarrage uniquement levier au point mort.</li>
+<li><b>Throttle Only</b> sous la poignée : accélérer au point mort sans embrayer l'hélice. Retour au neutre pour réenclencher.</li>
+<li><b>Cordon coupe-circuit</b> : à fixer au poignet ou à la cuisse dès le démarrage, sans exception.</li>
+</ul>
+<p><b>Active Trim</b> gère l'assiette longitudinale selon la vitesse GPS. Les <b>flaps</b> corrigent la gîte transversale due au vent latéral ou aux passagers d'un même bord.</p>` },
+
+{ t:"Circuit 12V et disjoncteurs", c:`
+<p>Deux batteries (type AGM recommandé) : une pour le démarrage du moteur, une de servitude, rechargées par l'alternateur via un relais de charge. Coupe-batterie rotatif dans le bac technique du coffre arrière tribord.</p>
+<ul>
+<li><b>OFF</b> — tout est isolé, sauf les pompes de cale automatiques et le détecteur de CO.</li>
+<li><b>ON</b> (rotation horaire 90°) — position normale en navigation, les deux parcs alimentent leurs circuits de façon isolée.</li>
+<li><b>COMBINE</b> (appuyer et pivoter 45°) — couple les deux batteries pour un démarrage de secours.</li>
+</ul>
+<p><b>Console pilote</b></p>
+<table>
+<tr><th>Pompe de cale arrière / avant</th><td>3 A</td></tr>
+<tr><th>Klaxon</th><td>5 A</td></tr>
+<tr><th>Feux de navigation</th><td>5 A</td></tr>
+<tr><th>Éclairage de courtoisie</th><td>5 A</td></tr>
+<tr><th>Flaps</th><td>15 A</td></tr>
+<tr><th>Essuie-glace tribord</th><td>10 A</td></tr>
+<tr><th>Lave-glace</th><td>5 A</td></tr>
+<tr><th>Prises 12V</th><td>10 A</td></tr>
+<tr><th>Stéréo</th><td>10 A</td></tr>
+<tr><th>GPS / électronique</th><td>10 A</td></tr>
+<tr><th>Réfrigérateur</th><td>10 A</td></tr>
+<tr><th>Pompe eau douce</th><td>10 A</td></tr>
+</table>
+<p><b>Panneau arrière</b></p>
+<table>
+<tr><th>Ligne principale console</th><td>60 A</td></tr>
+<tr><th>Macérateur</th><td>20 A</td></tr>
+<tr><th>Alarme CO</th><td>5 A</td></tr>
+<tr><th>Flotteurs pompes de cale</th><td>3 A</td></tr>
+<tr><th>Mémoire autoradio</th><td>10 A</td></tr>
+</table>
+<div class="man-danger">Remplace un fusible ou un disjoncteur uniquement par un modèle de même calibre. Un calibre supérieur ne protège plus et crée un risque d'incendie. Garde des rechanges à bord.</div>` },
+
+{ t:"Entretien, gelcoat et hivernage", c:`
+<ul>
+<li><b>Rinçage</b> à l'eau douce après chaque sortie en mer, savon neutre biodégradable.</li>
+<li><b>Nettoyeur haute pression</b> : buse à jet plat large uniquement, en mouvement continu. Jamais sur le tableau de bord, les cadrans, les joints de hublots ni la commande moteur.</li>
+<li><b>Cirage</b> : cire marine de carnauba au moins deux fois par an contre les UV et le farinage.</li>
+<li><b>Inox</b> : rince à l'eau douce après chaque usage, polish marin dans le sens du grain. Jamais de paille de fer, d'abrasif ni de nettoyant chloré.</li>
+<li><b>Sellerie vinyle</b> : eau savonneuse tiède. La mousse à cellules ouvertes absorbe l'eau — ne laisse pas les coussins sous la pluie, stocke-les au sec.</li>
+<li><b>Tauds et bimini</b> : rinçage à l'eau claire, savon doux à 38 °C maximum. Ne replie jamais un taud humide.</li>
+<li><b>Vitres acryliques</b> : jamais de chiffon sec, jamais d'acétone, de solvant ni de nettoyant à vitres.</li>
+</ul>
+<p><b>Hivernage</b> : dévisse le bouchon de nable pour vidanger, rince le moteur à l'eau douce, débranche les batteries en commençant par le négatif et mets-les en charge d'entretien, vidange le réservoir d'eau douce et les tuyauteries du WC.</p>
+<div class="man-note">Ne trailer jamais avec le bimini déployé : il doit être rangé dans son étui, rails en position basse.</div>` }
+];
+
+function sansAccent(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+function renderManuel(filtre){
+  const cont = document.getElementById("manuelList");
+  const q = sansAccent((filtre || "").trim());
+  cont.innerHTML = "";
+  let n = 0;
+  MANUEL.forEach((sec, i) => {
+    const brut = sansAccent(sec.t + " " + sec.c.replace(/<[^>]+>/g, " "));
+    if(q && brut.indexOf(q) === -1) return;
+    n++;
+    const div = document.createElement("div");
+    div.className = "man-sec" + (q ? " open" : "");
+    div.innerHTML = '<button class="man-head"><span><span class="num">'+(i+1)+'.</span>'+esc(sec.t)+'</span><span class="chev2">▾</span></button>'
+                  + '<div class="man-body">'+sec.c+'</div>';
+    div.querySelector(".man-head").addEventListener("click", () => div.classList.toggle("open"));
+    cont.appendChild(div);
+  });
+  if(n === 0) cont.innerHTML = '<p class="empty-msg">Aucune section ne contient ce mot.</p>';
+}
+document.getElementById("manuelSearch").addEventListener("input", (e) => renderManuel(e.target.value));
+
+/* ---------- ONEDRIVE VIA MAKE ---------- */
+function versBase64(texte){
+  const octets = new TextEncoder().encode(texte);
+  let bin = "";
+  for(let i = 0; i < octets.length; i++) bin += String.fromCharCode(octets[i]);
+  return btoa(bin);
+}
+function depuisBase64(b64){
+  const bin = atob(String(b64).replace(/\s/g, ""));
+  const octets = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) octets[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(octets);
+}
+function chargeUtile(){
+  return { app: "kat-a-mar", version: 1, checklist: state, comptes, sorties,
+           heuresDepart: getHeuresDepart(), resa, entretien,
+           manualHours: getManualHours(), exportedAt: new Date().toISOString() };
+}
+function cloudStatut(texte, classe){
+  const el = document.getElementById("cloudStatus");
+  el.textContent = texte;
+  el.className = "cloud-status" + (classe ? " " + classe : "");
+}
+function cloudBoutons(actif){
+  document.getElementById("cloudSaveBtn").disabled = !actif;
+  document.getElementById("cloudLoadBtn").disabled = !actif;
+}
+async function appelMake(corps){
+  const rep = await fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(corps)
+  });
+  if(!rep.ok) throw new Error("Make a répondu " + rep.status);
+  return (await rep.text()).trim();
+}
+
+document.getElementById("cloudSaveBtn").addEventListener("click", async () => {
+  if(WEBHOOK_URL.indexOf("REMPLACER") !== -1){ cloudStatut("Adresse du webhook Make pas encore renseignée dans le fichier.", "bad"); return; }
+  cloudBoutons(false);
+  cloudStatut("Envoi en cours…");
+  try{
+    await appelMake({ action: "save", data: versBase64(JSON.stringify(chargeUtile(), null, 2)) });
+    const h = new Date().toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
+    cloudStatut("Sauvegardé sur OneDrive à " + h + ".", "ok");
+  }catch(e){
+    cloudStatut("Échec : " + e.message + ". Rien n'a été envoyé, tes données restent sur l'iPhone.", "bad");
+  }finally{ cloudBoutons(true); }
+});
+
+document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
+  if(WEBHOOK_URL.indexOf("REMPLACER") !== -1){ cloudStatut("Adresse du webhook Make pas encore renseignée dans le fichier.", "bad"); return; }
+  cloudBoutons(false);
+  cloudStatut("Lecture de OneDrive…");
+  let data;
+  try{
+    const brut = await appelMake({ action: "import" });
+    if(!brut){ cloudStatut("Aucune sauvegarde sur OneDrive pour l'instant.", "bad"); cloudBoutons(true); return; }
+    let texte;
+    try{ texte = depuisBase64(brut); }catch(e){ texte = brut; }
+    data = JSON.parse(texte);
+  }catch(e){
+    cloudStatut("Échec de lecture : " + e.message + ". Rien n'a été modifié.", "bad");
+    cloudBoutons(true); return;
+  }
+  if(!data || typeof data !== "object" || data.app !== "kat-a-mar"){
+    cloudStatut("Le fichier trouvé n'est pas une sauvegarde Kat-a-Mar. Rien n'a été modifié.", "bad");
+    cloudBoutons(true); return;
+  }
+  const nbDep = (data.comptes && Array.isArray(data.comptes.expenses)) ? data.comptes.expenses.length : 0;
+  const nbSor = (data.sorties && Array.isArray(data.sorties.entries)) ? data.sorties.entries.length : 0;
+  const nbResa = (data.resa && Array.isArray(data.resa.entries)) ? data.resa.entries.length : 0;
+  const quand = data.exportedAt ? new Date(data.exportedAt).toLocaleString("fr-BE") : "date inconnue";
+  const ok = confirm("Sauvegarde OneDrive du " + quand + " :\n"
+    + nbDep + " dépense(s), " + nbSor + " sortie(s), " + nbResa + " réservation(s).\n\n"
+    + "Sur cet iPhone : " + comptes.expenses.length + " dépense(s), " + sorties.entries.length + " sortie(s), " + resa.entries.length + " réservation(s).\n\n"
+    + "REMPLACER les données de cet iPhone par celles de OneDrive ? Cette action est irréversible.");
+  if(!ok){ cloudStatut("Restauration annulée. Rien n'a été modifié."); cloudBoutons(true); return; }
+  try{
+    if(data.comptes && Array.isArray(data.comptes.expenses)) writeLS(COMPTES_KEY, JSON.stringify(data.comptes));
+    if(data.sorties && Array.isArray(data.sorties.entries)) writeLS(SORTIES_KEY, JSON.stringify(data.sorties));
+    if(data.resa && Array.isArray(data.resa.entries)) writeLS(RESA_KEY, JSON.stringify(data.resa));
+    if(data.entretien && typeof data.entretien === "object") writeLS(ENTRETIEN_KEY, JSON.stringify(data.entretien));
+    if(data.checklist && typeof data.checklist === "object") writeLS(STORAGE_KEY, JSON.stringify(data.checklist));
+    if(typeof data.heuresDepart === "number") writeLS(DEPART_KEY, String(data.heuresDepart));
+    if(typeof data.manualHours === "number") writeLS(MANUAL_HOURS_KEY, String(data.manualHours));
+  }catch(e){
+    cloudStatut("Mémoire du téléphone saturée : restauration incomplète.", "bad");
+    cloudBoutons(true); return;
+  }
+  alert("Données restaurées. L'application va se recharger.");
+  location.reload();
+});
 
 /* ---------- ACCUEIL : RESUMES ---------- */
 function refreshHome(){
