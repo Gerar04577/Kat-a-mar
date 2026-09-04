@@ -248,6 +248,26 @@ mark.hit.actif{ background:var(--p-peach-dark); color:#fff; }
 .dico-ou b{ color:var(--p-blue-dark); }
 .dico-lettre{ font-size:20px; font-weight:800; color:var(--p-blue-dark); margin:18px 4px 8px; }
 .dico-lettre:first-child{ margin-top:2px; }
+/* ---------- DOCUMENTS ---------- */
+.conn-card{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:15px; margin-bottom:16px; }
+.conn-etat{ font-size:13.5px; font-weight:700; color:var(--ink); }
+.conn-detail{ font-size:12.5px; color:var(--ink-soft); margin-top:5px; line-height:1.45; }
+button.conn-btn{ width:100%; margin-top:11px; padding:13px; border-radius:12px; border:none; font-weight:800; font-size:15px;
+  background:linear-gradient(135deg, var(--p-blue), var(--p-lavender)); color:#215678; }
+button.conn-btn.sortie{ background:var(--sand); border:1.5px solid var(--line); color:var(--ink-soft); font-size:13px; padding:10px; font-weight:700; }
+.doc-cat{ font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--p-blue-dark); font-weight:800; margin:20px 4px 9px; }
+.doc-carte{ background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:9px; }
+.doc-nom{ font-size:14.5px; font-weight:700; word-break:break-word; }
+.doc-info{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+.doc-echeance{ font-size:12.5px; font-weight:700; margin-top:6px; }
+.doc-echeance.ok{ color:var(--ok); } .doc-echeance.soon{ color:var(--warn); } .doc-echeance.late{ color:var(--bad); }
+.doc-actions{ display:flex; gap:8px; margin-top:10px; }
+.doc-actions button{ flex:1; padding:9px; border-radius:10px; font-size:12.5px; font-weight:700; border:1.5px solid var(--line); background:var(--sand); color:var(--ink-soft); }
+.doc-actions button.ouvrir{ background:var(--p-blue); border-color:var(--p-blue-dark); color:#215678; }
+.doc-actions button.suppr{ background:#fff; border-color:var(--p-pink-dark); color:#8C2F4C; }
+.doc-progres{ height:6px; background:rgba(60,59,78,0.08); border-radius:4px; margin-top:10px; overflow:hidden; display:none; }
+.doc-progres.show{ display:block; }
+.doc-progres > div{ height:100%; background:var(--p-blue-dark); width:0%; }
 .man-danger{ background:rgba(255,211,222,0.4); border-left:3px solid var(--p-pink-dark); padding:10px 12px; border-radius:8px; margin:12px 0; font-size:13.5px; color:#8C2F4C; font-weight:600; }
 .man-note{ background:rgba(255,238,179,0.45); border-left:3px solid var(--p-yellow-dark); padding:10px 12px; border-radius:8px; margin:12px 0; font-size:13.5px; color:#8A6A10; }
 button.cloud-btn{ width:100%; margin-top:11px; padding:12px; border-radius:12px; border:1.5px solid var(--p-lavender-dark); background:var(--p-lavender); color:#5B4E8C; font-weight:800; font-size:14px; }
@@ -303,6 +323,10 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
     <button class="tile wide c-mint" data-go="manuel">
       <div class="ic">📖</div>
       <div><div class="tname">Mode d'emploi</div><div class="tsub">Manuel du propriétaire 755CR — consultable hors-ligne</div></div>
+    </button>
+    <button class="tile wide c-pink" data-go="documents">
+      <div class="ic">📁</div>
+      <div><div class="tname">Documents</div><div class="tsub" id="tileDocs">Papiers du bateau dans OneDrive</div></div>
     </button>
     <button class="tile wide c-peach" data-go="dictionnaire">
       <div class="ic">🔤</div>
@@ -535,6 +559,40 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
   </div>
 </div>
 
+<!-- ================= DOCUMENTS ================= -->
+<div class="screen" id="screen-documents">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Documents</span></div>
+  <div class="body-wrap">
+    <div class="conn-card">
+      <div class="conn-etat" id="connEtat">Non connecté</div>
+      <div class="conn-detail" id="connDetail">Les documents sont rangés dans ton OneDrive, dossier KAT-A-MAR / DOCUMENTS. Il faut te connecter avec ton compte Microsoft pour y accéder.</div>
+      <button class="conn-btn" id="connBtn">Se connecter avec Microsoft</button>
+      <button class="conn-btn sortie" id="deconnBtn" style="display:none;">Se déconnecter</button>
+    </div>
+
+    <div class="form-card" id="docFormulaire" style="display:none;">
+      <label for="docCat">Catégorie</label>
+      <select id="docCat">
+        <option value="Propriete">Propriété</option>
+        <option value="Assurance">Assurance</option>
+        <option value="Manuels">Manuels</option>
+        <option value="Entretien">Entretien</option>
+        <option value="Photos">Photos</option>
+      </select>
+      <label for="docFichier">Fichier ou photo</label>
+      <input type="file" id="docFichier">
+      <label for="docEcheance">Date d'échéance (facultatif)</label>
+      <input type="date" id="docEcheance">
+      <p class="hint">Utile pour l'assurance et le contrôle périodique. L'accueil signale ce qui expire dans les trois mois.</p>
+      <button class="add-btn" id="docEnvoyer">Envoyer dans OneDrive</button>
+      <div class="doc-progres" id="docProgres"><div></div></div>
+      <p class="cloud-status" id="docStatut"></p>
+    </div>
+
+    <div id="docListe"></div>
+  </div>
+</div>
+
 <!-- ================= DICTIONNAIRE ================= -->
 <div class="screen" id="screen-dictionnaire">
   <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Dictionnaire</span></div>
@@ -609,9 +667,9 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v12";
+const VERSION = "v14";
 
-const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire"];
+const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
 /* Webhook du scénario Make "Kat-a-Mar" (routes save et import).
    Déclarée une seule fois dans tout le fichier. */
@@ -633,6 +691,7 @@ function showScreen(id){
   if(id === "donnees") refreshStorageInfo();
   if(id === "manuel") renderManuel(document.getElementById("manuelSearch").value);
   if(id === "dictionnaire") renderDico(document.getElementById("dicoSearch").value);
+  if(id === "documents") renderDocuments();
   if(id === "balance") renderBalance();
   if(id === "depenses") renderDepenses();
 }
@@ -1813,6 +1872,15 @@ const MANUEL = [
 <p>Sous les boutons, une ligne rappelle la date et l'auteur de la dernière version que cet iPhone connaît. C'est cette référence qui sert de comparaison.</p>
 <p>La règle de bon sens qui évite tout : <b>appuie sur Restaurer avant de commencer à saisir</b>, et sur Sauvegarder dès que tu as fini.</p>` },
 
+{ t:"Les documents du bateau", c:`
+<p>Les papiers du bateau sont rangés dans ton OneDrive, dossier <b>KAT-A-MAR / DOCUMENTS</b>, en cinq catégories : Propriété, Assurance, Manuels, Entretien, Photos. Ce sont de vrais fichiers, que tu peux ouvrir depuis l'application OneDrive ou transmettre à ton assureur.</p>
+<p><b>La connexion.</b> L'écran Documents demande de te connecter avec ton compte Microsoft. Aucun mot de passe n'est stocké par l'application, et personne ne peut lire ces documents sans se connecter.</p>
+<div class="man-note">Microsoft limite cette connexion à <b>24 heures</b>. Tu devras donc te reconnecter une fois par jour environ. C'est une règle de Microsoft pour les applications web, pas un défaut de l'application. Le bouton « Se connecter » réapparaît tout seul le moment venu.</div>
+<p><b>L'envoi.</b> Les fichiers de plus de 4 Mo partent automatiquement en plusieurs morceaux, sans que tu aies rien à faire. Si l'envoi est interrompu, rien d'incomplet n'est laissé dans OneDrive.</p>
+<p><b>Les échéances.</b> Tu peux donner une date de fin de validité à un document, utile pour l'assurance et le contrôle périodique. L'accueil signale alors ce qui expire dans les trois mois.</p>
+<div class="man-danger">Ces documents contiennent des passeports et des numéros d'identité. Ne les dépose jamais dans le dépôt GitHub, qui est public. OneDrive est le bon endroit.</div>
+<p><b>Hors ligne.</b> La liste est lue en direct depuis OneDrive : sans réseau, tu n'auras pas accès aux documents. Le mode d'emploi, lui, reste consultable en mer.</p>` },
+
 { t:"Le vocabulaire du bord", c:`
 <p>Tous les mots de métier employés dans cette application et dans les manuels sont réunis dans le <b>Dictionnaire</b>, accessible depuis l'accueil.</p>
 <p>Chaque entrée donne la définition du mot et l'endroit du bateau ou de l'application où tu le rencontres. La recherche y porte aussi bien sur le mot que sur sa définition : si tu ne connais que la chose, cherche « robinet » ou « bouchon » et tu retrouveras son nom.</p>` }
@@ -2199,6 +2267,389 @@ document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
   location.reload();
 });
 
+/* ---------- MICROSOFT GRAPH : CONNEXION ET DOCUMENTS ----------
+   OAuth 2.0 avec PKCE écrit à la main, sans aucune bibliothèque ni CDN.
+   Inscription Entra « Kat-a-Mar », comptes Microsoft personnels uniquement. */
+const GRAPH_CLIENT = "3d96633c-5a64-486c-900d-f068e0fceb70";
+const GRAPH_REDIRECT = "https://gerar04577.github.io/Kat-a-mar/";
+const GRAPH_SCOPES = "Files.ReadWrite User.Read offline_access";
+const GRAPH_AUTORISER = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
+const GRAPH_JETON = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
+const GRAPH_API = "https://graph.microsoft.com/v1.0";
+const RACINE_DOCS = "KAT-A-MAR/DOCUMENTS";
+const CATEGORIES = ["Propriete", "Assurance", "Manuels", "Entretien", "Photos"];
+const NOMS_CAT = { Propriete:"Propriété", Assurance:"Assurance", Manuels:"Manuels", Entretien:"Entretien", Photos:"Photos" };
+
+const CLE_ACCES = "katamar-graph-acces";
+const CLE_RAFRAICHIR = "katamar-graph-rafraichir";
+const CLE_EXPIRE = "katamar-graph-expire";
+const CLE_VERIF = "katamar-graph-verif";
+const CLE_ETAT = "katamar-graph-etat";
+const CLE_RETOUR = "katamar-graph-retour";
+const CLE_QUI = "katamar-graph-qui";
+const CLE_MOTIF = "katamar-graph-motif";
+
+function b64url(octets){
+  let bin = "";
+  for(let i = 0; i < octets.length; i++) bin += String.fromCharCode(octets[i]);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function alea(n){ const a = new Uint8Array(n); crypto.getRandomValues(a); return b64url(a); }
+async function empreinte(texte){
+  const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texte));
+  return b64url(new Uint8Array(d));
+}
+function connecte(){ return !!localStorage.getItem(CLE_RAFRAICHIR) || !!localStorage.getItem(CLE_ACCES); }
+
+async function urlConnexion(){
+  const verif = alea(48);
+  const etat = alea(12);
+  try{ writeLS(CLE_VERIF, verif); writeLS(CLE_ETAT, etat); writeLS(CLE_RETOUR, "documents"); }catch(e){}
+  return GRAPH_AUTORISER
+    + "?client_id=" + encodeURIComponent(GRAPH_CLIENT)
+    + "&response_type=code"
+    + "&redirect_uri=" + encodeURIComponent(GRAPH_REDIRECT)
+    + "&scope=" + encodeURIComponent(GRAPH_SCOPES)
+    + "&code_challenge=" + (await empreinte(verif))
+    + "&code_challenge_method=S256"
+    + "&state=" + etat;
+}
+async function seConnecter(){ location.href = await urlConnexion(); }
+function seDeconnecter(){
+  [CLE_ACCES, CLE_RAFRAICHIR, CLE_EXPIRE, CLE_VERIF, CLE_ETAT, CLE_QUI, CLE_MOTIF].forEach(k => {
+    try{ localStorage.removeItem(k); }catch(e){}
+  });
+  renderDocuments();
+}
+function rangerJetons(rep){
+  const marge = 60;   /* on renouvelle une minute avant l'échéance réelle */
+  try{
+    writeLS(CLE_ACCES, rep.access_token || "");
+    /* Microsoft ne renvoie pas toujours un nouveau jeton de rafraîchissement :
+       ne jamais écraser l'ancien par du vide. */
+    if(rep.refresh_token) writeLS(CLE_RAFRAICHIR, rep.refresh_token);
+    writeLS(CLE_EXPIRE, String(Date.now() + ((Number(rep.expires_in) || 3600) - marge) * 1000));
+  }catch(e){}
+}
+async function echangerCode(code, verif){
+  const corps = new URLSearchParams({
+    client_id: GRAPH_CLIENT, grant_type: "authorization_code", code: code,
+    redirect_uri: GRAPH_REDIRECT, code_verifier: verif, scope: GRAPH_SCOPES
+  });
+  const r = await fetch(GRAPH_JETON, { method:"POST",
+    headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body: corps.toString() });
+  const j = await r.json();
+  if(!r.ok) throw new Error(j.error_description || j.error || ("HTTP " + r.status));
+  rangerJetons(j);
+  try{ localStorage.removeItem(CLE_MOTIF); }catch(e){}
+  return j;
+}
+
+/* Un seul rafraîchissement à la fois : deux appels simultanés invalideraient
+   l'un des deux jetons. Motif « single-flight ». */
+let rafraichissementEnCours = null;
+async function rafraichirJeton(){
+  if(rafraichissementEnCours) return rafraichissementEnCours;
+  const refresh = localStorage.getItem(CLE_RAFRAICHIR);
+  if(!refresh) throw new Error("Session expirée, reconnecte-toi.");
+  rafraichissementEnCours = (async () => {
+    const corps = new URLSearchParams({
+      client_id: GRAPH_CLIENT, grant_type: "refresh_token",
+      refresh_token: refresh, scope: GRAPH_SCOPES
+    });
+    const r = await fetch(GRAPH_JETON, { method:"POST",
+      headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body: corps.toString() });
+    const j = await r.json();
+    if(!r.ok){
+      /* Microsoft limite à 24 heures les jetons de rafraîchissement délivrés
+         à une redirection de type SPA, sans fenêtre glissante. Passé ce délai
+         il faut se reconnecter : on efface tout pour que le bouton de
+         connexion réapparaisse, au lieu de laisser l'application se croire
+         connectée et répéter une erreur incompréhensible. */
+      const motif = String(j.error || "") + " " + String(j.error_description || "");
+      if(/invalid_grant|expired|interaction_required|AADSTS7000|AADSTS500/i.test(motif)){
+        [CLE_ACCES, CLE_RAFRAICHIR, CLE_EXPIRE].forEach(k => { try{ localStorage.removeItem(k); }catch(e){} });
+        /* Le motif est conservé pour rester affiché après le prochain rendu :
+           sinon l'explication disparaît et l'utilisateur ne comprend pas
+           pourquoi on lui redemande de se connecter. */
+        try{ writeLS(CLE_MOTIF, "Session Microsoft expirée. Microsoft limite la connexion à 24 heures : reconnecte-toi, tes documents sont intacts dans OneDrive."); }catch(e){}
+        throw new Error("Session Microsoft expirée — reconnecte-toi. La connexion ne dure que 24 heures.");
+      }
+      throw new Error(j.error_description || j.error || ("HTTP " + r.status));
+    }
+    rangerJetons(j);
+    return j.access_token;
+  })();
+  try{ return await rafraichissementEnCours; }
+  finally{ rafraichissementEnCours = null; }
+}
+async function jetonValide(){
+  const acces = localStorage.getItem(CLE_ACCES);
+  const expire = Number(localStorage.getItem(CLE_EXPIRE) || 0);
+  if(acces && Date.now() < expire) return acces;
+  return await rafraichirJeton();
+}
+async function appelGraph(chemin, options){
+  const o = options || {};
+  const jeton = await jetonValide();
+  const entetes = Object.assign({}, o.headers || {}, { Authorization: "Bearer " + jeton });
+  const r = await fetch(chemin.indexOf("http") === 0 ? chemin : GRAPH_API + chemin,
+                        Object.assign({}, o, { headers: entetes }));
+  if(r.status === 404) return null;
+  if(!r.ok){
+    let d = "";
+    try{ const j = await r.json(); d = (j.error && j.error.message) || ""; }catch(e){}
+    throw new Error("OneDrive a répondu " + r.status + (d ? " — " + d : ""));
+  }
+  if(r.status === 204) return true;
+  const t = await r.text();
+  return t ? JSON.parse(t) : true;
+}
+
+/* ---------- ENVOI ---------- */
+const SEUIL_SESSION = 4 * 1024 * 1024;   /* au-delà, Graph impose une session */
+/* Un nom de fichier vient de l'extérieur : on retire les séparateurs de
+   chemin, les caractères interdits par OneDrive, et les points de tête qui
+   feraient un fichier caché ou un « .. ». */
+function nomPropre(nom){
+  let n = String(nom || "").replace(/[\\\/:*?"<>|#%]/g, "-");
+  n = n.replace(/\.{2,}/g, ".").replace(/^[.\s-]+/, "").replace(/[\s.]+$/, "");
+  n = n.replace(/-{2,}/g, "-").slice(0, 120);
+  return n || "document";
+}
+async function envoyerPetit(cat, nom, fichier){
+  const jeton = await jetonValide();
+  const url = GRAPH_API + "/me/drive/root:/" + RACINE_DOCS + "/" + cat + "/" + encodeURIComponent(nom) + ":/content";
+  const r = await fetch(url, { method:"PUT",
+    headers:{ Authorization:"Bearer " + jeton, "Content-Type": fichier.type || "application/octet-stream" },
+    body: fichier });
+  if(!r.ok) throw new Error("Envoi refusé (" + r.status + ")");
+  return await r.json();
+}
+async function envoyerGros(cat, nom, fichier, surProgres){
+  const session = await appelGraph("/me/drive/root:/" + RACINE_DOCS + "/" + cat + "/" + encodeURIComponent(nom) + ":/createUploadSession",
+    { method:"POST", headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ item: { "@microsoft.graph.conflictBehavior":"replace", name: nom } }) });
+  if(!session || !session.uploadUrl) throw new Error("Session d'envoi refusée par OneDrive.");
+  const taille = fichier.size;
+  const morceau = 5 * 327680;             /* 1,6 Mo : multiple de 320 Kio exigé par Graph */
+  let debut = 0, dernier = null;
+  while(debut < taille){
+    const fin = Math.min(debut + morceau, taille);
+    const r = await fetch(session.uploadUrl, { method:"PUT",
+      headers:{ "Content-Range": "bytes " + debut + "-" + (fin - 1) + "/" + taille },
+      body: fichier.slice(debut, fin) });
+    if(!(r.status === 202 || r.status === 200 || r.status === 201)){
+      try{ await fetch(session.uploadUrl, { method:"DELETE" }); }catch(e){}
+      throw new Error("Envoi interrompu à " + Math.round(debut / taille * 100) + " % (" + r.status + ")");
+    }
+    if(r.status !== 202) dernier = await r.json();
+    debut = fin;
+    if(surProgres) surProgres(Math.round(debut / taille * 100));
+  }
+  return dernier;
+}
+
+/* ---------- ECHEANCES ----------
+   Rangées dans un fichier compagnon, pour être partagées avec Gil plutôt
+   que de rester sur un seul iPhone. */
+const FICHIER_ECHEANCES = "/me/drive/root:/" + RACINE_DOCS + "/echeances.json";
+let echeances = {};
+async function lireEcheances(){
+  try{
+    const item = await appelGraph(FICHIER_ECHEANCES + ":/content");
+    echeances = (item && typeof item === "object" && !item.error) ? item : {};
+  }catch(e){ echeances = {}; }
+  return echeances;
+}
+async function ecrireEcheances(){
+  const jeton = await jetonValide();
+  await fetch(GRAPH_API + FICHIER_ECHEANCES + ":/content", { method:"PUT",
+    headers:{ Authorization:"Bearer " + jeton, "Content-Type":"application/json" },
+    body: JSON.stringify(echeances, null, 2) });
+}
+function etatEcheanceDoc(iso){
+  if(!isISODate(iso)) return null;
+  const jours = Math.round((new Date(iso + "T00:00:00").getTime() - Date.now()) / 86400000);
+  if(jours < 0) return { classe:"late", texte:"Expiré depuis " + (-jours) + " jour(s)" };
+  if(jours <= 90) return { classe:"soon", texte:"Expire dans " + jours + " jour(s)" };
+  return { classe:"ok", texte:"Valable jusqu'au " + iso };
+}
+function fmtTaille(o){
+  const n = Number(o) || 0;
+  if(n < 1024) return n + " o";
+  if(n < 1024 * 1024) return Math.round(n / 1024) + " Ko";
+  return (Math.round(n / 1024 / 102.4) / 10).toLocaleString("fr-BE") + " Mo";
+}
+
+/* ---------- AFFICHAGE ---------- */
+function docStatut(texte, classe){
+  const el = document.getElementById("docStatut");
+  el.textContent = texte || "";
+  el.className = "cloud-status" + (classe ? " " + classe : "");
+}
+function docProgres(pct){
+  const b = document.getElementById("docProgres");
+  b.classList.toggle("show", pct !== null);
+  if(pct !== null) b.firstElementChild.style.width = pct + "%";
+}
+let docsEnCache = [];
+async function renderDocuments(){
+  const etat = document.getElementById("connEtat");
+  const detail = document.getElementById("connDetail");
+  const liste = document.getElementById("docListe");
+  document.getElementById("connBtn").style.display = connecte() ? "none" : "block";
+  document.getElementById("deconnBtn").style.display = connecte() ? "block" : "none";
+  document.getElementById("docFormulaire").style.display = connecte() ? "block" : "none";
+  if(!connecte()){
+    const motif = localStorage.getItem(CLE_MOTIF);
+    etat.textContent = "Non connecté";
+    detail.textContent = motif || "Les documents sont rangés dans ton OneDrive, dossier KAT-A-MAR / DOCUMENTS. Il faut te connecter avec ton compte Microsoft pour y accéder.";
+    liste.innerHTML = '<p class="empty-msg">Connecte-toi pour voir les documents du bateau.</p>';
+    return;
+  }
+  etat.textContent = "Connecté" + (localStorage.getItem(CLE_QUI) ? " — " + localStorage.getItem(CLE_QUI) : "");
+  detail.textContent = "Dossier OneDrive : " + RACINE_DOCS + ". Les fichiers restent de vrais documents, ouvrables depuis l'app OneDrive.";
+  liste.innerHTML = '<p class="empty-msg">Lecture de OneDrive…</p>';
+  try{
+    if(!localStorage.getItem(CLE_QUI)){
+      const moi = await appelGraph("/me");
+      if(moi && moi.displayName){ try{ writeLS(CLE_QUI, moi.displayName); }catch(e){} }
+    }
+    await lireEcheances();
+    const tout = [];
+    for(const cat of CATEGORIES){
+      const r = await appelGraph("/me/drive/root:/" + RACINE_DOCS + "/" + cat + ":/children?$top=200");
+      if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat, item: it }); });
+    }
+    docsEnCache = tout;
+    afficherDocuments(tout);
+    majTuileDocuments();
+  }catch(e){
+    liste.innerHTML = '<p class="empty-msg">Lecture impossible : ' + esc(e.message) + '</p>';
+    /* Si la session est tombée, on remet l'écran dans son état déconnecté
+       pour que le bouton de connexion redevienne accessible. */
+    if(!connecte()){
+      document.getElementById("connBtn").style.display = "block";
+      document.getElementById("deconnBtn").style.display = "none";
+      document.getElementById("docFormulaire").style.display = "none";
+      document.getElementById("connEtat").textContent = "Non connecté";
+    }
+  }
+}
+function afficherDocuments(tout){
+  const liste = document.getElementById("docListe");
+  liste.innerHTML = "";
+  if(tout.length === 0){
+    liste.innerHTML = '<p class="empty-msg">Aucun document. Envoie le premier ci-dessus.</p>';
+    return;
+  }
+  CATEGORIES.forEach(cat => {
+    const lot = tout.filter(x => x.cat === cat);
+    if(lot.length === 0) return;
+    const t = document.createElement("div"); t.className = "doc-cat";
+    t.textContent = NOMS_CAT[cat] + " · " + lot.length; liste.appendChild(t);
+    lot.sort((a,b) => a.item.name.localeCompare(b.item.name)).forEach(x => {
+      const cle = cat + "/" + x.item.name;
+      const ech = etatEcheanceDoc(echeances[cle]);
+      const div = document.createElement("div"); div.className = "doc-carte";
+      div.innerHTML = '<div class="doc-nom">' + esc(x.item.name) + '</div>'
+        + '<div class="doc-info">' + fmtTaille(x.item.size)
+        + (x.item.lastModifiedDateTime ? " · " + new Date(x.item.lastModifiedDateTime).toLocaleDateString("fr-BE") : "") + '</div>'
+        + (ech ? '<div class="doc-echeance ' + ech.classe + '">' + esc(ech.texte) + '</div>' : '')
+        + '<div class="doc-actions">'
+        + '<button class="ouvrir" data-ouvrir="' + esc(x.item.id) + '">Ouvrir</button>'
+        + '<button class="suppr" data-suppr="' + esc(x.item.id) + '" data-cle="' + esc(cle) + '">Supprimer</button>'
+        + '</div>';
+      liste.appendChild(div);
+    });
+  });
+  liste.querySelectorAll("[data-ouvrir]").forEach(b => b.addEventListener("click", async () => {
+    const x = docsEnCache.find(y => y.item.id === b.dataset.ouvrir);
+    if(!x) return;
+    b.textContent = "Ouverture…";
+    try{
+      const it = await appelGraph("/me/drive/items/" + x.item.id + "?select=id,name,@microsoft.graph.downloadUrl");
+      const url = it && it["@microsoft.graph.downloadUrl"];
+      if(url) window.open(url, "_blank"); else alert("Lien de téléchargement indisponible.");
+    }catch(e){ alert("Ouverture impossible : " + e.message); }
+    b.textContent = "Ouvrir";
+  }));
+  liste.querySelectorAll("[data-suppr]").forEach(b => b.addEventListener("click", async () => {
+    if(!confirm("Supprimer définitivement ce document de OneDrive ?")) return;
+    try{
+      await appelGraph("/me/drive/items/" + b.dataset.suppr, { method:"DELETE" });
+      if(echeances[b.dataset.cle]){ delete echeances[b.dataset.cle]; await ecrireEcheances(); }
+      renderDocuments();
+    }catch(e){ alert("Suppression impossible : " + e.message); }
+  }));
+}
+function majTuileDocuments(){
+  const el = document.getElementById("tileDocs");
+  if(!el) return;
+  if(!connecte()){ el.textContent = "Papiers du bateau dans OneDrive"; return; }
+  const proches = Object.keys(echeances).filter(k => {
+    const e = etatEcheanceDoc(echeances[k]);
+    return e && (e.classe === "soon" || e.classe === "late");
+  }).length;
+  el.textContent = proches
+    ? proches + (proches > 1 ? " échéances proches" : " échéance proche")
+    : docsEnCache.length + (docsEnCache.length > 1 ? " documents" : " document");
+}
+
+document.getElementById("connBtn").addEventListener("click", seConnecter);
+document.getElementById("deconnBtn").addEventListener("click", () => {
+  if(confirm("Se déconnecter de Microsoft ? Les documents restent dans OneDrive.")) seDeconnecter();
+});
+
+document.getElementById("docEnvoyer").addEventListener("click", unSeulAppui(async () => {
+  const champ = document.getElementById("docFichier");
+  const fichier = champ.files && champ.files[0];
+  if(!fichier){ docStatut("Choisis d'abord un fichier.", "bad"); return; }
+  const cat = document.getElementById("docCat").value;
+  const nom = nomPropre(fichier.name);
+  const ech = document.getElementById("docEcheance").value;
+  const bouton = document.getElementById("docEnvoyer");
+  bouton.disabled = true;
+  docStatut("Envoi de " + nom + "…");
+  docProgres(0);
+  try{
+    if(fichier.size < SEUIL_SESSION){ await envoyerPetit(cat, nom, fichier); docProgres(100); }
+    else{ await envoyerGros(cat, nom, fichier, p => docProgres(p)); }
+    if(isISODate(ech)){
+      await lireEcheances();
+      echeances[cat + "/" + nom] = ech;
+      await ecrireEcheances();
+    }
+    docStatut(nom + " enregistré dans " + NOMS_CAT[cat] + ".", "ok");
+    champ.value = ""; document.getElementById("docEcheance").value = "";
+    await renderDocuments();
+  }catch(e){
+    docStatut("Échec : " + e.message + ". Rien n'a été enregistré.", "bad");
+  }finally{ bouton.disabled = false; setTimeout(() => docProgres(null), 1200); }
+}));
+
+/* ---------- RETOUR DE LA PAGE DE CONNEXION MICROSOFT ---------- */
+(async function retourConnexion(){
+  const p = new URLSearchParams(location.search || "");
+  const code = p.get("code"), etat = p.get("state"), err = p.get("error");
+  if(!code && !err) return;
+  const attendu = localStorage.getItem(CLE_ETAT);
+  const verif = localStorage.getItem(CLE_VERIF);
+  const ecran = localStorage.getItem(CLE_RETOUR) || "documents";
+  try{ localStorage.removeItem(CLE_ETAT); localStorage.removeItem(CLE_VERIF); localStorage.removeItem(CLE_RETOUR); }catch(e){}
+  history.replaceState(null, "", GRAPH_REDIRECT);
+  if(err){ alert("Connexion refusée : " + (p.get("error_description") || err)); location.hash = "#" + ecran; return; }
+  if(!etat || etat !== attendu){ alert("Réponse de connexion inattendue, par sécurité elle est ignorée."); return; }
+  try{
+    await echangerCode(code, verif);
+    location.hash = "#" + ecran;
+    showScreen(ecran);
+  }catch(e){
+    alert("Connexion impossible : " + e.message);
+  }
+})();
+
 /* ---------- ACCUEIL : RESUMES ---------- */
 function refreshHome(){
   document.getElementById("tileChecklist").textContent =
@@ -2218,6 +2669,7 @@ function refreshHome(){
     if((h - rec.lastHours) >= item.intervalH || (parAnnees && y >= item.intervalY)) late++;
   });
   document.getElementById("tileEntretien").textContent = late ? late + " en retard" : (unknown ? unknown + " à renseigner" : "À jour");
+  majTuileDocuments();
   if(comptes.expenses.length === 0){ document.getElementById("tileComptes").textContent = "Aucune dépense"; }
   else{ document.getElementById("tileComptes").textContent = balancePhrase(calculBalance().solde, "au global"); }
 }
