@@ -255,6 +255,15 @@ button.cloud-btn:disabled{ opacity:.55; }
 .cloud-status{ font-size:12.5px; color:var(--ink-soft); margin-top:9px; line-height:1.45; text-align:center; }
 .cloud-status.ok{ color:var(--ok); font-weight:700; }
 .cloud-status.bad{ color:var(--bad); font-weight:700; }
+.conflit-card{ display:none; margin-top:13px; padding:14px; border-radius:14px;
+  background:var(--p-pink); border:2px solid var(--p-pink-dark); }
+.conflit-card.show{ display:block; }
+.conflit-titre{ font-size:14.5px; font-weight:800; color:#8C2F4C; margin-bottom:8px; }
+.conflit-txt{ font-size:13.5px; line-height:1.5; color:#7A3050; margin:0 0 12px; font-weight:600; }
+button.conflit-btn{ width:100%; margin-top:9px; padding:11px; border-radius:11px; font-weight:800; font-size:13.5px;
+  border:1.5px solid var(--line); background:var(--sand); color:var(--ink-soft); }
+button.conflit-btn.sur{ background:var(--p-mint); border-color:var(--p-mint-dark); color:#2A7A5F; }
+button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); color:#8C2F4C; }
 
 </style>
 </head>
@@ -545,7 +554,15 @@ button.cloud-btn:disabled{ opacity:.55; }
       <button class="cloud-btn" id="cloudSaveBtn">☁️ Sauvegarder sur OneDrive</button>
       <button class="cloud-btn" id="cloudLoadBtn">☁️ Restaurer depuis OneDrive</button>
       <p class="cloud-status" id="cloudStatus"></p>
-      <p class="hint">Le fichier <b>kat-a-mar.json</b> est écrasé à chaque sauvegarde : une seule version, toujours la plus récente.</p>
+      <div class="conflit-card" id="conflitCard">
+        <div class="conflit-titre">⚠️ Sauvegarde bloquée</div>
+        <p class="conflit-txt" id="conflitTexte"></p>
+        <button class="conflit-btn sur" id="conflitRestaurer">Restaurer d'abord cette version</button>
+        <button class="conflit-btn danger" id="conflitForcer">Forcer et écraser sa version</button>
+        <button class="conflit-btn" id="conflitAnnuler">Annuler</button>
+      </div>
+      <p class="hint">Le fichier <b>kat-a-mar.json</b> est écrasé à chaque sauvegarde : une seule version, toujours la plus récente. Avant d'écrire, l'application relit le fichier et refuse d'effacer le travail de l'autre.</p>
+      <p class="hint" id="derniereSauvegarde"></p>
     </div>
 
     <div class="info-card">
@@ -571,6 +588,18 @@ function todayStr(){
   const d = new Date();
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
+/* Verrou anti-double-appui. Un appui accidentel sur iPhone produit deux clics
+   à quelques millisecondes d'intervalle : le second est ignoré. Le verrou est
+   synchrone, pas un état différé — un état différé ne protège de rien. */
+function unSeulAppui(fn, ms){
+  let dernier = 0;
+  return function(){
+    const t = Date.now();
+    if(t - dernier < (ms || 900)) return;
+    dernier = t;
+    return fn.apply(this, arguments);
+  };
+}
 function fmtEUR(n){ return (Number(n)||0).toLocaleString("fr-BE", { style: "currency", currency: "EUR" }); }
 function fmtH(n){ return (Math.round((Number(n)||0)*10)/10).toLocaleString("fr-BE") + " h"; }
 function isISODate(s){ return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s); }
@@ -580,7 +609,7 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v9";
+const VERSION = "v12";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire"];
 
@@ -825,7 +854,7 @@ document.querySelectorAll(".qui-btn").forEach(btn => {
     btn.classList.add("active"); currentQui = btn.dataset.qui;
   });
 });
-document.getElementById("addSortieBtn").addEventListener("click", () => {
+document.getElementById("addSortieBtn").addEventListener("click", unSeulAppui(() => {
   const date = document.getElementById("sortDate").value || todayStr();
   const heures = parseFloat(document.getElementById("sortHeures").value);
   const note = document.getElementById("sortNote").value.trim();
@@ -837,7 +866,7 @@ document.getElementById("addSortieBtn").addEventListener("click", () => {
   saveSorties(sorties);
   document.getElementById("sortHeures").value = ""; document.getElementById("sortNote").value = "";
   renderSorties();
-});
+}));
 function renderSorties(){
   document.getElementById("hoursDisplay").textContent = fmtH(getCurrentHours());
   const container = document.getElementById("sortiesYears"); container.innerHTML = "";
@@ -899,7 +928,7 @@ document.querySelectorAll(".resaqui-btn").forEach(btn => {
   });
 });
 function datesOverlap(aStart,aEnd,bStart,bEnd){ return aStart <= bEnd && bStart <= aEnd; }
-document.getElementById("addResaBtn").addEventListener("click", () => {
+document.getElementById("addResaBtn").addEventListener("click", unSeulAppui(() => {
   const debut = document.getElementById("resaDebut").value;
   const fin = document.getElementById("resaFin").value;
   const note = document.getElementById("resaNote").value.trim();
@@ -910,7 +939,7 @@ document.getElementById("addResaBtn").addEventListener("click", () => {
   saveResa(resa);
   document.getElementById("resaNote").value = "";
   renderResa();
-});
+}));
 function renderResa(){
   const container = document.getElementById("resaList"); container.innerHTML = "";
   if(resa.entries.length === 0){ container.innerHTML = '<p class="empty-msg">Aucune réservation. Ajoute la première ci-dessus.</p>'; return; }
@@ -1197,7 +1226,7 @@ function compressImage(file, callback, onError){
   reader.readAsDataURL(file);
 }
 
-document.getElementById("addExpenseBtn").addEventListener("click", () => {
+document.getElementById("addExpenseBtn").addEventListener("click", unSeulAppui(() => {
   const date = document.getElementById("expDate").value || todayStr();
   const desc = document.getElementById("expDesc").value.trim();
   const amount = parseFloat(document.getElementById("expAmount").value);
@@ -1222,7 +1251,7 @@ document.getElementById("addExpenseBtn").addEventListener("click", () => {
   document.getElementById("expFacture").value = ""; document.getElementById("factureName").textContent = "";
   pendingFacture = null;
   renderComptes();
-});
+}));
 
 function dataUrlToBlob(dataUrl){
   const parts = String(dataUrl).split(",");
@@ -1410,7 +1439,7 @@ function renderBalance(){
     });
   });
 }
-document.getElementById("addRembBtn").addEventListener("click", () => {
+document.getElementById("addRembBtn").addEventListener("click", unSeulAppui(() => {
   const date = document.getElementById("rbDate").value || todayStr();
   const montant = parseFloat(document.getElementById("rbMontant").value);
   if(isNaN(montant) || montant <= 0){ alert("Indique un montant valide."); return; }
@@ -1425,7 +1454,7 @@ document.getElementById("addRembBtn").addEventListener("click", () => {
   }
   document.getElementById("rbMontant").value = "";
   renderBalance(); refreshHome();
-});
+}));
 
 /* ---------- ECRAN DEPENSES ---------- */
 function renderDepenses(){
@@ -1509,6 +1538,7 @@ document.getElementById("importFile").addEventListener("change", (e) => {
   e.target.value = "";
 });
 function refreshStorageInfo(){
+  majDerniereSauvegarde();
   let bytes = 0;
   try{
     [STORAGE_KEY, SORTIES_KEY, RESA_KEY, ENTRETIEN_KEY, COMPTES_KEY].forEach(k => { bytes += (localStorage.getItem(k) || "").length; });
@@ -1714,8 +1744,8 @@ const MANUEL = [
 <li>Niveau du liquide de direction hydraulique</li>
 </ul>
 <p><b>Après chaque sortie</b> — laver l'extérieur à l'eau douce, et rincer le circuit de refroidissement après toute sortie en eau salée ou saumâtre.</p>
-<p><b>Tous les 100 h ou 1 an</b> — vidange huile et filtre, lubrifiant d'embase, anodes anticorrosion, courroie d'accessoires, graissage du moteur, Quickleen dans le réservoir une fois par an. Réservés au concessionnaire : filtres à carburant côté aspiration, thermostat en usage eau salée, cannelures d'arbre d'hélice et d'entraînement, serrage de la visserie et du support moteur, état de la batterie et des cosses.</p>
-<p><b>Tous les 300 h ou 3 ans</b> — bougies, patins d'usure de trim. Réservés au concessionnaire : turbine de pompe à eau, filtre à carburant haute pression, connecteurs du faisceau, niveau du power trim, silentblocs moteur.</p>
+<p><b>Tous les 100 h ou 1 an</b> — vidange huile moteur + filtre à huile, lubrifiant d'embase, anodes anticorrosion, courroie d'accessoires, graissage du moteur, Quickleen dans le réservoir une fois par an. Réservés au concessionnaire : filtres à carburant côté aspiration, thermostat (usage en eau salée), cannelures d'arbre d'hélice et d'entraînement, serrage de la visserie et du support moteur, état de la batterie et des cosses.</p>
+<p><b>Tous les 300 h ou 3 ans</b> — bougies, patins d'usure de trim. Réservés au concessionnaire : turbine de pompe à eau, filtre à carburant haute pression, connecteurs du faisceau électrique, niveau de liquide du power trim, silentblocs moteur.</p>
 <p><b>Toutes les 600 h</b> — jeu aux soupapes, chez le concessionnaire. Pas de règle annuelle sur cette ligne.</p>
 <div class="man-note">La courroie d'accessoires est bien à contrôler tous les 100 h ou 1 an, pas tous les 300 h. Et le contrôle des anodes suit le même rythme : en eau salée, c'est la ligne à ne pas oublier.</div>
 <p><b>Rinçage du circuit de refroidissement</b></p>
@@ -1769,6 +1799,19 @@ const MANUEL = [
 <div class="man-note">Le niveau d'huile est passé dans la liste de départ. Mercury exige un moteur froid ou arrêté depuis au moins une heure : au retour, la lecture est fausse.</div>
 <p>Les deux listes ont leur propre avancement et leur propre bouton de remise à zéro. Décocher l'une ne touche pas l'autre. Rien ne s'efface tout seul : si les cases datent d'un autre jour, un bandeau jaune te le signale et te propose de les décocher.</p>
 <p>Trois lignes de la liste de retour ferment quelque chose qui, laissé ouvert, peut couler le bateau ou vider une batterie : la vanne d'eau de mer du WC, la vanne du macérateur, et le coupe-batterie. Une quatrième, relever le moteur hors de l'eau, décide de la durée de vie de l'embase.</p>` },
+
+{ t:"Sauvegarder à deux sans s'écraser", c:`
+<p>Vous partagez un seul fichier sur OneDrive, <b>kat-a-mar.json</b>, et rien n'y est envoyé automatiquement. Deux boutons dans l'écran Sauvegarde : Sauvegarder envoie, Restaurer récupère.</p>
+<p><b>Le garde-fou.</b> Chaque sauvegarde inscrit dans le fichier qui a sauvé et à quelle heure. Avant d'écrire, l'application relit le fichier sur OneDrive et compare. Si quelqu'un a sauvegardé depuis ton dernier chargement, <b>elle refuse d'écrire</b> et affiche un bandeau rouge nommant la personne et l'heure.</p>
+<p>Trois choix te sont alors proposés :</p>
+<ul>
+<li><b>Restaurer d'abord cette version</b> — le bon réflexe dans presque tous les cas. Tu récupères son travail, puis tu refais tes modifications par-dessus.</li>
+<li><b>Forcer et écraser</b> — une seconde confirmation est demandée. Son travail est définitivement perdu.</li>
+<li><b>Annuler</b> — rien n'est envoyé, tes données restent sur ton iPhone.</li>
+</ul>
+<div class="man-note">Si la vérification elle-même échoue, faute de réseau par exemple, l'application refuse aussi d'écrire. Mieux vaut ne rien envoyer que d'écraser à l'aveugle.</div>
+<p>Sous les boutons, une ligne rappelle la date et l'auteur de la dernière version que cet iPhone connaît. C'est cette référence qui sert de comparaison.</p>
+<p>La règle de bon sens qui évite tout : <b>appuie sur Restaurer avant de commencer à saisir</b>, et sur Sauvegarder dès que tu as fini.</p>` },
 
 { t:"Le vocabulaire du bord", c:`
 <p>Tous les mots de métier employés dans cette application et dans les manuels sont réunis dans le <b>Dictionnaire</b>, accessible depuis l'accueil.</p>
@@ -1978,17 +2021,46 @@ function depuisBase64(b64){
   for(let i = 0; i < bin.length; i++) octets[i] = bin.charCodeAt(i);
   return new TextDecoder().decode(octets);
 }
+/* Signature de la dernière écriture connue : qui a sauvé, et quand.
+   C'est elle qui permet de savoir si l'autre a écrit entre-temps. */
+const SIGNATURE_KEY = "katamar-signature";
+function signatureConnue(){ return localStorage.getItem(SIGNATURE_KEY) || ""; }
+function retenirSignature(sig){ try{ writeLS(SIGNATURE_KEY, sig || ""); }catch(e){} }
+function signatureDe(data){
+  if(!data || typeof data !== "object") return "";
+  return (data.exportedAt || "") + "|" + (data.sauvePar || "");
+}
 function chargeUtile(){
   return { app: "kat-a-mar", version: 1, checklist: state, comptes, sorties,
            heuresDepart: getHeuresDepart(), resa, entretien,
-           manualHours: getManualHours(), exportedAt: new Date().toISOString() };
+           manualHours: getManualHours(),
+           sauvePar: comptes.moi || "Quelqu'un",
+           exportedAt: new Date().toISOString() };
+}
+function quandLisible(iso){
+  if(!iso) return "à une date inconnue";
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? "à une date inconnue" : d.toLocaleString("fr-BE");
+}
+function majDerniereSauvegarde(){
+  const el = document.getElementById("derniereSauvegarde");
+  if(!el) return;
+  const sig = signatureConnue();
+  if(!sig){ el.textContent = "Aucune sauvegarde OneDrive connue depuis cet iPhone."; return; }
+  const parts = sig.split("|");
+  el.textContent = "Dernière version connue : " + quandLisible(parts[0])
+                 + (parts[1] ? ", par " + parts[1] : "") + ".";
 }
 function cloudStatut(texte, classe){
   const el = document.getElementById("cloudStatus");
   el.textContent = texte;
   el.className = "cloud-status" + (classe ? " " + classe : "");
 }
+/* Verrou synchrone : désactiver un bouton ne suffit pas, un second clic
+   peut encore être délivré. Le drapeau est testé avant tout traitement. */
+let cloudOccupe = false;
 function cloudBoutons(actif){
+  cloudOccupe = !actif;
   document.getElementById("cloudSaveBtn").disabled = !actif;
   document.getElementById("cloudLoadBtn").disabled = !actif;
 }
@@ -2007,20 +2079,81 @@ async function appelMake(corps){
   return texte;
 }
 
-document.getElementById("cloudSaveBtn").addEventListener("click", async () => {
+/* Lit le fichier distant. Renvoie null si aucune sauvegarde valable n'existe
+   encore, et lève une erreur si la lecture elle-même échoue. */
+async function lireDistant(){
+  const brut = await appelMake({ action: "import" });
+  if(!brut) return null;
+  let texte;
+  try{ texte = depuisBase64(brut); }catch(e){ texte = brut; }
+  let data;
+  try{ data = JSON.parse(texte); }catch(e){ return null; }
+  if(!data || typeof data !== "object" || data.app !== "kat-a-mar") return null;
+  return data;
+}
+function masquerConflit(){ document.getElementById("conflitCard").classList.remove("show"); }
+function afficherConflit(distant){
+  document.getElementById("conflitTexte").textContent =
+    (distant.sauvePar || "Quelqu'un") + " a sauvegardé le " + quandLisible(distant.exportedAt)
+    + ", après ton dernier chargement. Sauvegarder maintenant effacerait ce travail.";
+  document.getElementById("conflitCard").classList.add("show");
+}
+
+async function ecrireSurOneDrive(){
+  const charge = chargeUtile();
+  await appelMake({ action: "save", data: versBase64(JSON.stringify(charge, null, 2)) });
+  retenirSignature(signatureDe(charge));
+  majDerniereSauvegarde();
+  const h = new Date().toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
+  cloudStatut("Sauvegardé sur OneDrive à " + h + ".", "ok");
+}
+
+/* Garde-fou : on relit toujours le fichier avant d'écrire. */
+async function sauvegarder(forcer){
+  if(cloudOccupe) return;
   cloudBoutons(false);
-  cloudStatut("Envoi en cours…");
+  masquerConflit();
+  cloudStatut(forcer ? "Envoi en cours…" : "Vérification de la version sur OneDrive…");
   try{
-    await appelMake({ action: "save", data: versBase64(JSON.stringify(chargeUtile(), null, 2)) });
-    const h = new Date().toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
-    cloudStatut("Sauvegardé sur OneDrive à " + h + ".", "ok");
+    if(!forcer){
+      let distant;
+      try{
+        distant = await lireDistant();
+      }catch(e){
+        cloudStatut("Impossible de vérifier la version sur OneDrive : " + e.message
+          + ". Par sécurité, rien n'a été envoyé.", "bad");
+        return;
+      }
+      if(distant && signatureDe(distant) !== signatureConnue()){
+        cloudStatut("Sauvegarde interrompue : le fichier a changé depuis ton dernier chargement.", "bad");
+        afficherConflit(distant);
+        return;
+      }
+    }
+    cloudStatut("Envoi en cours…");
+    await ecrireSurOneDrive();
   }catch(e){
     cloudStatut("Échec : " + e.message + ". Rien n'a été envoyé, tes données restent sur l'iPhone.", "bad");
   }finally{ cloudBoutons(true); }
+}
+document.getElementById("cloudSaveBtn").addEventListener("click", () => sauvegarder(false));
+document.getElementById("conflitForcer").addEventListener("click", () => {
+  if(!confirm("Écraser la version de OneDrive ? Le travail de l'autre sera définitivement perdu.")) return;
+  sauvegarder(true);
+});
+document.getElementById("conflitAnnuler").addEventListener("click", () => {
+  masquerConflit();
+  cloudStatut("Sauvegarde annulée. Rien n'a été modifié.");
+});
+document.getElementById("conflitRestaurer").addEventListener("click", () => {
+  masquerConflit();
+  document.getElementById("cloudLoadBtn").click();
 });
 
 document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
+  if(cloudOccupe) return;
   cloudBoutons(false);
+  masquerConflit();
   cloudStatut("Lecture de OneDrive…");
   let data;
   try{
@@ -2040,8 +2173,9 @@ document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
   const nbDep = (data.comptes && Array.isArray(data.comptes.expenses)) ? data.comptes.expenses.length : 0;
   const nbSor = (data.sorties && Array.isArray(data.sorties.entries)) ? data.sorties.entries.length : 0;
   const nbResa = (data.resa && Array.isArray(data.resa.entries)) ? data.resa.entries.length : 0;
-  const quand = data.exportedAt ? new Date(data.exportedAt).toLocaleString("fr-BE") : "date inconnue";
-  const ok = confirm("Sauvegarde OneDrive du " + quand + " :\n"
+  const quand = quandLisible(data.exportedAt);
+  const ok = confirm("Sauvegarde OneDrive du " + quand
+    + (data.sauvePar ? ", par " + data.sauvePar : "") + " :\n"
     + nbDep + " dépense(s), " + nbSor + " sortie(s), " + nbResa + " réservation(s).\n\n"
     + "Sur cet iPhone : " + comptes.expenses.length + " dépense(s), " + sorties.entries.length + " sortie(s), " + resa.entries.length + " réservation(s).\n\n"
     + "REMPLACER les données de cet iPhone par celles de OneDrive ? Cette action est irréversible.");
@@ -2054,6 +2188,9 @@ document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
     if(data.checklist && typeof data.checklist === "object") writeLS(STORAGE_KEY, JSON.stringify(data.checklist));
     if(typeof data.heuresDepart === "number") writeLS(DEPART_KEY, String(data.heuresDepart));
     if(typeof data.manualHours === "number") writeLS(MANUAL_HOURS_KEY, String(data.manualHours));
+    /* On repart de la version qu'on vient de charger : c'est elle qui sert
+       désormais de référence au garde-fou. */
+    retenirSignature(signatureDe(data));
   }catch(e){
     cloudStatut("Mémoire du téléphone saturée : restauration incomplète.", "bad");
     cloudBoutons(true); return;
