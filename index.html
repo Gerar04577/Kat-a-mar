@@ -228,10 +228,26 @@ button.edit-btn{ margin-top:7px; width:100%; padding:9px; border-radius:12px; bo
 .man-body p{ margin:10px 0; }
 .man-body ul{ margin:10px 0; padding-left:20px; }
 .man-body li{ margin-bottom:7px; }
-.man-body table{ width:100%; border-collapse:collapse; font-size:13px; margin:10px 0; }
-.man-body th, .man-body td{ text-align:left; padding:6px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
-.man-body th{ color:var(--ink-soft); font-weight:700; }
-.man-body td:last-child, .man-body th:last-child{ text-align:right; white-space:nowrap; }
+.man-body table{ width:100%; table-layout:fixed; border-collapse:collapse; font-size:13px; margin:10px 0; }
+.man-body th, .man-body td{ text-align:left; padding:6px 4px; border-bottom:1px solid var(--line); vertical-align:top;
+  white-space:normal; overflow-wrap:anywhere; }
+.man-body th{ color:var(--ink-soft); font-weight:700; width:46%; }
+.man-body td{ text-align:right; }
+mark.hit{ background:var(--p-yellow); color:var(--ink); border-radius:3px; padding:0 1px; }
+mark.hit.actif{ background:var(--p-peach-dark); color:#fff; }
+.nav-recherche{ display:flex; align-items:center; gap:8px; margin:-6px 0 14px; }
+.nav-recherche .compte{ flex:1; font-size:12.5px; color:var(--ink-soft); font-weight:600; }
+.nav-recherche button{ width:44px; height:38px; border-radius:11px; border:1.5px solid var(--p-blue-dark);
+  background:var(--p-blue); color:#215678; font-size:17px; font-weight:800; }
+.nav-recherche button:disabled{ opacity:.4; }
+.nav-recherche .position{ font-size:12.5px; font-weight:800; color:var(--ink); min-width:46px; text-align:center; }
+.dico-entree{ background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:13px 15px; margin-bottom:9px; }
+.dico-mot{ font-size:16px; font-weight:800; color:var(--ink); }
+.dico-def{ font-size:14px; line-height:1.55; margin-top:5px; }
+.dico-ou{ font-size:12.5px; color:var(--ink-soft); margin-top:7px; line-height:1.45; }
+.dico-ou b{ color:var(--p-blue-dark); }
+.dico-lettre{ font-size:20px; font-weight:800; color:var(--p-blue-dark); margin:18px 4px 8px; }
+.dico-lettre:first-child{ margin-top:2px; }
 .man-danger{ background:rgba(255,211,222,0.4); border-left:3px solid var(--p-pink-dark); padding:10px 12px; border-radius:8px; margin:12px 0; font-size:13.5px; color:#8C2F4C; font-weight:600; }
 .man-note{ background:rgba(255,238,179,0.45); border-left:3px solid var(--p-yellow-dark); padding:10px 12px; border-radius:8px; margin:12px 0; font-size:13.5px; color:#8A6A10; }
 button.cloud-btn{ width:100%; margin-top:11px; padding:12px; border-radius:12px; border:1.5px solid var(--p-lavender-dark); background:var(--p-lavender); color:#5B4E8C; font-weight:800; font-size:14px; }
@@ -278,6 +294,10 @@ button.cloud-btn:disabled{ opacity:.55; }
     <button class="tile wide c-mint" data-go="manuel">
       <div class="ic">📖</div>
       <div><div class="tname">Mode d'emploi</div><div class="tsub">Manuel du propriétaire 755CR — consultable hors-ligne</div></div>
+    </button>
+    <button class="tile wide c-peach" data-go="dictionnaire">
+      <div class="ic">🔤</div>
+      <div><div class="tname">Dictionnaire</div><div class="tsub" id="tileDico">Les mots du bord expliqués</div></div>
     </button>
     <button class="tile wide c-blue" data-go="donnees">
       <div class="ic">💾</div>
@@ -495,8 +515,24 @@ button.cloud-btn:disabled{ opacity:.55; }
       <div class="urgence-item"><b>Odeur d'essence</b>Ne démarre rien, ne touche à aucun interrupteur, coupe les batteries et aère largement.</div>
     </div>
     <input type="search" class="manuel-search" id="manuelSearch" placeholder="Rechercher : nable, macérateur, GPL…">
+    <div class="nav-recherche" id="navRecherche" style="display:none;">
+      <span class="compte" id="rechCompte"></span>
+      <button type="button" id="rechPrec" aria-label="Occurrence précédente">‹</button>
+      <span class="position" id="rechPos"></span>
+      <button type="button" id="rechSuiv" aria-label="Occurrence suivante">›</button>
+    </div>
     <div id="manuelList"></div>
     <p class="empty-msg">Résumé du manuel du propriétaire Quicksilver 755CR, réf. INT 2228522B (mars 2018). Pour l'entretien du moteur, réfère-toi au manuel Mercury.</p>
+  </div>
+</div>
+
+<!-- ================= DICTIONNAIRE ================= -->
+<div class="screen" id="screen-dictionnaire">
+  <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Dictionnaire</span></div>
+  <div class="body-wrap">
+    <input type="search" class="manuel-search" id="dicoSearch" placeholder="Chercher un mot ou une définition…">
+    <p class="hint" id="dicoCompte" style="margin-top:-8px;"></p>
+    <div id="dicoListe"></div>
   </div>
 </div>
 
@@ -544,9 +580,9 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v8";
+const VERSION = "v9";
 
-const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses"];
+const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire"];
 
 /* Webhook du scénario Make "Kat-a-Mar" (routes save et import).
    Déclarée une seule fois dans tout le fichier. */
@@ -566,7 +602,8 @@ function showScreen(id){
   if(id === "resa") renderResa();
   if(id === "checklist") renderChecklist();
   if(id === "donnees") refreshStorageInfo();
-  if(id === "manuel") renderManuel();
+  if(id === "manuel") renderManuel(document.getElementById("manuelSearch").value);
+  if(id === "dictionnaire") renderDico(document.getElementById("dicoSearch").value);
   if(id === "balance") renderBalance();
   if(id === "depenses") renderDepenses();
 }
@@ -1733,44 +1770,82 @@ const MANUEL = [
 <p>Les deux listes ont leur propre avancement et leur propre bouton de remise à zéro. Décocher l'une ne touche pas l'autre. Rien ne s'efface tout seul : si les cases datent d'un autre jour, un bandeau jaune te le signale et te propose de les décocher.</p>
 <p>Trois lignes de la liste de retour ferment quelque chose qui, laissé ouvert, peut couler le bateau ou vider une batterie : la vanne d'eau de mer du WC, la vanne du macérateur, et le coupe-batterie. Une quatrième, relever le moteur hors de l'eau, décide de la durée de vie de l'embase.</p>` },
 
-{ t:"Glossaire des termes du bord", c:`
-<table>
-<tr><th>Amure, bâbord</th><td>le côté gauche du bateau quand on regarde vers l'avant</td></tr>
-<tr><th>Tribord</th><td>le côté droit</td></tr>
-<tr><th>Étrave</th><td>la pointe avant</td></tr>
-<tr><th>Tableau arrière</th><td>la paroi verticale à l'arrière, sur laquelle le moteur est boulonné</td></tr>
-<tr><th>Puits moteur</th><td>le renfoncement du tableau arrière où loge le moteur</td></tr>
-<tr><th>Embase</th><td>la partie basse et immergée du hors-bord, qui porte l'hélice</td></tr>
-<tr><th>Vérin de trim</th><td>le piston qui relève et abaisse le moteur</td></tr>
-<tr><th>Trim</th><td>l'angle du moteur : rentré, l'étrave baisse ; sorti, elle se lève</td></tr>
-<tr><th>Flaps</th><td>les volets au tableau arrière qui corrigent la gîte, l'inclinaison sur le côté</td></tr>
-<tr><th>Anode</th><td>bloc de métal tendre qui se ronge à la place du moteur, en eau salée</td></tr>
-<tr><th>Cale</th><td>le fond du bateau, sous le plancher, où l'eau s'accumule</td></tr>
-<tr><th>Nable</th><td>le bouchon de vidange au point le plus bas de la coque</td></tr>
-<tr><th>Dalot</th><td>l'évacuation qui vide le cockpit par gravité</td></tr>
-<tr><th>Passe-coque</th><td>tout orifice qui traverse la coque</td></tr>
-<tr><th>Vanne de coque</th><td>le robinet quart de tour qui ferme un passe-coque</td></tr>
-<tr><th>Macérateur</th><td>la pompe broyeuse qui vide la cuve des eaux noires</td></tr>
-<tr><th>Eaux noires</th><td>celles du WC ; les eaux grises viennent de l'évier</td></tr>
-<tr><th>Guindeau</th><td>le treuil d'étrave qui remonte l'ancre</td></tr>
-<tr><th>Barbotin</th><td>la roue crantée du guindeau où passe la chaîne</td></tr>
-<tr><th>Baille à mouillage</th><td>le coffre d'étrave où descend la chaîne</td></tr>
-<tr><th>Taquet</th><td>la pièce en T sur laquelle on frappe une amarre</td></tr>
-<tr><th>Défense</th><td>le boudin qui protège la coque du quai</td></tr>
-<tr><th>Taud</th><td>la toile de protection ; le bimini est le taud de soleil sur arceaux</td></tr>
-<tr><th>Gelcoat</th><td>la couche brillante de finition du polyester</td></tr>
-<tr><th>Farinage</th><td>l'aspect crayeux que prend un gelcoat non protégé</td></tr>
-<tr><th>Déjauger</th><td>passer sur le plan, quand la coque déchausse et glisse sur l'eau</td></tr>
-<tr><th>Marnage</th><td>l'écart entre marée haute et marée basse</td></tr>
-<tr><th>Talonner</th><td>toucher le fond avec la quille ou l'embase</td></tr>
-</table>` }
+{ t:"Le vocabulaire du bord", c:`
+<p>Tous les mots de métier employés dans cette application et dans les manuels sont réunis dans le <b>Dictionnaire</b>, accessible depuis l'accueil.</p>
+<p>Chaque entrée donne la définition du mot et l'endroit du bateau ou de l'application où tu le rencontres. La recherche y porte aussi bien sur le mot que sur sa définition : si tu ne connais que la chose, cherche « robinet » ou « bouchon » et tu retrouveras son nom.</p>` }
 ];
 
-function sansAccent(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+/* Comparaison insensible aux accents SANS changer la longueur du texte :
+   chaque caractère reste un caractère, donc les positions trouvées dans la
+   version normalisée sont valables dans le texte d'origine. */
+function sansAccent(s){
+  return Array.from(String(s))
+    .map(c => c.normalize("NFD")[0].toLowerCase())
+    .join("");
+}
+
+/* ---------- RECHERCHE À OCCURRENCES ---------- */
+let occurrences = [], occIndex = -1;
+
+/* Surligne le mot dans les nœuds de texte uniquement : les balises HTML
+   du mode d'emploi ne sont jamais touchées, donc jamais cassées. */
+function surligner(racine, q){
+  if(!q) return;
+  const aTraiter = [];
+  const marcheur = document.createTreeWalker(racine, NodeFilter.SHOW_TEXT, null);
+  let n;
+  while((n = marcheur.nextNode())) if(n.nodeValue && n.nodeValue.trim()) aTraiter.push(n);
+  aTraiter.forEach(noeud => {
+    const texte = noeud.nodeValue;
+    const norm = sansAccent(texte);
+    let depuis = 0, pos, morceaux = [], dernier = 0;
+    while((pos = norm.indexOf(q, depuis)) !== -1){
+      morceaux.push(document.createTextNode(texte.slice(dernier, pos)));
+      const m = document.createElement("mark");
+      m.className = "hit";
+      m.textContent = texte.slice(pos, pos + q.length);
+      morceaux.push(m);
+      dernier = pos + q.length;
+      depuis = dernier;
+    }
+    if(morceaux.length === 0) return;
+    morceaux.push(document.createTextNode(texte.slice(dernier)));
+    const frag = document.createDocumentFragment();
+    morceaux.forEach(x => frag.appendChild(x));
+    noeud.parentNode.replaceChild(frag, noeud);
+  });
+}
+function majNavRecherche(nbSections){
+  const barre = document.getElementById("navRecherche");
+  if(occurrences.length === 0){ barre.style.display = "none"; return; }
+  barre.style.display = "flex";
+  document.getElementById("rechCompte").textContent =
+    occurrences.length + (occurrences.length > 1 ? " occurrences" : " occurrence")
+    + " dans " + nbSections + (nbSections > 1 ? " sections" : " section");
+  document.getElementById("rechPos").textContent = (occIndex + 1) + " / " + occurrences.length;
+  document.getElementById("rechPrec").disabled = occurrences.length < 2;
+  document.getElementById("rechSuiv").disabled = occurrences.length < 2;
+}
+function allerOccurrence(delta){
+  if(occurrences.length === 0) return;
+  if(occIndex >= 0 && occurrences[occIndex]) occurrences[occIndex].classList.remove("actif");
+  occIndex = (occIndex + delta + occurrences.length) % occurrences.length;
+  const cible = occurrences[occIndex];
+  cible.classList.add("actif");
+  /* La section peut avoir été repliée à la main : on la rouvre avant de défiler. */
+  const sec = cible.closest(".man-sec");
+  if(sec && !sec.classList.contains("open")) sec.classList.add("open");
+  cible.scrollIntoView({ block: "center", behavior: "smooth" });
+  document.getElementById("rechPos").textContent = (occIndex + 1) + " / " + occurrences.length;
+}
+document.getElementById("rechPrec").addEventListener("click", () => allerOccurrence(-1));
+document.getElementById("rechSuiv").addEventListener("click", () => allerOccurrence(1));
+
 function renderManuel(filtre){
   const cont = document.getElementById("manuelList");
   const q = sansAccent((filtre || "").trim());
   cont.innerHTML = "";
+  occurrences = []; occIndex = -1;
   let n = 0;
   MANUEL.forEach((sec, i) => {
     const brut = sansAccent(sec.t + " " + sec.c.replace(/<[^>]+>/g, " "));
@@ -1782,10 +1857,113 @@ function renderManuel(filtre){
                   + '<div class="man-body">'+sec.c+'</div>';
     div.querySelector(".man-head").addEventListener("click", () => div.classList.toggle("open"));
     cont.appendChild(div);
+    if(q) surligner(div, q);
   });
-  if(n === 0) cont.innerHTML = '<p class="empty-msg">Aucune section ne contient ce mot.</p>';
+  if(n === 0) cont.innerHTML = '<p class="empty-msg">Aucune section ne contient ce mot. Le mot cherché est peut-être défini dans le Dictionnaire.</p>';
+  occurrences = Array.from(cont.querySelectorAll("mark.hit"));
+  if(occurrences.length){ occIndex = 0; occurrences[0].classList.add("actif"); }
+  majNavRecherche(n);
 }
 document.getElementById("manuelSearch").addEventListener("input", (e) => renderManuel(e.target.value));
+
+/* ---------- DICTIONNAIRE ----------
+   Vocabulaire du bateau à moteur. La voile en est volontairement exclue.
+   « ou » indique où le mot se rencontre, à bord ou dans l'application. */
+const DICO = [
+{ m:"Amarre", c:"Mouillage et amarrage", d:"Cordage qui retient le bateau au quai ou à un corps-mort.", o:"Frappée sur les taquets du pont. Contrôlée dans la checklist <b>Retour au port</b>." },
+{ m:"Anode", c:"Moteur", d:"Bloc de métal tendre, zinc ou aluminium, qui se corrode à la place des pièces qu'il protège. En eau salée, c'est lui qui s'use, pas ton moteur.", o:"Sur l'embase et sous la plaque anti-cavitation. Échéance de contrôle dans l'écran <b>Entretien</b>." },
+{ m:"Assiette", c:"Navigation", d:"Inclinaison du bateau d'avant en arrière. Trop cabré, on ne voit plus rien devant ; trop piqué, l'étrave enfourne.", o:"Se règle au trim du moteur, et à la charge répartie à bord." },
+{ m:"Bâbord", c:"Navigation", d:"Le côté gauche du bateau quand on regarde vers l'avant. Feu de route rouge.", o:"Partout dans les manuels pour situer un équipement." },
+{ m:"Baille à mouillage", c:"Mouillage et amarrage", d:"Coffre à l'avant du pont où descend la chaîne d'ancre.", o:"À l'étrave, sous un capot. Elle a son propre drain vers l'extérieur." },
+{ m:"Balcon", c:"Coque et pont", d:"Main-courante en inox qui ceinture le pont avant.", o:"C'est à lui qu'on se tient pour aller à l'avant, et seulement à l'arrêt." },
+{ m:"Barbotin", c:"Mouillage et amarrage", d:"Roue crantée du guindeau, dont les empreintes épousent les maillons de la chaîne.", o:"C'est dans son empreinte en étoile qu'on engage la manivelle de secours." },
+{ m:"Beaufort", c:"Mer et météo", d:"Échelle de force du vent, de 0 à 12. Force 6 correspond à un vent frais de 22 à 27 nœuds.", o:"Ton bateau est de catégorie C : conçu jusqu'à force 6 et des creux de 2 m." },
+{ m:"Bimini", c:"Coque et pont", d:"Taud de soleil tendu sur des arceaux au-dessus du cockpit.", o:"À replier sec, et à ranger avant toute mise sur remorque." },
+{ m:"Bout", c:"Mouillage et amarrage", d:"Nom du cordage à bord. Se prononce « boute ». On ne dit pas corde.", o:"Un bout enroulé dans l'hélice est la panne la plus fréquente au retour." },
+{ m:"Cale", c:"Coque et pont", d:"Le fond du bateau, sous le plancher, où s'accumule l'eau d'infiltration.", o:"Doit rester sèche : l'eau libre qui se déplace dégrade la stabilité. Deux pompes l'évacuent." },
+{ m:"Cap", c:"Navigation", d:"Direction suivie par le bateau, exprimée en degrés de 0 à 360.", o:"Affiché par le GPS du tableau de bord." },
+{ m:"Catégorie de conception", c:"Sécurité et réglementation", d:"Classement européen de A à D selon les conditions de mer admissibles. A pour la haute mer, D pour les eaux abritées.", o:"Le tien est en catégorie <b>C</b> : navigation côtière, 8 personnes maximum." },
+{ m:"CIN", c:"Sécurité et réglementation", d:"Craft Identification Number, l'identifiant légal unique du bateau, l'équivalent d'un numéro de châssis.", o:"Gravé sur le tableau arrière tribord. À citer pour toute démarche ou commande de pièce." },
+{ m:"Cockpit", c:"Coque et pont", d:"La partie ouverte du pont où l'on s'installe, entre le poste de pilotage et le tableau arrière.", o:"Il se vide seul par ses dalots." },
+{ m:"Coupe-batterie", c:"Circuits du bord", d:"Gros interrupteur rotatif qui isole tout le réseau électrique.", o:"Dans le bac technique du coffre arrière tribord. À couper si le bateau reste plus d'une journée." },
+{ m:"Coupe-circuit à cordon", c:"Sécurité et réglementation", d:"Interrupteur relié à un cordon attaché au pilote. Si le pilote passe par-dessus bord, le cordon s'arrache et le moteur s'arrête.", o:"Sur la commande de gaz, à droite du volant. Contrôlé dans la checklist <b>Avant de partir</b>." },
+{ m:"Creux", c:"Mer et météo", d:"Hauteur des vagues, mesurée du creux à la crête.", o:"Ta catégorie C admet des creux significatifs jusqu'à 2 mètres." },
+{ m:"Dalot", c:"Coque et pont", d:"Évacuation qui vide le cockpit à la mer par simple gravité, sans pompe.", o:"Aux angles arrière du plancher de cockpit. À garder dégagés de tout débris." },
+{ m:"Défense", c:"Mouillage et amarrage", d:"Boudin gonflable suspendu le long de la coque pour la protéger du quai. On dit aussi pare-battage.", o:"Hauteur et nombre à vérifier à chaque amarrage, en tenant compte du marnage." },
+{ m:"Déjauger", c:"Navigation", d:"Passer sur le plan : à vitesse suffisante, la coque déchausse et glisse sur l'eau au lieu de la fendre.", o:"C'est le régime normal de croisière de ton bateau." },
+{ m:"Eaux grises", c:"Circuits du bord", d:"Eaux savonneuses de l'évier, par opposition aux eaux noires du WC.", o:"Réservoir de 80 litres, vidangé uniquement à quai par le nable WASTE." },
+{ m:"Eaux noires", c:"Circuits du bord", d:"Eaux usées du WC, à ne pas rejeter n'importe où : leur traitement est réglementé, contrairement aux eaux grises de l'évier.", o:"Cuve de rétention de 27,8 litres sous la cabine. Vidange à quai, ou à la mer par le macérateur là où la loi l'autorise." },
+{ m:"Embase", c:"Moteur", d:"La partie basse et immergée du hors-bord, qui contient la transmission et porte l'hélice.", o:"C'est elle qui doit être complètement sortie de l'eau quand le bateau reste à quai." },
+{ m:"Étrave", c:"Coque et pont", d:"La pointe avant de la coque, celle qui fend l'eau.", o:"Elle porte le davier et le guindeau." },
+{ m:"Évent", c:"Circuits du bord", d:"Orifice qui laisse un réservoir respirer pendant qu'on le remplit ou qu'on le vide.", o:"Celui du carburant est sur le bordé bâbord et comporte un pare-flamme. À ne jamais obstruer." },
+{ m:"Farinage", c:"Coque et pont", d:"Aspect crayeux et terne que prend un gelcoat laissé sans protection aux UV.", o:"Se prévient par deux cirages par an." },
+{ m:"Flaps", c:"Navigation", d:"Volets articulés au tableau arrière qui corrigent la gîte, c'est-à-dire l'inclinaison sur le côté.", o:"Commandés au tableau de bord. À ne pas confondre avec le trim, qui agit d'avant en arrière." },
+{ m:"Franc-bord", c:"Coque et pont", d:"Hauteur de coque entre la surface de l'eau et le pont.", o:"Il diminue à mesure qu'on charge le bateau." },
+{ m:"Gelcoat", c:"Coque et pont", d:"La couche colorée et brillante qui recouvre le polyester de la coque. C'est une finition, pas une structure.", o:"Se lave au savon neutre et se cire deux fois par an." },
+{ m:"Gîte", c:"Navigation", d:"Inclinaison du bateau sur le côté.", o:"Se corrige avec les flaps, ou en déplaçant les passagers." },
+{ m:"Guindeau", c:"Mouillage et amarrage", d:"Treuil électrique d'étrave qui descend et remonte l'ancre.", o:"Commandé par une bascule au tableau de bord. Manivelle de secours en cas de panne." },
+{ m:"Hélice", c:"Moteur", d:"Le propulseur. Une pale tordue fait vibrer toute la transmission.", o:"Contrôlée dans les deux checklists." },
+{ m:"Hors-bord", c:"Moteur", d:"Moteur complet fixé à l'extérieur, sur le tableau arrière, et qui pivote pour diriger le bateau.", o:"Le tien est un Mercury Verado six cylindres de 250 CV." },
+{ m:"Liston", c:"Coque et pont", d:"Bourrelet de protection qui court le long de la coque, à hauteur du pont.", o:"C'est lui qui encaisse les frottements contre le quai." },
+{ m:"Macérateur", c:"Circuits du bord", d:"Pompe broyeuse qui vide la cuve des eaux noires à la mer.", o:"Interrupteur près du coupe-batterie arrière tribord. Sa vanne de coque reste fermée en dehors du rejet." },
+{ m:"Marnage", c:"Mer et météo", d:"Écart de hauteur d'eau entre marée haute et marée basse.", o:"Détermine la longueur à donner aux amarres pour la nuit." },
+{ m:"Mille nautique", c:"Navigation", d:"Unité de distance en mer : 1 852 mètres, soit une minute de latitude.", o:"Le feu blanc de mouillage doit être visible à 2 milles." },
+{ m:"Mouillage", c:"Mouillage et amarrage", d:"Désigne à la fois l'ancre avec sa chaîne, et l'action de jeter l'ancre.", o:"Le feu blanc 360° s'allume seul quand on est au mouillage." },
+{ m:"Nable", c:"Coque et pont", d:"Bouchon de vidange placé au point le plus bas de la coque, qu'on dévisse à terre pour évacuer l'eau.", o:"Au bas du tableau arrière. À revisser impérativement avant toute mise à l'eau." },
+{ m:"Nœud", c:"Navigation", d:"Unité de vitesse : un mille nautique par heure, soit environ 1,85 km/h. On ne dit jamais « nœuds à l'heure », la notion d'heure y est déjà.", o:"Affiché par le GPS du tableau de bord, et employé par les bulletins météo pour la force du vent." },
+{ m:"Pare-flamme", c:"Sécurité et réglementation", d:"Grille métallique qui empêche une flamme de remonter dans un circuit de carburant.", o:"Intégré à l'évent du réservoir d'essence." },
+{ m:"Passavant", c:"Coque et pont", d:"Couloir étroit le long de la cabine, qui permet de rejoindre l'avant.", o:"Interdit en navigation. Le nable de remplissage carburant s'y trouve, côté tribord arrière." },
+{ m:"Passe-coque", c:"Circuits du bord", d:"Tout orifice qui traverse la coque, en entrée ou en sortie.", o:"Vingt environ sur ton bateau. Le mode d'emploi en donne la liste et l'emplacement." },
+{ m:"Plage avant", c:"Coque et pont", d:"Le pont avant, souvent aménagé en bain de soleil.", o:"Interdit d'y séjourner quand le bateau fait route." },
+{ m:"Plaque anti-cavitation", c:"Moteur", d:"Plaque horizontale juste au-dessus de l'hélice, qui empêche l'air d'être aspiré par celle-ci.", o:"Elle porte une anode sur sa face inférieure." },
+{ m:"Puits moteur", c:"Coque et pont", d:"Le renfoncement du tableau arrière dans lequel le moteur est boulonné.", o:"C'est là qu'on cherche les fuites d'huile, d'essence ou d'eau." },
+{ m:"Quille", c:"Coque et pont", d:"L'arête longitudinale au bas de la coque, qui la raidit et l'aide à tenir son cap.", o:"C'est elle qui touche en premier en cas de talonnage." },
+{ m:"RIPAM", c:"Sécurité et réglementation", d:"Règlement international pour prévenir les abordages en mer, appelé COLREG en anglais. Il fixe qui doit manœuvrer, et les feux à porter.", o:"Sa connaissance est une obligation du chef de bord, rappelée par le manuel Quicksilver." },
+{ m:"Safran", c:"Navigation", d:"Le gouvernail, la pièce mobile immergée qui oriente le bateau. <b>Ton bateau n'en a pas</b> : c'est le moteur entier qui pivote.", o:"Terme à ne pas employer pour un hors-bord, c'est une erreur fréquente." },
+{ m:"SmartCraft", c:"Moteur", d:"Le réseau électronique de Mercury qui relie moteur, jauges et écran.", o:"C'est lui qui affiche les heures moteur à reporter dans l'écran <b>Sorties</b>." },
+{ m:"Sondeur", c:"Navigation", d:"Instrument qui mesure la profondeur sous la coque par écho.", o:"Au tableau de bord. À éteindre au retour." },
+{ m:"Tableau arrière", c:"Coque et pont", d:"La paroi verticale qui ferme l'arrière du bateau et supporte le moteur.", o:"Le CIN y est gravé côté tribord, et le nable se trouve à son pied." },
+{ m:"Talonner", c:"Navigation", d:"Toucher le fond avec la quille ou l'embase.", o:"À signaler et faire vérifier même sans dégât visible." },
+{ m:"Taquet", c:"Mouillage et amarrage", d:"Pièce en forme de T, boulonnée au pont, sur laquelle on frappe une amarre.", o:"Sur le pont avant, aux angles et dans la baille à mouillage." },
+{ m:"Taud", c:"Coque et pont", d:"Toile de protection. Le taud de soleil abrite du soleil, le taud de mouillage protège le bateau à l'arrêt.", o:"Ne jamais le replier humide : il moisit." },
+{ m:"Tribord", c:"Navigation", d:"Le côté droit du bateau quand on regarde vers l'avant. Feu de route vert.", o:"Moyen mnémotechnique : tribord et droite ont chacun sept lettres." },
+{ m:"Trim", c:"Moteur", d:"L'angle du moteur par rapport au tableau arrière. Rentré, l'étrave baisse ; sorti, elle se lève.", o:"Bouton sur la commande de gaz. Le système Active Trim le règle seul selon la vitesse." },
+{ m:"Vanne de coque", c:"Circuits du bord", d:"Robinet quart de tour qui ouvre ou ferme un passe-coque situé sous la flottaison.", o:"Deux comptent vraiment : celle du WC, sous la trappe centrale avant du cockpit, et celle du macérateur." },
+{ m:"Verado", c:"Moteur", d:"Gamme de hors-bord Mercury. La version six cylindres en ligne est suralimentée par compresseur.", o:"C'est ta motorisation : elle impose une pompe d'assistance de direction dans le coffre arrière bâbord." },
+{ m:"Vérin de trim", c:"Moteur", d:"Le piston hydraulique qui relève et abaisse le moteur.", o:"Entre le support et le moteur. À rincer à l'eau douce après chaque sortie en mer." },
+{ m:"VHF", c:"Sécurité et réglementation", d:"Radio marine. Le canal 16 est celui de la veille et de la détresse.", o:"Poste fixe au tableau de bord, portatif dans les équipements de sécurité." }
+];
+
+function renderDico(filtre){
+  const cont = document.getElementById("dicoListe");
+  const q = sansAccent((filtre || "").trim());
+  cont.innerHTML = "";
+  const liste = DICO.filter(e => !q || sansAccent(e.m + " " + e.d + " " + e.o.replace(/<[^>]+>/g, " ") + " " + e.c).indexOf(q) !== -1)
+                    .slice().sort((a,b) => sansAccent(a.m).localeCompare(sansAccent(b.m)));
+  document.getElementById("dicoCompte").textContent = q
+    ? (liste.length + (liste.length > 1 ? " mots trouvés" : " mot trouvé") + " sur " + DICO.length)
+    : (DICO.length + " mots, classés par ordre alphabétique");
+  if(liste.length === 0){
+    cont.innerHTML = '<p class="empty-msg">Aucun mot ne correspond. La recherche porte aussi sur les définitions : essaie « robinet », « bouchon » ou « cordage ».</p>';
+    return;
+  }
+  let lettre = "";
+  liste.forEach(e => {
+    const l = sansAccent(e.m)[0].toUpperCase();
+    if(l !== lettre){
+      lettre = l;
+      const t = document.createElement("div"); t.className = "dico-lettre"; t.textContent = lettre;
+      cont.appendChild(t);
+    }
+    const div = document.createElement("div"); div.className = "dico-entree";
+    div.innerHTML = '<div class="dico-mot">'+esc(e.m)+' <span class="tag">'+esc(e.c)+'</span></div>'
+                  + '<div class="dico-def">'+e.d+'</div>'
+                  + '<div class="dico-ou">Où : '+e.o+'</div>';
+    cont.appendChild(div);
+    if(q) surligner(div, q);
+  });
+}
+document.getElementById("dicoSearch").addEventListener("input", (e) => renderDico(e.target.value));
 
 /* ---------- ONEDRIVE VIA MAKE ---------- */
 function versBase64(texte){
