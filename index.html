@@ -173,6 +173,19 @@ button.add-btn{ width:100%; margin-top:15px; padding:13px; border:none; border-r
 .tag.conflict{ background:var(--p-pink); color:#8C2F4C; }
 .tag.past{ background:rgba(60,59,78,0.08); color:var(--ink-soft); }
 .tag.pro{ background:var(--p-lavender); color:#5B4E8C; margin-left:6px; margin-right:0; vertical-align:middle; }
+.visionneuse{ display:none; position:fixed; inset:0; z-index:100; background:rgba(20,19,30,0.94);
+  flex-direction:column; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+.visionneuse.show{ display:flex; }
+.vis-barre{ display:flex; align-items:center; gap:10px; padding:12px 14px; flex:0 0 auto; }
+.vis-titre{ flex:1; color:#fff; font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.vis-barre button{ flex:0 0 auto; padding:9px 13px; border-radius:11px; font-size:13.5px; font-weight:800; border:none; }
+.vis-fermer{ background:rgba(255,255,255,0.18); color:#fff; }
+.vis-partager{ background:var(--p-mint); color:#2A7A5F; }
+.vis-corps{ flex:1 1 auto; overflow:auto; display:flex; align-items:center; justify-content:center; padding:0 10px 14px; }
+.vis-corps img{ max-width:100%; height:auto; border-radius:10px; }
+.vis-msg{ color:#fff; font-size:14px; line-height:1.55; text-align:center; max-width:420px; }
+.vis-msg button{ margin-top:14px; width:100%; padding:13px; border-radius:12px; border:none;
+  background:var(--p-blue); color:#215678; font-weight:800; font-size:14.5px; }
 button.facture-btn{ margin-top:6px; font-size:12px; padding:6px 10px; border-radius:8px; border:1.5px solid var(--p-mint-dark); background:var(--p-mint); color:#2A7A5F; font-weight:700; }
 
 .summary-card{ background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:15px; margin-top:10px; }
@@ -559,6 +572,16 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
   </div>
 </div>
 
+<!-- ================= VISIONNEUSE DE FACTURE ================= -->
+<div class="visionneuse" id="visionneuse">
+  <div class="vis-barre">
+    <button class="vis-fermer" id="visFermer">‹ Fermer</button>
+    <span class="vis-titre" id="visTitre"></span>
+    <button class="vis-partager" id="visPartager">Partager</button>
+  </div>
+  <div class="vis-corps" id="visCorps"></div>
+</div>
+
 <!-- ================= DOCUMENTS ================= -->
 <div class="screen" id="screen-documents">
   <div class="topbar"><button class="back-btn" data-back><span class="chev">‹</span>Retour</button><span class="topbar-title">Documents</span></div>
@@ -667,7 +690,7 @@ function writeLS(key, value){ localStorage.setItem(key, value); }
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v14";
+const VERSION = "v15";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -1291,7 +1314,14 @@ document.getElementById("addExpenseBtn").addEventListener("click", unSeulAppui((
   const amount = parseFloat(document.getElementById("expAmount").value);
   if(!desc || isNaN(amount) || amount <= 0){ alert("Renseigne une description et un montant valide."); return; }
   const entry = { id: Date.now().toString(36), date, desc, amount, paidBy: currentPaidBy, type: posteId(currentType) };
-  if(pendingFacture) entry.facture = pendingFacture;
+  if(pendingFacture){
+    /* Une photo prise sur iPhone arrive sous un identifiant illisible : on la
+       renomme d'après la dépense, ce qui la rend reconnaissable une fois
+       partagée ou enregistrée dans Fichiers. */
+    const ext = (pendingFacture.type === "application/pdf") ? ".pdf" : ".jpg";
+    const base = (date + " " + desc).replace(/[\\\/:*?"<>|]/g, "-").replace(/\s+/g, " ").trim().slice(0, 80);
+    entry.facture = Object.assign({}, pendingFacture, { name: base + ext });
+  }
   comptes.expenses.push(entry);
   try{
     saveComptes(comptes);
@@ -1313,10 +1343,16 @@ document.getElementById("addExpenseBtn").addEventListener("click", unSeulAppui((
 }));
 
 function dataUrlToBlob(dataUrl){
-  const parts = String(dataUrl).split(",");
-  const m = parts[0].match(/:(.*?);/);
-  const mime = m ? m[1] : "application/octet-stream";
-  const bin = atob(parts[1] || "");
+  const txt = String(dataUrl || "");
+  /* Une facture abîmée doit être signalée, pas convertie en fichier vide :
+     sinon la visionneuse s'ouvre sur une image blanche sans explication. */
+  const entete = txt.match(/^data:([^;,]*)(;base64)?,/);
+  if(!entete) throw new Error("Contenu de facture invalide.");
+  const parts = txt.split(",");
+  const charge = parts.slice(1).join(",");
+  if(!charge) throw new Error("Facture vide.");
+  const mime = entete[1] || "application/octet-stream";
+  const bin = atob(charge);
   const arr = new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
   return new Blob([arr], { type: mime });
@@ -1330,12 +1366,53 @@ function shareOrDownload(file, title){
     setTimeout(()=>URL.revokeObjectURL(url), 5000);
   }
 }
-function saveFacture(entry){
-  try{
-    const blob = dataUrlToBlob(entry.facture.dataUrl);
-    shareOrDownload(new File([blob], entry.facture.name, { type: entry.facture.type }), entry.facture.name);
-  }catch(e){ alert("Facture illisible."); }
+/* Voir une facture, c'est la REGARDER. Le partage iOS reste disponible, mais
+   derrière un bouton séparé : il ne doit plus s'ouvrir à la place de l'image. */
+let factureAffichee = null, urlAffichee = null;
+function fermerVisionneuse(){
+  document.getElementById("visionneuse").classList.remove("show");
+  document.getElementById("visCorps").innerHTML = "";
+  if(urlAffichee){ try{ URL.revokeObjectURL(urlAffichee); }catch(e){} urlAffichee = null; }
+  factureAffichee = null;
 }
+function voirFacture(entry){
+  let blob;
+  try{ blob = dataUrlToBlob(entry.facture.dataUrl); }
+  catch(e){ alert("Facture illisible."); return; }
+  factureAffichee = entry;
+  const corps = document.getElementById("visCorps");
+  document.getElementById("visTitre").textContent = entry.facture.name || "Facture";
+  corps.innerHTML = "";
+  urlAffichee = URL.createObjectURL(blob);
+  if((entry.facture.type || "").indexOf("image/") === 0){
+    const img = document.createElement("img");
+    img.alt = entry.desc || "Facture";
+    img.src = urlAffichee;
+    img.addEventListener("error", () => {
+      corps.innerHTML = '<div class="vis-msg">Cette image ne peut pas être affichée. Utilise le bouton Partager pour l\'enregistrer.</div>';
+    });
+    corps.appendChild(img);
+  } else {
+    /* Safari n'affiche pas un PDF dans la page : on l'ouvre dans un onglet. */
+    const d = document.createElement("div");
+    d.className = "vis-msg";
+    d.innerHTML = "Document PDF — " + esc(entry.facture.name || "facture")
+      + "<br><br>Safari ne peut pas l'afficher ici, il s'ouvre dans un nouvel onglet."
+      + '<button id="visOuvrir">Ouvrir le PDF</button>';
+    corps.appendChild(d);
+    d.querySelector("#visOuvrir").addEventListener("click", () => window.open(urlAffichee, "_blank"));
+  }
+  document.getElementById("visionneuse").classList.add("show");
+}
+document.getElementById("visFermer").addEventListener("click", fermerVisionneuse);
+document.getElementById("visPartager").addEventListener("click", () => {
+  if(!factureAffichee) return;
+  try{
+    const blob = dataUrlToBlob(factureAffichee.facture.dataUrl);
+    shareOrDownload(new File([blob], factureAffichee.facture.name, { type: factureAffichee.facture.type }),
+                    factureAffichee.facture.name);
+  }catch(e){ alert("Partage impossible."); }
+});
 
 /* Solde global, remboursements déduits. Positif : Gil doit à Jean-Marc.
    Tout le calcul se fait en CENTIMES : additionner des euros en virgule
@@ -1439,7 +1516,7 @@ function renderComptes(){
   container.querySelectorAll(".facture-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const entry = comptes.expenses.find(e => e.id === btn.dataset.id);
-      if(entry && entry.facture) saveFacture(entry);
+      if(entry && entry.facture) voirFacture(entry);
     });
   });
 }
