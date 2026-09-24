@@ -31,6 +31,7 @@ body{
   background-repeat:repeat;
   background-size:170px 170px;
 }
+body{ padding-top: var(--h-rappel, 0px); }
 body{ font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; color:var(--ink); min-height:100vh; padding-bottom: 48px; }
 button{ font-family:inherit; }
 button:focus-visible, input:focus-visible{ outline:3px solid var(--p-blue-dark); outline-offset:2px; }
@@ -59,7 +60,7 @@ button:focus-visible, input:focus-visible{ outline:3px solid var(--p-blue-dark);
 
 /* barre de retour */
 .topbar{
-  position:sticky; top:0; z-index:30;
+  position:sticky; top:calc(env(safe-area-inset-top,0px) + var(--h-rappel, 0px)); z-index:30;
   display:flex; align-items:center; gap:8px;
   background:var(--sand); border-bottom:2px solid var(--line);
   padding: calc(env(safe-area-inset-top,0px) + 10px) 12px 10px;
@@ -82,6 +83,33 @@ button:focus-visible, input:focus-visible{ outline:3px solid var(--p-blue-dark);
 .tile .ic{ font-size:22px; line-height:1; }
 .tile .tname{ font-size:16px; font-weight:800; margin-top:8px; color:var(--ink); }
 .tile .tsub{ font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:3px; line-height:1.35; }
+.tile.verrou{ opacity:.42; }
+.tile.verrou::after{ content:"🔒"; position:absolute; top:10px; right:12px; font-size:14px; }
+.tile{ position:relative; }
+.bandeau{ max-width:600px; margin:0 auto 12px; padding:12px 14px; border-radius:14px;
+  font-size:13.5px; font-weight:700; line-height:1.45; position:relative; z-index:2; }
+.bandeau.attente{ background:var(--p-blue); border:1.5px solid var(--p-blue-dark); color:#215678; }
+.bandeau.bloque{ background:var(--p-pink); border:1.5px solid var(--p-pink-dark); color:#8C2F4C; }
+.bandeau.presence{ background:var(--p-yellow); border:1.5px solid var(--p-yellow-dark); color:#8A6A10; }
+.bandeau button{ width:100%; margin-top:10px; padding:11px; border-radius:11px; border:none;
+  font-weight:800; font-size:13.5px; background:#fff; color:var(--ink); }
+/* Le rappel est FIXE sous l'encoche, et sa hauteur est reportée dans
+   --h-rappel : sans cela il se superposait à la barre « Retour », qui est
+   elle aussi collée en haut, et le bouton Retour devenait inatteignable. */
+.rappel{ position:fixed; top:env(safe-area-inset-top,0px); left:0; right:0; z-index:60; display:none;
+  background:#C62A45; color:#fff; padding:11px 14px; font-size:13.5px; font-weight:800; line-height:1.4; }
+.rappel.show{ display:block; }
+.rappel button{ margin-top:9px; width:100%; padding:10px; border-radius:10px; border:none;
+  background:#fff; color:#C62A45; font-weight:800; font-size:13px; }
+.modale{ display:none; position:fixed; inset:0; z-index:120; background:rgba(20,19,30,0.72);
+  align-items:center; justify-content:center; padding:22px; }
+.modale.show{ display:flex; }
+.modale-boite{ background:var(--card); border-radius:18px; padding:20px; max-width:420px; width:100%; }
+.modale-titre{ font-size:17px; font-weight:800; margin-bottom:10px; }
+.modale-txt{ font-size:14px; line-height:1.55; color:var(--ink); }
+.modale-txt b{ color:#C62A45; }
+.modale-boite button{ width:100%; margin-top:16px; padding:13px; border-radius:12px; border:none;
+  background:linear-gradient(135deg, var(--p-mint), var(--p-blue)); color:#215678; font-weight:800; font-size:15px; }
 .tile.wide{ grid-column:1 / -1; min-height:0; flex-direction:row; align-items:center; justify-content:flex-start; gap:14px; }
 .tile.wide .ic{ flex:0 0 auto; }
 .tile.wide > div{ flex:1 1 auto; text-align:left; }
@@ -301,6 +329,18 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
 </style>
 </head>
 <body>
+<div class="rappel" id="rappelSauvegarde">
+  ⚠️ Données non sauvegardées — appuie sur Sauvegarder avant de quitter.
+  <button id="rappelAller">Aller à la sauvegarde</button>
+</div>
+<div class="modale" id="modaleChargement">
+  <div class="modale-boite">
+    <div class="modale-titre">Données chargées depuis OneDrive</div>
+    <div class="modale-txt" id="modaleDetail"></div>
+    <div class="modale-txt" style="margin-top:12px;">Tu peux travailler. <b>Mais n'oublie pas de sauvegarder avant de quitter</b> : rien ne part automatiquement.</div>
+    <button id="modaleOk">J'ai compris</button>
+  </div>
+</div>
 
 <!-- ================= ACCUEIL ================= -->
 <div class="screen active" id="screen-accueil">
@@ -308,6 +348,7 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
     <div class="hero-eyebrow">Quicksilver 755 · Mercury 250 CV</div>
     <h1>Kat-a-Mar</h1>
   </div>
+  <div id="bandeauxAccueil" style="max-width:600px;margin:14px auto 0;padding:0 16px;"></div>
   <div class="menu">
     <button class="tile c-blue" data-go="checklist">
       <div class="ic">⚓️</div>
@@ -685,12 +726,20 @@ function fmtEUR(n){ return (Number(n)||0).toLocaleString("fr-BE", { style: "curr
 function fmtH(n){ return (Math.round((Number(n)||0)*10)/10).toLocaleString("fr-BE") + " h"; }
 function isISODate(s){ return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s); }
 /* Écrit dans localStorage et REMONTE l'erreur (quota) au lieu de l'avaler. */
-function writeLS(key, value){ localStorage.setItem(key, value); }
+/* Clés qui contiennent les données partagées : toute écriture doit rallumer
+   le rappel rouge, sinon on peut croire que tout est sur OneDrive. */
+const CLES_DONNEES = ["checklist-bateau-state","checklist-bateau-sorties","checklist-bateau-resa",
+  "checklist-bateau-entretien","checklist-bateau-comptes","checklist-bateau-heures-depart",
+  "checklist-bateau-manual-hours"];
+function writeLS(key, value){
+  localStorage.setItem(key, value);
+  if(CLES_DONNEES.indexOf(key) !== -1 && typeof marquerModifie === "function") marquerModifie();
+}
 
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v15";
+const VERSION = "v18";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -701,6 +750,16 @@ let navDepth = 0;
 
 function showScreen(id){
   if(SCREENS.indexOf(id) === -1) id = "accueil";
+  /* Tant que OneDrive n'a pas été relu, on n'ouvre que les écrans qui ne
+     dépendent d'aucune donnée partagée. */
+  if(typeof ecranAutorise === "function" && !ecranAutorise(id)){
+    id = "accueil";
+    /* On remet aussi l'adresse à l'accueil. Sinon elle resterait sur l'écran
+       refusé, et un appui ultérieur sur cette tuile ne changerait rien :
+       le navigateur n'émet aucun événement quand l'adresse ne bouge pas,
+       et l'écran deviendrait inatteignable une fois déverrouillé. */
+    try{ history.replaceState(null, "", location.pathname + location.search + "#accueil"); }catch(e){}
+  }
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   const el = document.getElementById("screen-" + id);
   if(el) el.classList.add("active");
@@ -724,7 +783,15 @@ function goBack(){
   if(navDepth > 0){ history.back(); }
   else { location.hash = "#accueil"; }
 }
-document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => openScreen(b.dataset.go)));
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+  if(typeof ecranAutorise === "function" && !ecranAutorise(b.dataset.go)){
+    if(typeof majBandeaux === "function") majBandeaux();
+    const z = document.getElementById("bandeauxAccueil");
+    if(z) z.scrollIntoView({ block: "start", behavior: "smooth" });
+    return;
+  }
+  openScreen(b.dataset.go);
+}));
 document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", goBack));
 window.addEventListener("hashchange", () => {
   const id = currentScreen();
@@ -2175,6 +2242,44 @@ function signatureDe(data){
   if(!data || typeof data !== "object") return "";
   return (data.exportedAt || "") + "|" + (data.sauvePar || "");
 }
+/* Écrit une sauvegarde reçue dans le stockage local et repositionne la
+   signature de référence du garde-fou. Ne demande rien : l'appelant décide. */
+/* Relit le stockage local dans les variables de travail et rafraîchit
+   chaque écran. Appelé après toute restauration qui ne recharge pas la page. */
+function rechargerEnMemoire(){
+  state = loadState();
+  comptes = loadComptes();
+  sorties = loadSorties();
+  resa = loadResa();
+  entretien = loadEntretien();
+  rebuildChain();
+  currentPaidBy = comptes.moi || currentPaidBy;
+  const dep = document.getElementById("heuresDepart");
+  if(dep) dep.value = getHeuresDepart() || "";
+  const mh = document.getElementById("manualHours");
+  if(mh) mh.value = getManualHours() || "";
+  try{ setOwnerUI(); setPaidByUI(); }catch(e){}
+  try{ renderChecklist(); renderSorties(); renderResa(); renderEntretien(); renderComptes(); }catch(e){}
+  try{ refreshHome(); }catch(e){}
+}
+function appliquerSauvegarde(data){
+  if(data.comptes && Array.isArray(data.comptes.expenses)) writeLS(COMPTES_KEY, JSON.stringify(data.comptes));
+  if(data.sorties && Array.isArray(data.sorties.entries)) writeLS(SORTIES_KEY, JSON.stringify(data.sorties));
+  if(data.resa && Array.isArray(data.resa.entries)) writeLS(RESA_KEY, JSON.stringify(data.resa));
+  if(data.entretien && typeof data.entretien === "object") writeLS(ENTRETIEN_KEY, JSON.stringify(data.entretien));
+  if(data.checklist && typeof data.checklist === "object") writeLS(STORAGE_KEY, JSON.stringify(data.checklist));
+  if(typeof data.heuresDepart === "number") writeLS(DEPART_KEY, String(data.heuresDepart));
+  if(typeof data.manualHours === "number") writeLS(MANUAL_HOURS_KEY, String(data.manualHours));
+  retenirSignature(signatureDe(data));
+  /* Écrire dans le stockage ne suffit pas : les variables en mémoire ont été
+     chargées au démarrage et resteraient vides, donc l'écran afficherait
+     « Aucune dépense » alors que tout est revenu. */
+  rechargerEnMemoire();
+  /* Restaurer, ce n'est pas modifier : le rappel rouge doit s'éteindre, et
+     l'affichage doit suivre — sinon il resterait allumé à tort. */
+  if(typeof marquerSauvegarde === "function") marquerSauvegarde();
+  else{ try{ localStorage.removeItem("katamar-modifie"); }catch(e){} }
+}
 function chargeUtile(){
   return { app: "kat-a-mar", version: 1, checklist: state, comptes, sorties,
            heuresDepart: getHeuresDepart(), resa, entretien,
@@ -2248,6 +2353,7 @@ async function ecrireSurOneDrive(){
   const charge = chargeUtile();
   await appelMake({ action: "save", data: versBase64(JSON.stringify(charge, null, 2)) });
   retenirSignature(signatureDe(charge));
+  marquerSauvegarde();
   majDerniereSauvegarde();
   const h = new Date().toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
   cloudStatut("Sauvegardé sur OneDrive à " + h + ".", "ok");
@@ -2259,6 +2365,7 @@ async function sauvegarder(forcer){
   cloudBoutons(false);
   masquerConflit();
   cloudStatut(forcer ? "Envoi en cours…" : "Vérification de la version sur OneDrive…");
+  if(typeof verifierPresence === "function") verifierPresence();   /* informatif, jamais bloquant */
   try{
     if(!forcer){
       let distant;
@@ -2326,16 +2433,7 @@ document.getElementById("cloudLoadBtn").addEventListener("click", async () => {
     + "REMPLACER les données de cet iPhone par celles de OneDrive ? Cette action est irréversible.");
   if(!ok){ cloudStatut("Restauration annulée. Rien n'a été modifié."); cloudBoutons(true); return; }
   try{
-    if(data.comptes && Array.isArray(data.comptes.expenses)) writeLS(COMPTES_KEY, JSON.stringify(data.comptes));
-    if(data.sorties && Array.isArray(data.sorties.entries)) writeLS(SORTIES_KEY, JSON.stringify(data.sorties));
-    if(data.resa && Array.isArray(data.resa.entries)) writeLS(RESA_KEY, JSON.stringify(data.resa));
-    if(data.entretien && typeof data.entretien === "object") writeLS(ENTRETIEN_KEY, JSON.stringify(data.entretien));
-    if(data.checklist && typeof data.checklist === "object") writeLS(STORAGE_KEY, JSON.stringify(data.checklist));
-    if(typeof data.heuresDepart === "number") writeLS(DEPART_KEY, String(data.heuresDepart));
-    if(typeof data.manualHours === "number") writeLS(MANUAL_HOURS_KEY, String(data.manualHours));
-    /* On repart de la version qu'on vient de charger : c'est elle qui sert
-       désormais de référence au garde-fou. */
-    retenirSignature(signatureDe(data));
+    appliquerSauvegarde(data);
   }catch(e){
     cloudStatut("Mémoire du téléphone saturée : restauration incomplète.", "bad");
     cloudBoutons(true); return;
@@ -2727,6 +2825,209 @@ document.getElementById("docEnvoyer").addEventListener("click", unSeulAppui(asyn
   }
 })();
 
+/* ---------- VERROUILLAGE, PRESENCE ET RAPPEL DE SAUVEGARDE ----------
+   Principe repris de Gestion Loyers : tant que OneDrive n'a pas été relu,
+   on n'affiche RIEN qui puisse être faux. Aucun repli silencieux sur les
+   données locales. La présence, elle, n'est qu'une information : elle ne
+   bloque jamais, et une présence de plus de 5 minutes est ignorée. */
+const ECRANS_LIBRES = ["accueil", "checklist", "manuel"];
+const CLE_MODIFIE = "katamar-modifie";
+const CLE_PRENOM = "katamar-prenom";
+const DOSSIER_PRESENCE = "KAT-A-MAR/presence";
+const PEREMPTION_PRESENCE_MIN = 5;
+let oneDriveRelu = false;
+let etatVerification = "attente";   /* attente | ok | echec */
+let messageVerification = "";
+let modaleDejaVue = false;
+let propositionDistante = null;
+
+/* ---------- rappel rouge ---------- */
+function marquerModifie(){
+  try{ localStorage.setItem(CLE_MODIFIE, "1"); }catch(e){}
+  majRappel();
+}
+function marquerSauvegarde(){
+  try{ localStorage.removeItem(CLE_MODIFIE); }catch(e){}
+  majRappel();
+}
+function aDesModifsNonEnvoyees(){ return localStorage.getItem(CLE_MODIFIE) === "1"; }
+function majRappel(){
+  const el = document.getElementById("rappelSauvegarde");
+  if(!el) return;
+  el.classList.toggle("show", aDesModifsNonEnvoyees());
+  /* On reporte la hauteur réelle du bandeau pour décaler le reste de la page
+     et le point d'ancrage des barres « Retour ». */
+  const h = el.classList.contains("show") ? (el.offsetHeight || 64) : 0;
+  document.documentElement.style.setProperty("--h-rappel", h + "px");
+}
+/* Rappel répété toutes les 5 minutes tant que rien n'est parti. */
+setInterval(() => {
+  if(!aDesModifsNonEnvoyees()) return;
+  const el = document.getElementById("rappelSauvegarde");
+  if(!el) return;
+  el.classList.remove("show");
+  setTimeout(() => { el.classList.add("show"); majRappel(); }, 400);
+}, 5 * 60 * 1000);
+
+/* ---------- présence ---------- */
+function monPrenom(){
+  let p = (localStorage.getItem(CLE_PRENOM) || "").trim();
+  if(!p){
+    p = (prompt("Quel est ton prénom ? (demandé une seule fois, pour prévenir si quelqu'un d'autre utilise l'application en même temps)") || "").trim();
+    if(!p) p = "Quelqu'un";
+    try{ writeLS(CLE_PRENOM, p); }catch(e){}
+  }
+  return p;
+}
+function fichierPresence(prenom){
+  return prenom.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]/g, "") + ".json";
+}
+async function signalerPresence(){
+  if(!connecte()) return;
+  try{
+    const prenom = monPrenom();
+    const jeton = await jetonValide();
+    await fetch(GRAPH_API + "/me/drive/root:/" + DOSSIER_PRESENCE + "/" + fichierPresence(prenom) + ":/content",
+      { method:"PUT", headers:{ Authorization:"Bearer " + jeton, "Content-Type":"application/json" },
+        body: JSON.stringify({ prenom, derniereActivite: new Date().toISOString() }) });
+  }catch(e){ /* jamais bloquant */ }
+}
+async function autresPersonnesActives(){
+  if(!connecte()) return [];
+  try{
+    const moi = (localStorage.getItem(CLE_PRENOM) || "").toLowerCase();
+    const r = await appelGraph("/me/drive/root:/" + DOSSIER_PRESENCE + ":/children?$top=50");
+    if(!r || !r.value) return [];
+    const maintenant = Date.now();
+    const actives = [];
+    for(const f of r.value){
+      if(f.folder || !/\.json$/i.test(f.name || "")) continue;
+      try{
+        const info = await appelGraph("/me/drive/root:/" + DOSSIER_PRESENCE + "/" + encodeURIComponent(f.name) + ":/content");
+        if(!info || !info.prenom || !info.derniereActivite) continue;
+        if(moi && String(info.prenom).toLowerCase() === moi) continue;
+        const minutes = (maintenant - new Date(info.derniereActivite).getTime()) / 60000;
+        if(minutes >= 0 && minutes <= PEREMPTION_PRESENCE_MIN) actives.push(info.prenom);
+      }catch(e){ continue; }   /* un fichier illisible n'empêche pas les autres */
+    }
+    return actives;
+  }catch(e){ return []; }
+}
+let presenceAffichee = [];
+async function verifierPresence(){
+  presenceAffichee = await autresPersonnesActives();
+  majBandeaux();
+}
+
+/* ---------- verrouillage ---------- */
+function ecranAutorise(id){ return oneDriveRelu || ECRANS_LIBRES.indexOf(id) !== -1; }
+function majTuiles(){
+  document.querySelectorAll(".tile[data-go]").forEach(t => {
+    t.classList.toggle("verrou", !ecranAutorise(t.dataset.go));
+  });
+}
+function majBandeaux(){
+  const z = document.getElementById("bandeauxAccueil");
+  if(!z) return;
+  let h = "";
+  if(etatVerification === "attente"){
+    h += '<div class="bandeau attente">Lecture de OneDrive en cours… les écrans s\'ouvriront dès que les données seront vérifiées.</div>';
+  } else if(etatVerification === "echec"){
+    h += '<div class="bandeau bloque">🔒 ' + esc(messageVerification)
+       + '<br><br>Seules la Checklist et le Mode d\'emploi restent accessibles : le reste ne peut pas être affiché sans certitude.'
+       + '<button id="bandeauReessayer">Réessayer</button></div>';
+  }
+  if(propositionDistante){
+    h += '<div class="bandeau bloque">La sauvegarde sur OneDrive du '
+       + esc(quandLisible(propositionDistante.exportedAt))
+       + (propositionDistante.sauvePar ? " par " + esc(propositionDistante.sauvePar) : "")
+       + ' ne correspond pas à tes données. Restaurer la version de OneDrive ?'
+       + '<button id="bandeauRestaurer">Restaurer la version de OneDrive</button></div>';
+  }
+  if(presenceAffichee.length){
+    h += '<div class="bandeau presence">⚠️ ' + esc(presenceAffichee.join(" et "))
+       + ' semble' + (presenceAffichee.length > 1 ? "nt" : "")
+       + ' aussi utiliser l\'application en ce moment — vérifiez avant de continuer.</div>';
+  }
+  z.innerHTML = h;
+  const b = document.getElementById("bandeauReessayer");
+  if(b) b.addEventListener("click", () => { if(!connecte()) seConnecter(); else verifierOneDrive(); });
+  const r = document.getElementById("bandeauRestaurer");
+  if(r) r.addEventListener("click", () => {
+    if(!confirm("Remplacer les données de cet iPhone par celles de OneDrive ? Cette action est irréversible.")) return;
+    appliquerSauvegarde(propositionDistante);
+    location.reload();
+  });
+  majTuiles();
+}
+
+/* Relit OneDrive : session Microsoft valable ET fichier JSON lisible. */
+async function verifierOneDrive(){
+  etatVerification = "attente"; majBandeaux();
+  if(!connecte()){
+    oneDriveRelu = false; etatVerification = "echec";
+    messageVerification = "Connexion à OneDrive requise. Ouvre l'écran Documents pour te connecter avec ton compte Microsoft.";
+    majBandeaux(); return false;
+  }
+  let distant;
+  try{
+    await jetonValide();               /* échoue si la session a plus de 24 h */
+    distant = await lireDistant();
+  }catch(e){
+    oneDriveRelu = false; etatVerification = "echec";
+    messageVerification = "Impossible de relire OneDrive : " + e.message;
+    majBandeaux(); return false;
+  }
+  /* Le fichier est lisible : on regarde s'il faut récupérer quelque chose. */
+  if(distant){
+    const vide = comptes.expenses.length === 0 && sorties.entries.length === 0 && resa.entries.length === 0;
+    if(vide){
+      /* Rien en local : on restaure d'office, il n'y a rien à écraser. */
+      appliquerSauvegarde(distant);
+      etatVerification = "ok"; oneDriveRelu = true;
+      messageVerification = "";
+      majBandeaux();
+      ouvrirModaleChargement(distant, true);
+      demarrerPresence();
+      return true;
+    }
+    if(signatureDe(distant) !== signatureConnue()){
+      oneDriveRelu = true; etatVerification = "ok";
+      propositionDistante = distant;
+      majBandeaux();
+      demarrerPresence();
+      return true;
+    }
+  }
+  oneDriveRelu = true; etatVerification = "ok"; messageVerification = "";
+  majBandeaux();
+  ouvrirModaleChargement(distant, false);
+  demarrerPresence();
+  return true;
+}
+function ouvrirModaleChargement(distant, restauree){
+  if(modaleDejaVue) return;
+  modaleDejaVue = true;
+  const det = document.getElementById("modaleDetail");
+  if(det){
+    det.textContent = distant
+      ? (restauree ? "Données restaurées depuis la sauvegarde du " : "Version chargée : sauvegarde du ")
+        + quandLisible(distant.exportedAt) + (distant.sauvePar ? ", par " + distant.sauvePar : "") + "."
+      : "Aucune sauvegarde sur OneDrive pour l'instant.";
+  }
+  document.getElementById("modaleChargement").classList.add("show");
+}
+let presenceDemarree = false;
+function demarrerPresence(){
+  if(presenceDemarree) return;
+  presenceDemarree = true;
+  signalerPresence();
+  verifierPresence();
+  setInterval(signalerPresence, 2 * 60 * 1000);
+  setInterval(verifierPresence, 2 * 60 * 1000);
+}
+
 /* ---------- ACCUEIL : RESUMES ---------- */
 function refreshHome(){
   document.getElementById("tileChecklist").textContent =
@@ -2751,6 +3052,13 @@ function refreshHome(){
   else{ document.getElementById("tileComptes").textContent = balancePhrase(calculBalance().solde, "au global"); }
 }
 
+document.getElementById("modaleOk").addEventListener("click", () => {
+  document.getElementById("modaleChargement").classList.remove("show");
+});
+document.getElementById("rappelAller").addEventListener("click", () => {
+  location.hash = "#donnees";
+});
+
 /* ---------- DEMARRAGE ---------- */
 rebuildChain();
 renderChecklist();
@@ -2758,7 +3066,10 @@ renderSorties();
 renderResa();
 renderEntretien();
 renderComptes();
+majRappel();
+majBandeaux();
 showScreen(currentScreen());
+verifierOneDrive();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
