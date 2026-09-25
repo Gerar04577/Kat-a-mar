@@ -739,7 +739,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v18";
+const VERSION = "v19";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -2687,19 +2687,55 @@ async function renderDocuments(){
   detail.textContent = "Dossier OneDrive : " + RACINE_DOCS + ". Les fichiers restent de vrais documents, ouvrables depuis l'app OneDrive.";
   liste.innerHTML = '<p class="empty-msg">Lecture de OneDrive…</p>';
   try{
-    if(!localStorage.getItem(CLE_QUI)){
-      const moi = await appelGraph("/me");
-      if(moi && moi.displayName){ try{ writeLS(CLE_QUI, moi.displayName); }catch(e){} }
+    /* Un seul aller-retour au lieu de six : Graph sait renvoyer le dossier
+       racine et le contenu de chaque sous-dossier d'un coup. Les échéances
+       partent en même temps, pas après. */
+    /* Un seul aller-retour au lieu de six. Les options imbriquées dans
+       $expand sont refusées par Graph, d'où la forme simple. */
+    let racine = null;
+    const [r0] = await Promise.all([
+      appelGraph("/me/drive/root:/" + RACINE_DOCS + ":/children?$top=50&$expand=children")
+        .catch(() => null),
+      lireEcheances()
+    ]);
+    racine = r0;
+    let tout = [];
+    let exploitable = false;
+    if(racine && racine.value){
+      racine.value.forEach(dossier => {
+        if(!dossier.folder) return;
+        if(CATEGORIES.indexOf(dossier.name) === -1) return;
+        if(!Array.isArray(dossier.children)) return;
+        exploitable = true;
+        dossier.children.forEach(it => { if(!it.folder) tout.push({ cat: dossier.name, item: it }); });
+      });
+      /* Un dossier vide reste exploitable : la clé children existe et vaut []. */
+      if(!exploitable && racine.value.some(d => d.folder && CATEGORIES.indexOf(d.name) !== -1
+         && Array.isArray(d.children))) exploitable = true;
     }
-    await lireEcheances();
-    const tout = [];
-    for(const cat of CATEGORIES){
-      const r = await appelGraph("/me/drive/root:/" + RACINE_DOCS + "/" + cat + ":/children?$top=200");
-      if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat, item: it }); });
+    if(!exploitable){
+      /* Repli : si Graph n'a pas développé les sous-dossiers, on interroge
+         chaque catégorie, mais toutes de front et non l'une après l'autre. */
+      tout = [];
+      const lots = await Promise.all(CATEGORIES.map(cat =>
+        appelGraph("/me/drive/root:/" + RACINE_DOCS + "/" + cat + ":/children?$top=200").catch(() => null)));
+      lots.forEach((r, i) => {
+        if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat: CATEGORIES[i], item: it }); });
+      });
     }
     docsEnCache = tout;
     afficherDocuments(tout);
     majTuileDocuments();
+    /* Simple confort d'affichage : demandé après coup, jamais attendu. */
+    if(!localStorage.getItem(CLE_QUI)){
+      appelGraph("/me").then(moi => {
+        if(moi && moi.displayName){
+          try{ writeLS(CLE_QUI, moi.displayName); }catch(e){}
+          const e = document.getElementById("connEtat");
+          if(e && e.textContent.indexOf("Connecté") === 0) e.textContent = "Connecté — " + moi.displayName;
+        }
+      }).catch(() => {});
+    }
   }catch(e){
     liste.innerHTML = '<p class="empty-msg">Lecture impossible : ' + esc(e.message) + '</p>';
     /* Si la session est tombée, on remet l'écran dans son état déconnecté
@@ -2900,17 +2936,19 @@ async function autresPersonnesActives(){
     const r = await appelGraph("/me/drive/root:/" + DOSSIER_PRESENCE + ":/children?$top=50");
     if(!r || !r.value) return [];
     const maintenant = Date.now();
+    /* Lectures menées de front : à la file, chaque fichier ajoutait un
+       aller-retour au temps d'ouverture. */
+    const fichiers = r.value.filter(f => !f.folder && /\.json$/i.test(f.name || ""));
+    const lus = await Promise.all(fichiers.map(f =>
+      appelGraph("/me/drive/root:/" + DOSSIER_PRESENCE + "/" + encodeURIComponent(f.name) + ":/content")
+        .catch(() => null)));   /* un fichier illisible n'empêche pas les autres */
     const actives = [];
-    for(const f of r.value){
-      if(f.folder || !/\.json$/i.test(f.name || "")) continue;
-      try{
-        const info = await appelGraph("/me/drive/root:/" + DOSSIER_PRESENCE + "/" + encodeURIComponent(f.name) + ":/content");
-        if(!info || !info.prenom || !info.derniereActivite) continue;
-        if(moi && String(info.prenom).toLowerCase() === moi) continue;
-        const minutes = (maintenant - new Date(info.derniereActivite).getTime()) / 60000;
-        if(minutes >= 0 && minutes <= PEREMPTION_PRESENCE_MIN) actives.push(info.prenom);
-      }catch(e){ continue; }   /* un fichier illisible n'empêche pas les autres */
-    }
+    lus.forEach(info => {
+      if(!info || !info.prenom || !info.derniereActivite) return;
+      if(moi && String(info.prenom).toLowerCase() === moi) return;
+      const minutes = (maintenant - new Date(info.derniereActivite).getTime()) / 60000;
+      if(minutes >= 0 && minutes <= PEREMPTION_PRESENCE_MIN) actives.push(info.prenom);
+    });
     return actives;
   }catch(e){ return []; }
 }
@@ -3022,8 +3060,9 @@ let presenceDemarree = false;
 function demarrerPresence(){
   if(presenceDemarree) return;
   presenceDemarree = true;
-  signalerPresence();
-  verifierPresence();
+  /* Purement informative : elle démarre APRÈS le déverrouillage et ne doit
+     jamais être attendue, sinon elle rallonge l'ouverture pour rien. */
+  setTimeout(() => { signalerPresence(); verifierPresence(); }, 50);
   setInterval(signalerPresence, 2 * 60 * 1000);
   setInterval(verifierPresence, 2 * 60 * 1000);
 }
