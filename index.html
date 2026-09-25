@@ -739,7 +739,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v19";
+const VERSION = "v21";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -1387,7 +1387,24 @@ document.getElementById("addExpenseBtn").addEventListener("click", unSeulAppui((
        partagée ou enregistrée dans Fichiers. */
     const ext = (pendingFacture.type === "application/pdf") ? ".pdf" : ".jpg";
     const base = (date + " " + desc).replace(/[\\\/:*?"<>|]/g, "-").replace(/\s+/g, " ").trim().slice(0, 80);
-    entry.facture = Object.assign({}, pendingFacture, { name: base + ext });
+    /* Deux dépenses du même jour et du même libellé donneraient le même nom :
+       la seconde facture écraserait la première dans OneDrive. On ajoute un
+       suffixe tiré de l'identifiant de la dépense, qui est unique. */
+    const suffixe = String(entry.id).slice(-6).replace(/[^a-zA-Z0-9]/g, "");
+    const nomFacture = base + " (" + suffixe + ")" + ext;
+    /* On fige le type et l'image AVANT de repartir : pendingFacture est remis
+       à zéro juste après, et la reprise asynchrone le lirait trop tard. */
+    const typeFacture = pendingFacture.type;
+    const image = pendingFacture.dataUrl;
+    /* Le JSON ne contient plus l'image : seulement de quoi la retrouver. */
+    entry.facture = { name: nomFacture, type: typeFacture };
+    idbEcrire(nomFacture, image);          /* consultable hors ligne tout de suite */
+    deposerFacture(nomFacture, image, typeFacture).catch(() => {
+      /* Dépôt impossible pour l'instant : on garde l'image sur l'appareil et
+         on retentera à la prochaine ouverture connectée. */
+      facturesEnAttente[nomFacture] = { type: typeFacture };
+      try{ writeLS(CLE_FACTURES_ATTENTE, JSON.stringify(facturesEnAttente)); }catch(e){}
+    });
   }
   comptes.expenses.push(entry);
   try{
@@ -1442,13 +1459,23 @@ function fermerVisionneuse(){
   if(urlAffichee){ try{ URL.revokeObjectURL(urlAffichee); }catch(e){} urlAffichee = null; }
   factureAffichee = null;
 }
-function voirFacture(entry){
-  let blob;
-  try{ blob = dataUrlToBlob(entry.facture.dataUrl); }
-  catch(e){ alert("Facture illisible."); return; }
-  factureAffichee = entry;
+async function voirFacture(entry){
   const corps = document.getElementById("visCorps");
   document.getElementById("visTitre").textContent = entry.facture.name || "Facture";
+  corps.innerHTML = '<div class="vis-msg">Chargement…</div>';
+  document.getElementById("visionneuse").classList.add("show");
+  let dataUrl = entry.facture.dataUrl;    /* factures d'avant la migration */
+  if(!dataUrl){
+    try{ dataUrl = await chargerFacture(entry.facture.name); }
+    catch(e){
+      corps.innerHTML = '<div class="vis-msg">' + esc(e.message) + '</div>';
+      return;
+    }
+  }
+  let blob;
+  try{ blob = dataUrlToBlob(dataUrl); }
+  catch(e){ corps.innerHTML = '<div class="vis-msg">Facture illisible.</div>'; return; }
+  factureAffichee = Object.assign({}, entry, { facture: Object.assign({}, entry.facture, { dataUrl }) });
   corps.innerHTML = "";
   urlAffichee = URL.createObjectURL(blob);
   if((entry.facture.type || "").indexOf("image/") === 0){
@@ -1469,7 +1496,6 @@ function voirFacture(entry){
     corps.appendChild(d);
     d.querySelector("#visOuvrir").addEventListener("click", () => window.open(urlAffichee, "_blank"));
   }
-  document.getElementById("visionneuse").classList.add("show");
 }
 document.getElementById("visFermer").addEventListener("click", fermerVisionneuse);
 document.getElementById("visPartager").addEventListener("click", () => {
@@ -2780,7 +2806,7 @@ function afficherDocuments(tout){
     if(!x) return;
     b.textContent = "Ouverture…";
     try{
-      const it = await appelGraph("/me/drive/items/" + x.item.id + "?select=id,name,@microsoft.graph.downloadUrl");
+      const it = await appelGraph("/me/drive/items/" + x.item.id + "?$select=id,name,@microsoft.graph.downloadUrl");
       const url = it && it["@microsoft.graph.downloadUrl"];
       if(url) window.open(url, "_blank"); else alert("Lien de téléchargement indisponible.");
     }catch(e){ alert("Ouverture impossible : " + e.message); }
@@ -2860,6 +2886,166 @@ document.getElementById("docEnvoyer").addEventListener("click", unSeulAppui(asyn
     alert("Connexion impossible : " + e.message);
   }
 })();
+
+/* ---------- FACTURES : OneDrive + copie locale hors ligne ----------
+   Les images ne sont plus dans le fichier JSON : à 872 Ko encodés par photo,
+   il atteignait 4,4 Mo et l'ouverture demandait une vingtaine de secondes.
+   Elles vont dans OneDrive, et une copie reste sur l'appareil — mais dans
+   IndexedDB, car localStorage plafonne à 5 Mo sur Safari. */
+const DOSSIER_FACTURES = "KAT-A-MAR/FACTURES";
+const CLE_FACTURES_ATTENTE = "katamar-factures-attente";
+let facturesEnAttente = (() => {
+  try{ return JSON.parse(localStorage.getItem(CLE_FACTURES_ATTENTE) || "{}") || {}; }catch(e){ return {}; }
+})();
+async function deposerFacturesEnAttente(){
+  const noms = Object.keys(facturesEnAttente);
+  if(noms.length === 0 || !connecte()) return;
+  for(const nom of noms){
+    try{
+      const img = await idbLire(nom);
+      if(!img){ delete facturesEnAttente[nom]; continue; }
+      await envoyerVers(DOSSIER_FACTURES, nom, dataUrlToBlob(img), facturesEnAttente[nom].type);
+      delete facturesEnAttente[nom];
+    }catch(e){ /* on retentera */ }
+  }
+  try{ writeLS(CLE_FACTURES_ATTENTE, JSON.stringify(facturesEnAttente)); }catch(e){}
+}
+const IDB_NOM = "katamar", IDB_STORE = "factures";
+let idbPromesse = null;
+function ouvrirIDB(){
+  if(idbPromesse) return idbPromesse;
+  idbPromesse = new Promise((res) => {
+    try{
+      if(typeof indexedDB === "undefined"){ res(null); return; }
+      const r = indexedDB.open(IDB_NOM, 1);
+      r.onupgradeneeded = () => { try{ r.result.createObjectStore(IDB_STORE); }catch(e){} };
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => res(null);
+    }catch(e){ res(null); }
+  });
+  return idbPromesse;
+}
+function idbEcrire(cle, valeur){
+  return ouvrirIDB().then(db => new Promise(res => {
+    if(!db) return res(false);
+    try{
+      const t = db.transaction(IDB_STORE, "readwrite");
+      t.objectStore(IDB_STORE).put(valeur, cle);
+      t.oncomplete = () => res(true);
+      t.onerror = () => res(false);
+    }catch(e){ res(false); }
+  }));
+}
+function idbLire(cle){
+  return ouvrirIDB().then(db => new Promise(res => {
+    if(!db) return res(null);
+    try{
+      const t = db.transaction(IDB_STORE, "readonly");
+      const q = t.objectStore(IDB_STORE).get(cle);
+      q.onsuccess = () => res(q.result || null);
+      q.onerror = () => res(null);
+    }catch(e){ res(null); }
+  }));
+}
+function idbSupprimer(cle){
+  return ouvrirIDB().then(db => new Promise(res => {
+    if(!db) return res(false);
+    try{
+      const t = db.transaction(IDB_STORE, "readwrite");
+      t.objectStore(IDB_STORE).delete(cle);
+      t.oncomplete = () => res(true);
+      t.onerror = () => res(false);
+    }catch(e){ res(false); }
+  }));
+}
+
+/* Envoi d'un fichier à un chemin quelconque de OneDrive. */
+async function envoyerVers(dossier, nom, contenu, type){
+  /* Au-delà de 4 Mo, Graph refuse l'envoi direct : un PDF scanné joint comme
+     facture doit donc passer par une session, comme les documents. */
+  if(contenu && contenu.size >= SEUIL_SESSION){
+    const session = await appelGraph("/me/drive/root:/" + dossier + "/" + encodeURIComponent(nom) + ":/createUploadSession",
+      { method:"POST", headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ item: { "@microsoft.graph.conflictBehavior":"replace", name: nom } }) });
+    if(!session || !session.uploadUrl) throw new Error("Session d'envoi refusée par OneDrive.");
+    const taille = contenu.size, morceau = 5 * 327680;
+    let debut = 0, dernier = null;
+    while(debut < taille){
+      const fin = Math.min(debut + morceau, taille);
+      const r = await fetch(session.uploadUrl, { method:"PUT",
+        headers:{ "Content-Range": "bytes " + debut + "-" + (fin - 1) + "/" + taille },
+        body: contenu.slice(debut, fin) });
+      if(!(r.status === 202 || r.status === 200 || r.status === 201)){
+        try{ await fetch(session.uploadUrl, { method:"DELETE" }); }catch(e){}
+        throw new Error("Envoi interrompu à " + Math.round(debut / taille * 100) + " % (" + r.status + ")");
+      }
+      if(r.status !== 202) dernier = await r.json();
+      debut = fin;
+    }
+    return dernier;
+  }
+  const jeton = await jetonValide();
+  const url = GRAPH_API + "/me/drive/root:/" + dossier + "/" + encodeURIComponent(nom) + ":/content";
+  const r = await fetch(url, { method:"PUT",
+    headers:{ Authorization:"Bearer " + jeton, "Content-Type": type || "application/octet-stream" },
+    body: contenu });
+  if(!r.ok) throw new Error("Envoi refusé (" + r.status + ")");
+  return await r.json();
+}
+async function deposerFacture(nom, dataUrl, type){
+  const blob = dataUrlToBlob(dataUrl);
+  await envoyerVers(DOSSIER_FACTURES, nom, blob, type);
+  await idbEcrire(nom, dataUrl);          /* copie locale, consultable hors ligne */
+  return true;
+}
+/* Récupère une facture : d'abord l'appareil, sinon OneDrive, puis on garde. */
+async function chargerFacture(nom){
+  const local = await idbLire(nom);
+  if(local) return local;
+  if(!connecte()) throw new Error("Facture absente de cet appareil et connexion OneDrive requise.");
+  /* Adressage par chemin : le « : » ne se referme que devant une relation
+     (:/content, :/children). Pour l'élément lui-même, on enchaîne directement
+     la requête. Documentation : GET /me/drive/root:/{item-path} */
+  const it = await appelGraph("/me/drive/root:/" + DOSSIER_FACTURES + "/" + encodeURIComponent(nom)
+    + "?$select=id,name,@microsoft.graph.downloadUrl");
+  const url = it && it["@microsoft.graph.downloadUrl"];
+  if(!url) throw new Error("Facture introuvable dans OneDrive.");
+  const r = await fetch(url);
+  if(!r.ok) throw new Error("Téléchargement refusé (" + r.status + ")");
+  const blob = await r.blob();
+  const dataUrl = await new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = () => rej(new Error("Lecture impossible."));
+    fr.readAsDataURL(blob);
+  });
+  await idbEcrire(nom, dataUrl);
+  return dataUrl;
+}
+
+/* Migration : les factures déjà présentes dans le JSON en sortent une fois. */
+let migrationFaite = false;
+async function migrerFactures(){
+  if(migrationFaite) return;
+  const aMigrer = comptes.expenses.filter(e => e.facture && e.facture.dataUrl);
+  if(aMigrer.length === 0){ migrationFaite = true; return; }
+  if(!connecte()) return;               /* on réessaiera à la prochaine ouverture */
+  let faites = 0;
+  for(const e of aMigrer){
+    try{
+      await deposerFacture(e.facture.name, e.facture.dataUrl, e.facture.type);
+      delete e.facture.dataUrl;
+      faites++;
+    }catch(err){ /* on garde la facture dans le JSON, rien n'est perdu */ }
+  }
+  if(faites > 0){
+    saveComptes(comptes);
+    renderComptes();
+    alert(faites + " facture(s) déplacée(s) vers OneDrive. La sauvegarde devient beaucoup plus légère, "
+      + "et l'application s'ouvrira nettement plus vite.");
+  }
+  migrationFaite = (faites === aMigrer.length);
+}
 
 /* ---------- VERROUILLAGE, PRESENCE ET RAPPEL DE SAUVEGARDE ----------
    Principe repris de Gestion Loyers : tant que OneDrive n'a pas été relu,
@@ -3062,7 +3248,7 @@ function demarrerPresence(){
   presenceDemarree = true;
   /* Purement informative : elle démarre APRÈS le déverrouillage et ne doit
      jamais être attendue, sinon elle rallonge l'ouverture pour rien. */
-  setTimeout(() => { signalerPresence(); verifierPresence(); }, 50);
+  setTimeout(() => { signalerPresence(); verifierPresence(); migrerFactures(); deposerFacturesEnAttente(); }, 50);
   setInterval(signalerPresence, 2 * 60 * 1000);
   setInterval(verifierPresence, 2 * 60 * 1000);
 }
