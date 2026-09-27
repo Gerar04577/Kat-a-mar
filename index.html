@@ -739,7 +739,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v22";
+const VERSION = "v23";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -2534,6 +2534,14 @@ function cheminKat(relatif){
   const r = b.racine ? (relatif ? b.racine + "/" + relatif : b.racine) : relatif;
   return r ? b.prefixe + ":/" + r : b.prefixe;
 }
+/* Adresse d'un élément par son identifiant, sur le disque qui le contient.
+   Chez Gil, les documents sont sur le disque du propriétaire : passer par
+   /me/drive/items aboutirait à « élément introuvable ». */
+function itemKat(id){
+  const b = baseKat || { prefixe: "/me/drive/root", racine: RACINE_KAT };
+  const m = b.prefixe.match(/^\/drives\/([^/]+)\/items\//);
+  return m ? "/drives/" + m[1] + "/items/" + id : "/me/drive/items/" + id;
+}
 /* Adresse d'une relation (children, content, createUploadSession). */
 function relationKat(relatif, relation){
   const base = cheminKat(relatif);
@@ -2873,16 +2881,21 @@ function afficherDocuments(tout){
     if(!x) return;
     b.textContent = "Ouverture…";
     try{
-      const it = await appelGraph("/me/drive/items/" + x.item.id + "?$select=id,name,@microsoft.graph.downloadUrl");
+      /* Pas de $select ici : l'adresse de téléchargement est une annotation,
+         renvoyée d'office avec l'élément. La demander explicitement la fait
+         disparaître de la réponse. */
+      const it = await appelGraph(itemKat(x.item.id));
       const url = it && it["@microsoft.graph.downloadUrl"];
-      if(url) window.open(url, "_blank"); else alert("Lien de téléchargement indisponible.");
+      if(url) window.open(url, "_blank");
+      else alert("OneDrive n'a pas renvoyé de lien pour « " + (x.item.name || "ce document")
+        + " ». Réessaie dans un instant, ou ouvre-le depuis l'application OneDrive.");
     }catch(e){ alert("Ouverture impossible : " + e.message); }
     b.textContent = "Ouvrir";
   }));
   liste.querySelectorAll("[data-suppr]").forEach(b => b.addEventListener("click", async () => {
     if(!confirm("Supprimer définitivement ce document de OneDrive ?")) return;
     try{
-      await appelGraph("/me/drive/items/" + b.dataset.suppr, { method:"DELETE" });
+      await appelGraph(itemKat(b.dataset.suppr), { method:"DELETE" });
       if(echeances[b.dataset.cle]){ delete echeances[b.dataset.cle]; await ecrireEcheances(); }
       renderDocuments();
     }catch(e){ alert("Suppression impossible : " + e.message); }
@@ -3075,8 +3088,7 @@ async function chargerFacture(nom){
   /* Adressage par chemin : le « : » ne se referme que devant une relation
      (:/content, :/children). Pour l'élément lui-même, on enchaîne directement
      la requête. Documentation : GET /me/drive/root:/{item-path} */
-  const it = await appelGraph(cheminKat(DOSSIER_FACTURES + "/" + encodeURIComponent(nom))
-    + "?$select=id,name,@microsoft.graph.downloadUrl");
+  const it = await appelGraph(cheminKat(DOSSIER_FACTURES + "/" + encodeURIComponent(nom)));
   const url = it && it["@microsoft.graph.downloadUrl"];
   if(!url) throw new Error("Facture introuvable dans OneDrive.");
   const r = await fetch(url);
