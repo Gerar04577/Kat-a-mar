@@ -1,4 +1,4 @@
-const CACHE = "kat-a-mar-v25";
+const CACHE = "kat-a-mar-v27";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {

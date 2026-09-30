@@ -741,7 +741,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v25";
+const VERSION = "v27";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -2523,27 +2523,59 @@ async function resoudreBase(){
     } else if(item && item.folder){
       candidats.push({ prefixe: "/me/drive/root", racine: RACINE_KAT, origine: "dossier local" });
     }
+    /* Un partage peut se présenter de trois façons : listé par
+       « Partagé avec moi », rangé en raccourci n'importe où dans l'arbre, ou
+       les deux. On ramasse chaque forme, puis on départage. */
+    const ajouterDistant = (x, origine) => {
+      if((x.name || "").toUpperCase() !== RACINE_KAT) return;
+      const r = x.remoteItem;
+      if(!r || !r.id || !r.parentReference || !r.parentReference.driveId) return;
+      const pref = "/drives/" + r.parentReference.driveId + "/items/" + r.id;
+      if(candidats.some(c => c.prefixe === pref)) return;
+      candidats.push({ prefixe: pref, racine: "", origine: origine });
+    };
     try{
       const p = await appelGraph("/me/drive/sharedWithMe");
-      ((p && p.value) || []).forEach(x => {
-        if((x.name || "").toUpperCase() !== RACINE_KAT) return;
-        const r = x.remoteItem;
-        if(!r || !r.id || !r.parentReference || !r.parentReference.driveId) return;
-        const pref = "/drives/" + r.parentReference.driveId + "/items/" + r.id;
-        if(candidats.some(c => c.prefixe === pref)) return;
-        candidats.push({ prefixe: pref, racine: "", origine: "partagé avec moi" });
-      });
+      ((p && p.value) || []).forEach(x => ajouterDistant(x, "partagé avec moi"));
     }catch(e){}
+    /* La recherche retrouve un raccourci où qu'il soit rangé — chez Gil il
+       était dans un sous-dossier « Raccourcis », invisible autrement. */
+    if(!candidats.some(c => c.racine === "")){
+      try{
+        const q = await appelGraph("/me/drive/root/search(q='" + encodeURIComponent(RACINE_KAT) + "')?$top=50");
+        ((q && q.value) || []).forEach(x => ajouterDistant(x, "raccourci retrouvé"));
+      }catch(e){}
+    }
+    /* Dernier moyen : on ouvre les dossiers du premier niveau, où se trouve
+       le dossier « Raccourcis » que OneDrive crée lui-même. */
+    if(!candidats.some(c => c.racine === "")){
+      try{
+        const r0 = await appelGraph("/me/drive/root/children?$top=100");
+        const dossiers = ((r0 && r0.value) || []).filter(x => x.folder).slice(0, 12);
+        for(const d of dossiers){
+          if(candidats.some(c => c.racine === "")) break;
+          const sous = await appelGraph("/me/drive/items/" + d.id + "/children?$top=100").catch(() => null);
+          ((sous && sous.value) || []).forEach(x => ajouterDistant(x, "raccourci dans " + d.name));
+        }
+      }catch(e){}
+    }
     candidatsBase = candidats.slice();
     if(candidats.length === 0){
-      baseKat = { prefixe: "/me/drive/root", racine: RACINE_KAT, origine: "aucun trouvé" };
+      baseKat = { prefixe: "/me/drive/root", racine: RACINE_KAT, origine: "aucun trouvé", confirme: false };
       return baseKat;
     }
+    /* Un emplacement distant — partage ou raccourci — ne peut pas avoir été
+       fabriqué par l'application : il est fiable d'emblée. Seul un dossier
+       local doit faire ses preuves, puisque c'est lui qui peut être la
+       coquille vide créée par une écriture précédente. */
+    for(const c of candidats){ if(c.racine === "") c.confirme = true; }
+    const distantConfirme = candidats.find(c => c.confirme);
     /* Le bon emplacement est celui qui contient DOCUMENTS. */
     for(const c of candidats){
       const enfants = await enfantsDe(c);
       c.nbEnfants = enfants.length;
       if(contientDocuments(enfants)){
+        c.confirme = true;
         baseKat = c;
         racineListee = enfants;
         enfants.forEach(x => { if(x.folder && x.name) idsDossiers[x.name.toUpperCase()] = x.id; });
@@ -2552,7 +2584,7 @@ async function resoudreBase(){
     }
     /* Aucun ne le contient : premier usage, ou partage non encore rempli.
        On garde le partage s'il y en a un, plutôt qu'un dossier local vide. */
-    baseKat = candidats.find(c => c.origine !== "dossier local") || candidats[0];
+    baseKat = distantConfirme || candidats[0];
     return baseKat;
   })();
   try{ return await baseKatPromesse; }
@@ -2780,6 +2812,7 @@ function nomPropre(nom){
 }
 async function envoyerPetit(cat, nom, fichier){
   await resoudreBase();
+  verifierEcritureAutorisee();
   const jeton = await jetonValide();
   const url = GRAPH_API + (await adresseEcriture(RACINE_DOCS + "/" + cat, encodeURIComponent(nom), "content"));
   const r = await fetch(url, { method:"PUT",
@@ -2790,6 +2823,7 @@ async function envoyerPetit(cat, nom, fichier){
 }
 async function envoyerGros(cat, nom, fichier, surProgres){
   await resoudreBase();
+  verifierEcritureAutorisee();
   const session = await appelGraph(await adresseEcriture(RACINE_DOCS + "/" + cat, encodeURIComponent(nom), "createUploadSession"),
     { method:"POST", headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ item: { "@microsoft.graph.conflictBehavior":"replace", name: nom } }) });
@@ -2828,6 +2862,7 @@ async function lireEcheances(){
 }
 async function ecrireEcheances(){
   await resoudreBase();
+  try{ verifierEcritureAutorisee(); }catch(e){ return; }
   const jeton = await jetonValide();
   await fetch(GRAPH_API + (await adresseEcriture(RACINE_DOCS, "echeances.json", "content")), { method:"PUT",
     headers:{ Authorization:"Bearer " + jeton, "Content-Type":"application/json" },
@@ -2923,7 +2958,22 @@ async function renderDocuments(){
         if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat: CATEGORIES[i], item: it }); });
       });
     }
+    if(tout.length > 0 && baseKat) baseKat.confirme = true;
     docsEnCache = tout;
+    /* On ne bloque jamais la lecture : le message n'apparaît que si elle
+       n'a rien donné ET que le dossier n'est pas confirmé. */
+    if(tout.length === 0 && baseKat && !baseKat.confirme){
+      liste.innerHTML = '<p class="empty-msg"><b>Dossier partagé introuvable.</b><br><br>'
+        + "Les documents du bateau sont dans le OneDrive du propriétaire. Pour y accéder :"
+        + '<br><br>1. Ouvre OneDrive, rubrique <b>Partagés</b>.'
+        + '<br>2. Trouve le dossier <b>KAT-A-MAR</b>.'
+        + '<br>3. Menu « … » → <b>Ajouter un raccourci à Mes fichiers</b>.'
+        + '<br>4. Ferme complètement cette application et rouvre-la.'
+        + '<br><br>Tant que ce n\'est pas fait, rien n\'est écrit dans ton OneDrive : '
+        + "l'application ne crée aucun dossier de son côté.</p>";
+      majTuileDocuments();
+      return;
+    }
     afficherDocuments(tout);
     majTuileDocuments();
     /* Simple confort d'affichage : demandé après coup, jamais attendu. */
@@ -3024,10 +3074,15 @@ document.getElementById("diagBtn").addEventListener("click", async () => {
   try{
     await resoudreBase();
     lignes.push("Base retenue : " + JSON.stringify(baseKat));
+    lignes.push("Dossier confirmé (contient DOCUMENTS) : " + (baseKat && baseKat.confirme ? "oui" : "NON — aucune écriture"));
     lignes.push("Emplacements trouvés : " + (candidatsBase.length
       ? candidatsBase.map(c => c.origine + (c.nbEnfants !== undefined ? " (" + c.nbEnfants + " éléments)" : "")).join(", ")
       : "aucun"));
     lignes.push("Disque : " + prefixeDisque());
+    if(baseKat && baseKat.origine === "dossier local" && candidatsBase.length === 1){
+      lignes.push("⚠ Aucun partage trouvé : ce dossier local est peut-être celui que"
+        + " l'application a créé elle-même.");
+    }
     for(const d of [RACINE_DOCS, DOSSIER_FACTURES, DOSSIER_PRESENCE]){
       const id = await idDossier(d);
       lignes.push("Dossier " + d + " : " + (id ? "id " + id : "INTROUVABLE"));
@@ -3100,6 +3155,15 @@ document.getElementById("docEnvoyer").addEventListener("click", unSeulAppui(asyn
   }
 })();
 
+/* Un envoi manuel peut créer l'arborescence, mais seulement chez celui qui
+   possède le dossier : chez un invité, cela fabriquerait un dossier fantôme
+   que personne d'autre ne verrait jamais. */
+function verifierEcritureAutorisee(){
+  if(baseKat && baseKat.confirme) return;
+  if(baseKat && baseKat.racine === RACINE_KAT && baseKat.origine === "dossier local") return;
+  throw new Error("Le dossier KAT-A-MAR partagé n'a pas été trouvé. Rien n'a été envoyé : "
+    + "demande le partage, puis ajoute un raccourci à la racine de ton OneDrive.");
+}
 /* ---------- FACTURES : OneDrive + copie locale hors ligne ----------
    Les images ne sont plus dans le fichier JSON : à 872 Ko encodés par photo,
    il atteignait 4,4 Mo et l'ouverture demandait une vingtaine de secondes.
@@ -3197,6 +3261,7 @@ async function adresseEcriture(dossier, nom, relation){
 }
 async function envoyerVers(dossier, nom, contenu, type){
   await resoudreBase();
+  verifierEcritureAutorisee();
   /* Au-delà de 4 Mo, Graph refuse l'envoi direct : un PDF scanné joint comme
      facture doit donc passer par une session, comme les documents. */
   if(contenu && contenu.size >= SEUIL_SESSION){
@@ -3353,6 +3418,12 @@ async function signalerPresence(){
   if(!connecte()) return;
   try{
     await resoudreBase();
+    /* Règle absolue : on n'écrit jamais dans un dossier dont on n'a pas
+       confirmé qu'il est le bon. Sinon OneDrive crée l'arborescence
+       manquante et fabrique un dossier fantôme chez celui qui consulte —
+       c'est exactement ce qui est arrivé, et qui renaissait à chaque
+       suppression. */
+    if(!baseKat || !baseKat.confirme) return;
     const prenom = monPrenom();
     const jeton = await jetonValide();
     await fetch(GRAPH_API + (await adresseEcriture(DOSSIER_PRESENCE, fichierPresence(prenom), "content")),
