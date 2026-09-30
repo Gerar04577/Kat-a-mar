@@ -632,6 +632,8 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
       <div class="conn-detail" id="connDetail">Les documents sont rangés dans ton OneDrive, dossier KAT-A-MAR / DOCUMENTS. Il faut te connecter avec ton compte Microsoft pour y accéder.</div>
       <button class="conn-btn" id="connBtn">Se connecter avec Microsoft</button>
       <button class="conn-btn sortie" id="deconnBtn" style="display:none;">Se déconnecter</button>
+      <button class="conn-btn sortie" id="diagBtn">Diagnostic — copier le rapport</button>
+      <pre id="diagTexte" style="display:none;white-space:pre-wrap;word-break:break-all;font-size:11px;line-height:1.45;background:var(--sand);border:1.5px solid var(--line);border-radius:10px;padding:10px;margin-top:9px;max-height:320px;overflow:auto;"></pre>
     </div>
 
     <div class="form-card" id="docFormulaire" style="display:none;">
@@ -739,7 +741,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v23";
+const VERSION = "v24";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -2534,6 +2536,49 @@ function cheminKat(relatif){
   const r = b.racine ? (relatif ? b.racine + "/" + relatif : b.racine) : relatif;
   return r ? b.prefixe + ":/" + r : b.prefixe;
 }
+/* Identifiants des sous-dossiers de KAT-A-MAR, résolus une fois.
+   Sur un dossier partagé, l'adressage par chemin est refusé de façon
+   irrégulière selon la manière dont le partage a été fait : naviguer par
+   identifiant fonctionne dans tous les cas. */
+const idsDossiers = {};
+let racineListee = null;
+/* La racine n'est listée qu'une fois : tous les sous-dossiers sont retenus
+   d'un coup. Sans cela, chercher DOCUMENTS, FACTURES puis presence coûtait
+   trois fois le même aller-retour. */
+let racinePromesse = null;
+async function listerRacine(){
+  if(racineListee) return racineListee;
+  /* Un seul listage à la fois : deux demandes simultanées lanceraient deux
+     fois le même aller-retour, la mémorisation n'intervenant qu'à la fin. */
+  if(racinePromesse) return racinePromesse;
+  racinePromesse = (async () => {
+  await resoudreBase();
+  const b = baseKat;
+  const racineId = (b.prefixe.match(/\/items\/([^/:]+)$/) || [])[1];
+  const adresse = racineId
+    ? prefixeDisque() + "/items/" + racineId + "/children?$top=100"
+    : "/me/drive/root:/" + RACINE_KAT + ":/children?$top=100";
+  const enfants = await appelGraph(adresse).catch(() => null);
+  const v = (enfants && enfants.value) || [];
+  v.forEach(x => { if(x.folder && x.name) idsDossiers[x.name.toUpperCase()] = x.id; });
+  racineListee = v;
+  return v;
+  })();
+  try{ return await racinePromesse; }
+  finally{ racinePromesse = null; }
+}
+async function idDossier(nom){
+  const cle = nom.toUpperCase();
+  if(idsDossiers[cle]) return idsDossiers[cle];
+  await listerRacine();
+  return idsDossiers[cle] || null;
+}
+/* Disque courant, pour bâtir une adresse par identifiant. */
+function prefixeDisque(){
+  const b = baseKat || { prefixe: "/me/drive/root", racine: RACINE_KAT };
+  const m = b.prefixe.match(/^\/drives\/([^/]+)\//);
+  return m ? "/drives/" + m[1] : "/me/drive";
+}
 /* Adresse d'un élément par son identifiant, sur le disque qui le contient.
    Chez Gil, les documents sont sur le disque du propriétaire : passer par
    /me/drive/items aboutirait à « élément introuvable ». */
@@ -2586,7 +2631,8 @@ async function urlConnexion(){
 }
 async function seConnecter(){ location.href = await urlConnexion(); }
 function seDeconnecter(){
-  baseKat = null;
+  baseKat = null; racineListee = null; racinePromesse = null;
+  Object.keys(idsDossiers).forEach(k => delete idsDossiers[k]);
   [CLE_ACCES, CLE_RAFRAICHIR, CLE_EXPIRE, CLE_VERIF, CLE_ETAT, CLE_QUI, CLE_MOTIF].forEach(k => {
     try{ localStorage.removeItem(k); }catch(e){}
   });
@@ -2660,18 +2706,34 @@ async function jetonValide(){
   if(acces && Date.now() < expire) return acces;
   return await rafraichirJeton();
 }
+/* Journal des derniers appels : sans lui, un défaut chez Gil reste invisible.
+   Consultable par le bouton « Diagnostic » de l'écran Documents. */
+const journalGraph = [];
+function noterGraph(ligne){
+  journalGraph.push(ligne);
+  if(journalGraph.length > 40) journalGraph.shift();
+}
 async function appelGraph(chemin, options){
   const o = options || {};
   const jeton = await jetonValide();
   const entetes = Object.assign({}, o.headers || {}, { Authorization: "Bearer " + jeton });
-  const r = await fetch(chemin.indexOf("http") === 0 ? chemin : GRAPH_API + chemin,
-                        Object.assign({}, o, { headers: entetes }));
-  if(r.status === 404) return null;
+  const court = chemin.indexOf("http") === 0 ? chemin.slice(0, 60) : chemin;
+  let r;
+  try{
+    r = await fetch(chemin.indexOf("http") === 0 ? chemin : GRAPH_API + chemin,
+                    Object.assign({}, o, { headers: entetes }));
+  }catch(e){
+    noterGraph((o.method || "GET") + " " + court + " → réseau : " + e.message);
+    throw e;
+  }
+  if(r.status === 404){ noterGraph((o.method || "GET") + " " + court + " → 404"); return null; }
   if(!r.ok){
     let d = "";
     try{ const j = await r.json(); d = (j.error && j.error.message) || ""; }catch(e){}
+    noterGraph((o.method || "GET") + " " + court + " → " + r.status + (d ? " " + d : ""));
     throw new Error("OneDrive a répondu " + r.status + (d ? " — " + d : ""));
   }
+  noterGraph((o.method || "GET") + " " + court + " → " + r.status);
   if(r.status === 204) return true;
   const t = await r.text();
   return t ? JSON.parse(t) : true;
@@ -2691,7 +2753,7 @@ function nomPropre(nom){
 async function envoyerPetit(cat, nom, fichier){
   await resoudreBase();
   const jeton = await jetonValide();
-  const url = GRAPH_API + relationKat(RACINE_DOCS + "/" + cat + "/" + encodeURIComponent(nom), "content");
+  const url = GRAPH_API + (await adresseEcriture(RACINE_DOCS + "/" + cat, encodeURIComponent(nom), "content"));
   const r = await fetch(url, { method:"PUT",
     headers:{ Authorization:"Bearer " + jeton, "Content-Type": fichier.type || "application/octet-stream" },
     body: fichier });
@@ -2700,7 +2762,7 @@ async function envoyerPetit(cat, nom, fichier){
 }
 async function envoyerGros(cat, nom, fichier, surProgres){
   await resoudreBase();
-  const session = await appelGraph(relationKat(RACINE_DOCS + "/" + cat + "/" + encodeURIComponent(nom), "createUploadSession"),
+  const session = await appelGraph(await adresseEcriture(RACINE_DOCS + "/" + cat, encodeURIComponent(nom), "createUploadSession"),
     { method:"POST", headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ item: { "@microsoft.graph.conflictBehavior":"replace", name: nom } }) });
   if(!session || !session.uploadUrl) throw new Error("Session d'envoi refusée par OneDrive.");
@@ -2731,7 +2793,7 @@ let echeances = {};
 async function lireEcheances(){
   try{
     await resoudreBase();
-    const item = await appelGraph(relationKat(fichierEcheances(), "content"));
+    const item = await appelGraph(await adresseEcriture(RACINE_DOCS, "echeances.json", "content"));
     echeances = (item && typeof item === "object" && !item.error) ? item : {};
   }catch(e){ echeances = {}; }
   return echeances;
@@ -2739,7 +2801,7 @@ async function lireEcheances(){
 async function ecrireEcheances(){
   await resoudreBase();
   const jeton = await jetonValide();
-  await fetch(GRAPH_API + relationKat(fichierEcheances(), "content"), { method:"PUT",
+  await fetch(GRAPH_API + (await adresseEcriture(RACINE_DOCS, "echeances.json", "content")), { method:"PUT",
     headers:{ Authorization:"Bearer " + jeton, "Content-Type":"application/json" },
     body: JSON.stringify(echeances, null, 2) });
 }
@@ -2788,35 +2850,44 @@ async function renderDocuments(){
   liste.innerHTML = '<p class="empty-msg">Lecture de OneDrive…</p>';
   try{
     await resoudreBase();
-    /* Un seul aller-retour au lieu de six : Graph sait renvoyer le dossier
-       racine et le contenu de chaque sous-dossier d'un coup. Les échéances
-       partent en même temps, pas après. */
-    /* Un seul aller-retour au lieu de six. Les options imbriquées dans
-       $expand sont refusées par Graph, d'où la forme simple. */
-    let racine = null;
+    /* Deux voies, essayées dans l'ordre. La première tient en un seul
+       aller-retour ; la seconde navigue par identifiants et fonctionne sur
+       un dossier partagé, où l'adressage par chemin est parfois refusé. */
     const [r0] = await Promise.all([
-      appelGraph(relationKat(RACINE_DOCS, "children?$top=50&$expand=children"))
-        .catch(() => null),
+      appelGraph(relationKat(RACINE_DOCS, "children?$top=50&$expand=children")).catch(() => null),
       lireEcheances()
     ]);
-    racine = r0;
     let tout = [];
     let exploitable = false;
-    if(racine && racine.value){
-      racine.value.forEach(dossier => {
+    if(r0 && r0.value){
+      r0.value.forEach(dossier => {
         if(!dossier.folder) return;
         if(CATEGORIES.indexOf(dossier.name) === -1) return;
         if(!Array.isArray(dossier.children)) return;
         exploitable = true;
         dossier.children.forEach(it => { if(!it.folder) tout.push({ cat: dossier.name, item: it }); });
       });
-      /* Un dossier vide reste exploitable : la clé children existe et vaut []. */
-      if(!exploitable && racine.value.some(d => d.folder && CATEGORIES.indexOf(d.name) !== -1
-         && Array.isArray(d.children))) exploitable = true;
     }
     if(!exploitable){
-      /* Repli : si Graph n'a pas développé les sous-dossiers, on interroge
-         chaque catégorie, mais toutes de front et non l'une après l'autre. */
+      /* Voie 2 : on trouve DOCUMENTS par son identifiant, puis chaque
+         catégorie par le sien. Aucune adresse par chemin. */
+      tout = [];
+      const idDocs = await idDossier(RACINE_DOCS);
+      if(idDocs){
+        const sous = await appelGraph(prefixeDisque() + "/items/" + idDocs + "/children?$top=100").catch(() => null);
+        const dossiers = ((sous && sous.value) || []).filter(d => d.folder && CATEGORIES.indexOf(d.name) !== -1);
+        if(dossiers.length){
+          exploitable = true;
+          const lots = await Promise.all(dossiers.map(d =>
+            appelGraph(prefixeDisque() + "/items/" + d.id + "/children?$top=200").catch(() => null)));
+          lots.forEach((r, i) => {
+            if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat: dossiers[i].name, item: it }); });
+          });
+        }
+      }
+    }
+    if(!exploitable){
+      /* Voie 3, dernier recours : une adresse par chemin et par catégorie. */
       tout = [];
       const lots = await Promise.all(CATEGORIES.map(cat =>
         appelGraph(relationKat(RACINE_DOCS + "/" + cat, "children?$top=200")).catch(() => null)));
@@ -2914,6 +2985,37 @@ function majTuileDocuments(){
     : docsEnCache.length + (docsEnCache.length > 1 ? " documents" : " document");
 }
 
+/* Rapport de diagnostic : sans lui, un défaut qui ne se produit que chez
+   l'un des deux utilisateurs reste invisible pour qui écrit le code. */
+document.getElementById("diagBtn").addEventListener("click", async () => {
+  const el = document.getElementById("diagTexte");
+  const lignes = [];
+  lignes.push("Kat-a-Mar " + VERSION + " — " + new Date().toLocaleString("fr-BE"));
+  lignes.push("Prénom : " + (localStorage.getItem(CLE_PRENOM) || "—"));
+  lignes.push("Connecté : " + (connecte() ? "oui" : "non"));
+  try{
+    await resoudreBase();
+    lignes.push("Base : " + JSON.stringify(baseKat));
+    lignes.push("Disque : " + prefixeDisque());
+    for(const d of [RACINE_DOCS, DOSSIER_FACTURES, DOSSIER_PRESENCE]){
+      const id = await idDossier(d);
+      lignes.push("Dossier " + d + " : " + (id ? "id " + id : "INTROUVABLE"));
+    }
+  }catch(e){ lignes.push("Résolution impossible : " + e.message); }
+  lignes.push("Documents listés : " + docsEnCache.length);
+  lignes.push("");
+  lignes.push("Derniers appels OneDrive :");
+  journalGraph.slice(-25).forEach(l => lignes.push("  " + l));
+  const texte = lignes.join("\n");
+  el.textContent = texte;
+  el.style.display = "block";
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(texte);
+      alert("Rapport copié. Colle-le dans la conversation.");
+    }
+  }catch(e){}
+});
 document.getElementById("connBtn").addEventListener("click", seConnecter);
 document.getElementById("deconnBtn").addEventListener("click", () => {
   if(confirm("Se déconnecter de Microsoft ? Les documents restent dans OneDrive.")) seDeconnecter();
@@ -3040,12 +3142,34 @@ function idbSupprimer(cle){
 }
 
 /* Envoi d'un fichier à un chemin quelconque de OneDrive. */
+/* Identifiant d'un sous-dossier de second niveau, par exemple
+   DOCUMENTS/Propriete : on descend d'un cran depuis le premier. */
+async function idSousDossier(parent, enfant){
+  const cle = (parent + "/" + enfant).toUpperCase();
+  if(idsDossiers[cle]) return idsDossiers[cle];
+  const idP = await idDossier(parent);
+  if(!idP) return null;
+  const l = await appelGraph(prefixeDisque() + "/items/" + idP + "/children?$top=100").catch(() => null);
+  const d = ((l && l.value) || []).find(x => x.folder && (x.name || "").toUpperCase() === enfant.toUpperCase());
+  if(d){ idsDossiers[cle] = d.id; return d.id; }
+  return null;
+}
+/* Adresse d'écriture d'un fichier dans un sous-dossier de KAT-A-MAR.
+   On vise l'identifiant du dossier QUI CONTIENT le fichier : viser un
+   dossier parent laisserait un morceau de chemin, refusé sur un partage. */
+async function adresseEcriture(dossier, nom, relation){
+  const parts = dossier.split("/");
+  const id = parts.length > 1 ? await idSousDossier(parts[0], parts.slice(1).join("/"))
+                              : await idDossier(parts[0]);
+  if(id) return prefixeDisque() + "/items/" + id + ":/" + nom + ":/" + relation;
+  return relationKat(dossier + "/" + nom, relation);
+}
 async function envoyerVers(dossier, nom, contenu, type){
   await resoudreBase();
   /* Au-delà de 4 Mo, Graph refuse l'envoi direct : un PDF scanné joint comme
      facture doit donc passer par une session, comme les documents. */
   if(contenu && contenu.size >= SEUIL_SESSION){
-    const session = await appelGraph(relationKat(dossier + "/" + encodeURIComponent(nom), "createUploadSession"),
+    const session = await appelGraph(await adresseEcriture(dossier, encodeURIComponent(nom), "createUploadSession"),
       { method:"POST", headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({ item: { "@microsoft.graph.conflictBehavior":"replace", name: nom } }) });
     if(!session || !session.uploadUrl) throw new Error("Session d'envoi refusée par OneDrive.");
@@ -3066,7 +3190,7 @@ async function envoyerVers(dossier, nom, contenu, type){
     return dernier;
   }
   const jeton = await jetonValide();
-  const url = GRAPH_API + relationKat(dossier + "/" + encodeURIComponent(nom), "content");
+  const url = GRAPH_API + (await adresseEcriture(dossier, encodeURIComponent(nom), "content"));
   const r = await fetch(url, { method:"PUT",
     headers:{ Authorization:"Bearer " + jeton, "Content-Type": type || "application/octet-stream" },
     body: contenu });
@@ -3088,7 +3212,15 @@ async function chargerFacture(nom){
   /* Adressage par chemin : le « : » ne se referme que devant une relation
      (:/content, :/children). Pour l'élément lui-même, on enchaîne directement
      la requête. Documentation : GET /me/drive/root:/{item-path} */
-  const it = await appelGraph(cheminKat(DOSSIER_FACTURES + "/" + encodeURIComponent(nom)));
+  let it = await appelGraph(cheminKat(DOSSIER_FACTURES + "/" + encodeURIComponent(nom))).catch(() => null);
+  if(!it || !it["@microsoft.graph.downloadUrl"]){
+    const idF = await idDossier(DOSSIER_FACTURES);
+    if(idF){
+      const l = await appelGraph(prefixeDisque() + "/items/" + idF + "/children?$top=200").catch(() => null);
+      const f = ((l && l.value) || []).find(x => x.name === nom);
+      if(f) it = f;
+    }
+  }
   const url = it && it["@microsoft.graph.downloadUrl"];
   if(!url) throw new Error("Facture introuvable dans OneDrive.");
   const r = await fetch(url);
@@ -3192,7 +3324,7 @@ async function signalerPresence(){
     await resoudreBase();
     const prenom = monPrenom();
     const jeton = await jetonValide();
-    await fetch(GRAPH_API + relationKat(DOSSIER_PRESENCE + "/" + fichierPresence(prenom), "content"),
+    await fetch(GRAPH_API + (await adresseEcriture(DOSSIER_PRESENCE, fichierPresence(prenom), "content")),
       { method:"PUT", headers:{ Authorization:"Bearer " + jeton, "Content-Type":"application/json" },
         body: JSON.stringify({ prenom, derniereActivite: new Date().toISOString() }) });
   }catch(e){ /* jamais bloquant */ }
@@ -3202,7 +3334,11 @@ async function autresPersonnesActives(){
   try{
     await resoudreBase();
     const moi = (localStorage.getItem(CLE_PRENOM) || "").toLowerCase();
-    const r = await appelGraph(relationKat(DOSSIER_PRESENCE, "children?$top=50"));
+    let r = await appelGraph(relationKat(DOSSIER_PRESENCE, "children?$top=50")).catch(() => null);
+    if(!r || !r.value){
+      const idP = await idDossier(DOSSIER_PRESENCE);
+      if(idP) r = await appelGraph(prefixeDisque() + "/items/" + idP + "/children?$top=50").catch(() => null);
+    }
     if(!r || !r.value) return [];
     const maintenant = Date.now();
     /* Lectures menées de front : à la file, chaque fichier ajoutait un
