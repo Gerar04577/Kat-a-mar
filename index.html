@@ -741,7 +741,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v24";
+const VERSION = "v25";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -2490,41 +2490,69 @@ const RACINE_DOCS = "DOCUMENTS";
    découlent. */
 let baseKat = null;          /* { prefixe, racine } */
 let baseKatPromesse = null;
+let candidatsBase = [];
+/* Liste les enfants d'un candidat, sans passer par la résolution : c'est
+   justement ce qui sert à départager les candidats. */
+async function enfantsDe(c){
+  const adresse = c.racine
+    ? "/me/drive/root:/" + c.racine + ":/children?$top=100"
+    : c.prefixe + "/children?$top=100";
+  const r = await appelGraph(adresse).catch(() => null);
+  return (r && r.value) || [];
+}
+function contientDocuments(enfants){
+  return enfants.some(x => x.folder && (x.name || "").toUpperCase() === RACINE_DOCS.toUpperCase());
+}
 async function resoudreBase(){
   if(baseKat) return baseKat;
   if(baseKatPromesse) return baseKatPromesse;
   baseKatPromesse = (async () => {
-    /* 1. le dossier est-il chez moi ? */
+    /* On rassemble TOUS les emplacements possibles, puis on retient celui qui
+       contient vraiment le dossier DOCUMENTS. Sans cette vérification, un
+       dossier KAT-A-MAR vide — que l'application a pu créer elle-même en
+       déposant un fichier de présence — l'emporterait sur le vrai partage. */
+    const candidats = [];
     let item = null;
     try{
       item = await appelGraph("/me/drive/root:/" + RACINE_KAT + "?$select=id,name,folder,remoteItem");
     }catch(e){ item = null; }
     if(item && item.remoteItem && item.remoteItem.id
        && item.remoteItem.parentReference && item.remoteItem.parentReference.driveId){
-      baseKat = { prefixe: "/drives/" + item.remoteItem.parentReference.driveId
-                           + "/items/" + item.remoteItem.id, racine: "" };
-      return baseKat;
+      candidats.push({ prefixe: "/drives/" + item.remoteItem.parentReference.driveId
+                                + "/items/" + item.remoteItem.id, racine: "", origine: "raccourci" });
+    } else if(item && item.folder){
+      candidats.push({ prefixe: "/me/drive/root", racine: RACINE_KAT, origine: "dossier local" });
     }
-    if(item && item.folder){
-      baseKat = { prefixe: "/me/drive/root", racine: RACINE_KAT };
-      return baseKat;
-    }
-    /* 2. sinon, parmi les dossiers partagés avec moi */
     try{
       const p = await appelGraph("/me/drive/sharedWithMe");
-      const v = (p && p.value) || [];
-      const trouve = v.find(x => (x.name || "").toUpperCase() === RACINE_KAT
-        && x.remoteItem && x.remoteItem.id
-        && x.remoteItem.parentReference && x.remoteItem.parentReference.driveId);
-      if(trouve){
-        baseKat = { prefixe: "/drives/" + trouve.remoteItem.parentReference.driveId
-                             + "/items/" + trouve.remoteItem.id, racine: "" };
+      ((p && p.value) || []).forEach(x => {
+        if((x.name || "").toUpperCase() !== RACINE_KAT) return;
+        const r = x.remoteItem;
+        if(!r || !r.id || !r.parentReference || !r.parentReference.driveId) return;
+        const pref = "/drives/" + r.parentReference.driveId + "/items/" + r.id;
+        if(candidats.some(c => c.prefixe === pref)) return;
+        candidats.push({ prefixe: pref, racine: "", origine: "partagé avec moi" });
+      });
+    }catch(e){}
+    candidatsBase = candidats.slice();
+    if(candidats.length === 0){
+      baseKat = { prefixe: "/me/drive/root", racine: RACINE_KAT, origine: "aucun trouvé" };
+      return baseKat;
+    }
+    /* Le bon emplacement est celui qui contient DOCUMENTS. */
+    for(const c of candidats){
+      const enfants = await enfantsDe(c);
+      c.nbEnfants = enfants.length;
+      if(contientDocuments(enfants)){
+        baseKat = c;
+        racineListee = enfants;
+        enfants.forEach(x => { if(x.folder && x.name) idsDossiers[x.name.toUpperCase()] = x.id; });
         return baseKat;
       }
-    }catch(e){}
-    /* 3. rien trouvé : on repart du chemin classique, le dossier sera créé
-       au premier dépôt si l'utilisateur en est propriétaire. */
-    baseKat = { prefixe: "/me/drive/root", racine: RACINE_KAT };
+    }
+    /* Aucun ne le contient : premier usage, ou partage non encore rempli.
+       On garde le partage s'il y en a un, plutôt qu'un dossier local vide. */
+    baseKat = candidats.find(c => c.origine !== "dossier local") || candidats[0];
     return baseKat;
   })();
   try{ return await baseKatPromesse; }
@@ -2631,7 +2659,7 @@ async function urlConnexion(){
 }
 async function seConnecter(){ location.href = await urlConnexion(); }
 function seDeconnecter(){
-  baseKat = null; racineListee = null; racinePromesse = null;
+  baseKat = null; racineListee = null; racinePromesse = null; candidatsBase = [];
   Object.keys(idsDossiers).forEach(k => delete idsDossiers[k]);
   [CLE_ACCES, CLE_RAFRAICHIR, CLE_EXPIRE, CLE_VERIF, CLE_ETAT, CLE_QUI, CLE_MOTIF].forEach(k => {
     try{ localStorage.removeItem(k); }catch(e){}
@@ -2995,7 +3023,10 @@ document.getElementById("diagBtn").addEventListener("click", async () => {
   lignes.push("Connecté : " + (connecte() ? "oui" : "non"));
   try{
     await resoudreBase();
-    lignes.push("Base : " + JSON.stringify(baseKat));
+    lignes.push("Base retenue : " + JSON.stringify(baseKat));
+    lignes.push("Emplacements trouvés : " + (candidatsBase.length
+      ? candidatsBase.map(c => c.origine + (c.nbEnfants !== undefined ? " (" + c.nbEnfants + " éléments)" : "")).join(", ")
+      : "aucun"));
     lignes.push("Disque : " + prefixeDisque());
     for(const d of [RACINE_DOCS, DOSSIER_FACTURES, DOSSIER_PRESENCE]){
       const id = await idDossier(d);
