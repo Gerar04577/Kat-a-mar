@@ -306,6 +306,12 @@ button.conn-btn.sortie{ background:var(--sand); border:1.5px solid var(--line); 
 .doc-actions button{ flex:1; padding:9px; border-radius:10px; font-size:12.5px; font-weight:700; border:1.5px solid var(--line); background:var(--sand); color:var(--ink-soft); }
 .doc-actions button.ouvrir{ background:var(--p-blue); border-color:var(--p-blue-dark); color:#215678; }
 .doc-actions button.suppr{ background:#fff; border-color:var(--p-pink-dark); color:#8C2F4C; }
+/* Lien de secours : même aspect que le bouton « Ouvrir » qu'il remplace. */
+.doc-actions a.ouvrir{ flex:1; padding:9px; border-radius:10px; font-size:12.5px; font-weight:700;
+  border:1.5px solid var(--p-blue-dark); background:var(--p-blue); color:#215678;
+  text-align:center; text-decoration:none; }
+/* Mention « sur l'iPhone » : le document est copié, donc lisible en mer. */
+.doc-local{ color:#1F7A4D; font-weight:700; }
 .doc-progres{ height:6px; background:rgba(60,59,78,0.08); border-radius:4px; margin-top:10px; overflow:hidden; display:none; }
 .doc-progres.show{ display:block; }
 .doc-progres > div{ height:100%; background:var(--p-blue-dark); width:0%; }
@@ -377,6 +383,10 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
     <button class="tile wide c-mint" data-go="manuel">
       <div class="ic">📖</div>
       <div><div class="tname">Mode d'emploi</div><div class="tsub">Manuel du propriétaire 755CR — consultable hors-ligne</div></div>
+    </button>
+    <button class="tile wide c-yellow" data-page="permis-hauturier.html">
+      <div class="ic">🧭</div>
+      <div><div class="tname">Permis Hauturier</div><div class="tsub">Le cours complet — consultable hors-ligne</div></div>
     </button>
     <button class="tile wide c-pink" data-go="documents">
       <div class="ic">📁</div>
@@ -741,7 +751,7 @@ function writeLS(key, value){
 /* ---------- NAVIGATION AVEC RETOUR ---------- */
 /* NUMÉRO DE VERSION — à incrémenter à CHAQUE fichier livré, même pour une
    correction d'une ligne. Doit toujours correspondre au nom du cache dans sw.js. */
-const VERSION = "v28";
+const VERSION = "v29";
 
 const SCREENS = ["accueil","checklist","sorties","resa","entretien","comptes","infos","donnees","manuel","balance","depenses","dictionnaire","documents"];
 
@@ -793,6 +803,14 @@ document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", 
     return;
   }
   openScreen(b.dataset.go);
+}));
+/* Pages voisines du dépôt — le cours du permis hauturier est un fichier HTML
+   à part, pas un écran de l'application. Elle n'est donc JAMAIS concernée par
+   le verrouillage : son contenu est figé dans le dépôt, aucune donnée
+   partagée n'y entre. La navigation est directe et synchrone, donc jamais
+   bloquée par Safari. */
+document.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => {
+  location.href = b.dataset.page;
 }));
 document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", goBack));
 window.addEventListener("hashchange", () => {
@@ -2357,10 +2375,40 @@ async function appelMake(corps){
   return texte;
 }
 
+/* Le fichier de sauvegarde, à la racine du dossier KAT-A-MAR. */
+const FICHIER_JSON = "kat-a-mar.json";
+/* Lecture directe dans OneDrive par Microsoft Graph.
+   Jusqu'à la v28, la relecture d'ouverture passait UNIQUEMENT par le webhook
+   Make. Le 8 octobre, Make n'a pas répondu pendant une heure et toute
+   l'application s'est verrouillée, alors que OneDrive répondait parfaitement.
+   Make n'est plus qu'un secours. L'écriture, elle, reste inchangée : elle
+   fonctionne, et ce n'est pas le moment d'y toucher. */
+async function texteDistantGraph(){
+  await resoudreBase();
+  /* Sans dossier confirmé, un « fichier absent » ne veut rien dire : on
+     regarderait peut-être le mauvais disque. On laisse alors la main à Make. */
+  if(!baseKat || !baseKat.confirme) throw new Error("dossier KAT-A-MAR non confirmé");
+  const it = await appelGraph(cheminKat(FICHIER_JSON));
+  if(!it) return null;                 /* 404 : aucune sauvegarde, c'est net */
+  const url = it["@microsoft.graph.downloadUrl"];
+  if(!url) throw new Error("aucun lien de téléchargement renvoyé");
+  const r = await fetch(url);
+  if(!r.ok) throw new Error("téléchargement refusé (" + r.status + ")");
+  return (await r.text()).trim();
+}
 /* Lit le fichier distant. Renvoie null si aucune sauvegarde valable n'existe
    encore, et lève une erreur si la lecture elle-même échoue. */
 async function lireDistant(){
-  const brut = await appelMake({ action: "import" });
+  let brut = null, echecGraph = null;
+  try{ brut = await texteDistantGraph(); }
+  catch(e){ echecGraph = e; }
+  if(echecGraph){
+    try{ brut = await appelMake({ action: "import" }); }
+    catch(e2){
+      throw new Error("Microsoft OneDrive : " + echecGraph.message
+                    + " — et Make.com : " + e2.message);
+    }
+  }
   if(!brut) return null;
   let texte;
   try{ texte = depuisBase64(brut); }catch(e){ texte = brut; }
@@ -2769,6 +2817,7 @@ async function jetonValide(){
 /* Journal des derniers appels : sans lui, un défaut chez Gil reste invisible.
    Consultable par le bouton « Diagnostic » de l'écran Documents. */
 const journalGraph = [];
+let echecsReseau = 0;
 function noterGraph(ligne){
   journalGraph.push(ligne);
   if(journalGraph.length > 40) journalGraph.shift();
@@ -2783,6 +2832,10 @@ async function appelGraph(chemin, options){
     r = await fetch(chemin.indexOf("http") === 0 ? chemin : GRAPH_API + chemin,
                     Object.assign({}, o, { headers: entetes }));
   }catch(e){
+    /* Un échec réseau n'est pas un « dossier introuvable ». Les distinguer
+       évite d'afficher à Gil la marche à suivre du partage alors qu'il est
+       simplement sans réseau. */
+    echecsReseau++;
     noterGraph((o.method || "GET") + " " + court + " → réseau : " + e.message);
     throw e;
   }
@@ -2937,6 +2990,143 @@ function docProgres(pct){
   if(pct !== null) b.firstElementChild.style.width = pct + "%";
 }
 let docsEnCache = [];
+
+/* ---------- DOCUMENTS : TOUT VOIR, ET HORS LIGNE ----------
+   Jusqu'à la v28, seuls cinq dossiers aux noms EXACTS étaient lus. Un
+   document rangé dans « Propriété » avec l'accent, dans « PHOTOS » en
+   majuscules, dans un dossier libre, ou posé directement dans DOCUMENTS,
+   n'existait tout simplement pas pour l'application. */
+const CLE_DOCS_LISTE = "katamar-docs-liste";
+const CAT_RACINE = "";                       /* fichiers posés dans DOCUMENTS */
+const LIMITE_HORS_LIGNE = 8 * 1024 * 1024;   /* au-delà, pas de copie locale */
+
+/* Ramène un nom de dossier à la catégorie connue correspondante, quels que
+   soient la casse et les accents. Renvoie null si ce n'est aucune d'elles.
+   On réutilise le sansAccent de la recherche, qui met déjà en minuscules :
+   en redéfinir un second écraserait le premier et casserait la recherche. */
+function categorieConnue(nom){
+  if(nom == null) return null;
+  const n = sansAccent(String(nom)).trim();
+  return CATEGORIES.find(c => sansAccent(c) === n) || null;
+}
+function nomCategorie(cat){
+  if(cat === CAT_RACINE) return "Divers";
+  return NOMS_CAT[cat] || cat;
+}
+/* Ordre d'affichage : les catégories prévues d'abord, puis les dossiers
+   libres par ordre alphabétique, et pour finir ce qui traîne à la racine. */
+function categoriesPresentes(tout){
+  const vues = [];
+  tout.forEach(x => { if(vues.indexOf(x.cat) === -1) vues.push(x.cat); });
+  const connues = CATEGORIES.filter(c => vues.indexOf(c) !== -1);
+  const libres = vues.filter(c => c !== CAT_RACINE && CATEGORIES.indexOf(c) === -1)
+                     .sort((a, b) => a.localeCompare(b));
+  return connues.concat(libres, vues.indexOf(CAT_RACINE) !== -1 ? [CAT_RACINE] : []);
+}
+/* Range la liste renvoyée par Graph pour le dossier DOCUMENTS : sous-dossiers
+   déjà dépliés par $expand=children, et fichiers posés à la racine. */
+function rangerDocuments(valeurs){
+  const tout = [];
+  (valeurs || []).forEach(entree => {
+    if(!entree) return;
+    if(!entree.folder){
+      if(entree.file) tout.push({ cat: CAT_RACINE, item: entree });
+      return;
+    }
+    if(!Array.isArray(entree.children)) return;
+    const cat = categorieConnue(entree.name) || entree.name;
+    entree.children.forEach(it => { if(it && !it.folder) tout.push({ cat, item: it }); });
+  });
+  return tout;
+}
+/* Liste mémorisée : elle permet d'afficher l'écran sans réseau. */
+function memoriserListeDocs(tout){
+  try{
+    writeLS(CLE_DOCS_LISTE, JSON.stringify({
+      quand: new Date().toISOString(),
+      docs: tout.map(x => ({ cat: x.cat, id: x.item.id, name: x.item.name, size: x.item.size,
+        lastModifiedDateTime: x.item.lastModifiedDateTime,
+        mime: (x.item.file && x.item.file.mimeType) || "" }))
+    }));
+  }catch(e){}
+}
+function listeDocsMemorisee(){
+  try{
+    const o = JSON.parse(localStorage.getItem(CLE_DOCS_LISTE) || "null");
+    if(!o || !Array.isArray(o.docs)) return null;
+    return { quand: o.quand, tout: o.docs.map(d => ({ cat: d.cat,
+      item: { id: d.id, name: d.name, size: d.size,
+              lastModifiedDateTime: d.lastModifiedDateTime, file: { mimeType: d.mime } } })) };
+  }catch(e){ return null; }
+}
+function cleLocaleDoc(id){ return "doc:" + id; }
+
+/* Adresses locales prêtes à l'emploi. Préparées À L'AVANCE pour que
+   l'ouverture tienne dans le geste de l'utilisateur : Safari refuse
+   d'ouvrir une fenêtre après une attente réseau, et le document ne
+   s'ouvrait alors pas du tout, sans le moindre message. */
+let urlsDocuments = {};
+function oublierUrlsDocuments(){
+  Object.keys(urlsDocuments).forEach(k => { try{ URL.revokeObjectURL(urlsDocuments[k]); }catch(e){} });
+  urlsDocuments = {};
+}
+function marquerPret(id){
+  const b = document.querySelector('[data-ouvrir="' + id + '"]');
+  if(b) b.classList.add("pret");
+  const p = document.querySelector('[data-pastille="' + id + '"]');
+  if(p) p.textContent = "· sur l'iPhone";
+}
+/* Rend consultable hors ligne un document déjà copié, et prépare son
+   adresse locale. */
+async function preparerDocumentLocal(id){
+  if(urlsDocuments[id]) return true;
+  const dataUrl = await idbLire(cleLocaleDoc(id));
+  if(!dataUrl) return false;
+  try{
+    urlsDocuments[id] = URL.createObjectURL(dataUrlToBlob(dataUrl));
+    marquerPret(id);
+    return true;
+  }catch(e){ return false; }
+}
+/* Télécharge un document et le garde sur l'appareil. Les HEIC sont convertis
+   par OneDrive au passage, sinon ils resteraient illisibles hors iPhone. */
+async function copierDocumentEnLocal(x){
+  const id = x.item.id;
+  if(await preparerDocumentLocal(id)) return true;
+  if(typeof x.item.size === "number" && x.item.size > LIMITE_HORS_LIGNE) return false;
+  let blob;
+  if(estHeic(x.item.name, x.item.file && x.item.file.mimeType)){
+    blob = await telechargerJpeg(id);
+  }else{
+    const it = await appelGraph(itemKat(id));
+    const url = it && it["@microsoft.graph.downloadUrl"];
+    if(!url) return false;
+    const r = await fetch(url);
+    if(!r.ok) return false;
+    blob = await r.blob();
+  }
+  const dataUrl = await new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = () => rej(new Error("Lecture impossible."));
+    fr.readAsDataURL(blob);
+  });
+  await idbEcrire(cleLocaleDoc(id), dataUrl);
+  return await preparerDocumentLocal(id);
+}
+/* Copie d'avance, un par un, après l'affichage : jamais attendue, jamais
+   bloquante. C'est ce qui rend le permis et l'assurance lisibles en mer. */
+let copieEnCours = false;
+async function copierDocumentsEnFond(tout){
+  if(copieEnCours || !connecte()) return;
+  copieEnCours = true;
+  try{
+    for(const x of tout){
+      try{ await copierDocumentEnLocal(x); }catch(e){ /* un échec n'arrête pas les autres */ }
+    }
+  }finally{ copieEnCours = false; }
+}
+
 async function renderDocuments(){
   const etat = document.getElementById("connEtat");
   const detail = document.getElementById("connDetail");
@@ -2948,12 +3138,17 @@ async function renderDocuments(){
     const motif = localStorage.getItem(CLE_MOTIF);
     etat.textContent = "Non connecté";
     detail.textContent = motif || "Les documents sont rangés dans ton OneDrive, dossier KAT-A-MAR / DOCUMENTS. Il faut te connecter avec ton compte Microsoft pour y accéder.";
-    liste.innerHTML = '<p class="empty-msg">Connecte-toi pour voir les documents du bateau.</p>';
+    /* Même déconnecté, ce qui a déjà été copié sur l'iPhone reste lisible :
+       c'est tout l'intérêt, le permis doit s'ouvrir en mer. */
+    if(!afficherDepuisLeLocal("Non connecté à Microsoft.")){
+      liste.innerHTML = '<p class="empty-msg">Connecte-toi pour voir les documents du bateau.</p>';
+    }
     return;
   }
   etat.textContent = "Connecté" + (localStorage.getItem(CLE_QUI) ? " — " + localStorage.getItem(CLE_QUI) : "");
   detail.textContent = "Dossier OneDrive : " + RACINE_DOCS + ". Les fichiers restent de vrais documents, ouvrables depuis l'app OneDrive.";
   liste.innerHTML = '<p class="empty-msg">Lecture de OneDrive…</p>';
+  const reseauAvant = echecsReseau;
   try{
     await resoudreBase();
     /* Deux voies, essayées dans l'ordre. La première tient en un seul
@@ -2965,35 +3160,41 @@ async function renderDocuments(){
     ]);
     let tout = [];
     let exploitable = false;
-    if(r0 && r0.value){
-      r0.value.forEach(dossier => {
-        if(!dossier.folder) return;
-        if(CATEGORIES.indexOf(dossier.name) === -1) return;
-        if(!Array.isArray(dossier.children)) return;
-        exploitable = true;
-        dossier.children.forEach(it => { if(!it.folder) tout.push({ cat: dossier.name, item: it }); });
-      });
+    if(r0 && Array.isArray(r0.value)){
+      tout = rangerDocuments(r0.value);
+      /* Le développement a-t-il VRAIMENT eu lieu ? Chez Gil, Graph renvoie
+         parfois les dossiers sans leur contenu : la voie 2 est alors
+         indispensable. Se contenter de « la réponse n'est pas vide » ferait
+         croire la lecture réussie et n'afficherait aucun document.
+         Un dossier DOCUMENTS réellement vide reste, lui, une réponse valable. */
+      const deplie = r0.value.some(e => e && e.folder && Array.isArray(e.children));
+      exploitable = deplie || tout.length > 0 || r0.value.length === 0;
     }
     if(!exploitable){
       /* Voie 2 : on trouve DOCUMENTS par son identifiant, puis chaque
-         catégorie par le sien. Aucune adresse par chemin. */
+         sous-dossier par le sien. Aucune adresse par chemin. */
       tout = [];
       const idDocs = await idDossier(RACINE_DOCS);
       if(idDocs){
-        const sous = await appelGraph(prefixeDisque() + "/items/" + idDocs + "/children?$top=100").catch(() => null);
-        const dossiers = ((sous && sous.value) || []).filter(d => d.folder && CATEGORIES.indexOf(d.name) !== -1);
-        if(dossiers.length){
+        const sous = await appelGraph(prefixeDisque() + "/items/" + idDocs + "/children?$top=200").catch(() => null);
+        const entrees = (sous && sous.value) || [];
+        if(entrees.length){
           exploitable = true;
+          const dossiers = entrees.filter(d => d.folder);
+          entrees.forEach(f => { if(!f.folder && f.file) tout.push({ cat: CAT_RACINE, item: f }); });
           const lots = await Promise.all(dossiers.map(d =>
             appelGraph(prefixeDisque() + "/items/" + d.id + "/children?$top=200").catch(() => null)));
           lots.forEach((r, i) => {
-            if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat: dossiers[i].name, item: it }); });
+            const cat = categorieConnue(dossiers[i].name) || dossiers[i].name;
+            if(r && r.value) r.value.forEach(it => { if(!it.folder) tout.push({ cat, item: it }); });
           });
         }
       }
     }
     if(!exploitable){
-      /* Voie 3, dernier recours : une adresse par chemin et par catégorie. */
+      /* Voie 3, dernier recours : une adresse par chemin et par catégorie
+         prévue. Elle ne peut pas deviner les dossiers libres, mais elle
+         ramène au moins l'essentiel quand les deux autres sont refusées. */
       tout = [];
       const lots = await Promise.all(CATEGORIES.map(cat =>
         appelGraph(relationKat(RACINE_DOCS + "/" + cat, "children?$top=200")).catch(() => null)));
@@ -3006,6 +3207,11 @@ async function renderDocuments(){
     /* On ne bloque jamais la lecture : le message n'apparaît que si elle
        n'a rien donné ET que le dossier n'est pas confirmé. */
     if(tout.length === 0 && baseKat && !baseKat.confirme){
+      /* Rien lu, mais pourquoi ? Si des appels ont échoué faute de réseau,
+         ce n'est pas un problème de partage : on montre ce qu'on garde. */
+      if(echecsReseau > reseauAvant){
+        if(afficherDepuisLeLocal("OneDrive injoignable")) return;
+      }
       liste.innerHTML = '<p class="empty-msg"><b>Dossier partagé introuvable.</b><br><br>'
         + "Les documents du bateau sont dans le OneDrive du propriétaire. Pour y accéder :"
         + '<br><br>1. Ouvre OneDrive, rubrique <b>Partagés</b>.'
@@ -3017,8 +3223,12 @@ async function renderDocuments(){
       majTuileDocuments();
       return;
     }
+    memoriserListeDocs(tout);
     afficherDocuments(tout);
     majTuileDocuments();
+    /* Copie d'avance sur l'appareil, après l'affichage : c'est elle qui rend
+       les papiers du bateau lisibles sans réseau. */
+    copierDocumentsEnFond(tout);
     /* Simple confort d'affichage : demandé après coup, jamais attendu. */
     if(!localStorage.getItem(CLE_QUI)){
       appelGraph("/me").then(moi => {
@@ -3039,75 +3249,159 @@ async function renderDocuments(){
       document.getElementById("docFormulaire").style.display = "none";
       document.getElementById("connEtat").textContent = "Non connecté";
     }
+    /* La lecture a échoué : plutôt que de laisser l'écran vide, on montre
+       ce que l'appareil garde, en disant clairement de quand cela date. */
+    afficherDepuisLeLocal(e.message);
   }
 }
-function afficherDocuments(tout){
+/* Affiche la dernière liste connue et ce qui est copié sur l'appareil.
+   Renvoie false s'il n'y a rien du tout à montrer. */
+function afficherDepuisLeLocal(pourquoi){
+  const memo = listeDocsMemorisee();
+  if(!memo || memo.tout.length === 0) return false;
+  docsEnCache = memo.tout;
+  /* Rien ne doit partir vers OneDrive tant qu'on n'a pas pu le relire :
+     un envoi à l'aveugle est exactement ce qu'on cherche à éviter. */
+  const form = document.getElementById("docFormulaire");
+  if(form) form.style.display = "none";
+  afficherDocuments(memo.tout, {
+    horsLigne: true,
+    quand: memo.quand,
+    pourquoi: pourquoi || ""
+  });
+  majTuileDocuments();
+  return true;
+}
+function afficherDocuments(tout, contexte){
+  const ctx = contexte || {};
   const liste = document.getElementById("docListe");
+  oublierUrlsDocuments();
   liste.innerHTML = "";
+  if(ctx.horsLigne){
+    const b = document.createElement("div");
+    b.className = "bandeau attente";
+    b.innerHTML = "Liste du " + esc(quandLisible(ctx.quand))
+      + ". OneDrive n'a pas pu être relu" + (ctx.pourquoi ? " (" + esc(ctx.pourquoi) + ")" : "")
+      + ". Les documents déjà copiés sur cet iPhone restent consultables ; "
+      + "les autres attendront le réseau. Ni envoi ni suppression pour l'instant.";
+    liste.appendChild(b);
+  }
   if(tout.length === 0){
-    liste.innerHTML = '<p class="empty-msg">Aucun document. Envoie le premier ci-dessus.</p>';
+    const p = document.createElement("p");
+    p.className = "empty-msg";
+    p.textContent = "Aucun document. Envoie le premier ci-dessus.";
+    liste.appendChild(p);
     return;
   }
-  CATEGORIES.forEach(cat => {
+  categoriesPresentes(tout).forEach(cat => {
     const lot = tout.filter(x => x.cat === cat);
     if(lot.length === 0) return;
     const t = document.createElement("div"); t.className = "doc-cat";
-    t.textContent = NOMS_CAT[cat] + " · " + lot.length; liste.appendChild(t);
-    lot.sort((a,b) => a.item.name.localeCompare(b.item.name)).forEach(x => {
+    t.textContent = nomCategorie(cat) + " · " + lot.length; liste.appendChild(t);
+    lot.sort((a,b) => String(a.item.name).localeCompare(String(b.item.name))).forEach(x => {
       const cle = cat + "/" + x.item.name;
       const ech = etatEcheanceDoc(echeances[cle]);
       const div = document.createElement("div"); div.className = "doc-carte";
       div.innerHTML = '<div class="doc-nom">' + esc(x.item.name) + '</div>'
         + '<div class="doc-info">' + fmtTaille(x.item.size)
-        + (x.item.lastModifiedDateTime ? " · " + new Date(x.item.lastModifiedDateTime).toLocaleDateString("fr-BE") : "") + '</div>'
+        + (x.item.lastModifiedDateTime ? " · " + new Date(x.item.lastModifiedDateTime).toLocaleDateString("fr-BE") : "")
+        + ' <span class="doc-local" data-pastille="' + esc(x.item.id) + '"></span></div>'
         + (ech ? '<div class="doc-echeance ' + ech.classe + '">' + esc(ech.texte) + '</div>' : '')
         + '<div class="doc-actions">'
         + '<button class="ouvrir" data-ouvrir="' + esc(x.item.id) + '">Ouvrir</button>'
-        + '<button class="suppr" data-suppr="' + esc(x.item.id) + '" data-cle="' + esc(cle) + '">Supprimer</button>'
+        + (ctx.horsLigne ? ''
+           : '<button class="suppr" data-suppr="' + esc(x.item.id) + '" data-cle="' + esc(cle) + '">Supprimer</button>')
         + '</div>';
       liste.appendChild(div);
     });
   });
-  liste.querySelectorAll("[data-ouvrir]").forEach(b => b.addEventListener("click", async () => {
-    const x = docsEnCache.find(y => y.item.id === b.dataset.ouvrir);
-    if(!x) return;
-    b.textContent = "Ouverture…";
-    try{
-      if(estHeic(x.item.name, x.item.file && x.item.file.mimeType)){
-        /* Un HEIC déposé avant cette version : OneDrive le convertit à la
-           volée, sinon il resterait illisible hors iPhone. */
-        b.textContent = "Conversion…";
-        const blob = await telechargerJpeg(x.item.id);
-        const u = URL.createObjectURL(blob);
-        window.open(u, "_blank");
-        setTimeout(() => { try{ URL.revokeObjectURL(u); }catch(e){} }, 60000);
-        b.textContent = "Ouvrir";
-        return;
-      }
-      /* Pas de $select ici : l'adresse de téléchargement est une annotation,
-         renvoyée d'office avec l'élément. La demander explicitement la fait
-         disparaître de la réponse. */
-      const it = await appelGraph(itemKat(x.item.id));
-      const url = it && it["@microsoft.graph.downloadUrl"];
-      if(url) window.open(url, "_blank");
-      else alert("OneDrive n'a pas renvoyé de lien pour « " + (x.item.name || "ce document")
-        + " ». Réessaie dans un instant, ou ouvre-le depuis l'application OneDrive.");
-    }catch(e){ alert("Ouverture impossible : " + e.message); }
-    b.textContent = "Ouvrir";
-  }));
+  liste.querySelectorAll("[data-ouvrir]").forEach(b => b.addEventListener("click", () => ouvrirDocument(b)));
   liste.querySelectorAll("[data-suppr]").forEach(b => b.addEventListener("click", async () => {
     if(!confirm("Supprimer définitivement ce document de OneDrive ?")) return;
     try{
       await appelGraph(itemKat(b.dataset.suppr), { method:"DELETE" });
+      await idbSupprimer(cleLocaleDoc(b.dataset.suppr));
       if(echeances[b.dataset.cle]){ delete echeances[b.dataset.cle]; await ecrireEcheances(); }
       renderDocuments();
     }catch(e){ alert("Suppression impossible : " + e.message); }
   }));
+  /* Les copies déjà présentes sont préparées tout de suite : dès cet instant,
+     un appui les ouvre sans aucune attente, donc sans être bloqué. */
+  tout.forEach(x => { preparerDocumentLocal(x.item.id).catch(() => {}); });
+}
+
+/* OUVERTURE D'UN DOCUMENT — le point le plus délicat de l'application.
+   Safari n'autorise l'ouverture d'une fenêtre que PENDANT le geste de
+   l'utilisateur. Dès qu'on attend une réponse réseau, le geste est consommé
+   et l'ouverture est refusée en silence : c'est pour cela que les documents
+   ne s'ouvraient pas. Trois niveaux, du plus sûr au dernier recours. */
+function ouvrirDocument(b){
+  const id = b.dataset.ouvrir;
+  const x = docsEnCache.find(y => y.item.id === id);
+  /* 1. Copie locale déjà prête : ouverture immédiate, dans le geste. */
+  const prete = urlsDocuments[id];
+  if(prete){
+    let fen = null;
+    try{ fen = window.open(prete, "_blank"); }catch(e){ fen = null; }
+    /* Même ici la fenêtre peut être refusée : on ne laisse jamais un appui
+       sans effet visible. */
+    if(!fen) transformerEnLien(b, prete, x && x.item.name);
+    return;
+  }
+  /* 2. Sinon on ouvre la fenêtre MAINTENANT, vide, et on lui donnera son
+        adresse une fois le document récupéré. */
+  let fenetre = null;
+  try{ fenetre = window.open("", "_blank"); }catch(e){ fenetre = null; }
+  completerOuverture(id, fenetre, b);
+}
+async function completerOuverture(id, fenetre, b){
+  const x = docsEnCache.find(y => y.item.id === id);
+  if(!x){ if(fenetre){ try{ fenetre.close(); }catch(e){} } return; }
+  const libelle = b ? b.textContent : "";
+  if(b) b.textContent = "Ouverture…";
+  try{
+    const ok = await copierDocumentEnLocal(x);
+    const u = ok ? urlsDocuments[id] : null;
+    if(u){
+      if(fenetre) fenetre.location.href = u;
+      /* 3. La fenêtre a été refusée malgré tout : on transforme le bouton en
+            vrai lien. Un second appui, lui, ne peut plus être bloqué. */
+      else transformerEnLien(b, u, x.item.name);
+      if(b) b.textContent = libelle || "Ouvrir";
+      return;
+    }
+    /* Pas de copie possible (trop gros, ou refus) : on ouvre le lien direct. */
+    const it = await appelGraph(itemKat(id));
+    const url = it && it["@microsoft.graph.downloadUrl"];
+    if(!url) throw new Error("OneDrive n'a pas renvoyé de lien pour « "
+      + (x.item.name || "ce document") + " ». Réessaie dans un instant, "
+      + "ou ouvre-le depuis l'application OneDrive.");
+    if(fenetre) fenetre.location.href = url;
+    else transformerEnLien(b, url, x.item.name);
+  }catch(e){
+    if(fenetre) try{ fenetre.close(); }catch(err){}
+    alert("Ouverture impossible : " + e.message
+      + (connecte() ? "" : "\nCe document n'a pas encore été copié sur cet iPhone."));
+  }
+  if(b) b.textContent = libelle || "Ouvrir";
+}
+function transformerEnLien(b, url, nom){
+  if(!b) return;
+  const a = document.createElement("a");
+  a.className = "ouvrir";
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener";
+  if(nom) a.setAttribute("download", nom);
+  a.textContent = "Afficher";
+  b.replaceWith(a);
 }
 function majTuileDocuments(){
   const el = document.getElementById("tileDocs");
   if(!el) return;
-  if(!connecte()){ el.textContent = "Papiers du bateau dans OneDrive"; return; }
+  if(!connecte() && docsEnCache.length === 0){
+    el.textContent = "Papiers du bateau dans OneDrive"; return;
+  }
   const proches = Object.keys(echeances).filter(k => {
     const e = etatEcheanceDoc(echeances[k]);
     return e && (e.classe === "soon" || e.classe === "late");
@@ -3119,12 +3413,13 @@ function majTuileDocuments(){
 
 /* Rapport de diagnostic : sans lui, un défaut qui ne se produit que chez
    l'un des deux utilisateurs reste invisible pour qui écrit le code. */
-document.getElementById("diagBtn").addEventListener("click", async () => {
-  const el = document.getElementById("diagTexte");
+async function rapportDiagnostic(){
   const lignes = [];
   lignes.push("Kat-a-Mar " + VERSION + " — " + new Date().toLocaleString("fr-BE"));
   lignes.push("Prénom : " + (localStorage.getItem(CLE_PRENOM) || "—"));
   lignes.push("Connecté : " + (connecte() ? "oui" : "non"));
+  lignes.push("Vérification d'ouverture : " + etatVerification
+    + (messageVerification ? " — " + messageVerification : ""));
   try{
     await resoudreBase();
     lignes.push("Base retenue : " + JSON.stringify(baseKat));
@@ -3142,19 +3437,35 @@ document.getElementById("diagBtn").addEventListener("click", async () => {
       lignes.push("Dossier " + d + " : " + (id ? "id " + id : "INTROUVABLE"));
     }
   }catch(e){ lignes.push("Résolution impossible : " + e.message); }
-  lignes.push("Documents listés : " + docsEnCache.length);
+  lignes.push("Documents listés : " + docsEnCache.length
+    + " — copiés sur l'iPhone : " + Object.keys(urlsDocuments).length);
+  const memo = listeDocsMemorisee();
+  lignes.push("Liste mémorisée : " + (memo ? memo.tout.length + " documents, du " + quandLisible(memo.quand) : "aucune"));
   lignes.push("");
   lignes.push("Derniers appels OneDrive :");
   journalGraph.slice(-25).forEach(l => lignes.push("  " + l));
-  const texte = lignes.join("\n");
-  el.textContent = texte;
-  el.style.display = "block";
+  return lignes.join("\n");
+}
+async function copierPressePapier(texte){
   try{
     if(navigator.clipboard && navigator.clipboard.writeText){
       await navigator.clipboard.writeText(texte);
       alert("Rapport copié. Colle-le dans la conversation.");
+      return true;
     }
   }catch(e){}
+  return false;
+}
+/* Deux boutons mènent au même rapport : celui de l'écran Documents, et celui
+   du bandeau d'accueil. Jusqu'à la v28 il n'existait que le premier — enfermé
+   derrière un écran verrouillé, donc inatteignable au moment précis où il
+   sert. */
+document.getElementById("diagBtn").addEventListener("click", async () => {
+  const el = document.getElementById("diagTexte");
+  const texte = await rapportDiagnostic();
+  el.textContent = texte;
+  el.style.display = "block";
+  await copierPressePapier(texte);
 });
 document.getElementById("connBtn").addEventListener("click", seConnecter);
 document.getElementById("deconnBtn").addEventListener("click", () => {
@@ -3427,7 +3738,16 @@ async function migrerFactures(){
    on n'affiche RIEN qui puisse être faux. Aucun repli silencieux sur les
    données locales. La présence, elle, n'est qu'une information : elle ne
    bloque jamais, et une présence de plus de 5 minutes est ignorée. */
-const ECRANS_LIBRES = ["accueil", "checklist", "manuel"];
+/* Écrans toujours accessibles, même sans OneDrive. Le verrou n'a de sens que
+   pour les données que Gil et moi modifions chacun de notre côté : heures,
+   réservations, entretien, comptes, sauvegarde. Les autres écrans ne
+   contiennent rien qui puisse être faux :
+   — Checklist, Mode d'emploi, Infos, Dictionnaire : du texte figé dans la page ;
+   — Documents : des fichiers. Un permis hauturier copié sur l'iPhone ne
+     devient pas faux parce que le réseau manque, et c'est précisément en mer,
+     sans réseau, qu'on peut avoir à le présenter. L'écran dit clairement de
+     quand date la liste et interdit tout envoi tant que OneDrive n'est pas relu. */
+const ECRANS_LIBRES = ["accueil", "checklist", "manuel", "infos", "dictionnaire", "documents"];
 const CLE_MODIFIE = "katamar-modifie";
 const CLE_PRENOM = "katamar-prenom";
 const DOSSIER_PRESENCE = "presence";
@@ -3436,6 +3756,7 @@ let oneDriveRelu = false;
 let etatVerification = "attente";   /* attente | ok | echec */
 let messageVerification = "";
 let modaleDejaVue = false;
+let diagAccueilTexte = "";
 let propositionDistante = null;
 
 /* ---------- rappel rouge ---------- */
@@ -3546,8 +3867,10 @@ function majBandeaux(){
     h += '<div class="bandeau attente">Lecture de OneDrive en cours… les écrans s\'ouvriront dès que les données seront vérifiées.</div>';
   } else if(etatVerification === "echec"){
     h += '<div class="bandeau bloque">🔒 ' + esc(messageVerification)
-       + '<br><br>Seules la Checklist et le Mode d\'emploi restent accessibles : le reste ne peut pas être affiché sans certitude.'
-       + '<button id="bandeauReessayer">Réessayer</button></div>';
+       + '<br><br>Checklist, Mode d\'emploi, Permis Hauturier, Infos, Dictionnaire et Documents restent accessibles. '
+       + 'Les écrans de données partagées (heures, réservations, entretien, comptes, sauvegarde) attendent d\'être sûrs.'
+       + '<button id="bandeauReessayer">Réessayer</button>'
+       + '<button id="bandeauDiag">Diagnostic — copier le rapport</button></div>';
   }
   if(propositionDistante){
     h += '<div class="bandeau bloque">La sauvegarde sur OneDrive du '
@@ -3561,7 +3884,22 @@ function majBandeaux(){
        + ' semble' + (presenceAffichee.length > 1 ? "nt" : "")
        + ' aussi utiliser l\'application en ce moment — vérifiez avant de continuer.</div>';
   }
-  z.innerHTML = h;
+  /* Le rapport doit survivre à un redessin du bandeau : sinon il disparaît
+     dès que la présence ou la vérification change d'état. */
+  z.innerHTML = h + '<pre id="diagAccueil" style="display:none;white-space:pre-wrap;word-break:break-all;'
+    + 'font-size:11px;line-height:1.45;background:var(--sand);border:1.5px solid var(--line);'
+    + 'border-radius:10px;padding:10px;margin-top:9px;max-height:320px;overflow:auto;"></pre>';
+  if(diagAccueilTexte){
+    const p = document.getElementById("diagAccueil");
+    if(p){ p.textContent = diagAccueilTexte; p.style.display = "block"; }
+  }
+  const d = document.getElementById("bandeauDiag");
+  if(d) d.addEventListener("click", async () => {
+    diagAccueilTexte = await rapportDiagnostic();
+    const p = document.getElementById("diagAccueil");
+    if(p){ p.textContent = diagAccueilTexte; p.style.display = "block"; }
+    await copierPressePapier(diagAccueilTexte);
+  });
   const b = document.getElementById("bandeauReessayer");
   if(b) b.addEventListener("click", () => { if(!connecte()) seConnecter(); else verifierOneDrive(); });
   const r = document.getElementById("bandeauRestaurer");
@@ -3581,14 +3919,19 @@ async function verifierOneDrive(){
     messageVerification = "Connexion à OneDrive requise. Ouvre l'écran Documents pour te connecter avec ton compte Microsoft.";
     majBandeaux(); return false;
   }
-  let distant;
+  /* Chaque étape est nommée. Le 8 octobre, le message disait « Impossible de
+     relire OneDrive » alors que OneDrive répondait et que c'était Make.com
+     qui ne répondait pas : une heure perdue à chercher au mauvais endroit. */
+  let distant, etape = "la session Microsoft";
   try{
     await jetonValide();               /* échoue si la session a plus de 24 h */
+    etape = "OneDrive (Microsoft Graph)";
     await resoudreBase();              /* chez Gil, le dossier est un partage */
+    etape = "la lecture de la sauvegarde";
     distant = await lireDistant();
   }catch(e){
     oneDriveRelu = false; etatVerification = "echec";
-    messageVerification = "Impossible de relire OneDrive : " + e.message;
+    messageVerification = "Échec sur " + etape + " : " + e.message;
     majBandeaux(); return false;
   }
   /* Le fichier est lisible : on regarde s'il faut récupérer quelque chose. */
@@ -3673,6 +4016,12 @@ document.getElementById("rappelAller").addEventListener("click", () => {
 });
 
 /* ---------- DEMARRAGE ---------- */
+/* La dernière liste de documents connue est reprise dès le démarrage : la
+   tuile d'accueil annonce alors le bon nombre, même sans réseau. */
+(() => {
+  const memo = listeDocsMemorisee();
+  if(memo && memo.tout.length) docsEnCache = memo.tout;
+})();
 rebuildChain();
 renderChecklist();
 renderSorties();
