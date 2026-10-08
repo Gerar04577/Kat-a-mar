@@ -1,5 +1,5 @@
 const CACHE = "kat-a-mar-v28";
-const FILES = ["./", "./index.html", "./permis-hauturier.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -34,13 +34,10 @@ self.addEventListener("fetch", (event) => {
       fetch(req)
         .then((res) => {
           const copy = res.clone();
-          /* Chaque page est rangée sous son propre nom : sinon ouvrir le cours
-             remplacerait l'application en cache (v28). */
-          const cle = new URL(req.url).pathname.endsWith("permis-hauturier.html") ? "./permis-hauturier.html" : "./index.html";
-          if (res && res.ok) caches.open(CACHE).then((c) => c.put(cle, copy)).catch(() => {});
+          caches.open(CACHE).then((c) => c.put("./index.html", copy)).catch(() => {});
           return res;
         })
-        .catch(() => caches.match(req, { ignoreSearch: true }).then((r) => r || (new URL(req.url).pathname.endsWith("permis-hauturier.html") ? caches.match("./permis-hauturier.html") : caches.match("./index.html"))))
+        .catch(() => caches.match(req).then((r) => r || caches.match("./index.html")))
     );
     return;
   }

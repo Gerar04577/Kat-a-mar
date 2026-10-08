@@ -86,7 +86,6 @@ button:focus-visible, input:focus-visible{ outline:3px solid var(--p-blue-dark);
 .tile.verrou{ opacity:.42; }
 .tile.verrou::after{ content:"🔒"; position:absolute; top:10px; right:12px; font-size:14px; }
 .tile{ position:relative; }
-a.tile{ text-decoration:none; color:inherit; }
 .bandeau{ max-width:600px; margin:0 auto 12px; padding:12px 14px; border-radius:14px;
   font-size:13.5px; font-weight:700; line-height:1.45; position:relative; z-index:2; }
 .bandeau.attente{ background:var(--p-blue); border:1.5px solid var(--p-blue-dark); color:#215678; }
@@ -387,10 +386,6 @@ button.conflit-btn.danger{ background:#fff; border-color:var(--p-pink-dark); col
       <div class="ic">🔤</div>
       <div><div class="tname">Dictionnaire</div><div class="tsub" id="tileDico">Les mots du bord expliqués</div></div>
     </button>
-    <a class="tile wide c-lav" href="./permis-hauturier.html">
-      <div class="ic">🧭</div>
-      <div><div class="tname">Permis Hauturier</div><div class="tsub">Cours de navigation : caps, dérive, courant — consultable hors-ligne</div></div>
-    </a>
     <button class="tile wide c-blue" data-go="donnees">
       <div class="ic">💾</div>
       <div><div class="tname">Sauvegarde</div><div class="tsub" id="tileDonnees">Exporter et restaurer les données</div></div>
@@ -2804,6 +2799,49 @@ async function appelGraph(chemin, options){
   return t ? JSON.parse(t) : true;
 }
 
+/* ---------- HEIC ----------
+   Les photos d'iPhone sont en HEIC : Safari les affiche, mais ni Firefox ni
+   Chrome sur PC ne savent les décoder. On les convertit donc en JPEG avant
+   de les déposer, pour qu'elles soient lisibles partout et par chacun. */
+function estHeic(nom, type){
+  return /\.hei[cf]$/i.test(String(nom || "")) || /image\/hei[cf]/i.test(String(type || ""));
+}
+function jpegDeHeic(fichier){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error("Lecture du fichier impossible."));
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = () => rej(new Error("Cet appareil ne sait pas décoder le HEIC."));
+      img.onload = () => {
+        try{
+          /* 2400 px de large suffisent pour un document scanné, tout en
+             gardant un fichier raisonnable. */
+          const maxW = 2400;
+          const k = Math.min(1, maxW / img.width);
+          const c = document.createElement("canvas");
+          c.width = Math.round(img.width * k);
+          c.height = Math.round(img.height * k);
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          c.toBlob(b => b ? res(b) : rej(new Error("Conversion impossible.")), "image/jpeg", 0.85);
+        }catch(e){ rej(new Error("Conversion impossible.")); }
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(fichier);
+  });
+}
+/* Adresse de la version JPEG d'un document, convertie par OneDrive.
+   Les dimensions sont obligatoires : sans elles, Graph refuse. */
+function adresseJpeg(id){
+  return itemKat(id) + "/content?format=jpg&width=2400&height=2400";
+}
+async function telechargerJpeg(id){
+  const jeton = await jetonValide();
+  const r = await fetch(GRAPH_API + adresseJpeg(id), { headers:{ Authorization: "Bearer " + jeton } });
+  if(!r.ok) throw new Error("OneDrive n'a pas pu convertir ce fichier (" + r.status + ").");
+  return await r.blob();
+}
 /* ---------- ENVOI ---------- */
 const SEUIL_SESSION = 4 * 1024 * 1024;   /* au-delà, Graph impose une session */
 /* Un nom de fichier vient de l'extérieur : on retire les séparateurs de
@@ -3035,6 +3073,17 @@ function afficherDocuments(tout){
     if(!x) return;
     b.textContent = "Ouverture…";
     try{
+      if(estHeic(x.item.name, x.item.file && x.item.file.mimeType)){
+        /* Un HEIC déposé avant cette version : OneDrive le convertit à la
+           volée, sinon il resterait illisible hors iPhone. */
+        b.textContent = "Conversion…";
+        const blob = await telechargerJpeg(x.item.id);
+        const u = URL.createObjectURL(blob);
+        window.open(u, "_blank");
+        setTimeout(() => { try{ URL.revokeObjectURL(u); }catch(e){} }, 60000);
+        b.textContent = "Ouvrir";
+        return;
+      }
       /* Pas de $select ici : l'adresse de téléchargement est une annotation,
          renvoyée d'office avec l'élément. La demander explicitement la fait
          disparaître de la réponse. */
@@ -3117,15 +3166,27 @@ document.getElementById("docEnvoyer").addEventListener("click", unSeulAppui(asyn
   const fichier = champ.files && champ.files[0];
   if(!fichier){ docStatut("Choisis d'abord un fichier.", "bad"); return; }
   const cat = document.getElementById("docCat").value;
-  const nom = nomPropre(fichier.name);
+  let nom = nomPropre(fichier.name);
   const ech = document.getElementById("docEcheance").value;
   const bouton = document.getElementById("docEnvoyer");
   bouton.disabled = true;
-  docStatut("Envoi de " + nom + "…");
   docProgres(0);
   try{
-    if(fichier.size < SEUIL_SESSION){ await envoyerPetit(cat, nom, fichier); docProgres(100); }
-    else{ await envoyerGros(cat, nom, fichier, p => docProgres(p)); }
+    let aEnvoyer = fichier;
+    if(estHeic(fichier.name, fichier.type)){
+      docStatut("Conversion de la photo en JPEG…");
+      try{
+        aEnvoyer = await jpegDeHeic(fichier);
+        nom = nom.replace(/\.hei[cf]$/i, "") + ".jpg";
+      }catch(e){
+        /* Sur un appareil qui ne décode pas le HEIC, on dépose l'original :
+           OneDrive saura le convertir à la lecture. */
+        aEnvoyer = fichier;
+      }
+    }
+    docStatut("Envoi de " + nom + "…");
+    if(aEnvoyer.size < SEUIL_SESSION){ await envoyerPetit(cat, nom, aEnvoyer); docProgres(100); }
+    else{ await envoyerGros(cat, nom, aEnvoyer, p => docProgres(p)); }
     if(isISODate(ech)){
       await lireEcheances();
       echeances[cat + "/" + nom] = ech;
