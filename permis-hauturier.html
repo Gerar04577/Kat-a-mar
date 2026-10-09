@@ -113,15 +113,145 @@ svg.sy{width:40px;height:30px;margin:0}
 .tko span{color:var(--red)}.tok span{color:var(--green)}.tpk{color:var(--navy)}
 @media (max-width:560px){.mto .tw table{font-size:.82rem}.mto .tw td,.mto .tw th{padding:7px 4px;-webkit-hyphens:auto;hyphens:auto}}
 </style>
+<style>
+/* ================= RECHERCHE ET TAILLE DU TEXTE — v15 =================
+   Ajoutées après le reste pour ne rien réécrire du cours. Les diagrammes
+   ne bougent pas : leurs textes sont dimensionnés en unités SVG, pas en rem, donc le réglage de taille ne les touche pas. */
+:root{
+  --ech:1;                       /* multiplicateur de taille, boutons A / A */
+  --h-kam:56px;                  /* hauteur réelle de la barre « Retour », mesurée */
+  --surl:#ffe2a0;                /* toutes les occurrences */
+  --surl-actif:#ffd0a3;          /* celle où l'on se trouve */
+  --surl-trait:#e8690b;
+  font-size:calc(16px * var(--ech));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}}
+:root[data-theme="dark"]{
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}
+body{ font-size:calc(18px * var(--ech)); }
+
+#kam-chercher{
+  position:sticky; top:var(--h-kam); z-index:40;
+  background:var(--bg); border-bottom:1.5px solid var(--line);
+  margin:-28px -16px 0; padding:12px 16px 10px;
+}
+#kam-chercher .ligne{ display:flex; gap:10px; align-items:stretch;
+  max-width:680px; margin:0 auto; }
+#kam-chercher .boite{ position:relative; flex:1; min-width:0; }
+#kam-q{
+  width:100%; height:calc(56px * var(--ech));
+  font-family:var(--body); font-size:calc(19px * var(--ech)); font-weight:600;
+  color:var(--ink); background:var(--paper);
+  border:2px solid var(--line); border-radius:14px; padding:0 46px;
+}
+#kam-q::placeholder{ color:var(--muted); font-weight:400; }
+#kam-q:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px var(--sea); }
+#kam-chercher .loupe{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; pointer-events:none; color:var(--muted);
+}
+#kam-vider{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:var(--line); color:var(--ink); font-size:19px; line-height:1;
+  cursor:pointer; display:none;
+}
+#kam-vider.vu{ display:block; }
+#kam-chercher .fleches{ display:flex; gap:8px; }
+#kam-chercher .fleche{
+  width:calc(60px * var(--ech)); height:calc(56px * var(--ech));
+  border:2px solid var(--navy); border-radius:14px;
+  background:var(--paper); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; padding:0;
+}
+#kam-chercher .fleche svg{ width:28px; height:28px; }
+#kam-chercher .fleche:active{ background:var(--sea); }
+#kam-chercher .fleche:disabled{ opacity:.3; cursor:default; }
+#kam-chercher .fleche:focus-visible{ outline:3px solid var(--surl-trait); outline-offset:2px; }
+#kam-chercher .bas{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin:9px auto 0; min-height:26px; max-width:680px;
+}
+#kam-compteur{
+  font-family:var(--mono); font-weight:600; font-variant-numeric:tabular-nums;
+  font-size:calc(16px * var(--ech)); color:var(--muted); letter-spacing:.02em;
+}
+#kam-compteur b{ color:var(--surl-trait); font-size:calc(19px * var(--ech)); }
+#kam-compteur.rien{ color:var(--amber); }
+#kam-chercher .tailles{ display:flex; align-items:center; gap:6px; }
+#kam-chercher .tailles i{
+  font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-right:2px;
+}
+#kam-chercher .tbtn{
+  width:44px; height:38px; border:2px solid var(--line); border-radius:11px;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--body); font-weight:700; line-height:1; padding:0;
+}
+#kam-chercher .tbtn:active{ background:var(--sea); }
+#kam-chercher .tbtn:disabled{ opacity:.35; cursor:default; }
+#kam-chercher .tbtn.pt{ font-size:14px; }
+#kam-chercher .tbtn.gd{ font-size:21px; }
+
+mark.kam-occ{
+  background:var(--surl); color:inherit; border-radius:4px; padding:1px 2px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+@media (max-width:420px){
+  #kam-chercher .tailles i{ display:none; }
+}
+</style>
 </head>
 <body>
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Hauturier</span></div>
 <main>
 <header>
-  <div class="ver">COURS DÉBUTANT · v14 · pièges réécrits avec un exemple chiffré chacun, QCM mot pour mot, météo animée, France / Espagne</div>
+  <div class="ver">COURS DÉBUTANT · v15 · recherche par mots avec compteur d'occurrences et réglage de la taille du texte, pièges réécrits avec un exemple chiffré chacun, QCM mot pour mot, météo animée, France / Espagne</div>
   <h1>Caps, routes, dérive et courant</h1>
   <p>Le cours de navigation du permis hauturier français, une notion à la fois. Chaque exemple et chaque exercice a son schéma et le rappel de ses symboles.</p>
 </header>
+<div id="kam-chercher">
+  <div class="ligne">
+    <div class="boite">
+      <svg class="loupe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L21 21"></path>
+      </svg>
+      <input id="kam-q" type="search" autocomplete="off" autocorrect="off" spellcheck="false"
+             enterkeyhint="next" placeholder="Chercher un mot…"
+             aria-label="Chercher un mot dans le cours">
+      <button id="kam-vider" type="button" aria-label="Effacer la recherche">✕</button>
+    </div>
+    <div class="fleches">
+      <button class="fleche" id="kam-prec" type="button" disabled aria-label="Occurrence précédente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 15 L12 9 L6 15"></path>
+        </svg>
+      </button>
+      <button class="fleche" id="kam-suiv" type="button" disabled aria-label="Occurrence suivante">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9 L12 15 L18 9"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="bas">
+    <div id="kam-compteur" aria-live="polite">Cherche dans tout le cours</div>
+    <div class="tailles">
+      <i>Texte</i>
+      <button class="tbtn pt" id="kam-moins" type="button" aria-label="Réduire le texte">A</button>
+      <button class="tbtn gd" id="kam-plus" type="button" aria-label="Agrandir le texte">A</button>
+    </div>
+  </div>
+</div>
+
 <section>
   <h2>Mode d'emploi</h2>
   <ol>
@@ -1441,6 +1571,185 @@ coupe(document.getElementById("a6"),"chaud");coupe(document.getElementById("a7")
     if(k===0){const z=FR.find(z=>d<=z[0]);return"France, à <b>"+f1(d)+" milles d'un abri</b> : armement <b>"+z[1].toLowerCase()+"</b> exigé ("+z[2]+"). Pilote : permis côtier jusqu'à 6 milles d'un abri, extension hauturière au-delà."}
     if(k===1){const z=ES.find(z=>d<=z[0]);return"Espagne, à <b>"+f1(d)+" milles de la côte</b> : <b>"+z[0+1]+"</b>, il faut un bateau de "+z[2]+". La catégorie est celle du bateau, écrite sur le certificat d'inscription."}
     return d<=12?"Kat a Mar (catégorie C, zone 4) à <b>"+f1(d)+" milles</b> : <span class=\"ok\">autorisé</span>, dans les eaux territoriales espagnoles.":"Kat a Mar à <b>"+f1(d)+" milles</b> : <span class=\"ko\">interdit</span>. Le certificat d'inscription limite le bateau à <b>12 milles de la côte</b>, quel que soit le permis du pilote."}})})();
+})();
+</script>
+<script>
+/* ================= RECHERCHE À OCCURRENCES — v15 =================
+   Trois précautions imposées par ce cours :
+   1. les 60 schémas sont en SVG — y glisser une balise <mark> les casserait,
+      on saute donc tout sous-arbre SVG ;
+   2. les solutions sont dans des blocs « details » repliés — on les ouvre quand
+      l'occurrence visée s'y trouve, sinon on défilerait vers du vide ;
+   3. la page pèse un mégaoctet — on retire les anciens surlignages un par un
+      au lieu de reconstruire le HTML, qui se sentirait à chaque frappe. */
+(function(){
+  "use strict";
+  var cours = document.querySelector("main");
+  var champ = document.getElementById("kam-q");
+  var compteur = document.getElementById("kam-compteur");
+  var bPrec = document.getElementById("kam-prec");
+  var bSuiv = document.getElementById("kam-suiv");
+  var bVider = document.getElementById("kam-vider");
+  var bPlus = document.getElementById("kam-plus");
+  var bMoins = document.getElementById("kam-moins");
+  if(!cours || !champ) return;
+
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  var marques = [], courant = -1;
+
+  /* La barre « Retour » est collée en haut : la recherche se colle juste
+     dessous, à sa hauteur réelle plutôt qu'à une valeur devinée. */
+  function mesurerBarre(){
+    var b = document.querySelector(".kam-bar");
+    if(b) document.documentElement.style.setProperty("--h-kam", b.offsetHeight + "px");
+  }
+  mesurerBarre();
+  window.addEventListener("resize", mesurerBarre);
+  window.addEventListener("orientationchange", mesurerBarre);
+
+  /* Sans accents et sans majuscules, mais SANS changer la longueur : chaque
+     caractère reste un caractère, donc une position trouvée dans la version
+     aplatie est valable telle quelle dans le texte d'origine. */
+  function aplatir(s){
+    return Array.from(String(s)).map(function(c){
+      var b = (c.normalize("NFD").charAt(0) || c).toLowerCase();
+      return b.charAt(0) || c;
+    }).join("");
+  }
+
+  function aEviter(noeud){
+    var p = noeud.parentNode;
+    while(p && p !== cours){
+      if(p.nodeType === 1){
+        var n = p.nodeName.toUpperCase();
+        if(n === "SCRIPT" || n === "STYLE" || n === "NOSCRIPT" || n === "TEXTAREA") return true;
+        if(p.namespaceURI === SVG_NS) return true;
+        if(p.id === "kam-chercher") return true;
+      }
+      p = p.parentNode;
+    }
+    return false;
+  }
+
+  function effacerSurlignage(){
+    for(var i = 0; i < marques.length; i++){
+      var m = marques[i], p = m.parentNode;
+      if(!p) continue;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();            /* recolle le texte, sinon un mot resterait coupé */
+    }
+    marques = [];
+    courant = -1;
+  }
+
+  function surligner(mot){
+    var cible = aplatir(mot);
+    if(!cible) return;
+    var promeneur = document.createTreeWalker(cours, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if(!n.nodeValue || n.nodeValue.indexOf("\u0000") === 0) return NodeFilter.FILTER_REJECT;
+        return aEviter(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var noeuds = [], n;
+    while((n = promeneur.nextNode())) noeuds.push(n);
+    for(var i = 0; i < noeuds.length; i++){
+      var noeud = noeuds[i], texte = noeud.nodeValue, plat = aplatir(texte);
+      var pos = plat.indexOf(cible);
+      if(pos === -1) continue;
+      var frag = document.createDocumentFragment(), depart = 0;
+      while(pos !== -1){
+        if(pos > depart) frag.appendChild(document.createTextNode(texte.slice(depart, pos)));
+        var m = document.createElement("mark");
+        m.className = "kam-occ";
+        m.textContent = texte.slice(pos, pos + cible.length);
+        frag.appendChild(m);
+        marques.push(m);
+        depart = pos + cible.length;
+        pos = plat.indexOf(cible, depart);
+      }
+      if(depart < texte.length) frag.appendChild(document.createTextNode(texte.slice(depart)));
+      noeud.parentNode.replaceChild(frag, noeud);
+    }
+  }
+
+  function majCompteur(){
+    var mot = champ.value.trim();
+    if(!mot){ compteur.textContent = "Cherche dans tout le cours"; compteur.className = ""; return; }
+    if(mot.length < 2){ compteur.textContent = "Encore une lettre…"; compteur.className = ""; return; }
+    if(marques.length === 0){
+      compteur.textContent = "Aucune occurrence de « " + mot + " »";
+      compteur.className = "rien"; return;
+    }
+    compteur.innerHTML = "<b>" + (courant + 1) + "</b> / " + marques.length
+      + (marques.length > 1 ? " occurrences" : " occurrence");
+    compteur.className = "";
+  }
+
+  function ouvrirLesReplis(el){
+    var p = el.parentNode;
+    while(p && p !== cours){
+      if(p.nodeName === "DETAILS" && !p.open) p.open = true;
+      p = p.parentNode;
+    }
+  }
+
+  function allerA(i){
+    if(marques.length === 0) return;
+    if(courant >= 0 && marques[courant]) marques[courant].classList.remove("actif");
+    courant = (i + marques.length) % marques.length;
+    var m = marques[courant];
+    m.classList.add("actif");
+    ouvrirLesReplis(m);
+    m.scrollIntoView({ block: "center", behavior: "smooth" });
+    majCompteur();
+  }
+
+  var minuteur = null;
+  function chercher(){
+    var mot = champ.value.trim();
+    effacerSurlignage();
+    bVider.classList.toggle("vu", champ.value.length > 0);
+    if(mot.length >= 2) surligner(mot);
+    bPrec.disabled = bSuiv.disabled = (marques.length === 0);
+    if(marques.length > 0) allerA(0); else majCompteur();
+  }
+
+  champ.addEventListener("input", function(){
+    clearTimeout(minuteur);
+    minuteur = setTimeout(chercher, 150);
+  });
+  champ.addEventListener("keydown", function(e){
+    if(e.key !== "Enter") return;
+    e.preventDefault();
+    if(marques.length === 0){ clearTimeout(minuteur); chercher(); return; }
+    allerA(courant + (e.shiftKey ? -1 : 1));
+  });
+  bSuiv.addEventListener("click", function(){ allerA(courant + 1); });
+  bPrec.addEventListener("click", function(){ allerA(courant - 1); });
+  bVider.addEventListener("click", function(){
+    champ.value = ""; clearTimeout(minuteur); chercher(); champ.focus();
+  });
+
+  /* ---------- taille du texte ----------
+     Le cours est écrit en rem : changer la taille de la racine agrandit
+     tout le texte d'un coup, titres et tableaux compris. Les schémas,
+     eux, sont dimensionnés en unités SVG et ne bougent pas. */
+  var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
+  try{
+    var g = parseInt(localStorage.getItem("katamar-permis-taille"), 10);
+    if(g >= 0 && g < ECHELLES.length) iEch = g;
+  }catch(e){}
+  function appliquerTaille(){
+    document.documentElement.style.setProperty("--ech", ECHELLES[iEch]);
+    bMoins.disabled = (iEch === 0);
+    bPlus.disabled = (iEch === ECHELLES.length - 1);
+    try{ localStorage.setItem("katamar-permis-taille", String(iEch)); }catch(e){}
+    mesurerBarre();
+  }
+  bPlus.addEventListener("click", function(){ if(iEch < ECHELLES.length - 1){ iEch++; appliquerTaille(); } });
+  bMoins.addEventListener("click", function(){ if(iEch > 0){ iEch--; appliquerTaille(); } });
+  appliquerTaille();
 })();
 </script>
 </body>
