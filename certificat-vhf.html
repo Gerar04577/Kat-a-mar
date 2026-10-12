@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Certificat VHF · Kat-a-Mar</title>
-<!-- Certificat VHF belge (IBPT) — leçons pas à pas + QCM — v3
-     v3 : QCM corrigé immédiatement après chaque question dans TOUS les modes
+<!-- Certificat VHF belge (IBPT) — leçons pas à pas + QCM — v4
+     v4 : toutes les abréviations expliquées (lexique + mot souligné touchable
+     partout) ; recherche précise avec compteur d'occurrences et parcours une à une.
+     v3 :
+QCM corrigé immédiatement après chaque question dans TOUS les modes
      (examen blanc compris) ; en cas d'erreur : pourquoi la réponse choisie est
      fausse, pourquoi la bonne est juste, et un rappel de la théorie.
      v2 : refonte complète d'après la maquette validée le 12/10/2026 :
@@ -33,7 +36,8 @@ body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSys
 main{max-width:640px;margin:0 auto;padding-top:18px}
 .kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
 .kam-bar a,.kam-bar button{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px;background:none;font-family:inherit;cursor:pointer}
-.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+.kam-bar span{font-weight:700;flex:1;text-align:center}
+.kam-bar #barRech{min-width:44px;justify-content:center}
 h1{font-size:1.6rem;line-height:1.2;margin:0 0 4px}
 h2{font-size:1.2rem;margin:0 0 8px;line-height:1.3}
 p{margin:8px 0}
@@ -87,6 +91,30 @@ p{margin:8px 0}
 .fb.fok{border-color:var(--green);background:var(--greenbg)}
 .rappel{border-radius:12px;padding:11px 13px;margin:10px 0 0;background:var(--navybg);border:2px solid var(--navy)}
 .rappel .rt{display:block;font-weight:800;color:var(--navy);font-size:14px;margin-bottom:3px}
+.ab{text-decoration:underline dotted;text-decoration-color:var(--navy);text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer}
+mark.hl{background:#ffe066;color:#14263a;border-radius:3px;padding:0 1px}
+mark.hl.cur{background:#ff9f1c;color:#14263a;outline:2px solid #c45f00}
+#bulle{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--paper);border-top:3px solid var(--navy);border-radius:16px 16px 0 0;padding:16px 18px calc(env(safe-area-inset-bottom,0px) + 16px);box-shadow:0 -6px 24px rgba(0,0,0,.18)}
+#bulle .bin{max-width:640px;margin:0 auto}
+#bulleAb{font-size:1.5rem;font-weight:800;color:var(--navy)}
+#bulleN{font-weight:700;margin:2px 0 8px}
+.brow{display:flex;gap:10px;margin-top:12px}.brow .btn{margin:0;padding:11px;font-size:15px}
+#navRech{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--navy);color:var(--paper);padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;align-items:center;gap:8px}
+#navRech button{background:var(--paper);color:var(--navy);border:none;border-radius:10px;font-weight:800;font-size:17px;min-width:44px;height:42px;font-family:inherit;cursor:pointer}
+#navRechTxt{flex:1;font-weight:700;font-size:14px;line-height:1.3}
+.gl{padding:12px 0;border-top:1px solid var(--line)}.gl:first-child{border-top:none}
+.gla{font-size:1.2rem;font-weight:800;color:var(--navy)}
+.gln{font-weight:700;font-size:15px;margin:2px 0 4px}
+.glx{font-size:15.5px}
+.res{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 9px;font-family:inherit;color:var(--ink);cursor:pointer}
+.res .rt2{display:block;font-weight:800;font-size:15px;color:var(--navy)}
+.rn{display:inline-block;font-size:12.5px;font-weight:800;background:var(--navybg);color:var(--navy);border-radius:20px;padding:1px 9px;margin:4px 0}
+.res .rx{display:block;font-size:15px;line-height:1.5}
+.resb{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 9px}
+.rq ul{margin:6px 0;padding-left:20px}.rq li.bon{color:var(--green);font-weight:700}.rq .petit{margin-top:4px}
+.chk{display:flex;align-items:center;gap:8px;font-size:15px;margin:8px 0 0}.chk input{width:20px;height:20px}
+#rechTxt{width:100%;font-size:17px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--navy);background:var(--paper);color:var(--ink);font-family:inherit}
+.astuce{font-size:13.5px;color:var(--muted);margin:0 0 4px}
 .lien{background:none;border:none;color:var(--navy);font-weight:700;font-size:15px;font-family:inherit;padding:6px 0;cursor:pointer;text-decoration:underline}
 .erreur{color:var(--red);font-weight:700;font-size:14px;margin:8px 0 0}
 .score{font-size:2.4rem;font-weight:800;text-align:center;margin:6px 0}
@@ -97,14 +125,14 @@ p{margin:8px 0}
 </style>
 </head>
 <body>
-<div class="kam-bar"><a href="./index.html#accueil" id="barRetour">‹ Retour</a><span id="barTitre">Certificat VHF</span></div>
+<div class="kam-bar"><a href="./index.html#accueil" id="barRetour">‹ Retour</a><span id="barTitre">Certificat VHF</span><button type="button" id="barRech" aria-label="Rechercher">🔎</button></div>
 <main>
 
 <!-- =============== ACCUEIL =============== -->
 <section id="vAccueil">
   <h1>Certificat VHF belge</h1>
   <p class="muted" style="margin-top:0">Pour réussir l'examen de l'IBPT : lisez les leçons dans l'ordre, puis entraînez-vous.</p>
-  <p class="ver">v3 · d'après le manuel officiel IBPT 2025</p>
+  <p class="ver">v4 · d'après le manuel officiel IBPT 2025</p>
 
   <div class="carte">
     <h2>L'examen en bref</h2>
@@ -118,6 +146,10 @@ p{margin:8px 0}
     <div class="rouge"><span class="rt">⚠️ Pour le Kat a Mar</span>Si la radio a un bouton rouge « DISTRESS », c'est une radio ASN : le certificat VHF ne suffit pas, il faut le <b>SRC</b> (voir la leçon 1, étape 5).</div>
   </div>
 
+  <div class="titre-bloc">CHERCHER ET COMPRENDRE</div>
+  <button class="btn" type="button" id="goRech">🔎 Rechercher un mot dans tout le cours</button>
+  <button class="btn" type="button" id="goGloss">📖 Les abréviations expliquées</button>
+
   <div class="titre-bloc">S'ENTRAÎNER</div>
   <button class="btn plein" type="button" id="goEntr">✅ Entraînement · les 44 questions, corrigées une à une</button>
   <button class="btn" type="button" id="goExam">🎯 Examen blanc · 25 questions au hasard, corrigées une à une</button>
@@ -129,6 +161,7 @@ p{margin:8px 0}
 <!-- =============== LEÇON =============== -->
 <section id="vLecon" class="cache">
   <div class="petit muted" id="lecSur"></div>
+  <p class="astuce">Mot souligné en pointillés = abréviation : touchez-le pour son explication.</p>
   <div class="dots" id="lecDots"></div>
   <div class="carte etape" id="lecEtape"></div>
   <div class="nav">
@@ -147,6 +180,7 @@ p{margin:8px 0}
   <div class="barre"><div id="qBarre"></div></div>
   <div class="qtxt" id="qTxt"></div>
   <div id="qReps"></div>
+  <p class="astuce" id="qAbrev"></p>
   <p class="erreur cache" id="qErreur">Choisissez une réponse avant de continuer.</p>
   <div id="qRetour"></div>
   <button class="btn plein cache" type="button" id="qSuivant" style="margin-top:14px">Question suivante ›</button>
@@ -167,9 +201,86 @@ p{margin:8px 0}
   <button class="btn" type="button" id="resLecons">Retour aux leçons</button>
 </section>
 
+<!-- =============== LEXIQUE =============== -->
+<section id="vGloss" class="cache">
+  <h1>Les abréviations</h1>
+  <p class="muted" style="margin-top:0">Pour chacune : ce que veut dire chaque lettre, puis ce que c'est, en clair.</p>
+  <div class="carte" id="glossListe"></div>
+</section>
+
+<!-- =============== RECHERCHE =============== -->
+<section id="vRech" class="cache">
+  <h1>Rechercher</h1>
+  <p class="muted" style="margin-top:0">Dans les 10 leçons, les abréviations et les 44 questions.</p>
+  <input type="search" id="rechTxt" placeholder="Exemple : MMSI, canal 16, 60 jours" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <label class="chk"><input type="checkbox" id="rechMot"> Mot entier seulement (« canal » ne trouve pas « canaux »)</label>
+  <label class="chk"><input type="checkbox" id="rechExact"> Majuscules et accents exacts (« ASN » ne trouve pas « asn »)</label>
+  <p id="rechCompte" style="margin:14px 0 4px"></p>
+  <div id="rechRes"></div>
+</section>
 </main>
 
+<div id="navRech" class="cache">
+  <button type="button" id="navPrev" aria-label="Occurrence précédente">‹</button>
+  <span id="navRechTxt"></span>
+  <button type="button" id="navNext" aria-label="Occurrence suivante">›</button>
+  <button type="button" id="navListe" aria-label="Liste des résultats">☰</button>
+  <button type="button" id="navFermer" aria-label="Fermer la recherche">✕</button>
+</div>
+
+<div id="bulle" class="cache" role="dialog" aria-live="polite">
+  <div class="bin">
+    <div id="bulleAb"></div>
+    <div id="bulleN"></div>
+    <div id="bulleX"></div>
+    <div class="brow"><button type="button" class="btn" id="bulleLexique">📖 Toutes les abréviations</button><button type="button" class="btn plein" id="bulleFermer">Fermer</button></div>
+  </div>
+</div>
+
 <script>
+/* ================= LES ABRÉVIATIONS =================
+   a = abréviation · n = ce que veut dire chaque lettre · x = explication simple
+   Chaque abréviation trouvée dans les leçons et les corrections est soulignée en
+   pointillés : un toucher ouvre son explication en bas de l'écran. */
+const GLOSSAIRE = [
+{a:"VHF",n:"Very High Frequency, « très haute fréquence » en anglais",x:"La radio marine. Ses ondes vont en ligne droite et portent jusqu'à l'horizon, soit en général quelques dizaines de kilomètres."},
+{a:"IBPT",n:"Institut belge des services postaux et des télécommunications",x:"L'administration belge qui délivre l'autorisation de station de la radio et le certificat VHF, et qui organise l'examen. En néerlandais : BIPT."},
+{a:"UIT",n:"Union internationale des télécommunications",x:"L'organisation mondiale (rattachée à l'ONU) qui partage les fréquences radio et les séries d'indicatifs d'appel entre les pays."},
+{a:"MMSI",n:"Maritime Mobile Service Identity, « identité du service mobile maritime »",x:"Le numéro d'identité du bateau, 9 chiffres, donné par l'IBPT. C'est un peu son « numéro de téléphone » : l'ASN et l'AIS l'utilisent. En Belgique, il commence par 205."},
+{a:"MID",n:"Maritime Identification Digits, « chiffres d'identification maritime »",x:"Les 3 chiffres qui désignent le pays au début d'un MMSI ou d'un code ATIS. Belgique = 205."},
+{a:"ASN",n:"Appel sélectif numérique",x:"Un message numérique envoyé par la radio au lieu de la voix. Exemple : le bouton rouge « DISTRESS » envoie en une seconde une alerte de détresse avec votre position et votre MMSI. Il passe par le canal 70. Le certificat VHF ne suffit pas pour l'utiliser : il faut le SRC."},
+{a:"DSC",n:"Digital Selective Calling",x:"Le nom anglais de l'ASN (appel sélectif numérique). C'est la même chose."},
+{a:"SMDSM",n:"Système mondial de détresse et de sécurité en mer",x:"L'ensemble des moyens modernes pour donner l'alerte en mer : ASN, balises de détresse, satellites. En anglais : GMDSS. Les certificats SRC, ROC, LRC et GOC sont des certificats « SMDSM »."},
+{a:"GMDSS",n:"Global Maritime Distress and Safety System",x:"Le nom anglais du SMDSM, le système mondial de détresse et de sécurité en mer."},
+{a:"SRC",n:"Short Range Certificate, « certificat courte portée »",x:"Le certificat SMDSM de la plaisance. Il est obligatoire pour utiliser une VHF avec ASN de classe D, celle qui a un bouton « DISTRESS ». Il inclut le certificat VHF."},
+{a:"ROC",n:"Restricted Operator's Certificate, « certificat restreint d'opérateur »",x:"Un certificat SMDSM de niveau supérieur, exigé pour une radio ASN de classe A, surtout à bord de bateaux professionnels."},
+{a:"LRC",n:"Long Range Certificate, « certificat longue portée »",x:"Un certificat SMDSM pour la navigation au large, avec des radios à grande portée."},
+{a:"GOC",n:"General Operator's Certificate, « certificat général d'opérateur »",x:"Le certificat radio le plus complet, pour les grands navires."},
+{a:"EPIRB",n:"Emergency Position-Indicating Radio Beacon, « radiobalise de localisation des sinistres »",x:"Une balise de détresse. Une fois déclenchée, elle envoie votre position aux secours par satellite, partout dans le monde."},
+{a:"SART",n:"Search And Rescue Transponder, « répondeur de recherche et de sauvetage »",x:"Une balise qu'on emporte dans le radeau de survie. Elle s'allume sur l'écran radar des sauveteurs pour les guider jusqu'à vous."},
+{a:"AIS",n:"Automatic Identification System, « système d'identification automatique »",x:"Chaque bateau équipé diffuse automatiquement son nom, sa position, son cap et sa vitesse. Les bateaux voisins le voient sur leur écran de navigation, ce qui aide à éviter les collisions."},
+{a:"AIS-SART",n:"AIS Search And Rescue Transmitter, « émetteur AIS de recherche et de sauvetage »",x:"Une balise de survie, mise dans le radeau. Elle envoie sa position par AIS : elle apparaît sur l'écran des bateaux proches pour qu'ils viennent vous chercher. Son numéro commence par 970."},
+{a:"AIS-MOB",n:"MOB = Man Over Board, « homme à la mer »",x:"Une petite balise portée sur le gilet de sauvetage. Si quelqu'un tombe à l'eau, elle envoie sa position par AIS aux bateaux proches. Son numéro commence par 972."},
+{a:"AIS-EPIRB",n:"EPIRB qui envoie aussi sa position par AIS",x:"Une balise de détresse EPIRB qui, en plus du satellite, envoie sa position par AIS aux bateaux proches. Son numéro commence par 974."},
+{a:"ATIS",n:"Automatic Transmitter Identification System, « système d'identification automatique de l'émetteur »",x:"Sur les rivières et canaux, la radio ajoute automatiquement un code à la fin de chaque message. Les autorités savent ainsi quel bateau a parlé. Le code compte 10 chiffres et commence par 9 205 pour un bateau belge."},
+{a:"MRCC",n:"Maritime Rescue Coordination Centre, « centre de coordination du sauvetage maritime »",x:"Le centre qui organise les secours en mer. Pour la Belgique : le MRCC Oostende, joignable 24 h sur 24. C'est lui qu'on appelle en cas d'incident."},
+{a:"SAR",n:"Search And Rescue, « recherche et sauvetage »",x:"Les opérations de secours en mer. Le canal 67 leur est réservé."},
+{a:"SOLAS",n:"Safety Of Life At Sea, « sauvegarde de la vie humaine en mer »",x:"Une convention internationale de sécurité qui concerne les grands navires : navires à passagers, cargos de plus de 300 tonnes… Pas les bateaux de plaisance."},
+{a:"CIAC",n:"Code d'identification de l'autorité comptable",x:"Le code de l'organisme qui vous facture les appels téléphoniques passés par radio via une station côtière."},
+{a:"SPF",n:"Service public fédéral",x:"Un ministère belge. Le SPF Mobilité et Transports s'occupe de la navigation, mais pas des radios."},
+{a:"CROSS",n:"Centre régional opérationnel de surveillance et de sauvetage",x:"L'équivalent français du MRCC. Le plus proche de la Belgique est le CROSS Gris-Nez."},
+{a:"DISTRESS",n:"« Détresse » en anglais",x:"Le nom du bouton rouge des radios avec ASN. Il envoie automatiquement une alerte de détresse. Ce bouton demande le certificat SRC."},
+{a:"DUAL",n:"« Double » en anglais : la double veille",x:"La touche qui fait écouter à la radio votre canal ET le canal 16 : elle repasse sur le 16 toutes les 2,5 secondes. Interdite sur les voies intérieures."},
+{a:"HI/LO",n:"HIgh / LOw, « fort / faible » en anglais",x:"Le bouton qui choisit la puissance d'émission : LO = 0,5 à 1 W, pour parler près ; HI = 6 à 25 W, pour porter loin."},
+{a:"HI",n:"HIgh, « fort » en anglais",x:"Position forte du bouton de puissance : 6 à 25 W, pour porter loin. À utiliser seulement si nécessaire."},
+{a:"LO",n:"LOw, « faible » en anglais",x:"Position faible du bouton de puissance : 0,5 à 1 W, pour parler à un bateau proche ou dans un port. C'est le réglage à privilégier."},
+{a:"LED",n:"Light-Emitting Diode, « diode électroluminescente »",x:"Une lampe moderne. Son alimentation électrique brouille la réception radio : pas d'éclairage LED à moins de 4 m de l'antenne VHF."},
+{a:"MHz",n:"Mégahertz",x:"L'unité des fréquences radio : un million de vibrations par seconde. La VHF marine va de 156,025 à 162,025 MHz ; le canal 16 est sur 156,800 MHz."},
+{a:"W",n:"Watt",x:"L'unité de puissance. Plus elle est forte, plus la radio porte loin, mais plus elle risque de gêner les autres. Portable : 6 W au plus ; fixe : 25 W au plus."},
+{a:"QCM",n:"Questionnaire à choix multiple",x:"Une question avec plusieurs réponses proposées, dont une seule est juste. L'examen en compte 25."},
+{a:"Rainwat",n:"Arrangement régional sur la radio des voies de navigation intérieure",x:"L'accord européen, signé à Bucarest en 2012, qui fixe les règles radio sur les rivières et canaux (ATIS obligatoire, pas d'ASN…). La Belgique, les Pays-Bas, la France et l'Allemagne en font partie."}
+];
+
 /* ================= LES LEÇONS =================
    Chaque leçon = une suite d'étapes courtes.
    .rouge = revient souvent à l'examen · .u = mot décisif souligné en rouge */
@@ -204,8 +315,10 @@ const LECONS = [
 
 `<h2>Étape 5 · Ce que le certificat VHF ne permet pas</h2>
 <p>Certaines radios ont un <b>bouton rouge « DISTRESS »</b> qui envoie un appel de détresse automatique, avec votre position. C'est l'<b>ASN</b> (appel sélectif numérique), DSC en anglais.</p>
-<p>Le certificat VHF ne couvre <span class="u">pas</span> l'ASN, ni les balises de détresse (EPIRB, SART, AIS-SART). Pour cela, il faut un certificat dit « SMDSM » :</p>
-<ul><li>radio ASN de <b>classe D</b> (plaisance) → certificat <b>SRC</b> ;</li><li>radio ASN de <b>classe A</b> → certificat <b>ROC</b>.</li></ul>`
+<p>Le certificat VHF ne couvre <span class="u">pas</span> l'ASN, ni les balises de détresse :</p>
+<ul><li><b>EPIRB</b> : la balise qui envoie votre position aux secours par satellite ;</li><li><b>SART</b> : la balise du radeau de survie, visible sur le radar des sauveteurs ;</li><li><b>AIS-SART</b> : la même, mais visible sur l'écran AIS des bateaux proches.</li></ul>
+<p>Pour tout cela, il faut un certificat <b>SMDSM</b> (Système mondial de détresse et de sécurité en mer) :</p>
+<ul><li>radio ASN de <b>classe D</b> (plaisance) → certificat <b>SRC</b> (Short Range Certificate, « certificat courte portée ») ;</li><li>radio ASN de <b>classe A</b> → certificat <b>ROC</b> (« certificat restreint d'opérateur »).</li></ul>`
 + R("Piège classique", "« Le certificat VHF permet-il d'utiliser l'ASN ? » → <b>Non</b>, il faut un certificat SMDSM comme le SRC."),
 
 `<h2>Étape 6 · Sanctions et secret</h2>
@@ -227,8 +340,12 @@ const LECONS = [
 + R("Revient souvent à l'examen", "Un navire belge a un MMSI qui commence par <b>205</b>."),
 
 `<h2>Étape 3 · Le piège des numéros en 97…</h2>
-<p>Les balises de secours ont aussi un numéro, qui commence par 97. Ce <b>ne sont pas des MMSI</b> : ils sont programmés par le fabricant.</p>
-<table class="tab"><tr><td><b>970</b>…</td><td>AIS-SART, la balise de localisation</td></tr><tr><td><b>972</b>…</td><td>AIS-MOB, la balise « homme à la mer »</td></tr><tr><td><b>974</b>…</td><td>AIS-EPIRB</td></tr></table>`
+<p>D'abord, un mot : l'<b>AIS</b> (système d'identification automatique) est le système qui affiche les bateaux voisins sur l'écran de navigation, avec leur nom et leur position.</p>
+<p>Certaines balises de secours utilisent l'AIS pour montrer où se trouve la personne en danger. Elles ont un numéro qui commence par <b>97</b>. Ce <b>ne sont pas des MMSI</b> (le numéro d'identité du bateau) : ces numéros sont programmés par le fabricant de la balise.</p>
+<table class="tab"><tr><th>Début du numéro</th><th>Balise</th><th>En clair</th></tr>
+<tr><td><b>970</b>…</td><td>AIS-SART</td><td>SART = « Search And Rescue Transmitter », émetteur de recherche et de sauvetage. Balise mise dans le radeau de survie : elle apparaît sur l'écran AIS des bateaux proches pour qu'ils viennent vous chercher.</td></tr>
+<tr><td><b>972</b>…</td><td>AIS-MOB</td><td>MOB = « Man Over Board », homme à la mer. Petite balise portée sur le gilet : si quelqu'un tombe à l'eau, elle envoie sa position aux bateaux proches.</td></tr>
+<tr><td><b>974</b>…</td><td>AIS-EPIRB</td><td>EPIRB = balise de détresse qui envoie votre position aux secours par satellite. Celle-ci l'envoie aussi par AIS aux bateaux proches.</td></tr></table>`
 + R("Piège classique", "Si une réponse propose « 970 » comme début de MMSI d'un navire belge : c'est faux, c'est un AIS-SART.")
 ]},
 
@@ -257,7 +374,7 @@ const LECONS = [
 { t:"L'appareil et ses réglages", s:"Puissance, squelch, double veille, antenne", e:[
 `<h2>Étape 1 · La puissance</h2>
 <p>La puissance se mesure en watts (W). Plus elle est forte, plus on porte loin, mais plus on risque de gêner les autres. D'où un bouton <b>HI/LO</b> (fort/faible).</p>
-<table class="tab"><tr><td>VHF fixe, faible (LO)</td><td><b>0,5 à 1 W</b></td></tr><tr><td>VHF fixe, forte (HI)</td><td><b>6 à 25 W</b></td></tr><tr><td>VHF portable</td><td><b>0,5 à 6 W</b></td></tr><tr><td>AIS</td><td><b>12,5 W</b> maximum</td></tr></table>`
+<table class="tab"><tr><td>VHF fixe, faible (LO)</td><td><b>0,5 à 1 W</b></td></tr><tr><td>VHF fixe, forte (HI)</td><td><b>6 à 25 W</b></td></tr><tr><td>VHF portable</td><td><b>0,5 à 6 W</b></td></tr><tr><td>AIS (le système qui montre les bateaux voisins sur l'écran)</td><td><b>12,5 W</b> maximum</td></tr></table>`
 + R("Revient souvent à l'examen", "Puissance maximale d'une <b>portable</b> : <b>6 W</b>. Le 12,5 W, c'est l'AIS ; le 25 W, la VHF fixe."),
 
 `<h2>Étape 2 · Quand faut-il baisser la puissance ?</h2>
@@ -336,7 +453,7 @@ const LECONS = [
 { t:"Le code ATIS", s:"La signature automatique sur les canaux", e:[
 `<h2>Étape 1 · À quoi sert l'ATIS ?</h2>
 <p>Sur les rivières et canaux, la radio « signe » automatiquement chaque message avec un code. Les autorités savent ainsi quel bateau vient de parler.</p>
-<p>L'ATIS est <b>obligatoire</b> sur les voies intérieures des pays de l'arrangement <b>Rainwat</b> : Belgique, Pays-Bas, France, Allemagne et d'autres.</p>`,
+<p>L'ATIS est <b>obligatoire</b> sur les voies intérieures des pays de l'arrangement <b>Rainwat</b> (l'accord européen sur la radio des rivières et canaux) : Belgique, Pays-Bas, France, Allemagne et d'autres.</p>`,
 
 `<h2>Étape 2 · Quand le code est-il envoyé ?</h2>
 <ul><li>à la <span class="u">fin de chaque émission</span>, quand on relâche le bouton du micro ;</li><li>et toutes les <b>5 minutes</b> pendant une émission longue.</li></ul>
@@ -420,7 +537,7 @@ const LECONS = [
 
 { t:"Veille et secours en Belgique", s:"Qui appeler en cas de problème", e:[
 `<h2>Étape 1 · Écouter le canal 16</h2>
-<p>Les grands navires (soumis à la convention SOLAS) doivent écouter le canal 16 en permanence. Pour la plaisance, ce n'est pas obligatoire mais fortement conseillé, par exemple avec la double veille.</p>`,
+<p>Les grands navires, soumis à la convention <b>SOLAS</b> (« Safety Of Life At Sea », la convention internationale pour la sécurité en mer), doivent écouter le canal 16 en permanence. Pour la plaisance, ce n'est pas obligatoire mais fortement conseillé, par exemple avec la double veille.</p>`,
 
 `<h2>Étape 2 · Le MRCC Oostende</h2>
 <p>Le MRCC est le centre de coordination du sauvetage en mer. C'est le <span class="u">premier contact pour tout incident</span> en mer belge, 24 h sur 24.</p>
@@ -428,7 +545,7 @@ const LECONS = [
 + R("Piège classique", "<b>Oostende Radio</b> diffuse la météo et les avis de sécurité. Ce n'est <b>pas</b> lui qui gère les incidents : c'est le <b>MRCC</b>."),
 
 `<h2>Étape 3 · Les voisins et le téléphone par radio</h2>
-<ul><li>Pays-Bas : garde côtière de Den Helder ; France : CROSS Gris-Nez.</li><li>Pour appeler un téléphone à terre via une station côtière (la « correspondance publique »), il faut un abonnement auprès d'une autorité comptable, identifiée par son code <b>CIAC</b>.</li></ul>`
+<ul><li>Pays-Bas : garde côtière de Den Helder ; France : CROSS Gris-Nez, l'équivalent français du MRCC.</li><li>Pour appeler un téléphone à terre via une station côtière (la « correspondance publique »), il faut un abonnement auprès d'une autorité comptable, identifiée par son code <b>CIAC</b>.</li></ul>`
 ]}
 ];
 
@@ -627,10 +744,13 @@ const QUESTIONS = [
 
 /* ================= OUTILS ================= */
 const $ = id => document.getElementById(id);
-const VUES = ["vAccueil","vLecon","vQcm","vResultat"];
+const VUES = ["vAccueil","vLecon","vQcm","vResultat","vGloss","vRech"];
 function vue(id, titre){
   VUES.forEach(v => $(v).classList.toggle("cache", v !== id));
   $("barTitre").textContent = titre || "Certificat VHF";
+  $("barRech").classList.toggle("cache", id === "vRech");
+  if(typeof R_CUR !== "undefined") $("navRech").classList.toggle("cache", id !== "vLecon" || R_CUR < 0);
+  $("bulle").classList.add("cache");
   window.scrollTo(0, 0);
 }
 /* Le bouton du haut : vers l'application depuis l'accueil, vers les leçons ailleurs. */
@@ -655,6 +775,7 @@ function accueil(){
       '<span class="fl">›</span></button>';
   }).join("");
   $("barRetour").textContent = "‹ Retour";
+  R_CUR = -1;
   vue("vAccueil");
 }
 $("listeLecons").addEventListener("click", (ev) => {
@@ -669,18 +790,22 @@ function ouvrirLecon(n, i){
   $("barRetour").textContent = "‹ Leçons";
   afficherEtape();
   vue("vLecon", "Leçon " + n);
+  majNavRech();
 }
 function afficherEtape(){
   const L = LECONS[lecN - 1], fin = lecI === L.e.length - 1;
   $("lecSur").textContent = "Leçon " + lecN + " · " + L.t + " · étape " + (lecI + 1) + " sur " + L.e.length;
   $("lecDots").innerHTML = L.e.map((_, k) => '<span class="' + (k <= lecI ? 'on' : '') + '"></span>').join("");
   $("lecEtape").innerHTML = L.e[lecI];
+  if(R_CUR >= 0 && R_Q) surligner($("lecEtape"), R_Q, R_OPT);
+  marquerAbrev($("lecEtape"));
   $("lecPrev").style.visibility = lecI ? "visible" : "hidden";
   $("lecNext").classList.toggle("cache", fin);
   $("lecFin").classList.toggle("cache", !fin);
   $("lecSuivante").classList.toggle("cache", lecN === LECONS.length);
   if(fin) marquerLue(lecN);
   window.scrollTo(0, 0);
+  if(!$("vLecon").classList.contains("cache")) majNavRech();
 }
 $("lecPrev").addEventListener("click", () => { if(lecI > 0){ lecI--; afficherEtape(); } });
 $("lecNext").addEventListener("click", () => { if(lecI < LECONS[lecN - 1].e.length - 1){ lecI++; afficherEtape(); } });
@@ -709,6 +834,13 @@ function afficherQuestion(){
   $("qScore").textContent = bonnes() + " bonne" + (bonnes() > 1 ? "s" : "") + " sur " + pos;
   $("qBarre").style.width = ((pos + 1) / serie.length * 100) + "%";
   $("qTxt").textContent = Q.q;
+  marquerAbrev($("qTxt"));
+  /* Les abréviations écrites dans les réponses ne sont pas touchables (toucher le
+     bouton choisit la réponse) : on les liste ici, touchables. */
+  const vus = [];
+  [Q.q].concat(Q.r).forEach(t => { AB_RE.lastIndex = 0; let m;
+    while((m = AB_RE.exec(t))){ if(!estLettre(t[m.index - 1]) && !estLettre(t[m.index + m[0].length]) && vus.indexOf(m[0]) === -1) vus.push(m[0]); } });
+  $("qAbrev").innerHTML = vus.length ? "Abréviations de cette question : " + vus.map(a => '<span class="ab" role="button" tabindex="0" data-ab="' + a + '">' + a + '</span>').join(" · ") : "";
   $("qReps").innerHTML = Q.r.map((t, k) => '<button type="button" class="rep" data-k="' + k + '"><span class="l">' + LET[k] + '</span><span></span></button>').join("");
   $("qReps").querySelectorAll(".rep span:last-child").forEach((s, k) => s.textContent = Q.r[k]);
   $("qRetour").innerHTML = "";
@@ -729,6 +861,7 @@ $("qReps").addEventListener("click", (ev) => {
   if(k !== Q.b) btns[k].classList.add("ko");
   $("qScore").textContent = bonnes() + " bonne" + (bonnes() > 1 ? "s" : "") + " sur " + (pos + 1);
   $("qRetour").innerHTML = retourHtml(Q, k);
+  marquerAbrev($("qRetour"));
   $("qSuivant").classList.remove("cache");
   $("qRetour").scrollIntoView({behavior:"smooth", block:"nearest"});
 });
@@ -762,6 +895,7 @@ function resultat(){
   const fautes = serie.map((Q, i) => ({Q, k: reponses[i]})).filter(x => x.k !== x.Q.b);
   $("resFautesBloc").classList.toggle("cache", fautes.length === 0);
   $("resFautes").innerHTML = fautes.map(x => '<div class="faute"><b>' + esc(x.Q.q) + '</b>' + retourHtml(x.Q, x.k) + '</div>').join("");
+  marquerAbrev($("resFautes"));
   vue("vResultat", "Résultat");
 }
 $("resRecommencer").addEventListener("click", () => demarrerQcm(mode, modeLecon));
@@ -769,7 +903,230 @@ $("resLecons").addEventListener("click", accueil);
 $("goEntr").addEventListener("click", () => demarrerQcm("entr"));
 $("goExam").addEventListener("click", () => demarrerQcm("exam"));
 
+
+/* ================= ABRÉVIATIONS : soulignées, touchables ================= */
+const AB = {};
+GLOSSAIRE.forEach(g => AB[g.a] = g);
+const AB_TERMES = GLOSSAIRE.map(g => g.a).sort((a, b) => b.length - a.length);
+const AB_RE = new RegExp(AB_TERMES.map(t => t.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&")).join("|"), "g");
+function estLettre(c){ return !!c && /[0-9A-Za-zÀ-ÖØ-öø-ÿŒœ]/.test(c); }
+/* Parcourt les textes d'un bloc ; ne touche ni aux boutons de réponse, ni aux liens, ni aux abréviations déjà marquées. */
+function textes(el){
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {acceptNode: n =>
+    n.parentElement && n.parentElement.closest(".ab, .rep, button, .nab, script, style") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  const t = []; let n; while((n = w.nextNode())) t.push(n); return t;
+}
+function marquerAbrev(el){
+  if(!el) return;
+  textes(el).forEach(node => {
+    const s = node.nodeValue; AB_RE.lastIndex = 0;
+    const morceaux = []; let m, dernier = 0;
+    while((m = AB_RE.exec(s))){
+      const av = s[m.index - 1], ap = s[m.index + m[0].length];
+      if(estLettre(av) || estLettre(ap)) continue;
+      morceaux.push([m.index, m.index + m[0].length, m[0]]);
+    }
+    if(!morceaux.length) return;
+    const frag = document.createDocumentFragment();
+    morceaux.forEach(([a, b, t]) => {
+      if(a > dernier) frag.appendChild(document.createTextNode(s.slice(dernier, a)));
+      const sp = document.createElement("span"); sp.className = "ab"; sp.dataset.ab = t; sp.textContent = s.slice(a, b);
+      sp.setAttribute("role", "button"); sp.tabIndex = 0;
+      frag.appendChild(sp); dernier = b;
+    });
+    if(dernier < s.length) frag.appendChild(document.createTextNode(s.slice(dernier)));
+    node.parentNode.replaceChild(frag, node);
+  });
+}
+function ouvrirBulle(t){
+  const g = AB[t]; if(!g) return;
+  $("bulleAb").textContent = g.a;
+  $("bulleN").textContent = g.n;
+  $("bulleX").textContent = g.x;
+  $("bulle").classList.remove("cache");
+}
+document.addEventListener("click", (ev) => {
+  const s = ev.target.closest(".ab");
+  if(s){ ev.preventDefault(); ouvrirBulle(s.dataset.ab); return; }
+  if(!ev.target.closest("#bulle")) $("bulle").classList.add("cache");
+});
+$("bulleFermer").addEventListener("click", () => $("bulle").classList.add("cache"));
+$("bulleLexique").addEventListener("click", () => { $("bulle").classList.add("cache"); lexique(); });
+
+/* ================= LEXIQUE ================= */
+function lexique(q){
+  $("barRetour").textContent = "‹ Leçons";
+  const liste = GLOSSAIRE.slice().sort((a, b) => a.a.localeCompare(b.a, "fr"));
+  $("glossListe").innerHTML = liste.map(g =>
+    '<div class="gl" id="gl-' + g.a.replace(/[^A-Za-z0-9]/g, "_") + '"><div class="gla"></div><div class="gln"></div><div class="glx"></div></div>').join("");
+  $("glossListe").querySelectorAll(".gl").forEach((d, i) => {
+    d.querySelector(".gla").textContent = liste[i].a;
+    d.querySelector(".gln").textContent = liste[i].n;
+    d.querySelector(".glx").textContent = liste[i].x;
+  });
+  vue("vGloss", "Abréviations");
+}
+$("goGloss").addEventListener("click", () => lexique());
+
+/* ================= RECHERCHE ================= */
+/* Comparaison : sans tenir compte des majuscules ni des accents (sauf si demandé),
+   apostrophes ’ et ' confondues, espaces insécables = espaces. Chaque caractère
+   garde sa position, donc ce qui est surligné est exactement ce qui est compté. */
+function normCar(c, exact){
+  if(c === "’" || c === "‘") c = "'";
+  if(c === " " || c === " ") c = " ";
+  if(exact) return c;
+  const d = c.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return d.length === 1 ? d : c.toLowerCase().slice(0, 1) || c;
+}
+/* Caractère par caractère (unités JavaScript) : la position de chaque lettre est conservée. */
+function normTexte(s, exact){ let r = ""; for(let i = 0; i < s.length; i++) r += normCar(s[i], exact); return r; }
+function trouver(s, q, opt){
+  const ns = normTexte(s, opt.exact);
+  const nq = normTexte(q, opt.exact);
+  const res = []; if(!nq) return res;
+  let i = ns.indexOf(nq);
+  while(i !== -1){
+    const av = s[i - 1], ap = s[i + nq.length];
+    if(!opt.mot || (!estLettre(av) && !estLettre(ap))) res.push([i, i + nq.length]);
+    i = ns.indexOf(nq, i + nq.length);
+  }
+  return res;
+}
+/* Surligne dans un bloc ; renvoie le nombre d'occurrences. Même parcours que le comptage. */
+function surligner(el, q, opt){
+  let total = 0;
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const t = []; let n; while((n = w.nextNode())) t.push(n);
+  t.forEach(node => {
+    const s = node.nodeValue, pos = trouver(s, q, opt);
+    if(!pos.length) return;
+    const frag = document.createDocumentFragment(); let d = 0;
+    pos.forEach(([a, b]) => {
+      if(a > d) frag.appendChild(document.createTextNode(s.slice(d, a)));
+      const m = document.createElement("mark"); m.className = "hl"; m.textContent = s.slice(a, b);
+      frag.appendChild(m); d = b; total++;
+    });
+    if(d < s.length) frag.appendChild(document.createTextNode(s.slice(d)));
+    node.parentNode.replaceChild(frag, node);
+  });
+  return total;
+}
+function compter(html, q, opt){
+  const d = document.createElement("div"); d.innerHTML = html;
+  let total = 0, extrait = "";
+  const w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT); let n;
+  while((n = w.nextNode())){
+    const pos = trouver(n.nodeValue, q, opt);
+    if(pos.length && !extrait){
+      const s = n.nodeValue, a = pos[0][0], b = pos[0][1];
+      const deb = Math.max(0, a - 45), fin = Math.min(s.length, b + 60);
+      extrait = (deb > 0 ? "… " : "") + s.slice(deb, fin).replace(/\s+/g, " ") + (fin < s.length ? " …" : "");
+    }
+    total += pos.length;
+  }
+  return {total, extrait};
+}
+function esc2(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+let R_Q = "", R_OPT = {mot:false, exact:false}, R_OCC = [], R_CUR = -1;
+function lancerRecherche(){
+  const q = $("rechTxt").value.trim();
+  R_OPT = {mot: $("rechMot").checked, exact: $("rechExact").checked};
+  R_Q = q; R_OCC = []; R_CUR = -1;
+  if(q.length < 2){
+    $("rechCompte").textContent = q.length ? "Tapez au moins 2 caractères." : "";
+    $("rechRes").innerHTML = ""; return;
+  }
+  let html = "", nbL = 0, nbG = 0, nbQ = 0, lieux = 0;
+  /* 1. Leçons, étape par étape */
+  let hL = "";
+  LECONS.forEach((L, li) => L.e.forEach((et, ei) => {
+    const c = compter(et, q, R_OPT);
+    if(!c.total) return;
+    for(let k = 0; k < c.total; k++) R_OCC.push({l: li + 1, i: ei, k});
+    nbL += c.total; lieux++;
+    hL += '<button type="button" class="res" data-l="' + (li + 1) + '" data-i="' + ei + '"><span class="rt2">Leçon ' + (li + 1) + ' · ' + esc2(L.t) + ' · étape ' + (ei + 1) +
+      '</span><span class="rn">' + c.total + ' occurrence' + (c.total > 1 ? 's' : '') + '</span><span class="rx">' + esc2(c.extrait) + '</span></button>';
+  }));
+  /* 2. Abréviations */
+  let hG = "";
+  GLOSSAIRE.slice().sort((a, b) => a.a.localeCompare(b.a, "fr")).forEach(g => {
+    const bloc = '<div class="gl"><div class="gla">' + esc2(g.a) + '</div><div class="gln">' + esc2(g.n) + '</div><div class="glx">' + esc2(g.x) + '</div></div>';
+    const c = compter(bloc, q, R_OPT);
+    if(!c.total) return;
+    nbG += c.total; lieux++;
+    hG += '<div class="resb" data-bloc="g"><span class="rn">' + c.total + ' occurrence' + (c.total > 1 ? 's' : '') + '</span>' + bloc + '</div>';
+  });
+  /* 3. Questions : énoncé, réponses, explication et rappel */
+  let hQ = "";
+  QUESTIONS.forEach(Q => {
+    const bloc = '<div class="rq"><b>' + esc2(Q.q) + '</b><ul>' + Q.r.map((t, k) => '<li' + (k === Q.b ? ' class="bon"' : '') + '>' + LET[k] + '. ' + esc2(t) + (k === Q.b ? ' ✓' : '') + '</li>').join("") +
+      '</ul><div class="petit"><b>Pourquoi :</b> ' + esc2(Q.e) + '</div><div class="petit"><b>Rappel :</b> ' + esc2(Q.t) + '</div><div class="petit muted">Leçon ' + Q.l + '</div></div>';
+    const c = compter(bloc, q, R_OPT);
+    if(!c.total) return;
+    nbQ += c.total; lieux++;
+    hQ += '<div class="resb" data-bloc="q"><span class="rn">' + c.total + ' occurrence' + (c.total > 1 ? 's' : '') + '</span>' + bloc + '</div>';
+  });
+  const tot = nbL + nbG + nbQ;
+  $("rechCompte").innerHTML = tot
+    ? '<b>' + tot + ' occurrence' + (tot > 1 ? 's' : '') + '</b> de « ' + esc2(q) + ' » à ' + lieux + ' endroit' + (lieux > 1 ? 's' : '') +
+      '<br><span class="petit muted">Leçons : ' + nbL + ' · Abréviations : ' + nbG + ' · Questions : ' + nbQ + '</span>'
+    : 'Aucune occurrence de « ' + esc2(q) + ' ».' + (R_OPT.mot || R_OPT.exact ? ' Essayez sans les options.' : '');
+  if(nbL) html += '<div class="titre-bloc">DANS LES LEÇONS · ' + nbL + '</div><button type="button" class="btn plein" id="rechParcourir">Parcourir les ' + nbL + ' occurrence' + (nbL > 1 ? 's' : '') + ' une à une ›</button><div style="height:10px"></div>' + hL;
+  if(nbG) html += '<div class="titre-bloc">DANS LES ABRÉVIATIONS · ' + nbG + '</div>' + hG;
+  if(nbQ) html += '<div class="titre-bloc">DANS LES QUESTIONS · ' + nbQ + '</div>' + hQ;
+  $("rechRes").innerHTML = html;
+  /* Surligne les extraits, les abréviations et les questions affichés */
+  $("rechRes").querySelectorAll(".rx, .resb .gl, .resb .rq").forEach(el => surligner(el, q, R_OPT));
+  $("rechRes").querySelectorAll(".resb").forEach(marquerAbrev);
+  const b = $("rechParcourir"); if(b) b.addEventListener("click", () => allerOcc(0));
+}
+let rechMinuterie = 0;
+$("rechTxt").addEventListener("input", () => { clearTimeout(rechMinuterie); rechMinuterie = setTimeout(lancerRecherche, 250); });
+$("rechMot").addEventListener("change", lancerRecherche);
+$("rechExact").addEventListener("change", lancerRecherche);
+$("rechRes").addEventListener("click", (ev) => {
+  const b = ev.target.closest(".res"); if(!b) return;
+  const l = Number(b.dataset.l), i = Number(b.dataset.i);
+  allerOcc(R_OCC.findIndex(o => o.l === l && o.i === i));
+});
+function rechercher(){
+  $("barRetour").textContent = "‹ Leçons";
+  vue("vRech", "Rechercher");
+  setTimeout(() => $("rechTxt").focus(), 50);
+}
+$("barRech").addEventListener("click", rechercher);
+$("goRech").addEventListener("click", rechercher);
+
+/* Parcours des occurrences dans les leçons, une à une, d'une étape à l'autre */
+function allerOcc(n){
+  if(!R_OCC.length) return;
+  R_CUR = (n + R_OCC.length) % R_OCC.length;
+  const o = R_OCC[R_CUR];
+  if(!(lecN === o.l && lecI === o.i && !$("vLecon").classList.contains("cache"))) ouvrirLecon(o.l, o.i);
+  majNavRech();
+}
+function majNavRech(){
+  const actif = R_CUR >= 0 && R_OCC.length && !$("vLecon").classList.contains("cache");
+  $("navRech").classList.toggle("cache", !actif);
+  if(!actif) return;
+  $("navRechTxt").textContent = "« " + R_Q + " » · " + (R_CUR + 1) + " sur " + R_OCC.length;
+  const marks = $("lecEtape").querySelectorAll("mark.hl");
+  marks.forEach(m => m.classList.remove("cur"));
+  const o = R_OCC[R_CUR];
+  if(o && lecN === o.l && lecI === o.i && marks[o.k]){
+    marks[o.k].classList.add("cur");
+    marks[o.k].scrollIntoView({block: "center", behavior: "smooth"});
+  }
+}
+$("navPrev").addEventListener("click", () => allerOcc(R_CUR - 1));
+$("navNext").addEventListener("click", () => allerOcc(R_CUR + 1));
+$("navFermer").addEventListener("click", () => { R_CUR = -1; afficherEtape(); });
+$("navListe").addEventListener("click", () => { vue("vRech", "Rechercher"); $("navRech").classList.add("cache"); });
+
 accueil();
+marquerAbrev(document.querySelector("#vAccueil .carte"));
 </script>
 </body>
 </html>
