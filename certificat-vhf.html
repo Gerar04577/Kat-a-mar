@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Certificat VHF · Kat-a-Mar</title>
-<!-- Certificat VHF belge (IBPT) — leçons pas à pas + QCM — v5
+<!-- Certificat VHF belge (IBPT) — leçons pas à pas + QCM — v9
+     v9 : 2e série de 5 relectures ; 18 précisions (Q3, Q6, Q21, Q23, Q24, Q30, Q31, Q36, Q47, Q86, Q100, Q109 ; leçons 1, 3, 4, 5, 6 ; lexique SOLAS)
+     v8 : 5 relectures indépendantes ; 30 corrections (lexique SPF, MID, ASN, SRC, SOLAS, MARS… ; Q12, Q33, Q36, Q37, Q41, Q44, Q70, Q74, Q92, Q98, Q99, Q108 ; leçons 1, 2, 4, 6, 7, 9 ; accueil)
+     v7 : 18 règles ajoutées aux leçons pour que chaque question soit couverte ; nouvelle étape « Les boutons de la radio » (leçon 4) ; 2 erreurs corrigées (semi-duplex, échouement)
+     v6 : le QCM en cours est mémorisé (reprise à la même question après une leçon ou la fermeture de l'app) ; antenne AIS ajoutée à la leçon 4
      v5 : 117 questions (73 nouvelles, toutes tirées du manuel IBPT) + grand examen blanc de 100 questions
      v4 : toutes les abréviations expliquées (lexique + mot souligné touchable
      partout) ; recherche précise avec compteur d'occurrences et parcours une à une.
@@ -128,21 +132,22 @@ mark.hl.cur{background:#ff9f1c;color:#14263a;outline:2px solid #c45f00}
 <body>
 <div class="kam-bar"><a href="./index.html#accueil" id="barRetour">‹ Retour</a><span id="barTitre">Certificat VHF</span><button type="button" id="barRech" aria-label="Rechercher">🔎</button></div>
 <main>
+<button class="btn plein cache" type="button" id="reprise" style="margin-bottom:12px"></button>
 
 <!-- =============== ACCUEIL =============== -->
 <section id="vAccueil">
   <h1>Certificat VHF belge</h1>
   <p class="muted" style="margin-top:0">Pour réussir l'examen de l'IBPT : lisez les leçons dans l'ordre, puis entraînez-vous.</p>
-  <p class="ver">v5 · d'après le manuel officiel IBPT 2025</p>
+  <p class="ver">v9 · d'après le manuel officiel IBPT 2025</p>
 
   <div class="carte">
     <h2>L'examen en bref</h2>
     <table class="tab">
-      <tr><td>Questions</td><td><b>25</b> QCM sur ordinateur, à l'IBPT à Bruxelles</td></tr>
+      <tr><td>Questions</td><td><b>25</b> QCM sur ordinateur, organisé par l'IBPT</td></tr>
       <tr><td>Pour réussir</td><td><b>60 %</b>, soit <b>15</b> bonnes réponses sur 25</td></tr>
       <tr><td>Âge</td><td>15 ans minimum</td></tr>
       <tr><td>Inscription</td><td>Au plus tard 10 jours ouvrables avant</td></tr>
-      <tr><td>Le jour J</td><td>Carte d'identité et convocation ; arriver 15 min avant ; ni brouillon ni téléphone</td></tr>
+      <tr><td>Le jour J</td><td>Carte d'identité (ou autre document d'identité valide) et convocation ; arriver au moins 15 min avant (15 min de retard = absent) ; ni brouillon ni téléphone</td></tr>
     </table>
     <div class="rouge"><span class="rt">⚠️ Pour le Kat a Mar</span>Si la radio a un bouton rouge « DISTRESS », c'est une radio ASN : le certificat VHF ne suffit pas, il faut le <b>SRC</b> (voir la leçon 1, étape 5).</div>
   </div>
@@ -249,15 +254,15 @@ const GLOSSAIRE = [
 {a:"IBPT",n:"Institut belge des services postaux et des télécommunications",x:"L'administration belge qui délivre l'autorisation de station de la radio et le certificat VHF, et qui organise l'examen. En néerlandais : BIPT."},
 {a:"UIT",n:"Union internationale des télécommunications",x:"L'organisation mondiale (rattachée à l'ONU) qui partage les fréquences radio et les séries d'indicatifs d'appel entre les pays."},
 {a:"MMSI",n:"Maritime Mobile Service Identity, « identité du service mobile maritime »",x:"Le numéro d'identité du bateau, 9 chiffres, donné par l'IBPT. C'est un peu son « numéro de téléphone » : l'ASN et l'AIS l'utilisent. En Belgique, il commence par 205."},
-{a:"MID",n:"Maritime Identification Digits, « chiffres d'identification maritime »",x:"Les 3 chiffres qui désignent le pays au début d'un MMSI ou d'un code ATIS. Belgique = 205."},
-{a:"ASN",n:"Appel sélectif numérique",x:"Un message numérique envoyé par la radio au lieu de la voix. Exemple : le bouton rouge « DISTRESS » envoie en une seconde une alerte de détresse avec votre position et votre MMSI. Il passe par le canal 70. Le certificat VHF ne suffit pas pour l'utiliser : il faut le SRC."},
+{a:"MID",n:"Maritime Identification Digits, « chiffres d'identification maritime »",x:"Les 3 chiffres qui désignent le pays : au début d'un MMSI, et juste après le 9 initial dans un code ATIS. Belgique = 205."},
+{a:"ASN",n:"Appel sélectif numérique",x:"Un message numérique envoyé par la radio au lieu de la voix. Exemple : le bouton rouge « DISTRESS » envoie automatiquement une alerte de détresse avec votre MMSI (et votre position si la radio est reliée au GPS). Il passe par le canal 70. Le certificat VHF ne suffit pas pour l'utiliser : il faut un certificat SMDSM, le SRC pour une radio de classe D, au moins le ROC pour une radio de classe A."},
 {a:"DSC",n:"Digital Selective Calling",x:"Le nom anglais de l'ASN (appel sélectif numérique). C'est la même chose."},
 {a:"SMDSM",n:"Système mondial de détresse et de sécurité en mer",x:"L'ensemble des moyens modernes pour donner l'alerte en mer : ASN, balises de détresse, satellites. En anglais : GMDSS. Les certificats SRC, ROC, LRC et GOC sont des certificats « SMDSM »."},
 {a:"GMDSS",n:"Global Maritime Distress and Safety System",x:"Le nom anglais du SMDSM, le système mondial de détresse et de sécurité en mer."},
-{a:"SRC",n:"Short Range Certificate, « certificat courte portée »",x:"Le certificat SMDSM de la plaisance. Il est obligatoire pour utiliser une VHF avec ASN de classe D, celle qui a un bouton « DISTRESS ». Il inclut le certificat VHF."},
+{a:"SRC",n:"Short Range Certificate, « certificat courte portée »",x:"Le certificat SMDSM de la plaisance. Il est obligatoire pour utiliser une VHF avec ASN de classe D."},
 {a:"ROC",n:"Restricted Operator's Certificate, « certificat restreint d'opérateur »",x:"Un certificat SMDSM de niveau supérieur, exigé pour une radio ASN de classe A, surtout à bord de bateaux professionnels."},
 {a:"LRC",n:"Long Range Certificate, « certificat longue portée »",x:"Un certificat SMDSM pour la navigation au large, avec des radios à grande portée."},
-{a:"GOC",n:"General Operator's Certificate, « certificat général d'opérateur »",x:"Le certificat radio le plus complet, pour les grands navires."},
+{a:"GOC",n:"General Operator's Certificate, « certificat général d'opérateur »",x:"Le plus complet des certificats SMDSM d'opérateur, pour les grands navires."},
 {a:"EPIRB",n:"Emergency Position-Indicating Radio Beacon, « radiobalise de localisation des sinistres »",x:"Une balise de détresse. Une fois déclenchée, elle envoie votre position aux secours par satellite, partout dans le monde."},
 {a:"SART",n:"Search And Rescue Transponder, « répondeur de recherche et de sauvetage »",x:"Une balise qu'on emporte dans le radeau de survie. Elle s'allume sur l'écran radar des sauveteurs pour les guider jusqu'à vous."},
 {a:"AIS",n:"Automatic Identification System, « système d'identification automatique »",x:"Chaque bateau équipé diffuse automatiquement son nom, sa position, son cap et sa vitesse. Les bateaux voisins le voient sur leur écran de navigation, ce qui aide à éviter les collisions."},
@@ -266,21 +271,21 @@ const GLOSSAIRE = [
 {a:"AIS-EPIRB",n:"EPIRB qui envoie aussi sa position par AIS",x:"Une balise de détresse EPIRB qui, en plus du satellite, envoie sa position par AIS aux bateaux proches. Son numéro commence par 974."},
 {a:"ATIS",n:"Automatic Transmitter Identification System, « système d'identification automatique de l'émetteur »",x:"Sur les rivières et canaux, la radio ajoute automatiquement un code à la fin de chaque message. Les autorités savent ainsi quel bateau a parlé. Le code compte 10 chiffres et commence par 9 205 pour un bateau belge."},
 {a:"MRCC",n:"Maritime Rescue Coordination Centre, « centre de coordination du sauvetage maritime »",x:"Le centre qui organise les secours en mer. Pour la Belgique : le MRCC Oostende, joignable 24 h sur 24. C'est lui qu'on appelle en cas d'incident."},
-{a:"SAR",n:"Search And Rescue, « recherche et sauvetage »",x:"Les opérations de secours en mer. Le canal 67 leur est réservé."},
-{a:"SOLAS",n:"Safety Of Life At Sea, « sauvegarde de la vie humaine en mer »",x:"Une convention internationale de sécurité qui concerne les grands navires : navires à passagers, cargos de plus de 300 tonnes… Pas les bateaux de plaisance."},
+{a:"SAR",n:"Search And Rescue, « recherche et sauvetage »",x:"Les opérations de secours en mer. Le canal 67 leur sert, ainsi qu'à la lutte contre les catastrophes écologiques en mer."},
+{a:"SOLAS",n:"Safety Of Life At Sea, « sauvegarde de la vie humaine en mer »",x:"Une convention internationale de sécurité qui concerne les grands navires : navires à passagers, cargos d'une jauge brute de 300 ou plus en voyage international… Ses obligations de station radio ne concernent pas les bateaux de plaisance. Un navire qui doit avoir une station radio selon SOLAS s'appelle un « navire astreint »."},
 {a:"CIAC",n:"Code d'identification de l'autorité comptable",x:"Le code de l'organisme qui vous facture les appels téléphoniques passés par radio via une station côtière."},
-{a:"SPF",n:"Service public fédéral",x:"Un ministère belge. Le SPF Mobilité et Transports s'occupe de la navigation, mais pas des radios."},
+{a:"SPF",n:"Service public fédéral",x:"Un ministère belge. Le SPF Mobilité et Transports s'occupe de la navigation et fixe l'équipement radio obligatoire à bord en mer. Ce n'est pas lui qui délivre l'autorisation de station ni le certificat : c'est l'IBPT."},
 {a:"CROSS",n:"Centre régional opérationnel de surveillance et de sauvetage",x:"L'équivalent français du MRCC. Le plus proche de la Belgique est le CROSS Gris-Nez."},
-{a:"DISTRESS",n:"« Détresse » en anglais",x:"Le nom du bouton rouge des radios avec ASN. Il envoie automatiquement une alerte de détresse. Ce bouton demande le certificat SRC."},
+{a:"DISTRESS",n:"« Détresse » en anglais",x:"Le nom du bouton rouge des radios avec ASN. Il envoie automatiquement une alerte de détresse. Il demande un certificat SMDSM : le SRC (radio de classe D) ou au moins le ROC (classe A)."},
 {a:"DUAL",n:"« Double » en anglais : la double veille",x:"La touche qui fait écouter à la radio votre canal ET le canal 16 : elle repasse sur le 16 toutes les 2,5 secondes. Interdite sur les voies intérieures."},
 {a:"HI/LO",n:"HIgh / LOw, « fort / faible » en anglais",x:"Le bouton qui choisit la puissance d'émission : LO = 0,5 à 1 W, pour parler près ; HI = 6 à 25 W, pour porter loin."},
 {a:"HI",n:"HIgh, « fort » en anglais",x:"Position forte du bouton de puissance : 6 à 25 W, pour porter loin. À utiliser seulement si nécessaire."},
 {a:"LO",n:"LOw, « faible » en anglais",x:"Position faible du bouton de puissance : 0,5 à 1 W, pour parler à un bateau proche ou dans un port. C'est le réglage à privilégier."},
-{a:"LED",n:"Light-Emitting Diode, « diode électroluminescente »",x:"Une lampe moderne. Son alimentation électrique brouille la réception radio : pas d'éclairage LED à moins de 4 m de l'antenne VHF."},
+{a:"LED",n:"Light-Emitting Diode, « diode électroluminescente »",x:"Une lampe moderne. Son alimentation électrique brouille la réception radio : un éclairage LED à moins de 4 m de l'antenne VHF est fortement déconseillé."},
 {a:"MHz",n:"Mégahertz",x:"L'unité des fréquences radio : un million de vibrations par seconde. La VHF marine va de 156,025 à 162,025 MHz ; le canal 16 est sur 156,800 MHz."},
 {a:"W",n:"Watt",x:"L'unité de puissance. Plus elle est forte, plus la radio porte loin, mais plus elle risque de gêner les autres. Portable : 6 W au plus ; fixe : 25 W au plus."},
 {a:"OMI",n:"Organisation maritime internationale (en anglais IMO)",x:"L'organisation de l'ONU qui s'occupe de la sécurité des navires. La convention SOLAS est l'un de ses textes les plus importants."},
-{a:"MARS",n:"Maritime mobile Access and Retrieval System",x:"La base de données mondiale de l'UIT qui recense les navires et leurs numéros MMSI. L'IBPT doit la mettre à jour chaque mois."},
+{a:"MARS",n:"Maritime mobile Access and Retrieval System",x:"La base de données mondiale de l'UIT qui recense les navires et leurs numéros MMSI. L'IBPT doit transmettre chaque mois ses mises à jour à l'UIT."},
 {a:"MF",n:"Medium Frequency, « ondes moyennes »",x:"Une bande radio de plus longue portée que la VHF, utilisée par les grands navires et les centres de secours (exemple : 2182 kHz). Elle ne concerne pas votre certificat VHF."},
 {a:"kHz",n:"Kilohertz",x:"Unité de fréquence : mille vibrations par seconde. 1 000 kHz = 1 MHz."},
 {a:"QCM",n:"Questionnaire à choix multiple",x:"Une question avec plusieurs réponses proposées, dont une seule est juste. L'examen en compte 25."},
@@ -304,11 +309,14 @@ const LECONS = [
 
 `<h2>Étape 2 · L'autorisation de station</h2>
 <p>L'IBPT la délivre pour les bateaux <b>enregistrés en Belgique</b>. Elle décrit toute l'installation radio du bateau :</p>
-<ul><li>l'indicatif d'appel, le nom du bateau et le titulaire ;</li><li><b>tous</b> les appareils, y compris les VHF portables ;</li><li>le MMSI et le code ATIS.</li></ul>`
-+ R("Revient souvent à l'examen", "L'<span class='u'>original</span> de l'autorisation reste <span class='u'>à bord</span>, pour la montrer à tout contrôle. Il est interdit de la corriger à la main."),
+<ul><li>l'indicatif d'appel, le nom du bateau et le titulaire ;</li><li><b>tous</b> les appareils, y compris les VHF portables ;</li><li>le MMSI et le code ATIS.</li></ul>
+<p><b>Qui fait quoi ?</b></p>
+<ul><li>Le <span class="u">propriétaire</span> s'occupe de l'administratif : l'autorisation de station, les changements d'adresse, la programmation correcte des numéros.</li>
+<li>Le <span class="u">capitaine</span> (ou skipper) a l'autorité sur la radio à bord : il fait respecter les règles et exige que chaque personne qui l'utilise ait un certificat.</li></ul>`
++ R("Revient souvent à l'examen", "L'<span class='u'>original</span> de l'autorisation reste <span class='u'>à bord</span>, pour la montrer à tout contrôle. Il est interdit de la corriger à la main. Papiers = <b>propriétaire</b> ; utilisation à bord = <b>capitaine</b>."),
 
 `<h2>Étape 3 · Les délais à connaître</h2>
-<ol><li>On demande l'autorisation, et on achète l'appareil <b>ensuite</b>.</li>
+<ol><li>On attend d'avoir <b>reçu</b> l'autorisation, et on achète l'appareil <b>ensuite</b>.</li>
 <li>Vous achetez un bateau qui a déjà une radio à bord ? Vous avez <span class="u">60 jours</span> pour demander l'autorisation.</li>
 <li>Nouvel appareil, nouvelle adresse ou changement de nom : il faut une nouvelle autorisation.</li>
 <li>Bateau vendu : l'autorisation est renvoyée <b>immédiatement</b> à l'IBPT.</li></ol>`
@@ -316,20 +324,22 @@ const LECONS = [
 
 `<h2>Étape 4 · Le certificat d'opérateur</h2>
 <p>Toute personne qui parle à la radio doit avoir un certificat. Celui que vous préparez s'appelle officiellement « certificat restreint de radiotéléphoniste », ou certificat VHF.</p>
-<ul><li>âge minimum : <b>15 ans</b> ;</li><li>validité : <span class="u">5 ans</span>, renouvelable ;</li><li>l'IBPT vous prévient <b>6 semaines</b> avant la fin.</li></ul>`
+<ul><li>âge minimum : <b>15 ans</b> ;</li><li>validité : <span class="u">5 ans</span>, renouvelable ;</li><li>l'IBPT vous prévient <b>6 semaines</b> avant la fin ;</li>
+<li>il vaut en <b>mer</b> et sur les <b>voies intérieures</b> ;</li>
+<li>sur les <b>voies intérieures</b>, il est reconnu dans les <span class="u">16 pays de l'arrangement Rainwat</span> (Pays-Bas, France, Allemagne, Luxembourg, Suisse…).</li></ul>`
 + R("Revient souvent à l'examen", "Le certificat VHF est valable <b>5 ans</b>, pas à vie."),
 
 `<h2>Étape 5 · Ce que le certificat VHF ne permet pas</h2>
-<p>Certaines radios ont un <b>bouton rouge « DISTRESS »</b> qui envoie un appel de détresse automatique, avec votre position. C'est l'<b>ASN</b> (appel sélectif numérique), DSC en anglais.</p>
+<p>Certaines radios ont un <b>bouton rouge « DISTRESS »</b> qui envoie un appel de détresse automatique, avec votre MMSI (et votre position si la radio est reliée au GPS). C'est l'<b>ASN</b> (appel sélectif numérique), DSC en anglais.</p>
 <p>Le certificat VHF ne couvre <span class="u">pas</span> l'ASN, ni les balises de détresse :</p>
 <ul><li><b>EPIRB</b> : la balise qui envoie votre position aux secours par satellite ;</li><li><b>SART</b> : la balise du radeau de survie, visible sur le radar des sauveteurs ;</li><li><b>AIS-SART</b> : la même, mais visible sur l'écran AIS des bateaux proches.</li></ul>
 <p>Pour tout cela, il faut un certificat <b>SMDSM</b> (Système mondial de détresse et de sécurité en mer) :</p>
-<ul><li>radio ASN de <b>classe D</b> (plaisance) → certificat <b>SRC</b> (Short Range Certificate, « certificat courte portée ») ;</li><li>radio ASN de <b>classe A</b> → certificat <b>ROC</b> (« certificat restreint d'opérateur »).</li></ul>`
+<ul><li>radio ASN de <b>classe D</b> (plaisance) → certificat <b>SRC</b> (Short Range Certificate, « certificat courte portée ») ;</li><li>radio ASN de <b>classe A</b> → au moins le certificat <b>ROC</b> (« certificat restreint d'opérateur »).</li></ul>`
 + R("Piège classique", "« Le certificat VHF permet-il d'utiliser l'ASN ? » → <b>Non</b>, il faut un certificat SMDSM comme le SRC."),
 
 `<h2>Étape 6 · Sanctions et secret</h2>
-<p><b>Sans autorisation de station</b>, l'appareil est saisi. L'amende va de 200 à 2 000 €, et la prison de 8 jours à 1 an.</p>
-<p><b>Secret des communications</b> : ce que vous entendez à la radio ne doit pas être répété à d'autres. Exception : les messages adressés « à toutes les stations », comme la météo. Seul un juge peut lever ce secret.</p>`
+<p><b>Sans autorisation de station</b>, l'appareil est saisi. La loi prévoit une amende de 200 à 2 000 € et une prison de 8 jours à 1 an (l'une ou l'autre, ou les deux).</p>
+<p><b>Secret des communications</b> : ce que vous entendez à la radio, même par hasard, ne doit être <span class="u">ni répété, ni utilisé</span>. Le secret couvre le contenu d'une conversation et même le simple fait qu'elle a eu lieu. Exception : les messages adressés « à toutes les stations », comme la météo. Seul un <span class="u">juge d'instruction</span> peut lever ce secret.</p>`
 + EX("En une phrase", "Autorisation = la radio · certificat = la personne · les deux viennent de l'IBPT.")
 ]},
 
@@ -346,10 +356,10 @@ const LECONS = [
 + R("Revient souvent à l'examen", "Un navire belge a un MMSI qui commence par <b>205</b>."),
 
 `<h2>Étape 3 · Le piège des numéros en 97…</h2>
-<p>D'abord, un mot : l'<b>AIS</b> (système d'identification automatique) est le système qui affiche les bateaux voisins sur l'écran de navigation, avec leur nom et leur position.</p>
+<p>D'abord, un mot : l'<b>AIS</b> (système d'identification automatique) est le système qui affiche les bateaux voisins sur l'écran de navigation, avec leur nom et leur position. Votre AIS se programme avec le <b>MMSI</b>, l'<b>indicatif</b> et le <b>nom</b> du bateau, exactement comme sur l'autorisation de station.</p>
 <p>Certaines balises de secours utilisent l'AIS pour montrer où se trouve la personne en danger. Elles ont un numéro qui commence par <b>97</b>. Ce <b>ne sont pas des MMSI</b> (le numéro d'identité du bateau) : ces numéros sont programmés par le fabricant de la balise.</p>
 <table class="tab"><tr><th>Début du numéro</th><th>Balise</th><th>En clair</th></tr>
-<tr><td><b>970</b>…</td><td>AIS-SART</td><td>SART = « Search And Rescue Transmitter », émetteur de recherche et de sauvetage. Balise mise dans le radeau de survie : elle apparaît sur l'écran AIS des bateaux proches pour qu'ils viennent vous chercher.</td></tr>
+<tr><td><b>970</b>…</td><td>AIS-SART</td><td>AIS-SART = « AIS Search And Rescue Transmitter », émetteur AIS de recherche et de sauvetage. Balise mise dans le radeau de survie : elle apparaît sur l'écran AIS des bateaux proches pour qu'ils viennent vous chercher.</td></tr>
 <tr><td><b>972</b>…</td><td>AIS-MOB</td><td>MOB = « Man Over Board », homme à la mer. Petite balise portée sur le gilet : si quelqu'un tombe à l'eau, elle envoie sa position aux bateaux proches.</td></tr>
 <tr><td><b>974</b>…</td><td>AIS-EPIRB</td><td>EPIRB = balise de détresse qui envoie votre position aux secours par satellite. Celle-ci l'envoie aussi par AIS aux bateaux proches.</td></tr></table>`
 + R("Piège classique", "Si une réponse propose « 970 » comme début de MMSI d'un navire belge : c'est faux, c'est un AIS-SART.")
@@ -358,19 +368,25 @@ const LECONS = [
 { t:"Quelle radio à bord ?", s:"Ce qui est obligatoire, en mer et sur les canaux", e:[
 `<h2>Étape 1 · En mer : tout dépend de la zone</h2>
 <p>Les eaux belges sont découpées en zones, des plus abritées aux plus lointaines :</p>
-<table class="tab"><tr><td>Zones 1 et 2</td><td>Eaux intérieures reliées à la mer, Escaut</td><td>Une VHF <b>portable</b> suffit</td></tr>
-<tr><td>Zone 3</td><td>Les ports de la côte</td><td>VHF <b>fixe</b> obligatoire</td></tr>
-<tr><td>Zones 4 et 5</td><td>Jusqu'à 6, puis 60 milles</td><td>VHF fixe ; ASN conseillé</td></tr>
-<tr><td>Zones 6 et 7</td><td>Au-delà de 60 milles</td><td>VHF fixe <b>avec ASN</b> + une portable</td></tr></table>`
-+ R("Revient souvent à l'examen", "À partir de la <b>zone 3</b> (les ports de la côte), la VHF <b>fixe</b> est obligatoire."),
+<table class="tab"><tr><th>Zone</th><th>Où ?</th><th>Radio</th></tr>
+<tr><td><b>1</b></td><td>Eaux intérieures reliées à la mer (sauf l'Escaut maritime inférieur)</td><td>Une <b>portable</b> peut remplacer la fixe</td></tr>
+<tr><td><b>2</b></td><td>L'Escaut maritime inférieur</td><td>Une <b>portable</b> peut remplacer la fixe</td></tr>
+<tr><td><b>3</b></td><td>Les ports de la côte</td><td>VHF <b>fixe</b> obligatoire ; ASN conseillé</td></tr>
+<tr><td><b>4</b></td><td>Du littoral jusqu'à <b>6 milles</b></td><td>VHF fixe obligatoire ; ASN conseillé</td></tr>
+<tr><td><b>5</b></td><td>De 6 à <b>60 milles</b></td><td>VHF fixe obligatoire ; ASN conseillé</td></tr>
+<tr><td><b>6</b></td><td>De 60 à <b>200 milles</b></td><td>VHF fixe <b>avec ASN</b> + une portable</td></tr>
+<tr><td><b>7</b></td><td>Au-delà de 200 milles</td><td>VHF fixe <b>avec ASN</b> + une portable</td></tr></table>
+<p>Qui fixe ces obligations ? Le <span class="u">SPF Mobilité et Transports</span>, pas l'IBPT. L'IBPT, lui, délivre l'autorisation de station et le certificat.</p>`
++ R("Revient souvent à l'examen", "À partir de la <b>zone 3</b> (les ports de la côte), la VHF <b>fixe</b> est obligatoire.")
++ R("Piège classique", "Équipement obligatoire en mer = <b>SPF Mobilité</b>. Autorisation et certificat = <b>IBPT</b>."),
 
 `<h2>Étape 2 · Sur les voies intérieures (bateaux à moteur)</h2>
 <p>Sur les rivières et canaux, c'est la <b>longueur du bateau</b> qui compte :</p>
 <table class="tab"><tr><th>Bateau</th><th>VHF</th><th>Deux VHF</th></tr>
 <tr><td>Jusqu'à <b>7 m</b></td><td>Pas obligatoire</td><td>Non</td></tr>
-<tr><td>De 7 à <b>20 m</b></td><td>Une, obligatoire</td><td>Conseillé</td></tr>
+<tr><td>Plus de 7 m et moins de <b>20 m</b></td><td>Une, obligatoire</td><td>Conseillé</td></tr>
 <tr><td>Grand bateau</td><td>Obligatoire</td><td><b>Obligatoire</b></td></tr></table>`
-+ R("Chiffres à retenir", "<b>7 m</b> et <b>20 m</b>. Le Kat a Mar (6,95 m) n'aurait pas besoin de VHF sur un canal belge."),
++ R("Chiffres à retenir", "<b>7 m</b> et <b>20 m</b>. Jusqu'à 7 m compris : pas de VHF obligatoire."),
 
 `<h2>Étape 3 · Pourquoi deux VHF sur un grand bateau ?</h2>
 <p>Sur les voies intérieures, la « double veille » est interdite (voir la leçon 4). Un grand bateau doit pourtant écouter deux canaux en même temps : il lui faut donc <b>deux appareils</b>.</p>
@@ -387,36 +403,47 @@ const LECONS = [
 <p>On passe à <span class="u">1 W</span> pour les communications proches, pour ne pas brouiller tout le monde :</p>
 <ul><li>les conversations sociales (canaux 72 et 77) ;</li><li>sur les voies intérieures : entre bateaux, avec le port, et à bord.</li></ul>`,
 
-`<h2>Étape 3 · Le squelch</h2>
+`<h2>Étape 3 · Les boutons de la radio</h2>
+<table class="tab"><tr><th>Bouton</th><th>À quoi il sert</th></tr>
+<tr><td><b>Power</b></td><td>Allumer et éteindre la radio</td></tr>
+<tr><td><b>Volume</b></td><td>Régler le son du haut-parleur ou de l'écouteur. Il ne change ni la portée ni la puissance.</td></tr>
+<tr><td><b>Squelch</b></td><td>Supprimer le bruit de fond (voir l'étape suivante)</td></tr>
+<tr><td><b>HI/LO</b></td><td>Choisir la puissance d'émission : forte (6 à 25 W) ou faible (0,5 à 1 W)</td></tr>
+<tr><td><b>DUAL</b></td><td>La double veille (voir l'étape 5) : interdite sur les voies intérieures</td></tr></table>`
++ R("Piège classique", "Volume = le <b>son</b>. Squelch = le <b>seuil du bruit de fond</b>. HI/LO = la <b>puissance</b>."),
+
+`<h2>Étape 4 · Le squelch</h2>
 <p>Sans réglage, une VHF fait entendre en permanence un souffle (« chhhh »). Le <b>squelch</b> est un seuil : en dessous, le haut-parleur se tait.</p>
 <p>Réglez-le juste au point où le souffle disparaît. <span class="u">Trop haut</span>, vous n'entendrez plus les stations faibles et éloignées.</p>`
 + R("Revient souvent à l'examen", "Le squelch sert à <b>supprimer le bruit de fond</b>. Ce n'est ni le volume ni un changement de canal."),
 
-`<h2>Étape 4 · La double veille (DUAL)</h2>
+`<h2>Étape 5 · La double veille (DUAL)</h2>
 <p>Avec la touche DUAL, la radio écoute votre canal, mais repasse sur le <b>canal 16</b> un instant toutes les <b>2,5 secondes</b>. Vous ne manquez donc pas un appel de détresse.</p>`
 + R("Piège classique", "La double veille est <span class='u'>interdite</span> sur les voies de navigation intérieure."),
 
-`<h2>Étape 5 · La VHF portable</h2>
-<ul><li>Elle doit figurer sur l'autorisation de station du bateau.</li><li>Elle s'utilise <span class="u">seulement à bord</span>, jamais depuis le quai.</li><li>Sur les voies intérieures, elle doit aussi émettre le code ATIS.</li></ul>`
+`<h2>Étape 6 · La VHF portable</h2>
+<ul><li>Elle doit figurer sur l'autorisation de station du bateau.</li><li>Elle s'utilise <span class="u">seulement à bord</span>, jamais depuis le quai (à quai, il faudrait une autre autorisation, spécifique).</li><li>Sur les voies intérieures, elle doit aussi émettre le code ATIS.</li></ul>`
 + R("Piège classique", "« Puis-je appeler mon bateau avec la portable depuis le quai ? » → <b>Non</b>."),
 
-`<h2>Étape 6 · L'antenne et le câble</h2>
-<ul><li>Antenne <span class="u">verticale</span>, d'environ <b>1 m</b> ;</li>
+`<h2>Étape 7 · L'antenne et le câble</h2>
+<ul><li>Antenne <span class="u">verticale</span>, d'environ <b>1 m</b>. Inclinée vers l'arrière, comme sur une voiture de sport, elle <b>ne fonctionne pas</b> correctement. Si sa longueur n'est pas bonne, la portée baisse et la radio peut être abîmée ;</li>
 <li>à <span class="u">4 m</span> au moins des masses métalliques plus hautes qu'elle ;</li>
-<li>pas d'éclairage LED à moins de 4 m : il brouille la réception ;</li>
-<li>câble coaxial de <b>50 ohms</b>, connexions étanches.</li></ul>
-<p>Le téléphone portable ne remplace pas la VHF : il n'a pas de priorité, ne parle qu'à une seule personne et ne permet pas aux secours de vous localiser.</p>`
-+ R("Chiffres à retenir", "Antenne verticale · <b>4 m</b> · <b>50 ohms</b>.")
+<li>éclairage LED <b>fortement déconseillé</b> à moins de 4 m : il brouille la réception ;</li>
+<li>câble coaxial de <b>50 ohms</b>, connexions <span class="u">étanches</span> : de l'eau dans le câble réduit la portée et peut faire tomber la radio en panne ;</li>
+<li>l'antenne de l'<b>AIS</b> ne doit <span class="u">pas être placée près de l'antenne VHF</span>.</li></ul>
+<p>Pourquoi ? L'AIS et la VHF utilisent la même bande de fréquences (l'AIS émet sur 161,975 et 162,025 MHz). Quand vous parlez à la VHF, jusqu'à 25 W sortent de son antenne : l'antenne AIS voisine reçoit ce signal énorme et son récepteur est « ébloui », comme vos yeux face à des phares. Il n'entend plus les bateaux lointains, qui peuvent disparaître de votre écran. Dans l'autre sens, l'AIS qui émet votre position peut faire grésiller la VHF. Le manuel donne la règle ; cette explication est celle des radioélectriciens.</p>
+<p>Le téléphone portable ne remplace pas la VHF : il n'a pas de priorité, ne parle qu'à une seule personne et, en mer, ne peut pas être repéré par ses ondes radio, contrairement à une VHF.</p>`
++ R("Chiffres à retenir", "Antenne verticale · <b>4 m</b> · <b>50 ohms</b> · antenne AIS <b>loin</b> de l'antenne VHF.")
 ]},
 
 { t:"Fréquences et portée", s:"Jusqu'où porte la VHF ?", e:[
 `<h2>Étape 1 · Les ondes VHF vont en ligne droite</h2>
-<p>Les ondes VHF se comportent comme la lumière : elles vont tout droit et ne suivent pas la courbe de la Terre. Au-delà de l'horizon, on ne s'entend plus.</p>
+<p>Les ondes VHF se comportent comme la lumière : elles vont en ligne droite, jusqu'à l'horizon. Au-delà, on ne s'entend plus.</p>
 <p>La VHF marine utilise la bande de <b>156,025 à 162,025 MHz</b>.</p>`
 + R("Revient souvent à l'examen", "Le canal 16 correspond à <b>156,800 MHz</b>."),
 
 `<h2>Étape 2 · Calculer la portée</h2>
-<p>Plus les antennes sont hautes, plus l'horizon est loin. La formule du manuel :</p>
+<p>La portée dépend <span class="u">surtout de la hauteur des antennes</span> (de l'émetteur et du récepteur), puis de la puissance et des conditions (météo, relief). Plus les antennes sont hautes, plus l'horizon est loin. La formule du manuel :</p>
 <div class="radio">portée (milles) = 2,25 × (√ hauteur antenne 1 + √ hauteur antenne 2)</div>
 <p>Les hauteurs sont en mètres, et √ est la racine carrée.</p>`
 + EX("Exemple du manuel", "Deux antennes à 16 m : √16 = 4. Donc 2,25 × (4 + 4) = 2,25 × 8 = <b>18 milles</b>.")
@@ -425,7 +452,7 @@ const LECONS = [
 `<h2>Étape 3 · Simplex, duplex, semi-duplex</h2>
 <ul><li><b>Simplex</b> : une seule fréquence, comme un talkie-walkie. On parle chacun son tour et on dit « OVER » pour passer la parole.</li>
 <li><b>Duplex</b> : deux fréquences, comme un téléphone. On parle et on écoute en même temps.</li>
-<li><b>Semi-duplex</b> : la station côtière reçoit les bateaux, et tous les bateaux reçoivent la station côtière.</li></ul>`
+<li><b>Semi-duplex</b> : <span class="u">seule</span> la station côtière reçoit les bateaux, mais tous les bateaux reçoivent la station côtière. Un bateau n'entend donc pas ce que les autres bateaux disent à la station côtière.</li></ul>`
 + R("Revient souvent à l'examen", "Simplex = <b>une seule fréquence</b>, on parle à tour de rôle."),
 
 `<h2>Étape 4 · Les canaux à quatre chiffres</h2>
@@ -435,7 +462,8 @@ const LECONS = [
 { t:"Les canaux", s:"Quel canal pour quoi faire ?", e:[
 `<h2>Étape 1 · Le canal 16, le plus important</h2>
 <p>Le canal 16 est le canal international de <b>détresse, urgence et sécurité</b>. On y écoute en permanence, autant que possible.</p>
-<p>Il sert aussi à appeler une station côtière, puis on change de canal pour parler. On n'y bavarde jamais.</p>`
+<p>Il sert aussi à appeler une station côtière, puis on change de canal pour parler. On n'y bavarde jamais.</p>
+<p>Appeler un <b>autre bateau</b> sur le 16 n'est permis qu'<span class="u">en dernier recours</span>, le plus brièvement possible, avant de changer de canal.</p>`
 + R("Revient presque à chaque examen", "Canal de détresse en mer : <b>16</b>."),
 
 `<h2>Étape 2 · Le canal 70 : jamais pour parler</h2>
@@ -445,15 +473,16 @@ const LECONS = [
 `<h2>Étape 3 · Les conversations privées</h2>
 <p>Pour parler entre amis (bavardage, rendez-vous), on utilise un canal social, en faible puissance (<b>1 W</b>) :</p>
 <ul><li><b>en mer</b> : <span class="u">uniquement le 77</span> ;</li><li><b>sur les voies intérieures</b> : le <b>72</b> et le <b>77</b>.</li></ul>`
-+ R("Piège classique", "En mer, le 72 n'est <b>pas</b> autorisé : seulement le <b>77</b>."),
++ R("Piège classique", "En mer (eaux belges), le 72 n'est <b>pas</b> autorisé : seulement le <b>77</b>. D'autres pays peuvent avoir d'autres règles."),
 
 `<h2>Étape 4 · Les autres canaux en mer (Belgique)</h2>
-<table class="tab"><tr><td><b>06</b></td><td>Entre navires, au niveau international ; pilotage en Belgique</td></tr><tr><td><b>07</b></td><td>Oostende Radio</td></tr><tr><td><b>08</b></td><td>Premier canal entre navires en Belgique</td></tr><tr><td><b>13</b></td><td>Sécurité de la navigation</td></tr><tr><td><b>15, 17</b></td><td>Communications à bord d'un même navire</td></tr><tr><td><b>31</b></td><td>Ports de plaisance</td></tr><tr><td><b>67</b></td><td>Recherche et sauvetage</td></tr><tr><td><b>73</b></td><td>Lutte contre la pollution</td></tr></table>`,
+<table class="tab"><tr><td><b>06</b></td><td>Entre navires, au niveau international ; pilotage en Belgique</td></tr><tr><td><b>07</b></td><td>Oostende Radio</td></tr><tr><td><b>08</b></td><td>Premier canal entre navires en Belgique</td></tr><tr><td><b>13</b></td><td>Sécurité de la navigation</td></tr><tr><td><b>15, 17</b></td><td>Communications à bord d'un même navire</td></tr><tr><td><b>31</b></td><td>Ports de plaisance</td></tr><tr><td><b>67</b></td><td>Recherche et sauvetage</td></tr><tr><td><b>73</b></td><td>Lutte contre la pollution</td></tr><tr><td><b>82</b></td><td>Avitaillement et soutage (autorisation de l'IBPT nécessaire)</td></tr></table>
+<p class="petit muted">Le 37L ne s'utilise que dans les eaux britanniques.</p>`,
 
 `<h2>Étape 5 · Les canaux des voies intérieures</h2>
-<table class="tab"><tr><td><b>10</b></td><td>Entre bateaux ; urgence et sécurité</td></tr><tr><td><b>18, 20, 22</b></td><td>Écluses</td></tr><tr><td><b>31</b></td><td>Ports de plaisance</td></tr></table>
-<p class="petit muted">Le 37L ne s'utilise que dans les eaux britanniques. Le 82 (avitaillement) demande une autorisation de l'IBPT.</p>`
-+ R("Revient souvent à l'examen", "Sur les voies intérieures, la détresse passe par le canal <b>10</b>, pas le 16.")
+<table class="tab"><tr><td><b>10</b></td><td>Entre bateaux ; urgence et sécurité</td></tr><tr><td><b>18, 20, 22</b></td><td>Écluses</td></tr><tr><td><b>31</b></td><td>Ports de plaisance</td></tr><tr><td><b>73</b></td><td>Lutte contre la pollution</td></tr><tr><td><b>82</b></td><td>Avitaillement et soutage (autorisation de l'IBPT nécessaire)</td></tr></table>
+<p class="petit muted">Les canaux 15 et 17 (à bord), 72 et 77 (conversations privées) et 70 (ASN, interdit ici) sont expliqués plus haut.</p>`
++ R("Revient souvent à l'examen", "Sur les voies intérieures, la détresse passe en principe par le canal <b>10</b> (ou celui d'une écluse proche), pas le 16.")
 ]},
 
 { t:"Le code ATIS", s:"La signature automatique sur les canaux", e:[
@@ -463,12 +492,12 @@ const LECONS = [
 
 `<h2>Étape 2 · Quand le code est-il envoyé ?</h2>
 <ul><li>à la <span class="u">fin de chaque émission</span>, quand on relâche le bouton du micro ;</li><li>et toutes les <b>5 minutes</b> pendant une émission longue.</li></ul>
-<p>L'utilisateur ne peut ni le couper ni le reprogrammer.</p>`
+<p>L'utilisateur ne peut ni le déconnecter ni le reprogrammer. (Passer un appareil mixte en mode « mer » est un réglage prévu par le fabricant, pas une déconnexion : voir l'étape 4.)</p>`
 + R("Piège classique", "L'ATIS part à la <b>fin</b> de l'émission, pas au début."),
 
 `<h2>Étape 3 · Construire un code ATIS</h2>
 <p>Le code compte 10 chiffres, en quatre morceaux :</p>
-<ol><li>toujours <b>9</b> ;</li><li>le code du pays : <b>205</b> pour la Belgique ;</li><li>la 2<sup>e</sup> lettre de l'indicatif, transformée en nombre : A = 01, B = 02… S = 19, T = 20 ;</li><li>les <b>4 chiffres</b> de l'indicatif.</li></ol>`
+<ol><li>toujours <b>9</b> ;</li><li>le code du pays : <b>205</b> pour la Belgique ;</li><li>la 2<sup>e</sup> lettre de l'indicatif, transformée en nombre : A = 01, B = 02… S = 19, T = 20 (le manuel dit « 2<sup>e</sup> ou 3<sup>e</sup> lettre » ; pour un indicatif belge comme OS2563, c'est la 2<sup>e</sup>) ;</li><li>les <b>4 chiffres</b> de l'indicatif.</li></ol>`
 + EX("Exemple du manuel : indicatif OS2563", "9 · 205 · S = 19 · 2563 → <b>9 205 19 2563</b>")
 + R("Exercice type d'examen", "Indicatif <b>OT1234</b> → 9 · 205 · T = 20 · 1234 → <b>9 205 20 1234</b>."),
 
@@ -480,11 +509,12 @@ const LECONS = [
 
 { t:"Parler à la radio", s:"Les bons mots et les bonnes habitudes", e:[
 `<h2>Étape 1 · Avant de parler</h2>
-<ol><li>Écoutez : le canal doit être libre.</li><li>Faites des phrases courtes, lentement et clairement.</li><li>Ne gardez pas le bouton du micro enfoncé plus longtemps que nécessaire.</li></ol>`
-+ R("Revient souvent à l'examen", "Un <b>essai</b> radio dure <span class='u'>10 secondes</span> au plus, et <span class='u'>jamais sur le canal 16</span>. On donne le nom de la station, puis « en essai »."),
+<ol><li>Écoutez : le canal doit être libre.</li><li>Limitez-vous au strict nécessaire : phrases courtes, lentement et clairement.</li><li>Ne gardez pas le bouton du micro enfoncé plus longtemps que nécessaire.</li><li>Utilisez la puissance la plus faible possible.</li><li><span class="u">Ne diffusez jamais de musique</span> : c'est interdit.</li><li>Un message qui vous est adressé : confirmez que vous l'avez reçu.</li></ol>
+<p><b>Une station côtière vous donne une instruction</b> (silence radio, baisser la puissance, écouter un canal) ? <span class="u">Vous obéissez.</span> Seule exception : en cas de danger, vous pouvez vous en écarter, et vous la prévenez ensuite.</p>`
++ R("Revient souvent à l'examen", "Un <b>essai</b> radio dure <span class='u'>10 secondes</span> au plus, et <span class='u'>jamais sur le canal 16</span>. On donne l'<b>indicatif</b> (ou le nom) de la station, suivi du mot « <b>test</b> » (« en essai »), lentement et clairement."),
 
 `<h2>Étape 2 · Les mots de procédure</h2>
-<table class="tab"><tr><td><b>THIS IS</b> / ICI</td><td>avant de dire son propre nom</td></tr><tr><td><b>OVER</b> / À VOUS</td><td>« je vous passe la parole »</td></tr><tr><td><b>OUT</b> / TERMINÉ</td><td>« la conversation est finie »</td></tr></table>`
+<table class="tab"><tr><td><b>THIS IS</b> / ICI</td><td>avant de dire son propre nom</td></tr><tr><td><b>DE</b> (dit DELTA ECHO)</td><td>remplace ICI quand la <span class="u">liaison est mauvaise</span></td></tr><tr><td><b>OVER</b> / À VOUS</td><td>« je vous passe la parole »</td></tr><tr><td><b>OUT</b> / TERMINÉ</td><td>« la conversation est finie »</td></tr></table>`
 + R("Revient presque à chaque examen", "<b>« OVER AND OUT » est interdit</b> : OVER attend une réponse, OUT dit que c'est fini. Les deux ensemble se contredisent."),
 
 `<h2>Étape 3 · Un appel normal, pas à pas</h2>
@@ -501,7 +531,8 @@ const LECONS = [
 <p>Quand on comprend mal, on épelle avec l'alphabet international :</p>
 <p class="petit">Alfa · Bravo · Charlie · Delta · Echo · Foxtrot · Golf · Hotel · India · Juliett · Kilo · Lima · Mike · November · Oscar · Papa · Quebec · Romeo · Sierra · Tango · Uniform · Victor · Whiskey · X-ray · Yankee · Zulu</p>
 <p class="petit">Chiffres : Nadazero · Unaone · Bissotwo · Terrathree · Kartefour · Pantafive · Soxisix · Setteseven · Oktoeight · Novenine</p>`
-+ EX("Exemple", "KAT = <b>Kilo Alfa Tango</b>.")
++ '<p>Les nombres se transmettent <span class="u">chiffre par chiffre</span>.</p>'
++ EX("Exemples", "KAT = <b>Kilo Alfa Tango</b>. 25 = <b>Bissotwo Pantafive</b>.")
 ]},
 
 { t:"Détresse, urgence, sécurité", s:"MAYDAY, PAN PAN ou SÉCURITÉ ?", e:[
@@ -509,25 +540,25 @@ const LECONS = [
 <p>Quand on a un problème, on ne dit pas « au secours » : on commence le message par un <b>mot clé</b>. Ce mot dit à tout le monde à quel point c'est grave.</p>`
 + R("Revient très souvent à l'examen", "L'ordre de priorité : <b>MAYDAY</b>, puis <b>PAN PAN</b>, puis <b>SÉCURITÉ</b>, puis les appels normaux. Ces mots ne se traduisent jamais."),
 
-`<h2>Étape 2 · MAYDAY : danger de mort</h2>
+`<h2>Étape 2 · MAYDAY : danger imminent</h2>
 <p>On dit MAYDAY trois fois quand il y a un <span class="u">danger imminent</span> pour le bateau ou une personne, et qu'il faut de l'aide <span class="u">tout de suite</span>.</p>`
 + EX("Exemples", "Une voie d'eau fait couler le bateau, un incendie à bord, une personne tombée à l'eau. Exemple du manuel : panne par tempête, avec risque de s'échouer.")
 + '<p>C\'est le skipper qui décide de lancer un MAYDAY.</p>',
 
 `<h2>Étape 3 · PAN PAN : grave, mais pas immédiat</h2>
-<p>On dit PAN PAN trois fois quand la sécurité est en jeu, <span class="u">sans danger immédiat</span> : un malade dont la vie n'est pas en danger, un échouement sans voie d'eau…</p>`
+<p>On dit PAN PAN trois fois quand la sécurité est en jeu, <span class="u">sans danger immédiat</span> : un malade dont la vie n'est pas en danger, un échouement sans fuite de cargaison…</p>`
 + R("Exemple du manuel, souvent posé", "Moteur en panne, vent de force 5, dans une zone de trafic : c'est <b>PAN PAN</b>, pas MAYDAY."),
 
 `<h2>Étape 4 · SÉCURITÉ : prévenir les autres</h2>
 <p>On dit SÉCURITÉ trois fois pour <span class="u">avertir</span> les autres bateaux d'un danger pour la navigation ou d'une mauvaise météo.</p>`
 + EX("Exemples", "Une épave à la dérive, une bouée déplacée, un avis de tempête. Exemple du manuel : panne par temps calme, dans une zone à faible trafic.")
-+ R("À retenir en une phrase", "MAYDAY = je suis en danger. PAN PAN = j'ai un problème sérieux. SÉCURITÉ = attention, danger pour tous."),
++ R("À retenir en une phrase", "MAYDAY = danger imminent, il faut de l'aide tout de suite. PAN PAN = j'ai un problème sérieux. SÉCURITÉ = attention, danger pour tous."),
 
 `<h2>Étape 5 · Le message de détresse</h2>
 <p><b>D'abord l'appel</b> : MAYDAY ×3, THIS IS, le nom du bateau ×3, l'indicatif.</p>
 <p><b>Puis le message</b>, dans cet ordre :</p>
 <ol><li>MAYDAY, le nom et l'indicatif ;</li><li>la <span class="u">position</span> ;</li><li>la <span class="u">nature de la détresse</span> : ce qui se passe ;</li><li>l'<span class="u">aide demandée</span> ;</li><li>les autres informations utiles.</li></ol>`
-+ '<div class="radio">MAYDAY MAYDAY MAYDAY\nTHIS IS Kat a Mar, Kat a Mar, Kat a Mar\nMAYDAY Kat a Mar\nposition… · voie d\'eau · demande assistance immédiate\nOVER</div>',
++ '<div class="radio">MAYDAY MAYDAY MAYDAY\nTHIS IS Kat a Mar, Kat a Mar, Kat a Mar, (indicatif)\nMAYDAY Kat a Mar (indicatif)\nposition… · voie d\'eau · demande assistance immédiate\nOVER</div>',
 
 `<h2>Étape 6 · Les mots pendant une détresse</h2>
 <table class="tab"><tr><td><b>MAYDAY RELAY</b></td><td>Je relaie la détresse d'un <b>autre</b> bateau : je ne suis pas en danger moi-même</td></tr>
@@ -535,6 +566,7 @@ const LECONS = [
 <tr><td><b>SILENCE MAYDAY</b></td><td>Silence ! Ne gênez pas la détresse</td></tr>
 <tr><td><b>PRUDENCE</b></td><td>Les communications peuvent reprendre, mais de façon limitée</td></tr>
 <tr><td><b>SILENCE FINI</b></td><td>La détresse est terminée</td></tr></table>`
++ '<p>Pendant une détresse, les bateaux qui n\'y participent pas gardent le <span class="u">silence radio</span> sur ce canal. Ils ne reprennent normalement qu\'après <b>SILENCE FINI</b> ; PRUDENCE n\'autorise qu\'un trafic limité.</p>'
 + R("Pièges classiques", "MAYDAY RELAY ≠ être soi-même en détresse. PRUDENCE ≠ SILENCE FINI."),
 
 `<h2>Étape 7 · Qui répond, et sur quel canal ?</h2>
@@ -543,7 +575,9 @@ const LECONS = [
 
 { t:"Veille et secours en Belgique", s:"Qui appeler en cas de problème", e:[
 `<h2>Étape 1 · Écouter le canal 16</h2>
-<p>Les grands navires, soumis à la convention <b>SOLAS</b> (« Safety Of Life At Sea », la convention internationale pour la sécurité en mer), doivent écouter le canal 16 en permanence. Pour la plaisance, ce n'est pas obligatoire mais fortement conseillé, par exemple avec la double veille.</p>`,
+<p>Un <span class="u">navire astreint</span> est un navire qui doit obligatoirement avoir une station radio, selon la convention <b>SOLAS</b> (« Safety Of Life At Sea », la convention internationale pour la sécurité en mer). Il écoute le canal 16 en permanence, dans la mesure du possible.</p>
+<p>Pour les autres bateaux, comme la plaisance, le manuel dit que cette veille n'est pas obligatoire mais conseillée autant que possible, par exemple avec la double veille en mer. (À un autre endroit, il la dit « obligatoire autant que possible » : à l'examen, retenez « autant que possible ».)</p>`
++ R("Revient souvent à l'examen", "Navire astreint = station radio <b>obligatoire</b> (SOLAS). Plaisance : veille du 16 <b>autant que possible</b>."),
 
 `<h2>Étape 2 · Le MRCC Oostende</h2>
 <p>Le MRCC est le centre de coordination du sauvetage en mer. C'est le <span class="u">premier contact pour tout incident</span> en mer belge, 24 h sur 24.</p>
@@ -571,7 +605,7 @@ const QUESTIONS = [
 {l:1,q:"Vous achetez un bateau qui a déjà une VHF à bord. Dans quel délai demander l'autorisation ?",r:["15 jours","30 jours","60 jours","90 jours"],b:2,
  e:"Vous avez 60 jours.",
  f:["Trop court : le délai est de 60 jours.","Trop court : le délai est de 60 jours.","","Trop long : le délai est de 60 jours."],
- t:"Normalement, on demande l'autorisation avant d'acheter la radio. Exception : un bateau acheté avec une radio déjà à bord. On a alors 60 jours pour demander l'autorisation."},
+ t:"Normalement, on attend d'avoir reçu l'autorisation avant d'acheter la radio. Exception : un bateau acheté avec une radio déjà à bord. On a alors 60 jours pour demander l'autorisation."},
 {l:1,q:"Combien de temps le certificat VHF est-il valable ?",r:["1 an","5 ans","10 ans","À vie"],b:1,
  e:"5 ans, renouvelable.",
  f:["Non, il est valable 5 ans.","","Non, il est valable 5 ans.","Non : il faut le renouveler tous les 5 ans."],
@@ -584,7 +618,7 @@ const QUESTIONS = [
 {l:1,q:"Le certificat VHF permet-il d'utiliser l'ASN (bouton « DISTRESS ») ?",r:["Oui","Oui, en mer seulement","Non, il faut un certificat SMDSM comme le SRC","Oui, avec une radio de classe D"],b:2,
  e:"L'ASN demande un certificat SMDSM : le SRC pour une radio de classe D.",
  f:["Non : le certificat VHF couvre seulement la parole, pas l'ASN.","Non : même en mer, l'ASN demande un certificat SMDSM.","","Piège : une radio ASN de classe D demande justement le certificat SRC."],
- t:"Le bouton rouge « DISTRESS » envoie un appel de détresse numérique : c'est l'ASN. Le certificat VHF ne couvre que la parole. Pour l'ASN, il faut un certificat SMDSM : le SRC pour une radio de classe D (plaisance), le ROC pour une classe A.",
+ t:"Le bouton rouge « DISTRESS » envoie un appel de détresse numérique : c'est l'ASN. Le certificat VHF ne couvre que la parole. Pour l'ASN, il faut un certificat SMDSM : le SRC pour une radio de classe D (plaisance), au moins le ROC pour une classe A.",
  p:"La réponse « classe D » est un piège : la classe D demande justement le SRC."},
 {l:1,q:"Vous vendez votre bateau. Que faites-vous de l'autorisation de station ?",r:["Vous la laissez à l'acheteur","Vous la renvoyez immédiatement à l'IBPT","Vous la gardez 5 ans","Vous la déchirez"],b:1,
  e:"Elle est renvoyée immédiatement à l'IBPT.",
@@ -608,9 +642,9 @@ const QUESTIONS = [
  f:["Non : en zone 1, une VHF portable suffit.","Non : en zone 2 (l'Escaut), une portable suffit encore.","","Non : c'est dès la zone 3. En zones 6 et 7, il faut en plus l'ASN."],
  t:"Les eaux belges sont découpées en zones. Jusqu'à la zone 2 (eaux intérieures et Escaut), une VHF portable suffit. Dès la zone 3, les ports de la côte, la VHF fixe est obligatoire."},
 {l:3,q:"Un bateau à moteur de 6,95 m sur les voies intérieures belges doit-il avoir une VHF ?",r:["Oui, une","Non","Oui, deux","Oui, avec ASN"],b:1,
- e:"Non : la VHF n'est obligatoire qu'à partir de 7 m.",
- f:["Non : une VHF n'est obligatoire qu'à partir de 7 m.","","Non : deux VHF, c'est pour les grands bateaux.","Non : l'ASN est même interdit sur les voies intérieures."],
- t:"Sur les voies intérieures, pour un bateau à moteur : jusqu'à 7 m, pas de VHF obligatoire ; de 7 à 20 m, une VHF ; un grand bateau, deux VHF."},
+ e:"Non : la VHF n'est obligatoire qu'au-delà de 7 m.",
+ f:["Non : une VHF n'est obligatoire qu'au-delà de 7 m.","","Non : deux VHF, c'est pour les grands bateaux.","Non : l'ASN est même interdit sur les voies intérieures."],
+ t:"Sur les voies intérieures, pour un bateau à moteur : jusqu'à 7 m, pas de VHF obligatoire ; plus de 7 m et moins de 20 m, une VHF ; un grand bateau, deux VHF."},
 {l:3,q:"Pourquoi un grand bateau doit-il avoir deux VHF sur les voies intérieures ?",r:["Pour avoir une radio de secours","Parce que la double veille y est interdite","Pour parler en deux langues","Parce que l'ATIS l'exige"],b:1,
  e:"Il doit écouter deux canaux, et la double veille est interdite : il lui faut deux appareils.",
  f:["Ce n'est pas la raison donnée par la règle.","","Non, la langue n'a rien à voir.","Non : l'ATIS est un code d'identification, pas une raison d'avoir deux radios."],
@@ -631,7 +665,7 @@ const QUESTIONS = [
 {l:4,q:"Peut-on utiliser la VHF portable du bateau depuis le quai ?",r:["Oui, toujours","Oui, à 1 W","Non, seulement à bord","Oui, sur le canal 77"],b:2,
  e:"La portable s'utilise seulement à bord.",
  f:["Non : jamais depuis le quai.","Non : même en faible puissance, c'est interdit depuis le quai.","","Non : le canal ne change rien, c'est interdit depuis le quai."],
- t:"La VHF portable fait partie de l'installation du bateau : elle figure sur son autorisation de station et ne s'utilise qu'à bord."},
+ t:"La VHF portable fait partie de l'installation du bateau : elle figure sur son autorisation de station et ne s'utilise qu'à bord. L'utiliser à quai demanderait une autre autorisation, spécifique."},
 {l:4,q:"Comment installer une antenne VHF ?",r:["Inclinée vers l'arrière","Verticale, à 4 m des masses métalliques plus hautes","Près d'un éclairage LED","Horizontale"],b:1,
  e:"Verticale, et à 4 m au moins des masses métalliques plus hautes.",
  f:["Non : elle doit être verticale.","","Non : les LED brouillent la réception ; gardez-les à plus de 4 m.","Non : elle doit être verticale."],
@@ -646,7 +680,7 @@ const QUESTIONS = [
  t:"Formule : portée en milles = 2,25 × (√ hauteur antenne 1 + √ hauteur antenne 2), hauteurs en mètres. Ici, √9 = 3, donc 2,25 × (3 + 3) = 13,5 milles."},
 {l:5,q:"Qu'est-ce que le mode simplex ?",r:["Deux fréquences","Une seule fréquence, on parle à tour de rôle","On parle et on écoute en même temps","Un mode réservé aux liaisons bateau-terre"],b:1,
  e:"Une seule fréquence : on parle chacun son tour.",
- f:["Deux fréquences, c'est le duplex.","","Parler et écouter en même temps, c'est le duplex.","Non, le simplex sert aussi entre bateaux."],
+ f:["Deux fréquences, c'est le duplex (ou le semi-duplex), pas le simplex.","","Parler et écouter en même temps, c'est le duplex.","Non, le simplex sert aussi entre bateaux."],
  t:"Simplex = une seule fréquence, comme un talkie-walkie : on parle chacun son tour et on dit OVER. Duplex = deux fréquences, comme un téléphone : on parle et on écoute en même temps."},
 {l:5,q:"Quelle est la fréquence du canal 16 ?",r:["156,025 MHz","156,800 MHz","161,975 MHz","162,025 MHz"],b:1,
  e:"Le canal 16 est sur 156,800 MHz.",
@@ -655,10 +689,10 @@ const QUESTIONS = [
 {l:6,q:"Quel est le canal international de détresse en mer ?",r:["10","16","70","77"],b:1,
  e:"Le canal 16.",
  f:["Le 10 sert à la détresse sur les voies intérieures, pas en mer.","","Le 70 est réservé à l'ASN, jamais à la voix.","Le 77 est le canal des conversations privées."],
- t:"En mer, la détresse, l'urgence et la sécurité passent par le canal 16. Sur les voies intérieures, c'est le canal 10."},
+ t:"En mer, la détresse, l'urgence et la sécurité passent par le canal 16. Sur les voies intérieures, c'est en principe le canal 10 (ou celui d'une écluse proche)."},
 {l:6,q:"Quel canal utiliser en mer pour une conversation privée entre navires ?",r:["72","77","16","13"],b:1,
  e:"En mer, seul le canal 77.",
- f:["Le 72 est autorisé sur les voies intérieures, pas en mer.","","Le 16 est réservé à la détresse et aux appels.","Le 13 sert à la sécurité de la navigation."],
+ f:["Le 72 est autorisé sur les voies intérieures, pas en mer belge.","","Le 16 est réservé à la détresse et aux appels.","Le 13 sert à la sécurité de la navigation."],
  t:"Conversations privées, à 1 W : en mer, seulement le canal 77 ; sur les voies intérieures, le 72 et le 77.",
  p:"Le 72 est autorisé sur les canaux, pas en mer."},
 {l:6,q:"À quoi sert le canal 70 ?",r:["Aux appels sociaux","À l'ASN uniquement","Aux écluses","Aux opérations de sauvetage"],b:1,
@@ -683,9 +717,9 @@ const QUESTIONS = [
  t:"L'ATIS part à la fin de chaque émission, quand on relâche le bouton du micro, et toutes les 5 minutes pendant une émission longue."},
 {l:7,q:"Où l'ATIS est-il obligatoire ?",r:["En mer","Sur les voies intérieures des pays de l'arrangement Rainwat","Seulement dans les ports","Nulle part"],b:1,
  e:"Sur les voies intérieures des pays de l'arrangement Rainwat.",
- f:["En mer, on utilise l'ASN, pas l'ATIS.","","Non : sur toutes les voies intérieures de ces pays.","Non : il est obligatoire sur les voies intérieures."],
+ f:["En mer, on utilise l'ASN, pas l'ATIS.","","Non : sur les voies intérieures de ces pays.","Non : il est obligatoire sur les voies intérieures."],
  t:"ATIS = voies intérieures des pays de l'arrangement Rainwat (Belgique, Pays-Bas, France, Allemagne…). ASN = mer."},
-{l:8,q:"Combien de temps peut durer un essai d'émission ?",r:["5 secondes","10 secondes","30 secondes","1 minute"],b:1,
+{l:8,q:"Combien de temps un essai d'émission peut-il durer au maximum ?",r:["5 secondes","10 secondes","30 secondes","1 minute"],b:1,
  e:"10 secondes au plus.",
  f:["Non : jusqu'à 10 secondes.","","Trop long : 10 secondes au plus.","Trop long : 10 secondes au plus."],
  t:"Un essai radio dure 10 secondes au plus, et jamais sur le canal 16. On dit le nom de sa station, puis « en essai »."},
@@ -696,7 +730,7 @@ const QUESTIONS = [
  p:"Cette question tombe presque à chaque session."},
 {l:8,q:"Entre deux navires en mer, quelle langue utiliser ?",r:["Celle du navire qui appelle","Celle du pays du navire appelé, ou l'anglais","Toujours le français","Celle du port le plus proche"],b:1,
  e:"La langue du pays du navire appelé, ou l'anglais.",
- f:["Non : c'est le navire appelé qui compte, pas celui qui appelle.","","Non : le français n'est jamais imposé.","Non : la règle ne parle pas du port."],
+ f:["Non : c'est le navire appelé qui compte, pas celui qui appelle.","","Non : entre navires en mer, rien n'impose le français.","Non : la règle ne parle pas du port."],
  t:"En mer, entre navires : la langue du pays du navire appelé, ou l'anglais. Avec une station côtière : la langue de son pays, ou l'anglais."},
 {l:8,q:"Comment épeler KAT ?",r:["Kilo Alfa Tango","King Alfa Tom","Kilo Adam Tango","Kilo Alfa Toronto"],b:0,
  e:"Kilo Alfa Tango.",
@@ -709,9 +743,9 @@ const QUESTIONS = [
  p:"Beaucoup répondent MAYDAY. MAYDAY est réservé au danger immédiat."},
 {l:9,q:"Une voie d'eau fait couler votre bateau. Quel message ?",r:["MAYDAY","PAN PAN","SÉCURITÉ","Un appel normal"],b:0,
  e:"Danger immédiat pour le bateau et les personnes : MAYDAY.",
- f:["","PAN PAN, c'est sans danger immédiat. Un bateau qui coule, c'est un danger immédiat.","SÉCURITÉ sert à avertir les autres d'un danger, pas à demander de l'aide.","La vie des personnes est en jeu : il faut un appel de détresse."],
+ f:["","PAN PAN, c'est sans danger immédiat. Un bateau qui coule, c'est un danger immédiat.","SÉCURITÉ sert surtout à avertir les autres d'un danger ; ici, il faut une aide immédiate.","Le bateau et les personnes sont en danger imminent : il faut un appel de détresse."],
  t:"MAYDAY = danger imminent pour le bateau ou une personne, avec besoin d'aide immédiate : voie d'eau, incendie, personne tombée à l'eau."},
-{l:9,q:"Vous entendez « MAYDAY RELAY, MAYDAY RELAY, MAYDAY RELAY, ICI Kat a Mar… ». Cela signifie :",r:["Kat a Mar est en détresse","Kat a Mar relaie la détresse d'un autre navire","La détresse est terminée","Kat a Mar accuse réception"],b:1,
+{l:9,q:"Vous entendez « MAYDAY RELAY, MAYDAY RELAY, MAYDAY RELAY, ALL STATIONS, ALL STATIONS, ALL STATIONS, ICI Kat a Mar… ». Cela signifie :",r:["Kat a Mar est en détresse","Kat a Mar relaie la détresse d'un autre navire","La détresse est terminée","Kat a Mar accuse réception"],b:1,
  e:"Kat a Mar n'est pas en danger : il relaie la détresse d'un autre bateau.",
  f:["Non : RELAY veut dire qu'il relaie l'appel d'un autre.","","Non : la fin d'une détresse se dit SILENCE FINI.","Non : l'accusé de réception se dit RECEIVED."],
  t:"MAYDAY RELAY = je ne suis pas en danger, je relaie la détresse d'un autre bateau. RECEIVED = j'ai reçu la détresse. SILENCE FINI = la détresse est terminée."},
@@ -728,7 +762,7 @@ const QUESTIONS = [
  e:"Tout bateau proche doit accuser réception.",
  f:["Non : une détresse doit toujours recevoir une réponse.","","Non : entre navires, tout bateau proche doit répondre.","L'IBPT n'intervient pas dans les secours."],
  t:"Entre navires, tout bateau proche accuse réception. Avec une autorité portuaire : si elle ne répond pas dans la minute, un bateau prend la détresse en charge."},
-{l:9,q:"Que doit contenir en premier un message de détresse, après MAYDAY et le nom du bateau ?",r:["L'heure","La position","Le nombre de personnes à bord","La météo"],b:1,
+{l:9,q:"Dans un message de détresse, que faut-il donner juste après MAYDAY, le nom et l'indicatif du bateau ?",r:["L'heure","La position","Le nombre de personnes à bord","La météo"],b:1,
  e:"La position vient en premier, pour que les secours sachent où aller.",
  f:["L'heure n'est pas demandée à ce stade.","","Utile, mais cela vient dans les « autres informations », à la fin.","La météo n'est pas un élément obligatoire."],
  t:"Message de détresse, dans l'ordre : MAYDAY, nom et indicatif, puis la position, la nature de la détresse, l'aide demandée et les autres informations utiles."},
@@ -743,8 +777,8 @@ const QUESTIONS = [
  t:"Deux services à ne pas confondre : Oostende Radio diffuse la météo et les avis de sécurité ; le MRCC Oostende coordonne les sauvetages."},
 {l:10,q:"Pour un bateau de plaisance, la veille sur le canal 16 est :",r:["Interdite","Obligatoire en permanence","Conseillée autant que possible","Réservée aux bateaux de plus de 20 m"],b:2,
  e:"Conseillée autant que possible.",
- f:["Non : elle est conseillée.","Non : elle n'est obligatoire que pour les grands navires (convention SOLAS).","","Non : les 20 m concernent les voies intérieures, pas la veille en mer."],
- t:"La veille permanente sur le canal 16 est obligatoire pour les grands navires (convention SOLAS). Pour la plaisance, elle est fortement conseillée, par exemple avec la double veille en mer."},
+ f:["Non : elle est conseillée.","Non : la veille permanente n'est imposée qu'aux navires astreints (station radio obligatoire selon SOLAS). Pour la plaisance, le manuel dit « autant que possible ».","","Non : les 20 m concernent les voies intérieures, pas la veille en mer."],
+ t:"La veille permanente sur le canal 16 est imposée aux navires astreints (station radio obligatoire selon SOLAS), dans la mesure du possible. Pour la plaisance, elle est conseillée autant que possible, par exemple avec la double veille en mer."},
 /* ---- v5 : 73 questions supplémentaires (45 à 117), toutes tirées du manuel IBPT ---- */
 /* Leçon 1 · Les papiers obligatoires */
 {l:1,q:"Qui est responsable des démarches administratives de la radio (autorisation, changement d'adresse, programmation) ?",r:["Le capitaine","Le propriétaire du bateau","L'IBPT","La personne qui parle à la radio"],b:1,
@@ -759,7 +793,7 @@ const QUESTIONS = [
 {l:1,q:"Quand avez-vous le droit d'acheter une VHF pour votre bateau ?",r:["Quand vous voulez","Après avoir reçu l'autorisation de station","Après avoir réussi l'examen","Dans les 60 jours qui suivent l'achat"],b:1,
  e:"Seulement après avoir reçu l'autorisation de station.",
  f:["Non : il faut d'abord l'autorisation de station.","","Le certificat est le permis de la personne ; pour acheter l'appareil, il faut l'autorisation de station.","Les 60 jours ne valent que pour un bateau acheté avec une radio déjà à bord."],
- t:"On demande d'abord l'autorisation de station, puis on achète la radio. Cela vaut aussi pour chaque appareil supplémentaire. Seule exception : un bateau acheté avec une radio déjà à bord, où l'on a 60 jours pour demander l'autorisation.",
+ t:"On attend d'avoir reçu l'autorisation de station, puis on achète la radio. Cela vaut aussi pour chaque appareil supplémentaire. Seule exception : un bateau acheté avec une radio déjà à bord, où l'on a 60 jours pour demander l'autorisation.",
  p:"Le délai de 60 jours ne concerne QUE le bateau acheté avec une radio déjà installée."},
 {l:1,q:"Vous changez le nom de votre bateau. Que faites-vous pour la radio ?",r:["Rien","Vous corrigez le nom sur l'autorisation","Vous demandez une autorisation de station adaptée","Vous prévenez la capitainerie"],b:2,
  e:"Vous demandez une autorisation de station adaptée.",
@@ -844,7 +878,7 @@ const QUESTIONS = [
 {l:3,q:"Un bateau à moteur de 12 m navigue sur les voies intérieures belges. Que faut-il à bord ?",r:["Aucune radio obligatoire","Une VHF obligatoire ; une seconde est conseillée","Deux VHF obligatoires","Une VHF avec ASN"],b:1,
  e:"Une VHF obligatoire (depuis 2009) ; une deuxième est conseillée.",
  f:["Au-delà de 7 m, la VHF est obligatoire.","","Deux VHF ne sont obligatoires que pour les grands bateaux.","L'ASN est interdit sur les voies intérieures."],
- t:"Bateaux à moteur sur les voies intérieures : jusqu'à 7 m, pas de VHF obligatoire ; de 7 à 20 m, une VHF obligatoire et une seconde conseillée ; grand bateau, deux VHF obligatoires."},
+ t:"Bateaux à moteur sur les voies intérieures : jusqu'à 7 m, pas de VHF obligatoire ; plus de 7 m et moins de 20 m, une VHF obligatoire et une seconde conseillée ; grand bateau, deux VHF obligatoires."},
 {l:3,q:"Qui décide quel équipement radio est obligatoire à bord, en mer ?",r:["L'IBPT","Le SPF Mobilité et Transports","L'UIT","Le MRCC Oostende"],b:1,
  e:"Le SPF Mobilité et Transports.",
  f:["L'IBPT délivre les autorisations et certificats, mais ne fixe pas l'équipement obligatoire.","","L'UIT gère les fréquences au niveau mondial.","Le MRCC organise les secours."],
@@ -862,7 +896,7 @@ const QUESTIONS = [
  t:"Les puissances à connaître : VHF fixe 0,5 à 1 W (faible) ou 6 à 25 W (forte) ; VHF portable 0,5 à 6 W ; AIS 12,5 W au maximum."},
 {l:4,q:"Sur les voies intérieures, à quelle puissance la VHF doit-elle se réduire pour parler aux autres bateaux ?",r:["0,5 à 1 W","6 W","12,5 W","25 W"],b:0,
  e:"Entre 0,5 et 1 W.",
- f:["","6 W, c'est le maximum d'une portable : trop fort ici.","12,5 W, c'est le maximum d'un AIS.","25 W, c'est la puissance maximale en mer."],
+ f:["","6 W, c'est le maximum d'une portable : trop fort ici.","12,5 W, c'est le maximum d'un AIS.","25 W, c'est le maximum d'une VHF fixe."],
  t:"Sur les voies intérieures, la radio doit se réduire à 0,5–1 W pour les communications bateau-bateau, bateau-autorités portuaires et à bord. La règle vaut aussi pour les portables."},
 {l:4,q:"Sur les voies intérieures, une VHF portable doit-elle avoir l'ATIS ?",r:["Non, seulement les VHF fixes","Oui, toujours","Seulement la nuit","Seulement au-delà de 1 W"],b:1,
  e:"Oui, toujours.",
@@ -876,7 +910,7 @@ const QUESTIONS = [
  e:"Elle ne fonctionnera pas correctement : l'antenne doit être verticale.",
  f:["Non, c'est l'inverse.","","Si : l'inclinaison empêche l'antenne de fonctionner.","Ce n'est pas le problème indiqué par le manuel."],
  t:"Antenne VHF : verticale, isolée, à au moins 4 m des grandes masses métalliques plus hautes qu'elle, d'une longueur d'environ 1 m."},
-{l:4,q:"À quelle distance minimale de l'antenne VHF faut-il éviter un éclairage LED ?",r:["1 m","2 m","4 m","10 m"],b:2,
+{l:4,q:"À moins de quelle distance de l'antenne VHF un éclairage LED est-il fortement déconseillé ?",r:["1 m","2 m","4 m","10 m"],b:2,
  e:"4 m.",
  f:["Trop près : il faut 4 m.","Trop près : il faut 4 m.","","Trop loin : 4 m suffisent."],
  t:"L'alimentation des lampes LED brouille la bande VHF. Le manuel déconseille fortement un éclairage LED à moins de 4 m de l'antenne VHF."},
@@ -933,7 +967,7 @@ const QUESTIONS = [
  e:"Les canaux 72 et 77, à faible puissance.",
  f:["Le 16 est réservé à la détresse et aux appels.","","Le 10 sert aux communications bateau-bateau pour la navigation.","Seulement le 77, c'est la règle en mer, pas sur les voies intérieures."],
  t:"Conversations privées : en mer, seulement le canal 77 ; sur les voies intérieures, les canaux 72 et 77. Toujours à faible puissance (0,5 à 1 W).",
- p:"Le 72 n'est permis que sur les voies intérieures, pas en mer."},
+ p:"Le 72 n'est permis que sur les voies intérieures, pas en mer belge."},
 {l:6,q:"Sur les voies intérieures, à quoi sert le canal 10 ?",r:["Aux écluses","Premier canal bateau-bateau, aussi pour la détresse","À l'ASN","Aux conversations privées"],b:1,
  e:"C'est le premier canal bateau-bateau ; c'est aussi sur lui qu'on lance un MAYDAY en principe.",
  f:["Les écluses utilisent 18, 20 et 22.","","L'ASN est interdit sur les voies intérieures.","Conversations privées : 72 et 77."],
@@ -956,9 +990,9 @@ const QUESTIONS = [
  e:"Toutes les 5 minutes.",
  f:["Non : c'est toutes les 5 minutes.","Non : c'est toutes les 5 minutes.","","Si : en cas d'émission longue, il est répété toutes les 5 minutes."],
  t:"Le signal ATIS part automatiquement à la fin de chaque émission, quand on relâche le bouton de micro. Si l'émission est longue, il est aussi envoyé toutes les 5 minutes."},
-{l:7,q:"Pouvez-vous débrancher ou reprogrammer vous-même l'ATIS ?",r:["Oui, à tout moment","Non, c'est impossible pour l'utilisateur","Oui, en mer","Oui, avec l'accord du capitaine"],b:1,
+{l:7,q:"Sur les voies intérieures, pouvez-vous déconnecter ou reprogrammer vous-même le dispositif ATIS ?",r:["Oui, à tout moment","Non, c'est impossible pour l'utilisateur","Oui, si l'émission est courte","Oui, avec l'accord du capitaine"],b:1,
  e:"Non.",
- f:["Non : l'utilisateur ne peut ni le couper ni le reprogrammer.","","En mer, on active l'ASN au lieu de l'ATIS sur un appareil mixte ; mais on ne reprogramme pas le code ATIS.","Le capitaine ne peut pas l'autoriser non plus."],
+ f:["Non : l'utilisateur ne peut ni le couper ni le reprogrammer.","","Non : la durée de l'émission n'y change rien ; l'utilisateur ne peut jamais le déconnecter ni le reprogrammer.","Le capitaine ne peut pas l'autoriser non plus."],
  t:"L'utilisateur ne peut ni déconnecter ni reprogrammer l'ATIS. Si l'ATIS est un boîtier séparé, il doit être relié à la radio par une liaison électrique protégée contre les coupures ; une liaison acoustique est interdite."},
 {l:7,q:"Par quel chiffre commence toujours un code ATIS ?",r:["0","2","9","1"],b:2,
  e:"Par 9.",
@@ -985,17 +1019,17 @@ const QUESTIONS = [
  t:"Avant de s'identifier, on dit ICI ou THIS IS. Si la liaison est mauvaise, on dit DE (DELTA ECHO). On passe la parole avec À VOUS ou OVER ; on termine avec TERMINÉ ou OUT."},
 {l:8,q:"En mer, vous appelez une station côtière. Quelle langue utiliser ?",r:["Le néerlandais","La langue du pays de la station côtière, ou l'anglais","Celle de votre propre pays","Le français obligatoirement"],b:1,
  e:"La langue du pays de la station côtière, ou l'anglais.",
- f:["Seulement si la station côtière est néerlandophone.","","Non : on s'adapte à la station appelée.","Non : pas obligatoirement."],
+ f:["Seulement si c'est la langue du pays de la station côtière.","","Non : on s'adapte à la station appelée.","Non : pas obligatoirement."],
  t:"En mer : avec une station côtière, la langue de son pays ou l'anglais ; entre navires, la langue du pays du navire appelé ou l'anglais. Sur les voies intérieures : avec une station terrestre, la langue du pays où elle se trouve ; entre bateaux, la langue du pays où l'on navigue."},
 {l:8,q:"Sur les voies intérieures, vous appelez un autre bateau. Quelle langue utiliser ?",r:["Toujours l'anglais","La langue du pays où vous naviguez","La langue du bateau appelé","Le français"],b:1,
  e:"La langue du pays dans lequel on navigue.",
- f:["L'anglais ne s'impose que dans des cas particuliers, sans règlement de police.","","C'est la règle en mer, pas sur les voies intérieures.","Seulement si vous naviguez dans une région francophone."],
+ f:["L'anglais ne s'impose que dans des cas particuliers, sans règlement de police.","","C'est la règle en mer, pas sur les voies intérieures.","Seulement si le français est la langue du pays où vous naviguez."],
  t:"Voies intérieures, entre bateaux : la langue du pays où l'on navigue. En mer, entre navires : la langue du pays du navire appelé, ou l'anglais.",
  p:"La règle diffère entre la mer (navire appelé) et les voies intérieures (pays où l'on navigue)."},
 {l:8,q:"Faut-il traduire les mots MAYDAY, PAN PAN ou SÉCURITÉ dans votre langue ?",r:["Oui, toujours","Non : ces mots se disent tels quels","Oui, sur les voies intérieures","Seulement PAN PAN"],b:1,
  e:"Non : ils se disent tels quels, sans traduction.",
  f:["Non : ce sont des mots internationaux.","","Non : même sur les voies intérieures.","Non : aucun de ces mots ne se traduit."],
- t:"Les mots clés (MAYDAY, MAYDAY RELAY, SILENCE MAYDAY, RECEIVED, SILENCE FINI, PAN PAN, SÉCURITÉ, THIS IS, ALL STATIONS) se disent tels quels. La suite du message se fait dans une langue autorisée sur cette voie d'eau."},
+ t:"Les mots clés (MAYDAY, MAYDAY RELAY, SILENCE MAYDAY, RECEIVED, SILENCE FINI, PAN PAN, SÉCURITÉ, THIS IS, ALL STATIONS) se disent tels quels (le manuel admet aussi ICI pour THIS IS et REÇU pour RECEIVED). La suite du message se fait dans une langue autorisée sur cette voie d'eau."},
 {l:8,q:"Une station côtière vous demande de réduire votre puissance. Que faites-vous ?",r:["Vous obéissez","Vous l'ignorez si vous l'entendez bien","Vous changez de canal","Vous lui demandez de le confirmer par écrit"],b:0,
  e:"Vous obéissez : on suit les instructions de la station côtière.",
  f:["","Non : il faut suivre ses instructions.","Non : il faut suivre ses instructions.","Non : il faut suivre ses instructions."],
@@ -1029,10 +1063,10 @@ const QUESTIONS = [
  t:"Le silence radio s'impose ainsi : « SILENCE MAYDAY », puis le nom du bateau qui gêne (ou ALL STATIONS), puis « SILENCE MAYDAY ». Il peut être imposé par la station en détresse, par le centre qui coordonne les secours ou par une autre station."},
 {l:9,q:"Un équipier est malade, mais sa vie n'est pas en danger. Il vous faut un avis médical. Quel message ?",r:["MAYDAY","PAN PAN","SÉCURITÉ","Aucun, c'est privé"],b:1,
  e:"PAN PAN (urgence).",
- f:["MAYDAY seulement si la vie est en danger immédiat.","","SÉCURITÉ sert aux avertissements nautiques ou météo.","Non : c'est une question de sécurité de l'équipage."],
+ f:["MAYDAY seulement en cas de danger imminent pour une personne ou le bateau ; ici, la vie n'est pas en danger.","","SÉCURITÉ sert aux avertissements nautiques ou météo.","Non : c'est une question de sécurité de l'équipage."],
  t:"PAN PAN = urgence : sécurité de l'équipage ou du bateau, sans danger imminent. Exemples du manuel : une personne malade dont la vie n'est pas en danger, un échouement sans fuite de cargaison, un bateau en panne par vent de force 5 dans une zone de trafic."},
 {l:9,q:"Votre bateau est en panne par temps calme, dans une zone avec peu de trafic. Quel message ?",r:["MAYDAY","PAN PAN","SÉCURITÉ","Aucun"],b:2,
- e:"SÉCURITÉ.",
+ e:"SÉCURITÉ : votre bateau immobilisé est un danger pour la navigation des autres, vous les avertissez.",
  f:["Pas de danger imminent : pas de MAYDAY.","PAN PAN, c'est pour une panne par vent de force 5 dans une zone de trafic.","","Il faut prévenir les autres : SÉCURITÉ."],
  t:"Les trois exemples du manuel : panne dans la tempête avec risque d'échouer → MAYDAY ; panne par vent de force 5 dans une zone de trafic → PAN PAN ; panne par temps calme dans une zone à faible trafic → SÉCURITÉ.",
  p:"La même panne donne trois messages différents selon le danger."},
@@ -1062,7 +1096,7 @@ const QUESTIONS = [
 {l:10,q:"Qu'est-ce qu'un « navire astreint » ?",r:["Un navire de plus de 20 m","Un navire qui doit obligatoirement avoir une station radio (convention SOLAS)","Un navire de la Défense","Un navire en détresse"],b:1,
  e:"Un navire obligé d'avoir une station radio, selon la convention SOLAS.",
  f:["20 m, c'est la définition d'un grand bateau sur les voies intérieures.","","Rien à voir avec la Défense.","Rien à voir avec la détresse."],
- t:"Navire astreint = la convention SOLAS l'oblige à avoir une station radio. Il veille en permanence sur le canal 16, dans la mesure du possible. Pour les autres bateaux, comme la plaisance, le manuel demande de veiller le canal 16 autant que possible pendant la navigation."},
+ t:"Navire astreint = la convention SOLAS l'oblige à avoir une station radio. Il veille en permanence sur le canal 16, dans la mesure du possible. Pour les autres bateaux, comme la plaisance, le manuel conseille de veiller le canal 16 autant que possible pendant la navigation."},
 {l:10,q:"Quel est le centre de sauvetage français cité par le manuel pour nos pays voisins ?",r:["Le MRCC Oostende","Le CROSS Gris-Nez","La Garde côtière de Den Helder","Oostende Radio"],b:1,
  e:"Le CROSS Gris-Nez.",
  f:["C'est le centre belge.","","C'est le centre néerlandais.","C'est la station côtière belge ; elle ne traite pas les incidents."],
@@ -1079,6 +1113,7 @@ const $ = id => document.getElementById(id);
 const VUES = ["vAccueil","vLecon","vQcm","vResultat","vGloss","vRech"];
 function vue(id, titre){
   VUES.forEach(v => $(v).classList.toggle("cache", v !== id));
+  majReprise(id);
   $("barTitre").textContent = titre || "Certificat VHF";
   $("barRech").classList.toggle("cache", id === "vRech");
   if(typeof R_CUR !== "undefined") $("navRech").classList.toggle("cache", id !== "vLecon" || R_CUR < 0);
@@ -1149,6 +1184,7 @@ $("lecQcm").addEventListener("click", () => demarrerQcm("lecon", lecN));
    mode "exam" : 25 questions ; mode "exam100" : 100 questions ; correction après chaque question */
 let mode = "entr", modeLecon = 0, serie = [], pos = 0, reponses = [], repondu = false;
 function demarrerQcm(m, n){
+  if(qcmEnCours() && !confirm("Un QCM est en cours (" + titreMode(mode, modeLecon) + ", question " + (pos + 1) + " sur " + serie.length + ").\n\nLe remplacer par un nouveau ? (Annuler = le garder)")){ reprendre(); return; }
   mode = m; modeLecon = n || 0;
   if(m === "lecon") serie = melanger(QUESTIONS.filter(q => q.l === n));
   else if(m === "exam") serie = melanger(QUESTIONS).slice(0, 25);
@@ -1156,11 +1192,48 @@ function demarrerQcm(m, n){
   else serie = melanger(QUESTIONS);
   /* Les réponses sont mélangées à chaque série : la bonne n'est jamais toujours au même endroit. */
   serie = serie.map(Q => { const o = melanger([0, 1, 2, 3]);
-    return Object.assign({}, Q, { r: o.map(k => Q.r[k]), f: o.map(k => Q.f[k]), b: o.indexOf(Q.b) }); });
+    return construire(QUESTIONS.indexOf(Q), o); });
   pos = 0; reponses = [];
+  sauverQcm();
   $("barRetour").textContent = "‹ Leçons";
   afficherQuestion();
   vue("vQcm", titreMode(m, n));
+}
+/* Une question de la série = la question d'origine (_i) avec ses réponses dans l'ordre _o. */
+function construire(i, o){ const Q = QUESTIONS[i];
+  return Object.assign({}, Q, { r: o.map(k => Q.r[k]), f: o.map(k => Q.f[k]), b: o.indexOf(Q.b), _i: i, _o: o }); }
+
+/* ===== Mémoire du QCM en cours =====
+   La série, la position et les réponses sont gardées dans l'iPhone (clé « katamar-vhf-qcm »).
+   On peut quitter le QCM pour relire une leçon, fermer l'application, et revenir à la même question. */
+const CLE_QCM = "katamar-vhf-qcm";
+function qcmEnCours(){ return serie.length > 0 && pos < serie.length && !qcmFini; }
+let qcmFini = true;
+function sauverQcm(){
+  qcmFini = false;
+  try { localStorage.setItem(CLE_QCM, JSON.stringify({ v: 1, nbQ: QUESTIONS.length, mode, modeLecon, pos, reponses,
+    s: serie.map(q => [q._i, q._o]) })); } catch(e){}
+}
+function oublierQcm(){ qcmFini = true; try { localStorage.removeItem(CLE_QCM); } catch(e){} }
+function chargerQcm(){
+  try {
+    const d = JSON.parse(localStorage.getItem(CLE_QCM) || "null");
+    if(!d || d.v !== 1 || d.nbQ !== QUESTIONS.length || !Array.isArray(d.s) || !d.s.length) return;
+    serie = d.s.map(x => construire(x[0], x[1]));
+    mode = d.mode; modeLecon = d.modeLecon || 0; reponses = d.reponses || [];
+    pos = Math.min(d.pos || 0, serie.length - 1); qcmFini = false;
+  } catch(e){ serie = []; }
+}
+function majReprise(id){
+  const b = $("reprise"), voir = qcmEnCours() && id !== "vQcm" && id !== "vResultat";
+  b.classList.toggle("cache", !voir);
+  if(voir) b.textContent = "▶ Reprendre le QCM : " + titreMode(mode, modeLecon) + " · question " + (pos + 1) + " sur " + serie.length + " · " + bonnes() + " bonne" + (bonnes() > 1 ? "s" : "");
+}
+function reprendre(){
+  $("barRetour").textContent = "‹ Leçons";
+  afficherQuestion();
+  vue("vQcm", titreMode(mode, modeLecon));
+  if(reponses[pos] !== undefined) montrerReponse(reponses[pos]);
 }
 function titreMode(m, n){ return m === "exam" ? "Examen blanc" : m === "exam100" ? "Grand examen blanc" : (m === "lecon" ? "QCM leçon " + n : "Entraînement"); }
 function bonnes(){ return reponses.filter((r, i) => r === serie[i].b).length; }
@@ -1189,19 +1262,23 @@ function afficherQuestion(){
 $("qReps").addEventListener("click", (ev) => {
   const b = ev.target.closest(".rep");
   if(!b) return;
-  const k = Number(b.dataset.k), Q = serie[pos], btns = $("qReps").querySelectorAll(".rep");
   $("qErreur").classList.add("cache");
   if(repondu) return;
+  reponses[pos] = Number(b.dataset.k);
+  sauverQcm();
+  montrerReponse(reponses[pos]);
+  $("qRetour").scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+function montrerReponse(k){
+  const Q = serie[pos], btns = $("qReps").querySelectorAll(".rep");
   repondu = true;
-  reponses[pos] = k;
   btns[Q.b].classList.add("ok");
   if(k !== Q.b) btns[k].classList.add("ko");
   $("qScore").textContent = bonnes() + " bonne" + (bonnes() > 1 ? "s" : "") + " sur " + (pos + 1);
   $("qRetour").innerHTML = retourHtml(Q, k);
   marquerAbrev($("qRetour"));
   $("qSuivant").classList.remove("cache");
-  $("qRetour").scrollIntoView({behavior:"smooth", block:"nearest"});
-});
+}
 function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function retourHtml(Q, k){
   const lien = '<button type="button" class="lien" data-revoir="' + Q.l + '">📘 Relire la leçon ' + Q.l + ' : ' + esc(LECONS[Q.l - 1].t) + '</button>';
@@ -1219,7 +1296,7 @@ document.addEventListener("click", (ev) => {
 });
 $("qSuivant").addEventListener("click", () => {
   if(reponses[pos] === undefined){ $("qErreur").classList.remove("cache"); return; }
-  if(pos < serie.length - 1){ pos++; afficherQuestion(); } else resultat();
+  if(pos < serie.length - 1){ pos++; sauverQcm(); afficherQuestion(); } else { oublierQcm(); resultat(); }
 });
 
 /* ================= RÉSULTAT ================= */
@@ -1236,6 +1313,7 @@ function resultat(){
   vue("vResultat", "Résultat");
 }
 $("resRecommencer").addEventListener("click", () => demarrerQcm(mode, modeLecon));
+$("reprise").addEventListener("click", reprendre);
 $("resLecons").addEventListener("click", accueil);
 $("goEntr").addEventListener("click", () => demarrerQcm("entr"));
 $("goExam").addEventListener("click", () => demarrerQcm("exam"));
@@ -1464,6 +1542,7 @@ $("navNext").addEventListener("click", () => allerOcc(R_CUR + 1));
 $("navFermer").addEventListener("click", () => { R_CUR = -1; afficherEtape(); });
 $("navListe").addEventListener("click", () => { vue("vRech", "Rechercher"); $("navRech").classList.add("cache"); });
 
+chargerQcm();
 accueil();
 marquerAbrev(document.querySelector("#vAccueil .carte"));
 </script>
