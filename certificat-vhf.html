@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Certificat VHF · Kat-a-Mar</title>
+<!-- Certificat VHF belge (IBPT) — fiche de révision + QCM — v1
+     Page à part du dépôt, comme permis-hauturier.html : aucune donnée partagée,
+     aucune police externe, donc entièrement utilisable hors ligne. -->
+<style>
+:root{
+  --bg:#f2f5f6; --paper:#ffffff; --ink:#14263a; --muted:#566a7c; --line:#cfd9e0;
+  --sea:#e1eef6; --navy:#1d4e89; --red:#c0392b; --green:#1f7a3f; --amber:#a86400;
+  --okbg:#e3f4e8; --badbg:#fbe6e3; --warnbg:#fff4dc;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52;
+  --okbg:#173426; --badbg:#3a1d1b; --warnbg:#382a12; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.6;padding:0 16px 64px}
+main{max-width:680px;margin:0 auto;padding-top:22px;display:flex;flex-direction:column;gap:22px}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px}
+.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+h1{font-size:1.75rem;line-height:1.2;margin:0}
+h2{font-size:1.25rem;margin:0}
+h3{font-size:1.05rem;margin:18px 0 6px}
+.ver{font-size:.75rem;color:var(--muted);letter-spacing:.04em}
+p{margin:8px 0}
+.lead{color:var(--muted);margin:6px 0 0}
+.onglets{display:flex;gap:8px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:40;background:var(--bg);padding:8px 0}
+.onglets button{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);font-weight:800;font-size:15px;font-family:inherit}
+.onglets button.actif{background:var(--navy);color:var(--paper)}
+.carte{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+details.carte > summary{cursor:pointer;font-weight:800;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.carte > summary::-webkit-details-marker{display:none}
+details.carte > summary::after{content:"＋";color:var(--navy);font-weight:800}
+details.carte[open] > summary::after{content:"－"}
+details.carte[open] > summary{margin-bottom:6px}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:4px 0}
+.tabw{overflow-x:auto;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-size:13px;font-weight:700}
+.bloc{background:var(--sea);border-radius:10px;padding:10px 12px;margin:8px 0}
+.alerte{background:var(--warnbg);border-radius:10px;padding:10px 12px;margin:8px 0}
+.info{font-size:14px;color:var(--muted)}
+.choix-mode{display:flex;flex-direction:column;gap:8px}
+.choix-mode button,.btn{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);font-weight:800;font-size:15px;font-family:inherit}
+.btn.plein{background:var(--navy);color:var(--paper)}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
+.q .enonce{font-weight:700;margin:0 0 8px}
+.q label{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1.5px solid var(--line);border-radius:10px;margin:6px 0;cursor:pointer}
+.q input{margin-top:4px;flex:0 0 auto;width:18px;height:18px}
+.q label.bonne{border-color:var(--green);background:var(--okbg)}
+.q label.fausse{border-color:var(--red);background:var(--badbg)}
+.q .expl{display:none;margin:8px 0 0;font-size:15px}
+.q.corrige .expl{display:block}
+.q.manque{border-color:var(--amber)}
+#liste{display:flex;flex-direction:column;gap:12px}
+#score{display:none;text-align:center}
+#score .gros{font-size:2.2rem;font-weight:800;margin:4px 0}
+#score.ok .gros{color:var(--green)}
+#score.ko .gros{color:var(--red)}
+.erreur{color:var(--red);font-size:14px;font-weight:700;margin:6px 0 0;display:none}
+a{color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Certificat VHF</span></div>
+<main>
+  <header>
+    <h1>Certificat VHF belge</h1>
+    <p class="lead">Fiche de révision et QCM d'entraînement pour l'examen de l'IBPT (certificat restreint de radiotéléphoniste).</p>
+    <p class="ver">v1 · d'après le manuel officiel IBPT 2025 et le règlement d'examen du 20 septembre 2021</p>
+  </header>
+
+  <div class="onglets">
+    <button id="tabFiche" class="actif" type="button">📘 Fiche</button>
+    <button id="tabQcm" type="button">✅ QCM</button>
+  </div>
+
+  <!-- ================= FICHE ================= -->
+  <section id="vueFiche" style="display:flex;flex-direction:column;gap:12px">
+
+    <div class="carte">
+      <h2>L'examen en bref</h2>
+      <div class="tabw"><table>
+        <tr><th>Point</th><th>À retenir</th></tr>
+        <tr><td>Format</td><td>25 questions à choix multiple, sur ordinateur</td></tr>
+        <tr><td>Réussite</td><td>60 %, soit 15 bonnes réponses sur 25. Mauvaise réponse ou absence = 0 point</td></tr>
+        <tr><td>Lieu</td><td>IBPT, Bruxelles. Au moins une session par mois</td></tr>
+        <tr><td>Conditions</td><td>15 ans minimum ; nationalité UE/EEE ou permis de séjour</td></tr>
+        <tr><td>Inscription</td><td>Au plus tard 10 jours ouvrables avant la date</td></tr>
+        <tr><td>Droit d'examen</td><td>25 € dans le règlement de 2021, indexé (33,36 € dans une brochure plus récente). Non remboursé</td></tr>
+        <tr><td>Après un échec</td><td>Attendre au moins 1 mois avant de se réinscrire</td></tr>
+        <tr><td>Le jour J</td><td>Carte d'identité + convocation ; arriver 15 min avant ; ni brouillon ni téléphone</td></tr>
+      </table></div>
+      <p class="info">Contact : maritime@ibpt.be. Vérifiez le montant exact au moment de l'inscription.</p>
+    </div>
+
+    <details class="carte" open>
+      <summary>1. Documents et règles</summary>
+      <ul>
+        <li><b>Autorisation de station</b> (IBPT) : obligatoire pour tout navire enregistré en Belgique. L'<b>original</b> reste à bord. Aucune modification à la main.</li>
+        <li>Elle mentionne l'indicatif d'appel, le titulaire, le navire, <b>tous</b> les appareils (portables compris), le MMSI et l'ATIS.</li>
+        <li>On achète l'appareil <b>après</b> l'autorisation. Bateau acheté avec une radio à bord : <b>60 jours</b> pour la demander. Vente du bateau : la renvoyer immédiatement.</li>
+        <li>Le <b>capitaine</b> dirige le service radio ; le <b>propriétaire</b> répond des règles administratives.</li>
+        <li><b>Certificat d'opérateur</b> : obligatoire pour toute personne qui utilise la radio ; valable <b>5 ans</b>, avec un rappel <b>6 semaines</b> avant l'échéance.</li>
+        <li>Le certificat VHF ne couvre <b>pas</b> l'ASN (DSC), l'EPIRB, le SART ni l'AIS-SART : il faut un certificat SMDSM. Radio ASN classe D → <b>SRC</b> ; classe A → <b>ROC</b>.</li>
+        <li><b>Sans autorisation de station</b> : saisie de l'appareil ; amende de 200 à 2 000 € et/ou prison de 8 jours à 1 an.</li>
+        <li><b>Secret des communications</b> : on ne répète rien de ce qu'on capte, sauf les messages « à toutes les stations ». Seul un juge peut lever ce secret.</li>
+      </ul>
+    </details>
+
+    <details class="carte">
+      <summary>2. Identifiants</summary>
+      <div class="tabw"><table>
+        <tr><th>Identifiant</th><th>À retenir</th></tr>
+        <tr><td>Indicatif d'appel</td><td>Unique au monde ; série belge <b>ONA à OTZ</b>, attribuée par l'UIT</td></tr>
+        <tr><td>MMSI</td><td><b>9 chiffres</b> ; les navires belges commencent par <b>205</b></td></tr>
+        <tr><td>AIS-SART · AIS-MOB · AIS-EPIRB</td><td><b>970 · 972 · 974</b> suivis de chiffres : ce ne sont pas des MMSI</td></tr>
+        <tr><td>ATIS</td><td><b>9 + 205 + 2 chiffres + 4 chiffres</b> (voir point 7)</td></tr>
+      </table></div>
+    </details>
+
+    <details class="carte">
+      <summary>3. Équipements obligatoires</summary>
+      <h3>En mer (zones belges)</h3>
+      <ul>
+        <li>Jusqu'à la zone 2 : une VHF portable peut remplacer la fixe.</li>
+        <li>À partir de la <b>zone 3</b> (ports de la côte) : VHF fixe obligatoire, ASN conseillé.</li>
+        <li>Zones 6 et 7 : VHF fixe avec ASN + une portable.</li>
+      </ul>
+      <h3>Voies intérieures (bateaux à moteur)</h3>
+      <div class="tabw"><table>
+        <tr><th>Bateau</th><th>VHF obligatoire</th><th>Deux VHF</th></tr>
+        <tr><td>Jusqu'à 7 m</td><td>Non</td><td>Non</td></tr>
+        <tr><td>De 7 à 20 m</td><td>Oui, une</td><td>Non, mais conseillé</td></tr>
+        <tr><td>Grand bateau*</td><td>Oui</td><td>Oui</td></tr>
+      </table></div>
+      <p class="info">* 20 m ou plus, ou bateau à passagers, transbordeur, de pêche en action, barge de poussage, quelle que soit la longueur.</p>
+    </details>
+
+    <details class="carte">
+      <summary>4. L'appareil</summary>
+      <div class="tabw"><table>
+        <tr><th>Élément</th><th>À retenir</th></tr>
+        <tr><td>VHF fixe</td><td>Faible puissance <b>0,5 à 1 W</b>, haute <b>6 à 25 W</b> (bouton HI/LO)</td></tr>
+        <tr><td>VHF portable</td><td><b>0,5 à 6 W</b> ; inscrite sur l'autorisation ; seulement à bord, <b>jamais à quai</b></td></tr>
+        <tr><td>AIS</td><td><b>12,5 W</b> maximum ; classe A pour les navires astreints, B pour la plaisance</td></tr>
+        <tr><td>Squelch</td><td>Coupe le bruit de fond sous un seuil ; trop haut, on n'entend plus les stations faibles</td></tr>
+        <tr><td>Double veille (DUAL)</td><td>Interdite sur les voies intérieures</td></tr>
+        <tr><td>Antenne</td><td><b>Verticale</b>, à <b>4 m</b> au moins des masses métalliques plus hautes, environ <b>1 m</b> de long ; pas de LED à moins de 4 m</td></tr>
+        <tr><td>Câble</td><td>Coaxial <b>50 ohms</b>, connexions étanches</td></tr>
+      </table></div>
+      <p>Le GSM ne remplace pas la VHF : pas de priorité, une seule personne à la fois, pas de localisation.</p>
+    </details>
+
+    <details class="carte">
+      <summary>5. Fréquences, portée, modes</summary>
+      <ul>
+        <li>Bande VHF marine : <b>156,025 à 162,025 MHz</b> ; canal 16 = <b>156,800 MHz</b>.</li>
+        <li>Canal <b>1027</b> = partie basse de l'ancien canal 27 ; <b>2027</b> = partie haute.</li>
+        <li><b>Simplex</b> : une fréquence, on parle à tour de rôle (OVER). <b>Duplex</b> : deux fréquences, on parle et on écoute en même temps. <b>Semi-duplex</b> : entre les deux.</li>
+      </ul>
+      <div class="bloc"><b>Portée théorique (milles)</b> = 2,25 × (√ hauteur antenne émetteur + √ hauteur antenne récepteur), hauteurs en mètres.<br>Exemple du manuel : deux antennes à 16 m → 2,25 × (4 + 4) = <b>18 milles</b>. 1 mille = <b>1 852 m</b>.</div>
+    </details>
+
+    <details class="carte">
+      <summary>6. Canaux à connaître</summary>
+      <div class="tabw"><table>
+        <tr><th>Canal</th><th>En mer (Belgique)</th><th>Voies intérieures</th></tr>
+        <tr><td>06</td><td>Navire-navire international ; pilotage en Belgique</td><td>—</td></tr>
+        <tr><td>07</td><td>Oostende Radio</td><td>—</td></tr>
+        <tr><td>08</td><td>Premier canal navire-navire en Belgique</td><td>—</td></tr>
+        <tr><td>10</td><td>—</td><td>Bateau-bateau, urgence, sécurité</td></tr>
+        <tr><td>13</td><td>Sécurité de la navigation</td><td>—</td></tr>
+        <tr><td>15 · 17</td><td>À bord</td><td>À bord</td></tr>
+        <tr><td><b>16</b></td><td><b>Détresse, urgence, sécurité</b></td><td>—</td></tr>
+        <tr><td>18 · 20 · 22</td><td>—</td><td>Écluses</td></tr>
+        <tr><td>31</td><td>Ports de plaisance</td><td>Ports de plaisance</td></tr>
+        <tr><td>67</td><td>Recherche et sauvetage</td><td>—</td></tr>
+        <tr><td><b>70</b></td><td><b>ASN uniquement</b>, bloqué pour la voix</td><td>ASN <b>interdit</b></td></tr>
+        <tr><td>72</td><td>—</td><td>Social, 1 W max</td></tr>
+        <tr><td>73</td><td>Antipollution</td><td>Antipollution</td></tr>
+        <tr><td><b>77</b></td><td><b>Social</b>, 1 W max</td><td>Social, 1 W max</td></tr>
+        <tr><td>82</td><td>Avitaillement, sur autorisation IBPT</td><td>Idem</td></tr>
+        <tr><td>87H · 88H</td><td>AIS</td><td>AIS</td></tr>
+      </table></div>
+      <p class="info">Canal 37L : seulement dans les eaux britanniques.</p>
+    </details>
+
+    <details class="carte">
+      <summary>7. ATIS (voies intérieures)</summary>
+      <ul>
+        <li>Obligatoire sur les voies intérieures des pays de l'<b>arrangement Rainwat</b> (Belgique, France, Pays-Bas, Allemagne…).</li>
+        <li>Émis <b>à la fin de chaque émission</b>, et <b>toutes les 5 minutes</b> pendant une longue émission.</li>
+        <li>L'utilisateur ne peut ni le couper ni le reprogrammer.</li>
+        <li>Radio mixte : <b>ATIS</b> sur les voies intérieures, <b>ASN</b> en mer.</li>
+      </ul>
+      <div class="bloc"><b>Composition</b> : 9 · MID du pays (205) · 2e ou 3e lettre de l'indicatif en chiffres (A = 01, B = 02…) · les 4 chiffres de l'indicatif.<br>Exemple du manuel : indicatif <b>OS2563</b> → S = 19 → ATIS <b>9 205 19 2563</b>.</div>
+    </details>
+
+    <details class="carte">
+      <summary>8. Procédures de communication</summary>
+      <ul>
+        <li>Vérifier que le canal est libre avant d'émettre. Un <b>essai</b> dure <b>10 secondes</b> au plus, <b>jamais sur le 16</b>.</li>
+        <li><b>THIS IS</b> (ICI) avant son nom ; <b>OVER</b> (À VOUS) pour passer la parole ; <b>OUT</b> (TERMINÉ) pour finir. <b>Jamais « OVER AND OUT »</b>.</li>
+        <li>Langue <b>en mer</b> : avec une station côtière, la langue de son pays ou l'anglais ; entre navires, la langue du pays du navire appelé ou l'anglais.</li>
+        <li>Langue <b>sur les voies intérieures</b> : avec une station à terre, la langue de son pays ; entre bateaux, la langue du pays où l'on navigue.</li>
+        <li>Canaux sociaux : <b>77</b> en mer ; <b>72 et 77</b> sur les voies intérieures.</li>
+      </ul>
+      <h3>Épellation</h3>
+      <p>Alfa · Bravo · Charlie · Delta · Echo · Foxtrot · Golf · Hotel · India · Juliett · Kilo · Lima · Mike · November · Oscar · Papa · Quebec · Romeo · Sierra · Tango · Uniform · Victor · Whiskey · X-ray · Yankee · Zulu</p>
+      <p>Chiffres : Nadazero · Unaone · Bissotwo · Terrathree · Kartefour · Pantafive · Soxisix · Setteseven · Oktoeight · Novenine</p>
+    </details>
+
+    <details class="carte">
+      <summary>9. Détresse, urgence, sécurité</summary>
+      <div class="bloc"><b>Priorité : MAYDAY → PAN PAN → SÉCURITÉ → routine.</b> Ces mots ne se traduisent jamais.</div>
+      <div class="tabw"><table>
+        <tr><th>Signal</th><th>Quand</th></tr>
+        <tr><td><b>MAYDAY</b> × 3</td><td>Danger <b>imminent</b> pour une personne ou le navire, aide immédiate nécessaire</td></tr>
+        <tr><td><b>PAN PAN</b> × 3</td><td>Problème de sécurité <b>sans danger imminent</b></td></tr>
+        <tr><td><b>SÉCURITÉ</b> × 3</td><td>Avertissement nautique ou météo important (épave, bouée déplacée…)</td></tr>
+      </table></div>
+      <ul>
+        <li><b>Message de détresse</b> : MAYDAY, nom, indicatif, <b>position</b>, <b>nature de la détresse</b>, <b>aide demandée</b>, autres informations.</li>
+        <li><b>MAYDAY RELAY</b> : une station qui n'est pas en détresse relaie la détresse d'un autre.</li>
+        <li><b>Accusé de réception</b> : en navire-navire, par toute station à proximité. Avec une autorité portuaire, si rien n'arrive en <b>1 minute</b>, un navire prend la détresse en charge.</li>
+        <li><b>SILENCE MAYDAY</b> : silence imposé · <b>PRUDENCE</b> : trafic limité qui reprend · <b>SILENCE FINI</b> : fin de la détresse.</li>
+        <li>Canal : <b>16</b> en mer ; <b>10</b> sur les voies intérieures (ou le canal d'une écluse proche).</li>
+      </ul>
+    </details>
+
+    <details class="carte">
+      <summary>10. Veille et secours</summary>
+      <ul>
+        <li>Veille sur le <b>16</b> autant que possible en navigation. La double veille repasse sur le 16 toutes les <b>2,5 secondes</b>.</li>
+        <li><b>MRCC Oostende</b> : premier contact pour tout incident en mer, 24 h/24 ; VHF 16 et 67, ASN 70 ; tél. +32 59 70 10 00 ou +32 59 70 11 00.</li>
+        <li><b>Oostende Radio</b> : météo et avis de sécurité, pas la gestion des incidents.</li>
+        <li>Voisins : Den Helder (Pays-Bas), CROSS Gris-Nez (France).</li>
+        <li>Correspondance publique : abonnement auprès d'une autorité comptable, identifiée par son code <b>CIAC</b>.</li>
+      </ul>
+    </details>
+
+    <details class="carte">
+      <summary>Pièges classiques du QCM</summary>
+      <div class="tabw"><table>
+        <tr><th>Piège</th><th>La bonne réponse</th></tr>
+        <tr><td>OVER AND OUT</td><td>Toujours faux</td></tr>
+        <tr><td>Canal social en mer</td><td>77 seulement</td></tr>
+        <tr><td>Canal 70</td><td>ASN uniquement ; ASN interdit sur les voies intérieures</td></tr>
+        <tr><td>VHF portable à quai</td><td>Interdit : seulement à bord</td></tr>
+        <tr><td>Essai radio</td><td>10 s au plus, jamais sur le 16</td></tr>
+        <tr><td>MAYDAY RELAY</td><td>On relaie la détresse d'un autre</td></tr>
+        <tr><td>PRUDENCE / SILENCE FINI</td><td>Reprise limitée / fin de la détresse</td></tr>
+        <tr><td>Puissances</td><td>1 W (bas), 6 W (portable), 12,5 W (AIS), 25 W (fixe)</td></tr>
+        <tr><td>Oostende Radio</td><td>Météo et sécurité ; le MRCC gère les incidents</td></tr>
+      </table></div>
+    </details>
+
+    <div class="alerte"><b>Pour le Kat a Mar :</b> si sa VHF a un bouton rouge « DISTRESS », c'est une radio ASN : il faut le <b>SRC</b> (formation de 8 h dans un centre reconnu, puis examen à l'IBPT), qui inclut le certificat VHF. Et un certificat belge ne vaut, sauf accord international, qu'à bord des bateaux sous pavillon belge.</div>
+  </section>
+
+  <!-- ================= QCM ================= -->
+  <section id="vueQcm" style="display:none;flex-direction:column;gap:14px">
+    <div class="carte" id="accueilQcm">
+      <h2>Choisissez votre entraînement</h2>
+      <p class="info">Questions rédigées d'après le manuel IBPT 2025. Il faut 60 % pour réussir, comme à l'examen.</p>
+      <div class="choix-mode">
+        <button type="button" id="modeExamen">🎯 Examen blanc — 25 questions au hasard</button>
+        <button type="button" id="modeTout">📚 Les 30 questions, dans l'ordre</button>
+      </div>
+    </div>
+    <div id="liste"></div>
+    <p class="erreur" id="erreurQcm">Répondez à toutes les questions avant de corriger (celles qui manquent sont entourées en orange).</p>
+    <div id="actionsQcm" style="display:none;flex-direction:column;gap:8px">
+      <button type="button" class="btn plein" id="corriger">Corriger</button>
+    </div>
+    <div class="carte" id="score">
+      <div class="info">Votre score</div>
+      <div class="gros" id="scoreVal"></div>
+      <div id="scoreMsg"></div>
+      <button type="button" class="btn" id="recommencer" style="margin-top:12px">Recommencer</button>
+    </div>
+  </section>
+</main>
+
+<script>
+/* Les 30 questions. b = indice de la bonne réponse (0 = A). */
+const QUESTIONS = [
+ {q:"Qui délivre l'autorisation de station d'un bateau belge ?", r:["Le SPF Mobilité","L'IBPT","La capitainerie","La police de la navigation"], b:1, e:"L'IBPT délivre les autorisations des navires enregistrés en Belgique."},
+ {q:"Où doit se trouver l'original de l'autorisation de station ?", r:["Chez le propriétaire","À bord","À l'IBPT","Au port d'attache"], b:1, e:"L'original reste à bord, prêt à être montré aux autorités."},
+ {q:"Vous achetez un bateau qui a déjà une VHF à bord. Dans quel délai demander l'autorisation ?", r:["15 jours","30 jours","60 jours","90 jours"], b:2, e:"60 jours."},
+ {q:"Combien de temps le certificat VHF est-il valable ?", r:["1 an","5 ans","10 ans","À vie"], b:1, e:"5 ans, avec un rappel 6 semaines avant l'échéance."},
+ {q:"À partir de quel âge peut-on obtenir le certificat VHF ?", r:["14 ans","15 ans","16 ans","18 ans"], b:1, e:"15 ans au moins (règlement d'examen de l'IBPT)."},
+ {q:"Le certificat VHF permet-il d'utiliser l'ASN (DSC) ?", r:["Oui","Oui, en mer seulement","Non, il faut un certificat SMDSM comme le SRC","Oui, avec une radio de classe D"], b:2, e:"ASN, EPIRB et SART demandent un certificat SMDSM (SRC, LRC, ROC ou GOC)."},
+ {q:"Par quels chiffres commence le MMSI d'un navire belge ?", r:["205","227","244","970"], b:0, e:"205 identifie la Belgique ; 970 est un AIS-SART."},
+ {q:"Quel est le code ATIS d'un bateau belge d'indicatif OT1234 ?", r:["205 20 1234","9 205 20 1234","9 205 19 1234","9 227 20 1234"], b:1, e:"9 + 205 + T (20e lettre = 20) + 1234."},
+ {q:"Quand le signal ATIS est-il émis ?", r:["Au début de chaque émission","À la fin de chaque émission","Toutes les minutes","Seulement en détresse"], b:1, e:"À la fin de chaque émission, et toutes les 5 minutes pendant une émission longue."},
+ {q:"Quelle est la puissance maximale d'une VHF portable ?", r:["1 W","6 W","12,5 W","25 W"], b:1, e:"0,5 à 6 W ; 12,5 W est le maximum de l'AIS."},
+ {q:"À quoi sert le squelch ?", r:["Régler le volume","Supprimer le bruit de fond","Changer de canal","Activer la double veille"], b:1, e:"Il coupe le bruit de fond sous un seuil réglable."},
+ {q:"Sur les voies de navigation intérieure, la double veille est :", r:["Autorisée","Obligatoire","Interdite","Autorisée sur le canal 10"], b:2, e:"Interdite : d'où deux appareils sur les grands bateaux."},
+ {q:"Quel est le canal international de détresse en mer ?", r:["10","16","70","77"], b:1, e:"Canal 16, 156,800 MHz."},
+ {q:"Quel canal utiliser en mer pour une conversation privée entre navires ?", r:["72","77","16","13"], b:1, e:"En mer, seul le 77 ; le 72 s'ajoute sur les voies intérieures."},
+ {q:"À quoi sert le canal 70 ?", r:["Aux appels sociaux","À l'ASN uniquement","Aux écluses","Aux opérations de sauvetage"], b:1, e:"Réservé à l'ASN, toujours bloqué pour la voix."},
+ {q:"Quelle est la portée théorique entre deux antennes placées à 9 m au-dessus de l'eau ?", r:["9 milles","13,5 milles","18 milles","20,25 milles"], b:1, e:"2,25 × (√9 + √9) = 2,25 × 6 = 13,5 milles."},
+ {q:"Qu'est-ce que le mode simplex ?", r:["Deux fréquences","Une seule fréquence, on parle à tour de rôle","On parle et on écoute en même temps","Un mode réservé aux liaisons bateau-terre"], b:1, e:"Une fréquence, on alterne avec OVER."},
+ {q:"Combien de temps peut durer un essai d'émission ?", r:["5 secondes","10 secondes","30 secondes","1 minute"], b:1, e:"10 secondes au plus, jamais sur le canal 16."},
+ {q:"Quelle expression est interdite ?", r:["OVER","OUT","OVER AND OUT","THIS IS"], b:2, e:"OVER attend une réponse, OUT termine : les deux se contredisent."},
+ {q:"Moteur en panne, vent de force 5, zone de trafic, pas de danger imminent. Quel message ?", r:["MAYDAY","PAN PAN","SÉCURITÉ","Routine"], b:1, e:"Exemple du manuel : panne, force 5, zone de trafic = PAN PAN."},
+ {q:"Une voie d'eau fait couler votre bateau. Quel message ?", r:["MAYDAY","PAN PAN","SÉCURITÉ","Routine"], b:0, e:"Danger imminent pour le navire et les personnes."},
+ {q:"Vous entendez « MAYDAY RELAY, MAYDAY RELAY, MAYDAY RELAY, ICI Kat a Mar… ». Cela signifie :", r:["Kat a Mar est en détresse","Kat a Mar relaie la détresse d'un autre navire","La détresse est terminée","Kat a Mar accuse réception"], b:1, e:"MAYDAY RELAY = relais par une station qui n'est pas en détresse."},
+ {q:"Quel mot annonce la reprise d'un trafic limité pendant une détresse ?", r:["SILENCE FINI","PRUDENCE","SILENCE MAYDAY","RECEIVED"], b:1, e:"PRUDENCE ; SILENCE FINI annonce la fin complète."},
+ {q:"Pour signaler une épave à la dérive, on commence par :", r:["MAYDAY","PAN PAN","SÉCURITÉ","Un appel de routine"], b:2, e:"Avertissement nautique important = SÉCURITÉ."},
+ {q:"Comment épeler KAT ?", r:["Kilo Alfa Tango","King Alfa Tom","Kilo Adam Tango","Kilo Alfa Toronto"], b:0, e:"Alphabet international."},
+ {q:"Entre deux navires en mer, quelle langue utiliser ?", r:["Celle du navire qui appelle","Celle du pays du navire appelé, ou l'anglais","Toujours le français","Celle du port le plus proche"], b:1, e:"Langue du pays du navire appelé ou anglais."},
+ {q:"Un bateau à moteur de 6,95 m sur les voies intérieures belges doit-il avoir une VHF ?", r:["Oui, une","Non","Oui, deux","Oui, avec ASN"], b:1, e:"Pas obligatoire jusqu'à 7 m ; une VHF de 7 à 20 m."},
+ {q:"Comment installer une antenne VHF ?", r:["Inclinée vers l'arrière","Verticale, à 4 m des masses métalliques plus hautes","Près d'un éclairage LED","Horizontale"], b:1, e:"Verticale, à 4 m des masses métalliques, loin des LED."},
+ {q:"Quelle impédance doit avoir le câble coaxial entre la VHF et l'antenne ?", r:["25 ohms","50 ohms","75 ohms","300 ohms"], b:1, e:"50 ohms."},
+ {q:"Qui doit accuser réception d'une détresse sur le réseau navire-navire ?", r:["Personne","Toute station de navire à proximité","Seulement le MRCC","L'IBPT"], b:1, e:"Toute station de navire à proximité."}
+];
+const LETTRES = ["A","B","C","D"];
+
+/* ---------- onglets ---------- */
+const vueFiche = document.getElementById("vueFiche"), vueQcm = document.getElementById("vueQcm");
+const tabFiche = document.getElementById("tabFiche"), tabQcm = document.getElementById("tabQcm");
+function montrer(qcm){
+  vueFiche.style.display = qcm ? "none" : "flex";
+  vueQcm.style.display = qcm ? "flex" : "none";
+  tabFiche.classList.toggle("actif", !qcm);
+  tabQcm.classList.toggle("actif", qcm);
+  window.scrollTo(0, 0);
+}
+tabFiche.addEventListener("click", () => montrer(false));
+tabQcm.addEventListener("click", () => montrer(true));
+
+/* ---------- QCM ---------- */
+const liste = document.getElementById("liste");
+const actions = document.getElementById("actionsQcm");
+const erreur = document.getElementById("erreurQcm");
+const score = document.getElementById("score");
+let serie = [];
+let corrige = false;
+
+function melanger(t){
+  const a = t.slice();
+  for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function demarrer(examen){
+  serie = examen ? melanger(QUESTIONS.map((_, i) => i)).slice(0, 25) : QUESTIONS.map((_, i) => i);
+  corrige = false;
+  liste.innerHTML = serie.map((qi, n) => {
+    const Q = QUESTIONS[qi];
+    return '<div class="q" data-n="' + n + '"><p class="enonce">' + (n + 1) + ". " + Q.q + "</p>" +
+      Q.r.map((txt, k) => '<label><input type="radio" name="q' + n + '" value="' + k + '"><span>' + LETTRES[k] + ") " + txt + "</span></label>").join("") +
+      '<p class="expl"></p></div>';
+  }).join("");
+  document.getElementById("accueilQcm").style.display = "none";
+  actions.style.display = "flex";
+  erreur.style.display = "none";
+  score.style.display = "none";
+  window.scrollTo(0, 0);
+}
+document.getElementById("modeExamen").addEventListener("click", () => demarrer(true));
+document.getElementById("modeTout").addEventListener("click", () => demarrer(false));
+
+liste.addEventListener("change", (ev) => {
+  const bloc = ev.target.closest(".q");
+  if(bloc) bloc.classList.remove("manque");
+  if(!liste.querySelector(".q.manque")) erreur.style.display = "none";
+});
+
+document.getElementById("corriger").addEventListener("click", () => {
+  if(corrige) return;
+  const blocs = Array.from(liste.querySelectorAll(".q"));
+  const vides = blocs.filter(b => !b.querySelector("input:checked"));
+  if(vides.length){
+    vides.forEach(b => b.classList.add("manque"));
+    erreur.style.display = "block";
+    vides[0].scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  let bons = 0;
+  blocs.forEach((b, n) => {
+    const Q = QUESTIONS[serie[n]];
+    const choisi = Number(b.querySelector("input:checked").value);
+    const labels = b.querySelectorAll("label");
+    labels[Q.b].classList.add("bonne");
+    if(choisi === Q.b) bons++; else labels[choisi].classList.add("fausse");
+    b.querySelectorAll("input").forEach(i => i.disabled = true);
+    b.querySelector(".expl").innerHTML = (choisi === Q.b ? "✅ " : "❌ Bonne réponse : " + LETTRES[Q.b] + ". ") + Q.e;
+    b.classList.add("corrige");
+  });
+  corrige = true;
+  const total = blocs.length;
+  const pct = Math.round(bons / total * 100);
+  const reussi = bons / total >= 0.6;
+  document.getElementById("scoreVal").textContent = bons + " / " + total + " (" + pct + " %)";
+  document.getElementById("scoreMsg").textContent = reussi
+    ? "Réussi : il faut 60 % à l'examen."
+    : "Pas encore : il faut 60 %, soit " + Math.ceil(total * 0.6) + " bonnes réponses. Revoyez les explications ci-dessus.";
+  score.className = "carte " + (reussi ? "ok" : "ko");
+  score.style.display = "block";
+  actions.style.display = "none";
+  score.scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+document.getElementById("recommencer").addEventListener("click", () => {
+  liste.innerHTML = "";
+  score.style.display = "none";
+  actions.style.display = "none";
+  document.getElementById("accueilQcm").style.display = "block";
+  window.scrollTo(0, 0);
+});
+</script>
+</body>
+</html>
