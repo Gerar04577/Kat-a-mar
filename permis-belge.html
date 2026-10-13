@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Permis Belge · Kat-a-Mar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+
+/* Layout: one airy column; each notion = definition, why, diagram, formula, worked examples, trap, exercise */
+:root{
+  --bg:#f2f5f6; --paper:#ffffff; --ink:#14263a; --muted:#566a7c; --line:#cfd9e0;
+  --sea:#e1eef6; --navy:#1d4e89; --red:#c0392b; --green:#1f7a3f; --amber:#a86400; --water:#9cc6ea; --land:#cfe3b0; --sun:#f6c453; --warm:#d1443a; --cold:#2f6fd0; --occl:#7a4fc2; --warmair:#f2b24a; --coldair:#7fb2e6; --cloud:#c9cdd1; --cloudd:#7c838a; --rain:#3b7ad8;
+  --display:"Zilla Slab",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.7;padding:0 16px}
+main{max-width:680px;margin:0 auto;padding-block:32px 72px;display:flex;flex-direction:column;gap:56px}
+header{display:flex;flex-direction:column;gap:10px}
+header h1{font-family:var(--display);font-size:2.1rem;line-height:1.15;margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+.ver{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+section{display:flex;flex-direction:column;gap:22px;min-width:0}
+.kicker{margin:0;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+h2{font-family:var(--display);font-size:1.6rem;line-height:1.2;margin:-14px 0 0;text-wrap:balance;border-bottom:2px solid var(--line);padding-bottom:10px}
+h3{font-family:var(--display);font-size:1.15rem;margin:8px 0 -8px;color:var(--navy)}
+p{margin:0;max-width:62ch}
+ul,ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+.def{background:var(--sea);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.def .term{font-weight:700;color:var(--navy);font-size:1.05rem}
+.why{color:var(--muted)}
+.why b{color:var(--ink)}
+.formula{font-family:var(--mono);font-size:1.15rem;text-align:center;background:var(--paper);border:2px solid var(--navy);border-radius:10px;padding:14px 12px;max-width:none;font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.ctitle{font-weight:700;font-size:1.05rem}
+.given-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px}
+.given{gap:4px}
+.steps{list-style:decimal;gap:8px}
+.steps li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.steps .what{min-width:0}
+.steps .res{font-family:var(--mono);font-weight:500;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.result{font-weight:700;color:var(--green);margin-top:4px}
+.trap{border-left:4px solid var(--red);padding:12px 16px;background:var(--paper);border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:4px}
+.trap-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);font-weight:700}
+details.ex{border:2px dashed var(--navy);border-radius:12px;padding:14px 18px;display:block}
+details.ex summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details.ex[open] summary{margin-bottom:10px}
+details.ex[open]{display:flex;flex-direction:column;gap:10px}
+.fig{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px}
+svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+.t-m{fill:var(--muted)} .t-n{fill:var(--navy)} .t-r{fill:var(--red)} .t-g{fill:var(--green)} .t-a{fill:var(--amber)}
+.s-ink{stroke:var(--ink)} .s-n{stroke:var(--navy)} .s-r{stroke:var(--red)} .s-g{stroke:var(--green)} .s-a{stroke:var(--amber)} .s-l{stroke:var(--line)}
+.f-sea{fill:var(--sea)} .f-paper{fill:var(--paper)} .f-n{fill:var(--navy)} .f-r{fill:var(--red)} .f-g{fill:var(--green)} .f-a{fill:var(--amber)} .f-ink{fill:var(--ink)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td:first-child{font-family:var(--mono);font-weight:500;color:var(--navy);white-space:nowrap}
+.plus{color:var(--green);font-weight:700} .minus{color:var(--red);font-weight:700}
+nav.toc ol{gap:6px}
+nav.toc a{color:var(--navy)}
+.memo{font-family:var(--mono);font-size:.95rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;white-space:pre;overflow-x:auto;line-height:1.9}
+
+.sym{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.sym p{max-width:none}
+.sym b{font-family:var(--mono);color:var(--navy);display:inline-block;min-width:3.2em}
+.note{font-size:.85rem;color:var(--muted)}
+td.hl{background:var(--amber);color:var(--paper);font-weight:700;border-radius:4px}
+
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px}
+.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+.anim.live .ctl label{display:flex;align-items:center;gap:8px;flex:1 1 100%;min-width:0;font-size:.9rem;color:var(--muted);font-weight:700}
+.anim.live .ctl label input{flex:1 1 0;width:0;min-width:60px;accent-color:var(--navy)}
+.anim.live .ctl label output{font-family:var(--mono);font-size:.8rem;color:var(--navy);flex:0 0 auto;text-align:right;white-space:nowrap}
+.anim.live .ctl button.on{background:var(--sea)}
+figure.anim{margin:0;min-width:0}
+.anim .ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--navy)}
+.anim .ctl .tm{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.opt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt button{font:inherit;font-weight:700;font-size:.92rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:7px 10px;cursor:pointer;min-width:0}
+.opt button.on{background:var(--sea)}
+.opt button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cards div{background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0}
+.cards .l{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.cards .v{font-size:.95rem;font-weight:700;line-height:1.35}
+.keep{border:2px solid var(--green);border-radius:10px;padding:12px 14px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.keep .kt{font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--green);font-weight:700;margin:0}
+.lead{color:var(--muted)}
+.ok{color:var(--green);font-weight:700} .ko{color:var(--red);font-weight:700}
+.mto-sub{display:flex;flex-direction:column;gap:18px;min-width:0}
+.mto-sub td:first-child,.cmp td:first-child,.symt td:first-child{font-family:var(--body);font-weight:700;white-space:normal}
+.mto .memo{font-size:.85rem}
+svg.sy{width:40px;height:30px;margin:0}
+.qcm .opts{list-style:none;padding-left:0}
+.qcm .rep{padding-left:1.1em}
+.qcm .rep li.ok>b:first-child{color:var(--green)} .qcm .rep li.ko>b:first-child{color:var(--red)}
+.qcm .rep li{color:var(--ink);font-weight:400}
+.tp{gap:8px}.tp .tpt{font-weight:700;font-size:1.05rem}
+.tpx{background:var(--sea);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.tpx p{max-width:none}.tko span,.tok span{display:inline-block;font-weight:700;margin-right:6px}
+.tko span{color:var(--red)}.tok span{color:var(--green)}.tpk{color:var(--navy)}
+@media (max-width:560px){.mto .tw table{font-size:.82rem}.mto .tw td,.mto .tw th{padding:7px 4px;-webkit-hyphens:auto;hyphens:auto}}
+
+
+.anim{background:var(--paper);border:2px solid var(--navy);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:10px}
+.anim .atitle{font-weight:700;color:var(--navy);font-size:.95rem}
+.anim svg{max-width:560px}
+.anim .cap{min-height:4.6em;background:var(--sea);border-radius:8px;padding:10px 12px;font-size:.98rem;line-height:1.5;max-width:none}
+.anim .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.anim .ctl button{font:inherit;font-weight:700;font-size:.95rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:8px 14px;cursor:pointer}
+.anim .ctl button.pri{background:var(--navy);color:var(--paper)}
+.anim .ctl button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.anim .ctl .cnt{margin-left:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.tool-prot path.body{fill:var(--paper);fill-opacity:.82;stroke:var(--ink);stroke-width:1.5}
+.tool-prot line{stroke:var(--ink)}
+.tool-prot text{font-size:9px;fill:var(--ink)}
+.tool-comp line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.tool-comp circle{fill:var(--amber)}
+
+
+.rappel{background:var(--paper);border:2px solid var(--amber);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.rappel .rt{font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.rappel p{font-family:var(--mono);font-size:.95rem;max-width:none;line-height:1.6}
+.etapes{display:flex;flex-direction:column;gap:14px}
+.etape{border-left:4px solid var(--navy);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.etape .et{font-weight:700;color:var(--navy)}
+.etape .ef{font-family:var(--mono);font-size:.92rem;color:var(--muted)}
+.etape .ec{font-family:var(--mono);font-size:1rem;font-weight:500}
+.etape .es{font-size:.95rem}
+
+</style>
+<style>
+/* ===== AJOUTS PROPRES AU PERMIS BELGE =====
+   Reprend les jetons du permis hauturier ; n'ajoute que ce qui lui manque :
+   les sous-menus, l'encadré « ce que dit le règlement », le QCM interactif,
+   la recherche à occurrences et le réglage de taille. */
+:root{
+  --ech:1;                 /* multiplicateur de taille, boutons A / A */
+  --h-kam:56px;            /* hauteur réelle de la barre « Retour », mesurée */
+  --surl:#ffe2a0; --surl-actif:#ffd0a3; --surl-trait:#e8690b;
+  font-size:calc(16px * var(--ech));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}}
+:root[data-theme="dark"]{ --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442; }
+body{ font-size:calc(18px * var(--ech)); }
+
+/* ---- sous-menus du sommaire ---- */
+.menus{ display:flex; flex-direction:column; gap:12px; }
+.menu-item{
+  /* sans box-sizing, width:100% + 18px de padding + 2px de bordure débordaient
+     de 40 px : la page du sommaire glissait latéralement sur l'iPhone. */
+  box-sizing:border-box;
+  display:flex; align-items:center; gap:14px; text-align:left;
+  background:var(--paper); border:2px solid var(--line); border-radius:14px;
+  padding:16px 18px; font:inherit; color:var(--ink); cursor:pointer;
+  text-decoration:none; width:100%;
+}
+.menu-item:active{ background:var(--sea); }
+.menu-item.pret{ border-color:var(--navy); }
+.menu-item[aria-disabled="true"]{ opacity:.55; cursor:default; }
+.menu-item .num{
+  font-family:var(--mono); font-weight:700; font-size:1.3rem; color:var(--navy);
+  background:var(--sea); border-radius:11px; padding:10px 13px; flex:0 0 auto;
+}
+.menu-item .txt{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.menu-item .t{ font-family:var(--display); font-weight:700; font-size:1.2rem; }
+.menu-item .s{ color:var(--muted); font-size:.92rem; }
+.menu-item .etat{
+  margin-left:auto; flex:0 0 auto; font-family:var(--mono); font-size:.72rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.menu-item.pret .etat{ color:var(--green); }
+
+/* ---- sommaire interne d'un module ---- */
+.chapitres{ display:flex; flex-direction:column; gap:6px; list-style:none; padding-left:0; }
+.chapitres li{ display:flex; gap:10px; align-items:baseline; }
+.chapitres .n{ font-family:var(--mono); color:var(--navy); font-weight:700; flex:0 0 auto; }
+.chapitres a{ color:var(--ink); }
+.chapitres .avenir{ color:var(--muted); }
+
+/* ---- encadré « ce que dit le règlement » ---- */
+.regl{
+  border-left:4px solid var(--red); background:var(--paper);
+  border-radius:0 10px 10px 0; padding:14px 16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.regl .rh{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--red); font-weight:700;
+}
+.regl .art{ font-family:var(--mono); font-size:.85rem; color:var(--navy); }
+.regl p{ max-width:none; }
+
+/* ---- QCM interactif ---- */
+.qcm{
+  background:var(--paper); border:2px solid var(--navy); border-radius:12px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:12px;
+}
+.qcm .qn{
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--navy);
+}
+.qcm .qt{ font-weight:700; font-size:1.05rem; max-width:none; }
+.qcm .choix{ display:flex; flex-direction:column; gap:8px; }
+.qcm .choix button{
+  font:inherit; text-align:left; background:var(--bg); color:var(--ink);
+  border:1.5px solid var(--line); border-radius:10px; padding:11px 14px;
+  cursor:pointer; display:flex; gap:10px; align-items:flex-start;
+}
+.qcm .choix button .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qcm .choix button:active{ background:var(--sea); }
+.qcm .choix button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+.qcm .choix button.juste{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qcm .choix button.faux{ border-color:var(--red); background:color-mix(in srgb, var(--red) 10%, var(--paper)); }
+.qcm .choix button[disabled]{ cursor:default; }
+.qcm .corr{ display:flex; flex-direction:column; gap:8px; }
+.qcm .corr .verdict{ font-weight:700; }
+.qcm .corr .verdict.ok{ color:var(--green); }
+.qcm .corr .verdict.ko{ color:var(--red); }
+.qcm .corr ul{ list-style:none; padding-left:0; gap:7px; }
+.qcm .corr li{ font-size:.95rem; }
+.qcm .corr li b{ font-family:var(--mono); }
+.qcm .corr li.ok b{ color:var(--green); }
+.qcm .corr li.ko b{ color:var(--red); }
+.qcm .cat{
+  font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.score{
+  background:var(--sea); border-radius:12px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.score .big{ font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--navy); }
+.score .regle{ font-size:.88rem; color:var(--muted); }
+
+/* ---- barre de recherche (identique au permis hauturier) ---- */
+#kam-chercher{
+  position:sticky; top:var(--h-kam); z-index:40;
+  background:var(--bg); border-bottom:1.5px solid var(--line);
+  margin:-28px -16px 0; padding:12px 16px 10px;
+}
+#kam-chercher .ligne{ display:flex; gap:10px; align-items:stretch; max-width:680px; margin:0 auto; }
+#kam-chercher .boite{ position:relative; flex:1; min-width:0; }
+#kam-q{
+  width:100%; height:calc(56px * var(--ech));
+  font-family:var(--body); font-size:calc(19px * var(--ech)); font-weight:600;
+  color:var(--ink); background:var(--paper);
+  border:2px solid var(--line); border-radius:14px; padding:0 46px;
+}
+#kam-q::placeholder{ color:var(--muted); font-weight:400; }
+#kam-q:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px var(--sea); }
+#kam-chercher .loupe{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; pointer-events:none; color:var(--muted);
+}
+#kam-vider{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:var(--line); color:var(--ink); font-size:19px; line-height:1;
+  cursor:pointer; display:none;
+}
+#kam-vider.vu{ display:block; }
+#kam-chercher .fleches{ display:flex; gap:8px; }
+#kam-chercher .fleche{
+  width:calc(60px * var(--ech)); height:calc(56px * var(--ech));
+  border:2px solid var(--navy); border-radius:14px;
+  background:var(--paper); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; padding:0;
+}
+#kam-chercher .fleche svg{ width:28px; height:28px; }
+#kam-chercher .fleche:active{ background:var(--sea); }
+#kam-chercher .fleche:disabled{ opacity:.3; cursor:default; }
+#kam-chercher .fleche:focus-visible{ outline:3px solid var(--surl-trait); outline-offset:2px; }
+#kam-chercher .bas{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin:9px auto 0; min-height:26px; max-width:680px;
+}
+#kam-compteur{
+  font-family:var(--mono); font-weight:600; font-variant-numeric:tabular-nums;
+  font-size:calc(16px * var(--ech)); color:var(--muted); letter-spacing:.02em;
+}
+#kam-compteur b{ color:var(--surl-trait); font-size:calc(19px * var(--ech)); }
+#kam-compteur.rien{ color:var(--amber); }
+#kam-chercher .tailles{ display:flex; align-items:center; gap:6px; }
+#kam-chercher .tailles i{
+  font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-right:2px;
+}
+#kam-chercher .tbtn{
+  width:44px; height:38px; border:2px solid var(--line); border-radius:11px;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--body); font-weight:700; line-height:1; padding:0;
+}
+#kam-chercher .tbtn:active{ background:var(--sea); }
+#kam-chercher .tbtn:disabled{ opacity:.35; cursor:default; }
+#kam-chercher .tbtn.pt{ font-size:14px; }
+#kam-chercher .tbtn.gd{ font-size:21px; }
+mark.kam-occ{
+  background:var(--surl); color:inherit; border-radius:4px; padding:1px 2px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+@media (max-width:420px){ #kam-chercher .tailles i{ display:none; } }
+
+/* ---- habillage des schémas ---- */
+.f-ciel{ fill:var(--bg); }
+.f-terre{ fill:var(--land); }
+.f-eau{ fill:var(--water); }
+.f-mur{ fill:var(--cloudd); }
+.f-porte{ fill:var(--ink); }
+.f-coque{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; }
+.f-cabine{ fill:var(--sea); stroke:var(--ink); stroke-width:1.4; }
+.f-mat{ fill:var(--ink); }
+.s-cote{ stroke:var(--navy); stroke-width:1.6; }
+.s-amarre{ stroke:var(--red); stroke-width:2; stroke-linecap:round; }
+.t-lab{ font-family:var(--mono); font-size:10px; fill:var(--muted); }
+.cards .v{ font-weight:700; }
+.anim .cap .verdict-ok{ color:var(--green); font-weight:700; }
+.anim .cap .verdict-ko{ color:var(--red); font-weight:700; }
+
+
+/* ---- corrections d'affichage sur téléphone ----
+   Trouvées en regardant la page rendue, pas en lisant le code. */
+
+/* La pastille d'état passe sous le texte quand la largeur ne suffit plus. */
+@media (max-width:470px){
+  .menu-item{ flex-wrap:wrap; }
+  .menu-item .etat{ margin-left:0; width:100%; text-align:right; }
+}
+
+/* Les curseurs des animations : la valeur était coupée au bord du cadre.
+   Sur téléphone, le curseur passe sur sa propre ligne, pleine largeur. */
+@media (max-width:560px){
+  .anim.live .ctl label{ flex-wrap:wrap; }
+  .anim.live .ctl label input{ order:3; flex:1 1 100%; width:auto; min-width:0; }
+  .anim.live .ctl label output{ margin-left:auto; }
+}
+
+/* Deux flèches un peu moins larges : sans ça, « Chercher un mot… » était
+   tronqué dès 390 px de large. */
+@media (max-width:430px){
+  #kam-chercher .fleche{ width:calc(50px * var(--ech)); }
+  #kam-q{ padding-left:42px; padding-right:42px; }
+}
+
+/* La barre « Retour » et la barre de recherche sont collantes : sans marge de
+   défilement, tout ce qu'on rejoint par un lien ou par le score se retrouvait
+   caché dessous. */
+section[id], .score, .qcm, figure.anim, [id]{
+  scroll-margin-top: var(--h-collant, 170px);
+}
+
+/* Même précaution que sur le permis hauturier : au texte agrandi, un tableau
+   ne doit jamais entraîner toute la page de côté. */
+@media (max-width:620px){
+  main table{ display:block; width:max-content; max-width:100%; overflow-x:auto; }
+  main .steps .res, main .res{ white-space:normal; }
+}
+
+</style>
+</head>
+<body>
+<div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
+<main>
+<header>
+  <div class="ver">SOMMAIRE · v1 · module 1, chapitre 1 disponible</div>
+  <h1>Brevet de conduite belge</h1>
+  <p>Le cours des trois modules, écrit d'après les règlements officiels, avec les animations et les QCM. Chaque module se travaille séparément.</p>
+</header>
+
+<section>
+  <h2>Les deux brevets</h2>
+  <div class="def">
+    <p class="term">Le brevet restreint</p>
+    <p>Valable sur les voies navigables de Belgique, <b>sauf l'Escaut maritime inférieur</b>. Il donne le certificat international <b>ICC-I</b>, reconnu sur les eaux intérieures d'autres pays européens. C'est la partie fluviale.</p>
+  </div>
+  <div class="def">
+    <p class="term">Le brevet général</p>
+    <p>Le restreint, plus l'Escaut maritime inférieur et la <b>navigation côtière</b>. Il donne le certificat <b>ICC-IC</b>, valable sur les eaux intérieures et côtières. On l'obtient en ajoutant une seconde série de questions à l'examen du restreint.</p>
+  </div>
+  <p class="why">Tu passes les deux : le module 1 couvre le restreint, le module 2 ajoute ce qu'il faut pour le général.</p>
+</section>
+
+<section>
+  <h2>L'examen théorique</h2>
+  <p>Sur ordinateur, dans les bureaux du SPF Mobilité et Transports — Namur le lundi, Bruxelles le jeudi après-midi, Anvers et Ostende en début de semaine.</p>
+  <div class="cards">
+    <div><div class="l">Brevet restreint</div><div class="v">30 questions</div></div>
+    <div><div class="l">Complément général</div><div class="v">+ 30 questions</div></div>
+    <div><div class="l">Pour réussir</div><div class="v">60 % du total</div></div>
+    <div><div class="l">Et surtout</div><div class="v">50 % par catégorie</div></div>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège du barème</div>
+    <p>On peut avoir <b>75 % au total et être recalé</b> : il suffit d'être sous 50 % dans une seule catégorie. C'est pour ça que les QCM de ce cours comptent <b>par catégorie</b>, et pas seulement un score global.</p>
+  </div>
+  <h3>Les conditions</h3>
+  <ul>
+    <li>Avoir <b>16 ans</b> au moins — on peut s'inscrire à l'examen dès 15 ans.</li>
+    <li>Être <b>médicalement apte</b>.</li>
+    <li>Avoir réussi l'examen <b>théorique</b> il y a trois ans au plus.</li>
+    <li>Avoir réussi l'examen <b>pratique</b> il y a trois ans au plus.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Les modules</h2>
+  <div class="menus">
+    <a class="menu-item pret" href="./permis-belge-m1.html">
+      <span class="num">1</span>
+      <span class="txt">
+        <span class="t">Fluvial</span>
+        <span class="s">Navigation fluviale, balisage, signalisation, priorités, feux et marques, signaux sonores, sécurité, moteurs, RPNE</span>
+      </span>
+      <span class="etat">Chap. 1</span>
+    </a>
+    <span class="menu-item" aria-disabled="true">
+      <span class="num">2</span>
+      <span class="txt">
+        <span class="t">Côtier</span>
+        <span class="s">Navigation, marées, météorologie, RIPAM, réglementation belge — complément au brevet général</span>
+      </span>
+      <span class="etat">À venir</span>
+    </span>
+    <span class="menu-item" aria-disabled="true">
+      <span class="num">3</span>
+      <span class="txt">
+        <span class="t">Pratique</span>
+        <span class="s">Notions nautiques, effet du pas de l'hélice, amarrage, conduite, préparation de l'examen pratique</span>
+      </span>
+      <span class="etat">À venir</span>
+    </span>
+    <span class="menu-item" aria-disabled="true">
+      <span class="num">R</span>
+      <span class="txt">
+        <span class="t">Radiotéléphonie</span>
+        <span class="s">Licence restreinte : MAYDAY, PAN PAN, SÉCURITÉ, canaux, appel sélectif numérique</span>
+      </span>
+      <span class="etat">À venir</span>
+    </span>
+  </div>
+</section>
+
+<section>
+  <h2>Comment ce cours est écrit</h2>
+  <p>Le cours suit le programme de l'examen. Chaque fois que le <b>texte réglementaire</b> dit autre chose que ce qu'on apprend habituellement, un encadré rouge le signale, avec l'article.</p>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>Voilà à quoi ressemble cet encadré. Tu coches la case attendue à l'examen, et tu sais ce qui s'applique vraiment quand tu es à l'écluse.</p>
+    <p class="art">Référence de l'article citée ici.</p>
+  </div>
+  <p class="note">Textes de référence : arrêté royal du 15 octobre 1935 portant règlement général des voies navigables du Royaume, et ses règlements particuliers ; arrêté du Gouvernement wallon du 15 mai 2014 pour les voies hydrauliques wallonnes ; règlement de police pour la navigation sur les eaux intérieures.</p>
+</section>
+</main>
+
+<script>
+/* ===== SOCLE COMMUN DES PAGES DU PERMIS BELGE =====
+   Trois choses : la recherche à occurrences, le réglage de la taille du
+   texte, et le moteur d'animations. Plus le QCM, qui compte par catégorie
+   parce que l'examen belge se rate catégorie par catégorie. */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------- outils */
+  function aplatir(s){
+    return Array.from(String(s)).map(function(c){
+      var b = (c.normalize("NFD").charAt(0) || c).toLowerCase();
+      return b.charAt(0) || c;       /* toujours UN caractère */
+    }).join("");
+  }
+  var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------- taille du texte */
+  var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
+  var bPlus = document.getElementById("kam-plus");
+  var bMoins = document.getElementById("kam-moins");
+  function mesurerBarre(){
+    var b = document.querySelector(".kam-bar");
+    var h = b ? b.offsetHeight : 56;
+    if(b) document.documentElement.style.setProperty("--h-kam", h + "px");
+    /* Hauteur TOTALE de ce qui reste collé en haut : la barre « Retour » plus
+       la barre de recherche. C'est elle qui sert de marge de défilement —
+       calculée, jamais devinée, sinon un titre rejoint par un lien se cache
+       dessous. */
+    var c = document.getElementById("kam-chercher");
+    document.documentElement.style.setProperty("--h-collant",
+      (h + (c ? c.offsetHeight : 0) + 12) + "px");
+  }
+  function appliquerTaille(){
+    document.documentElement.style.setProperty("--ech", ECHELLES[iEch]);
+    if(bMoins) bMoins.disabled = (iEch === 0);
+    if(bPlus) bPlus.disabled = (iEch === ECHELLES.length - 1);
+    try{ localStorage.setItem("katamar-permis-taille", String(iEch)); }catch(e){}
+    mesurerBarre();
+  }
+  try{
+    var g = parseInt(localStorage.getItem("katamar-permis-taille"), 10);
+    if(g >= 0 && g < ECHELLES.length) iEch = g;
+  }catch(e){}
+  if(bPlus) bPlus.addEventListener("click", function(){ if(iEch < ECHELLES.length - 1){ iEch++; appliquerTaille(); } });
+  if(bMoins) bMoins.addEventListener("click", function(){ if(iEch > 0){ iEch--; appliquerTaille(); } });
+  mesurerBarre();
+  window.addEventListener("resize", mesurerBarre);
+  window.addEventListener("orientationchange", mesurerBarre);
+  appliquerTaille();
+
+  /* --------------------------------------------- recherche à occurrences */
+  var cours = document.querySelector("main");
+  var champ = document.getElementById("kam-q");
+  if(cours && champ){
+    var compteur = document.getElementById("kam-compteur");
+    var bPrec = document.getElementById("kam-prec");
+    var bSuiv = document.getElementById("kam-suiv");
+    var bVider = document.getElementById("kam-vider");
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var marques = [], courant = -1;
+
+    function aEviter(noeud){
+      var p = noeud.parentNode;
+      while(p && p !== cours){
+        if(p.nodeType === 1){
+          var n = p.nodeName.toUpperCase();
+          if(n === "SCRIPT" || n === "STYLE" || n === "NOSCRIPT" || n === "TEXTAREA") return true;
+          if(p.namespaceURI === SVG_NS) return true;   /* un <mark> casserait le schéma */
+          if(p.id === "kam-chercher") return true;
+          if(p.hidden) return true;                    /* corrections non révélées */
+        }
+        p = p.parentNode;
+      }
+      return false;
+    }
+    function effacerSurlignage(){
+      for(var i = 0; i < marques.length; i++){
+        var m = marques[i], p = m.parentNode;
+        if(!p) continue;
+        p.replaceChild(document.createTextNode(m.textContent), m);
+        p.normalize();
+      }
+      marques = []; courant = -1;
+    }
+    function surligner(mot){
+      var cible = aplatir(mot);
+      if(!cible) return;
+      var promeneur = document.createTreeWalker(cours, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(n){
+          if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+          return aEviter(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var noeuds = [], n;
+      while((n = promeneur.nextNode())) noeuds.push(n);
+      for(var i = 0; i < noeuds.length; i++){
+        var noeud = noeuds[i], texte = noeud.nodeValue, plat = aplatir(texte);
+        var pos = plat.indexOf(cible);
+        if(pos === -1) continue;
+        var frag = document.createDocumentFragment(), depart = 0;
+        while(pos !== -1){
+          if(pos > depart) frag.appendChild(document.createTextNode(texte.slice(depart, pos)));
+          var m = document.createElement("mark");
+          m.className = "kam-occ";
+          m.textContent = texte.slice(pos, pos + cible.length);
+          frag.appendChild(m); marques.push(m);
+          depart = pos + cible.length;
+          pos = plat.indexOf(cible, depart);
+        }
+        if(depart < texte.length) frag.appendChild(document.createTextNode(texte.slice(depart)));
+        noeud.parentNode.replaceChild(frag, noeud);
+      }
+    }
+    function majCompteur(){
+      var mot = champ.value.trim();
+      if(!mot){ compteur.textContent = "Cherche dans tout le module"; compteur.className = ""; return; }
+      if(mot.length < 2){ compteur.textContent = "Encore une lettre…"; compteur.className = ""; return; }
+      if(marques.length === 0){
+        compteur.textContent = "Aucune occurrence de « " + mot + " »";
+        compteur.className = "rien"; return;
+      }
+      compteur.innerHTML = "<b>" + (courant + 1) + "</b> / " + marques.length
+        + (marques.length > 1 ? " occurrences" : " occurrence");
+      compteur.className = "";
+    }
+    function ouvrirLesReplis(el){
+      var p = el.parentNode;
+      while(p && p !== cours){
+        if(p.nodeName === "DETAILS" && !p.open) p.open = true;
+        p = p.parentNode;
+      }
+    }
+    function allerA(i){
+      if(marques.length === 0) return;
+      if(courant >= 0 && marques[courant]) marques[courant].classList.remove("actif");
+      courant = (i + marques.length) % marques.length;
+      var m = marques[courant];
+      m.classList.add("actif");
+      ouvrirLesReplis(m);
+      m.scrollIntoView({ block:"center", behavior: reduit ? "auto" : "smooth" });
+      majCompteur();
+    }
+    var minuteur = null;
+    function chercher(){
+      var mot = champ.value.trim();
+      effacerSurlignage();
+      bVider.classList.toggle("vu", champ.value.length > 0);
+      if(mot.length >= 2) surligner(mot);
+      bPrec.disabled = bSuiv.disabled = (marques.length === 0);
+      if(marques.length > 0) allerA(0); else majCompteur();
+    }
+    champ.addEventListener("input", function(){ clearTimeout(minuteur); minuteur = setTimeout(chercher, 150); });
+    champ.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(marques.length === 0){ clearTimeout(minuteur); chercher(); return; }
+      allerA(courant + (e.shiftKey ? -1 : 1));
+    });
+    bSuiv.addEventListener("click", function(){ allerA(courant + 1); });
+    bPrec.addEventListener("click", function(){ allerA(courant - 1); });
+    bVider.addEventListener("click", function(){ champ.value = ""; clearTimeout(minuteur); chercher(); champ.focus(); });
+  }
+
+  /* --------------------------------------------------------- animations */
+  /* Chaque animation déclare un état de départ, une suite d'images et une
+     fonction de rendu. Entre deux images, les nombres sont interpolés : le
+     sas se remplit sous les yeux au lieu de sauter d'un niveau à l'autre. */
+  var ANIMS = {};
+  window.kamAnim = function(id, def){
+    var fig = document.getElementById(id);
+    if(!fig) return;
+    var cap = fig.querySelector(".cap");
+    var cnt = fig.querySelector(".cnt");
+    var bLect = fig.querySelector("[data-lecture]");
+    var bEtape = fig.querySelector("[data-etape]");
+    var bRejouer = fig.querySelector("[data-rejouer]");
+    var etat = Object.assign({}, def.etat0);
+    var i = -1, enCours = false, tache = null;
+    /* Chaque transition porte un numéro. Deux appuis rapides sur « Étape »
+       lançaient deux boucles en même temps : l'ancienne continuait d'écrire
+       l'état et ramenait le feu au rouge ou le bateau en arrière. Une boucle
+       qui n'est plus la dernière s'arrête d'elle-même. */
+    var gen = 0;
+    /* Cible de la transition en cours. Appuyer sur « Étape » pendant qu'une
+       image se joue doit la TERMINER d'un coup, puis passer à la suivante —
+       sinon le mouvement se fige à mi-chemin : le feu reste entre rouge et
+       vert, et le bateau s'arrête au milieu du sas. */
+    var cibleEnCours = null;
+
+    function rendre(){ def.rendu(etat, fig); }
+    function majCnt(){ if(cnt) cnt.textContent = Math.max(0, i + 1) + " / " + def.images.length; }
+    function poser(n, immediat, apres){
+      var img = def.images[n];
+      var depart = Object.assign({}, etat);
+      var cible = Object.assign({}, etat, img.etat || {});
+      var duree = (immediat || reduit) ? 0 : (img.d || 700);
+      if(cap) cap.innerHTML = img.cap;
+      i = n; majCnt();
+      if(duree === 0){
+        gen++; cibleEnCours = null; etat = cible; rendre(); if(apres) apres();
+        return;
+      }
+      var t0 = performance.now();
+      cibleEnCours = cible;
+      var moi = ++gen;
+      cancelAnimationFrame(tache);
+      (function boucle(t){
+        if(moi !== gen) return;               /* une transition plus récente a pris la main */
+        var k = Math.min(1, (t - t0) / duree);
+        var doux = k < .5 ? 2*k*k : 1 - Math.pow(-2*k + 2, 2)/2;   /* ease-in-out */
+        var e = {};
+        Object.keys(cible).forEach(function(cle){
+          var a = depart[cle], b = cible[cle];
+          e[cle] = (typeof a === "number" && typeof b === "number") ? a + (b - a) * doux : b;
+        });
+        etat = e; rendre();
+        if(k < 1) tache = requestAnimationFrame(boucle);
+        else { cibleEnCours = null; if(apres) apres(); }
+      })(t0);
+    }
+    function terminerEnCours(){
+      if(!cibleEnCours) return;
+      gen++; cancelAnimationFrame(tache);
+      etat = cibleEnCours; cibleEnCours = null; rendre();
+    }
+    function suivante(){
+      terminerEnCours();
+      if(i + 1 >= def.images.length) return false;
+      poser(i + 1, false, null);
+      return true;
+    }
+    function lire(){
+      if(enCours){ enCours = false; couper(); if(bLect) bLect.textContent = "▶ Lecture"; return; }
+      enCours = true; if(bLect) bLect.textContent = "⏸ Pause";
+      var n = (i + 1 >= def.images.length) ? 0 : i + 1;
+      if(n === 0){ etat = Object.assign({}, def.etat0); rendre(); }
+      (function enchaine(k){
+        if(!enCours || k >= def.images.length){
+          enCours = false; if(bLect) bLect.textContent = "▶ Lecture"; return;
+        }
+        poser(k, false, function(){ setTimeout(function(){ enchaine(k + 1); }, reduit ? 0 : 450); });
+      })(n);
+    }
+    function couper(){ gen++; cibleEnCours = null; cancelAnimationFrame(tache); }
+    if(bLect) bLect.addEventListener("click", lire);
+    if(bEtape) bEtape.addEventListener("click", function(){
+      enCours = false; if(bLect) bLect.textContent = "▶ Lecture";
+      /* on ne coupe pas ici : poser() incrémente lui-même le numéro */
+      if(!suivante()){ etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+        if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture »."; }
+    });
+    if(bRejouer) bRejouer.addEventListener("click", function(){
+      enCours = false; couper();
+      if(bLect) bLect.textContent = "▶ Lecture";
+      etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+      if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    });
+    if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    rendre(); majCnt();
+    ANIMS[id] = { rendre: rendre };
+  };
+
+  /* --------------------------------------------------------------- QCM */
+  /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
+     minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
+  var scores = {};
+  function majScore(){
+    var panneau = document.getElementById("score");
+    if(!panneau) return;
+    var cats = Object.keys(scores);
+    if(cats.length === 0){ panneau.hidden = true; return; }
+    panneau.hidden = false;
+    var justes = 0, total = 0;
+    cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
+    var pc = total ? Math.round(justes / total * 100) : 0;
+    var lignes = cats.sort().map(function(c){
+      var s = scores[c], p = Math.round(s.ok / s.n * 100);
+      return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
+           + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
+    }).join("");
+    var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
+      + '<ul class="chapitres">' + lignes + "</ul>"
+      + '<p class="regle">' + (pc >= 60 && !sousBarre
+          ? "Au-dessus des deux barres : 60 % au total, et 50 % dans chaque catégorie."
+          : "Il faut <b>60 % au total</b> ET <b>50 % minimum dans chaque catégorie</b>. "
+            + (pc < 60 ? "Le total n'y est pas. " : "")
+            + (sousBarre ? "Une catégorie au moins est sous la barre." : "")) + "</p>";
+  }
+  document.querySelectorAll(".qcm").forEach(function(q){
+    var bonne = (q.dataset.bonne || "").toUpperCase();
+    var cat = q.dataset.cat || "Général";
+    var corr = q.querySelector(".corr");
+    var boutons = [].slice.call(q.querySelectorAll(".choix button"));
+    boutons.forEach(function(b){
+      b.addEventListener("click", function(){
+        if(q.dataset.repondu) return;
+        q.dataset.repondu = "1";
+        var choisi = (b.dataset.l || "").toUpperCase();
+        var juste = (choisi === bonne);
+        boutons.forEach(function(x){
+          x.disabled = true;
+          var l = (x.dataset.l || "").toUpperCase();
+          if(l === bonne) x.classList.add("juste");
+          else if(l === choisi) x.classList.add("faux");
+        });
+        if(corr){
+          corr.hidden = false;
+          var v = corr.querySelector(".verdict");
+          if(v){
+            v.className = "verdict " + (juste ? "ok" : "ko");
+            v.textContent = juste ? "Juste." : "Faux — la bonne réponse est " + bonne + ".";
+          }
+        }
+        if(!scores[cat]) scores[cat] = { ok:0, n:0 };
+        scores[cat].n++; if(juste) scores[cat].ok++;
+        majScore();
+      });
+    });
+  });
+  var raz = document.getElementById("qcm-raz");
+  if(raz) raz.addEventListener("click", function(){
+    scores = {};
+    document.querySelectorAll(".qcm").forEach(function(q){
+      delete q.dataset.repondu;
+      q.querySelectorAll(".choix button").forEach(function(b){
+        b.disabled = false; b.classList.remove("juste", "faux");
+      });
+      var c = q.querySelector(".corr"); if(c) c.hidden = true;
+    });
+    majScore();
+    var p = document.getElementById("score"); if(p) p.hidden = true;
+  });
+  majScore();
+})();
+
+</script>
+
+</body>
+</html>

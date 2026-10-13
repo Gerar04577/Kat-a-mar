@@ -202,8 +202,28 @@ mark.kam-occ{
   box-decoration-break:clone; -webkit-box-decoration-break:clone;
 }
 mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+/* Marge de défilement : sans elle, un titre rejoint par un lien ou par la
+   recherche se cache sous les deux barres collantes. La hauteur est mesurée
+   par le script, jamais devinée. */
+[id]{ scroll-margin-top: var(--h-collant, 170px); }
 @media (max-width:420px){
   #kam-chercher .tailles i{ display:none; }
+}
+@media (max-width:430px){
+  #kam-chercher .fleche{ width:calc(50px * var(--ech)); }
+  #kam-q{ padding-left:42px; padding-right:42px; }
+}
+
+/* Au texte agrandi, certains tableaux dépassaient la largeur du téléphone et
+   faisaient glisser toute la page. Ils défilent maintenant chacun dans leur
+   propre cadre, sans entraîner le reste. */
+@media (max-width:620px){
+  main table{ display:block; width:max-content; max-width:100%; overflow-x:auto; }
+  /* Les résultats sont en « nowrap » pour ne pas couper un nombre en deux.
+     Mais certains contiennent une phrase entière : au texte agrandi, elle
+     poussait toute la page de côté. Sur téléphone, on les laisse revenir à
+     la ligne. */
+  main .steps .res, main .res{ white-space:normal; }   /* .steps .res est plus fort que .res */
 }
 </style>
 </head>
@@ -211,7 +231,7 @@ mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--sur
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Hauturier</span></div>
 <main>
 <header>
-  <div class="ver">COURS DÉBUTANT · v15 · recherche par mots avec compteur d'occurrences et réglage de la taille du texte, pièges réécrits avec un exemple chiffré chacun, QCM mot pour mot, météo animée, France / Espagne</div>
+  <div class="ver">COURS DÉBUTANT · v16 · recherche par mots avec compteur d'occurrences, réglage de la taille du texte, pièges réécrits avec un exemple chiffré chacun, QCM mot pour mot, météo animée, France / Espagne</div>
   <h1>Caps, routes, dérive et courant</h1>
   <p>Le cours de navigation du permis hauturier français, une notion à la fois. Chaque exemple et chaque exercice a son schéma et le rappel de ses symboles.</p>
 </header>
@@ -223,7 +243,7 @@ mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--sur
         <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L21 21"></path>
       </svg>
       <input id="kam-q" type="search" autocomplete="off" autocorrect="off" spellcheck="false"
-             enterkeyhint="next" placeholder="Chercher un mot…"
+             enterkeyhint="next" placeholder="Chercher…"
              aria-label="Chercher un mot dans le cours">
       <button id="kam-vider" type="button" aria-label="Effacer la recherche">✕</button>
     </div>
@@ -1601,7 +1621,11 @@ coupe(document.getElementById("a6"),"chaud");coupe(document.getElementById("a7")
      dessous, à sa hauteur réelle plutôt qu'à une valeur devinée. */
   function mesurerBarre(){
     var b = document.querySelector(".kam-bar");
-    if(b) document.documentElement.style.setProperty("--h-kam", b.offsetHeight + "px");
+    var h = b ? b.offsetHeight : 56;
+    if(b) document.documentElement.style.setProperty("--h-kam", h + "px");
+    var c = document.getElementById("kam-chercher");
+    document.documentElement.style.setProperty("--h-collant",
+      (h + (c ? c.offsetHeight : 0) + 12) + "px");
   }
   mesurerBarre();
   window.addEventListener("resize", mesurerBarre);

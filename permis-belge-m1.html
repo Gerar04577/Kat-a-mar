@@ -1,0 +1,1333 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Module 1 Fluvial · Permis Belge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+
+/* Layout: one airy column; each notion = definition, why, diagram, formula, worked examples, trap, exercise */
+:root{
+  --bg:#f2f5f6; --paper:#ffffff; --ink:#14263a; --muted:#566a7c; --line:#cfd9e0;
+  --sea:#e1eef6; --navy:#1d4e89; --red:#c0392b; --green:#1f7a3f; --amber:#a86400; --water:#9cc6ea; --land:#cfe3b0; --sun:#f6c453; --warm:#d1443a; --cold:#2f6fd0; --occl:#7a4fc2; --warmair:#f2b24a; --coldair:#7fb2e6; --cloud:#c9cdd1; --cloudd:#7c838a; --rain:#3b7ad8;
+  --display:"Zilla Slab",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.7;padding:0 16px}
+main{max-width:680px;margin:0 auto;padding-block:32px 72px;display:flex;flex-direction:column;gap:56px}
+header{display:flex;flex-direction:column;gap:10px}
+header h1{font-family:var(--display);font-size:2.1rem;line-height:1.15;margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+.ver{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+section{display:flex;flex-direction:column;gap:22px;min-width:0}
+.kicker{margin:0;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+h2{font-family:var(--display);font-size:1.6rem;line-height:1.2;margin:-14px 0 0;text-wrap:balance;border-bottom:2px solid var(--line);padding-bottom:10px}
+h3{font-family:var(--display);font-size:1.15rem;margin:8px 0 -8px;color:var(--navy)}
+p{margin:0;max-width:62ch}
+ul,ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+.def{background:var(--sea);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.def .term{font-weight:700;color:var(--navy);font-size:1.05rem}
+.why{color:var(--muted)}
+.why b{color:var(--ink)}
+.formula{font-family:var(--mono);font-size:1.15rem;text-align:center;background:var(--paper);border:2px solid var(--navy);border-radius:10px;padding:14px 12px;max-width:none;font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.ctitle{font-weight:700;font-size:1.05rem}
+.given-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px}
+.given{gap:4px}
+.steps{list-style:decimal;gap:8px}
+.steps li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.steps .what{min-width:0}
+.steps .res{font-family:var(--mono);font-weight:500;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.result{font-weight:700;color:var(--green);margin-top:4px}
+.trap{border-left:4px solid var(--red);padding:12px 16px;background:var(--paper);border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:4px}
+.trap-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);font-weight:700}
+details.ex{border:2px dashed var(--navy);border-radius:12px;padding:14px 18px;display:block}
+details.ex summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details.ex[open] summary{margin-bottom:10px}
+details.ex[open]{display:flex;flex-direction:column;gap:10px}
+.fig{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px}
+svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+.t-m{fill:var(--muted)} .t-n{fill:var(--navy)} .t-r{fill:var(--red)} .t-g{fill:var(--green)} .t-a{fill:var(--amber)}
+.s-ink{stroke:var(--ink)} .s-n{stroke:var(--navy)} .s-r{stroke:var(--red)} .s-g{stroke:var(--green)} .s-a{stroke:var(--amber)} .s-l{stroke:var(--line)}
+.f-sea{fill:var(--sea)} .f-paper{fill:var(--paper)} .f-n{fill:var(--navy)} .f-r{fill:var(--red)} .f-g{fill:var(--green)} .f-a{fill:var(--amber)} .f-ink{fill:var(--ink)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td:first-child{font-family:var(--mono);font-weight:500;color:var(--navy);white-space:nowrap}
+.plus{color:var(--green);font-weight:700} .minus{color:var(--red);font-weight:700}
+nav.toc ol{gap:6px}
+nav.toc a{color:var(--navy)}
+.memo{font-family:var(--mono);font-size:.95rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;white-space:pre;overflow-x:auto;line-height:1.9}
+
+.sym{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.sym p{max-width:none}
+.sym b{font-family:var(--mono);color:var(--navy);display:inline-block;min-width:3.2em}
+.note{font-size:.85rem;color:var(--muted)}
+td.hl{background:var(--amber);color:var(--paper);font-weight:700;border-radius:4px}
+
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px}
+.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+.anim.live .ctl label{display:flex;align-items:center;gap:8px;flex:1 1 100%;min-width:0;font-size:.9rem;color:var(--muted);font-weight:700}
+.anim.live .ctl label input{flex:1 1 0;width:0;min-width:60px;accent-color:var(--navy)}
+.anim.live .ctl label output{font-family:var(--mono);font-size:.8rem;color:var(--navy);flex:0 0 auto;text-align:right;white-space:nowrap}
+.anim.live .ctl button.on{background:var(--sea)}
+figure.anim{margin:0;min-width:0}
+.anim .ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--navy)}
+.anim .ctl .tm{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.opt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt button{font:inherit;font-weight:700;font-size:.92rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:7px 10px;cursor:pointer;min-width:0}
+.opt button.on{background:var(--sea)}
+.opt button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cards div{background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0}
+.cards .l{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.cards .v{font-size:.95rem;font-weight:700;line-height:1.35}
+.keep{border:2px solid var(--green);border-radius:10px;padding:12px 14px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.keep .kt{font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--green);font-weight:700;margin:0}
+.lead{color:var(--muted)}
+.ok{color:var(--green);font-weight:700} .ko{color:var(--red);font-weight:700}
+.mto-sub{display:flex;flex-direction:column;gap:18px;min-width:0}
+.mto-sub td:first-child,.cmp td:first-child,.symt td:first-child{font-family:var(--body);font-weight:700;white-space:normal}
+.mto .memo{font-size:.85rem}
+svg.sy{width:40px;height:30px;margin:0}
+.qcm .opts{list-style:none;padding-left:0}
+.qcm .rep{padding-left:1.1em}
+.qcm .rep li.ok>b:first-child{color:var(--green)} .qcm .rep li.ko>b:first-child{color:var(--red)}
+.qcm .rep li{color:var(--ink);font-weight:400}
+.tp{gap:8px}.tp .tpt{font-weight:700;font-size:1.05rem}
+.tpx{background:var(--sea);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.tpx p{max-width:none}.tko span,.tok span{display:inline-block;font-weight:700;margin-right:6px}
+.tko span{color:var(--red)}.tok span{color:var(--green)}.tpk{color:var(--navy)}
+@media (max-width:560px){.mto .tw table{font-size:.82rem}.mto .tw td,.mto .tw th{padding:7px 4px;-webkit-hyphens:auto;hyphens:auto}}
+
+
+.anim{background:var(--paper);border:2px solid var(--navy);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:10px}
+.anim .atitle{font-weight:700;color:var(--navy);font-size:.95rem}
+.anim svg{max-width:560px}
+.anim .cap{min-height:4.6em;background:var(--sea);border-radius:8px;padding:10px 12px;font-size:.98rem;line-height:1.5;max-width:none}
+.anim .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.anim .ctl button{font:inherit;font-weight:700;font-size:.95rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:8px 14px;cursor:pointer}
+.anim .ctl button.pri{background:var(--navy);color:var(--paper)}
+.anim .ctl button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.anim .ctl .cnt{margin-left:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.tool-prot path.body{fill:var(--paper);fill-opacity:.82;stroke:var(--ink);stroke-width:1.5}
+.tool-prot line{stroke:var(--ink)}
+.tool-prot text{font-size:9px;fill:var(--ink)}
+.tool-comp line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.tool-comp circle{fill:var(--amber)}
+
+
+.rappel{background:var(--paper);border:2px solid var(--amber);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.rappel .rt{font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.rappel p{font-family:var(--mono);font-size:.95rem;max-width:none;line-height:1.6}
+.etapes{display:flex;flex-direction:column;gap:14px}
+.etape{border-left:4px solid var(--navy);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.etape .et{font-weight:700;color:var(--navy)}
+.etape .ef{font-family:var(--mono);font-size:.92rem;color:var(--muted)}
+.etape .ec{font-family:var(--mono);font-size:1rem;font-weight:500}
+.etape .es{font-size:.95rem}
+
+</style>
+<style>
+/* ===== AJOUTS PROPRES AU PERMIS BELGE =====
+   Reprend les jetons du permis hauturier ; n'ajoute que ce qui lui manque :
+   les sous-menus, l'encadré « ce que dit le règlement », le QCM interactif,
+   la recherche à occurrences et le réglage de taille. */
+:root{
+  --ech:1;                 /* multiplicateur de taille, boutons A / A */
+  --h-kam:56px;            /* hauteur réelle de la barre « Retour », mesurée */
+  --surl:#ffe2a0; --surl-actif:#ffd0a3; --surl-trait:#e8690b;
+  font-size:calc(16px * var(--ech));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}}
+:root[data-theme="dark"]{ --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442; }
+body{ font-size:calc(18px * var(--ech)); }
+
+/* ---- sous-menus du sommaire ---- */
+.menus{ display:flex; flex-direction:column; gap:12px; }
+.menu-item{
+  /* sans box-sizing, width:100% + 18px de padding + 2px de bordure débordaient
+     de 40 px : la page du sommaire glissait latéralement sur l'iPhone. */
+  box-sizing:border-box;
+  display:flex; align-items:center; gap:14px; text-align:left;
+  background:var(--paper); border:2px solid var(--line); border-radius:14px;
+  padding:16px 18px; font:inherit; color:var(--ink); cursor:pointer;
+  text-decoration:none; width:100%;
+}
+.menu-item:active{ background:var(--sea); }
+.menu-item.pret{ border-color:var(--navy); }
+.menu-item[aria-disabled="true"]{ opacity:.55; cursor:default; }
+.menu-item .num{
+  font-family:var(--mono); font-weight:700; font-size:1.3rem; color:var(--navy);
+  background:var(--sea); border-radius:11px; padding:10px 13px; flex:0 0 auto;
+}
+.menu-item .txt{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.menu-item .t{ font-family:var(--display); font-weight:700; font-size:1.2rem; }
+.menu-item .s{ color:var(--muted); font-size:.92rem; }
+.menu-item .etat{
+  margin-left:auto; flex:0 0 auto; font-family:var(--mono); font-size:.72rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.menu-item.pret .etat{ color:var(--green); }
+
+/* ---- sommaire interne d'un module ---- */
+.chapitres{ display:flex; flex-direction:column; gap:6px; list-style:none; padding-left:0; }
+.chapitres li{ display:flex; gap:10px; align-items:baseline; }
+.chapitres .n{ font-family:var(--mono); color:var(--navy); font-weight:700; flex:0 0 auto; }
+.chapitres a{ color:var(--ink); }
+.chapitres .avenir{ color:var(--muted); }
+
+/* ---- encadré « ce que dit le règlement » ---- */
+.regl{
+  border-left:4px solid var(--red); background:var(--paper);
+  border-radius:0 10px 10px 0; padding:14px 16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.regl .rh{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--red); font-weight:700;
+}
+.regl .art{ font-family:var(--mono); font-size:.85rem; color:var(--navy); }
+.regl p{ max-width:none; }
+
+/* ---- QCM interactif ---- */
+.qcm{
+  background:var(--paper); border:2px solid var(--navy); border-radius:12px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:12px;
+}
+.qcm .qn{
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--navy);
+}
+.qcm .qt{ font-weight:700; font-size:1.05rem; max-width:none; }
+.qcm .choix{ display:flex; flex-direction:column; gap:8px; }
+.qcm .choix button{
+  font:inherit; text-align:left; background:var(--bg); color:var(--ink);
+  border:1.5px solid var(--line); border-radius:10px; padding:11px 14px;
+  cursor:pointer; display:flex; gap:10px; align-items:flex-start;
+}
+.qcm .choix button .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qcm .choix button:active{ background:var(--sea); }
+.qcm .choix button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+.qcm .choix button.juste{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qcm .choix button.faux{ border-color:var(--red); background:color-mix(in srgb, var(--red) 10%, var(--paper)); }
+.qcm .choix button[disabled]{ cursor:default; }
+.qcm .corr{ display:flex; flex-direction:column; gap:8px; }
+.qcm .corr .verdict{ font-weight:700; }
+.qcm .corr .verdict.ok{ color:var(--green); }
+.qcm .corr .verdict.ko{ color:var(--red); }
+.qcm .corr ul{ list-style:none; padding-left:0; gap:7px; }
+.qcm .corr li{ font-size:.95rem; }
+.qcm .corr li b{ font-family:var(--mono); }
+.qcm .corr li.ok b{ color:var(--green); }
+.qcm .corr li.ko b{ color:var(--red); }
+.qcm .cat{
+  font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.score{
+  background:var(--sea); border-radius:12px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.score .big{ font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--navy); }
+.score .regle{ font-size:.88rem; color:var(--muted); }
+
+/* ---- barre de recherche (identique au permis hauturier) ---- */
+#kam-chercher{
+  position:sticky; top:var(--h-kam); z-index:40;
+  background:var(--bg); border-bottom:1.5px solid var(--line);
+  margin:-28px -16px 0; padding:12px 16px 10px;
+}
+#kam-chercher .ligne{ display:flex; gap:10px; align-items:stretch; max-width:680px; margin:0 auto; }
+#kam-chercher .boite{ position:relative; flex:1; min-width:0; }
+#kam-q{
+  width:100%; height:calc(56px * var(--ech));
+  font-family:var(--body); font-size:calc(19px * var(--ech)); font-weight:600;
+  color:var(--ink); background:var(--paper);
+  border:2px solid var(--line); border-radius:14px; padding:0 46px;
+}
+#kam-q::placeholder{ color:var(--muted); font-weight:400; }
+#kam-q:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px var(--sea); }
+#kam-chercher .loupe{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; pointer-events:none; color:var(--muted);
+}
+#kam-vider{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:var(--line); color:var(--ink); font-size:19px; line-height:1;
+  cursor:pointer; display:none;
+}
+#kam-vider.vu{ display:block; }
+#kam-chercher .fleches{ display:flex; gap:8px; }
+#kam-chercher .fleche{
+  width:calc(60px * var(--ech)); height:calc(56px * var(--ech));
+  border:2px solid var(--navy); border-radius:14px;
+  background:var(--paper); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; padding:0;
+}
+#kam-chercher .fleche svg{ width:28px; height:28px; }
+#kam-chercher .fleche:active{ background:var(--sea); }
+#kam-chercher .fleche:disabled{ opacity:.3; cursor:default; }
+#kam-chercher .fleche:focus-visible{ outline:3px solid var(--surl-trait); outline-offset:2px; }
+#kam-chercher .bas{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin:9px auto 0; min-height:26px; max-width:680px;
+}
+#kam-compteur{
+  font-family:var(--mono); font-weight:600; font-variant-numeric:tabular-nums;
+  font-size:calc(16px * var(--ech)); color:var(--muted); letter-spacing:.02em;
+}
+#kam-compteur b{ color:var(--surl-trait); font-size:calc(19px * var(--ech)); }
+#kam-compteur.rien{ color:var(--amber); }
+#kam-chercher .tailles{ display:flex; align-items:center; gap:6px; }
+#kam-chercher .tailles i{
+  font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-right:2px;
+}
+#kam-chercher .tbtn{
+  width:44px; height:38px; border:2px solid var(--line); border-radius:11px;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--body); font-weight:700; line-height:1; padding:0;
+}
+#kam-chercher .tbtn:active{ background:var(--sea); }
+#kam-chercher .tbtn:disabled{ opacity:.35; cursor:default; }
+#kam-chercher .tbtn.pt{ font-size:14px; }
+#kam-chercher .tbtn.gd{ font-size:21px; }
+mark.kam-occ{
+  background:var(--surl); color:inherit; border-radius:4px; padding:1px 2px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+@media (max-width:420px){ #kam-chercher .tailles i{ display:none; } }
+
+/* ---- habillage des schémas ---- */
+.f-ciel{ fill:var(--bg); }
+.f-terre{ fill:var(--land); }
+.f-eau{ fill:var(--water); }
+.f-mur{ fill:var(--cloudd); }
+.f-porte{ fill:var(--ink); }
+.f-coque{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; }
+.f-cabine{ fill:var(--sea); stroke:var(--ink); stroke-width:1.4; }
+.f-mat{ fill:var(--ink); }
+.s-cote{ stroke:var(--navy); stroke-width:1.6; }
+.s-amarre{ stroke:var(--red); stroke-width:2; stroke-linecap:round; }
+.t-lab{ font-family:var(--mono); font-size:10px; fill:var(--muted); }
+.cards .v{ font-weight:700; }
+.anim .cap .verdict-ok{ color:var(--green); font-weight:700; }
+.anim .cap .verdict-ko{ color:var(--red); font-weight:700; }
+
+
+/* ---- corrections d'affichage sur téléphone ----
+   Trouvées en regardant la page rendue, pas en lisant le code. */
+
+/* La pastille d'état passe sous le texte quand la largeur ne suffit plus. */
+@media (max-width:470px){
+  .menu-item{ flex-wrap:wrap; }
+  .menu-item .etat{ margin-left:0; width:100%; text-align:right; }
+}
+
+/* Les curseurs des animations : la valeur était coupée au bord du cadre.
+   Sur téléphone, le curseur passe sur sa propre ligne, pleine largeur. */
+@media (max-width:560px){
+  .anim.live .ctl label{ flex-wrap:wrap; }
+  .anim.live .ctl label input{ order:3; flex:1 1 100%; width:auto; min-width:0; }
+  .anim.live .ctl label output{ margin-left:auto; }
+}
+
+/* Deux flèches un peu moins larges : sans ça, « Chercher un mot… » était
+   tronqué dès 390 px de large. */
+@media (max-width:430px){
+  #kam-chercher .fleche{ width:calc(50px * var(--ech)); }
+  #kam-q{ padding-left:42px; padding-right:42px; }
+}
+
+/* La barre « Retour » et la barre de recherche sont collantes : sans marge de
+   défilement, tout ce qu'on rejoint par un lien ou par le score se retrouvait
+   caché dessous. */
+section[id], .score, .qcm, figure.anim, [id]{
+  scroll-margin-top: var(--h-collant, 170px);
+}
+
+/* Même précaution que sur le permis hauturier : au texte agrandi, un tableau
+   ne doit jamais entraîner toute la page de côté. */
+@media (max-width:620px){
+  main table{ display:block; width:max-content; max-width:100%; overflow-x:auto; }
+  main .steps .res, main .res{ white-space:normal; }
+}
+
+</style>
+</head>
+<body>
+<div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
+<main>
+<header>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v1 · chapitre 1</div>
+  <h1>La navigation fluviale</h1>
+  <p>Les cartes, les écluses, le niveau des eaux. Tout le vocabulaire que les dix chapitres suivants vont réutiliser.</p>
+</header>
+
+<div id="kam-chercher">
+  <div class="ligne">
+    <div class="boite">
+      <svg class="loupe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L21 21"></path>
+      </svg>
+      <input id="kam-q" type="search" autocomplete="off" autocorrect="off" spellcheck="false"
+             enterkeyhint="next" placeholder="Chercher…" aria-label="Chercher un mot dans le module">
+      <button id="kam-vider" type="button" aria-label="Effacer la recherche">✕</button>
+    </div>
+    <div class="fleches">
+      <button class="fleche" id="kam-prec" type="button" disabled aria-label="Occurrence précédente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15 L12 9 L6 15"></path></svg>
+      </button>
+      <button class="fleche" id="kam-suiv" type="button" disabled aria-label="Occurrence suivante">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9 L12 15 L18 9"></path></svg>
+      </button>
+    </div>
+  </div>
+  <div class="bas">
+    <div id="kam-compteur" aria-live="polite">Cherche dans tout le module</div>
+    <div class="tailles">
+      <i>Texte</i>
+      <button class="tbtn pt" id="kam-moins" type="button" aria-label="Réduire le texte">A</button>
+      <button class="tbtn gd" id="kam-plus" type="button" aria-label="Agrandir le texte">A</button>
+    </div>
+  </div>
+</div>
+
+<section>
+  <h2>Les onze chapitres du module</h2>
+  <ol class="chapitres">
+    <li><span class="n">1</span><a href="#ch1">La navigation fluviale</a></li>
+    <li><span class="n">2</span><span class="avenir">Le balisage — à venir</span></li>
+    <li><span class="n">3</span><span class="avenir">La signalisation fluviale — à venir</span></li>
+    <li><span class="n">4</span><span class="avenir">Les règles de priorité en eaux intérieures — à venir</span></li>
+    <li><span class="n">5</span><span class="avenir">Les feux et marques — à venir</span></li>
+    <li><span class="n">6</span><span class="avenir">Les signaux sonores — à venir</span></li>
+    <li><span class="n">7</span><span class="avenir">Sécurité et premiers secours — à venir</span></li>
+    <li><span class="n">8</span><span class="avenir">La technique des moteurs — à venir</span></li>
+    <li><span class="n">9</span><span class="avenir">Le RPNE — à venir</span></li>
+    <li><span class="n">10</span><span class="avenir">La Meuse mitoyenne — à venir</span></li>
+    <li><span class="n">11</span><span class="avenir">Le canal de Bruxelles — à venir</span></li>
+  </ol>
+</section>
+
+<section id="ch1">
+  <p class="kicker">Chapitre 1</p>
+  <h2>La navigation fluviale</h2>
+  <p>On navigue en eaux intérieures sur trois sortes de voies : les <b>fleuves</b>, les <b>lacs</b> et les <b>canaux</b>. En Belgique, ce sont surtout des fleuves et rivières — la Meuse, l'Escaut, la Sambre, la Lys — et des canaux : le canal Albert, le canal Bruxelles-Escaut, le canal du Centre.</p>
+
+  <div class="def">
+    <p class="term">Fleuve et rivière</p>
+    <p>Un cours d'eau naturel. Il a un <b>sens de courant</b>, et c'est ce sens qui commande presque tout : le balisage, les priorités, la façon de nommer les rives.</p>
+  </div>
+  <div class="def">
+    <p class="term">Canal</p>
+    <p>Une voie creusée par l'homme. Pas de courant naturel, mais des <b>écluses</b> pour passer d'un palier à l'autre.</p>
+  </div>
+
+  <h3>La carte fluviale</h3>
+  <p>C'est l'équivalent de la carte marine, en plus simple. Elle donne quatre choses :</p>
+  <ul>
+    <li>les <b>ponts, ports et écluses</b>, avec leurs coordonnées de contact ;</li>
+    <li>la <b>hauteur libre</b> de dégagement sous les ponts ;</li>
+    <li>les <b>distances</b> entre points définis, en kilomètres ;</li>
+    <li>les <b>hauteurs d'eau</b>, rapportées à un niveau de référence.</li>
+  </ul>
+
+  <h3>Les symboles qu'il faut connaître</h3>
+  <div class="card">
+    <p class="ctitle">La distance</p>
+    <p>Elle est indiquée <b>entre deux bâtonnets</b> et s'exprime en <b>kilomètres</b>. Pas en milles : on est en eaux intérieures.</p>
+  </div>
+  <div class="card">
+    <p class="ctitle">L'écluse</p>
+    <p>Le symbole porte une <b>flèche</b>. Elle indique <b>l'amont</b>, c'est-à-dire le côté où le niveau est le plus haut. À côté figurent les dimensions utiles du sas, par exemple <span class="formula" style="display:inline-block;margin:0;padding:2px 8px;font-size:1rem;">80,25 × 12,50</span> mètres, et le moyen de contacter l'éclusier.</p>
+  </div>
+  <div class="card">
+    <p class="ctitle">Le canal VHF</p>
+    <p>Le numéro du canal radio sur lequel appeler l'écluse. On appelle <b>avant</b> d'arriver, pas une fois collé aux portes.</p>
+  </div>
+  <div class="card">
+    <p class="ctitle">Le DNG</p>
+    <p>Le <b>Deuxième Nivellement Général</b> : le niveau de référence belge auquel toutes les hauteurs d'eau sont rapportées. Son zéro est calé sur le niveau des <b>basses mers à Ostende</b>. Quand la carte annonce une hauteur d'eau, c'est par rapport à ce zéro-là.</p>
+  </div>
+  <div class="card">
+    <p class="ctitle">La ligne pointillée au centre du chenal</p>
+    <p>Elle veut dire que la <b>profondeur standard de la voie n'est pas garantie</b>. À lire comme un avertissement, pas comme une interdiction.</p>
+  </div>
+
+  <h3>L'écluse</h3>
+  <p>Une écluse fait passer un bateau d'un niveau d'eau à un autre. Elle est faite d'un bassin fermé par deux portes, qu'on remplit ou qu'on vide.</p>
+  <div class="def">
+    <p class="term">Le vocabulaire, une fois pour toutes</p>
+    <ul>
+      <li><b>Le bief</b> — la portion de voie entre deux écluses.</li>
+      <li><b>Le bief amont</b> — celui où le niveau DNG est le <b>plus élevé</b>.</li>
+      <li><b>Le bief aval</b> — celui où le niveau DNG est le <b>plus bas</b>.</li>
+      <li><b>Le sas</b> — le bassin entre les deux portes, celui qu'on remplit et qu'on vide.</li>
+      <li><b>La hauteur de chute</b> — la différence de niveau entre le bief amont et le bief aval.</li>
+      <li><b>Le bajoyer</b> — le mur latéral de l'écluse.</li>
+    </ul>
+  </div>
+
+  <figure class="anim" id="anim-ecluse">
+    <p class="atitle">▶ Animation : un éclusage de bout en bout, en montant</p>
+    <svg viewBox="0 0 420 215" role="img" aria-label="Coupe d'une écluse : le sas se remplit et le bateau monte du bief aval vers le bief amont">
+      <rect x="0" y="0" width="420" height="215" class="f-ciel"/>
+      <!-- fonds -->
+      <rect x="0" y="190" width="420" height="25" class="f-terre"/>
+      <!-- eau aval, sas, amont -->
+      <rect x="0" y="150" width="122" height="40" class="f-eau"/>
+      <rect id="ec-eau-sas" x="138" y="150" width="164" height="40" class="f-eau"/>
+      <rect x="318" y="90" width="102" height="100" class="f-eau"/>
+      <!-- bajoyers -->
+      <rect x="122" y="60" width="16" height="130" class="f-mur"/>
+      <rect x="302" y="60" width="16" height="130" class="f-mur"/>
+      <!-- portes -->
+      <rect id="ec-porte-aval" x="126" y="60" width="8" height="130" class="f-porte"/>
+      <rect id="ec-porte-amont" x="306" y="60" width="8" height="130" class="f-porte"/>
+      <!-- feu -->
+      <circle id="ec-feu" cx="130" cy="50" r="7" fill="#c0392b"/>
+      <!-- hauteur de chute -->
+      <line x1="345" y1="90" x2="345" y2="150" class="s-cote"/>
+      <line x1="339" y1="90" x2="351" y2="90" class="s-cote"/>
+      <line x1="339" y1="150" x2="351" y2="150" class="s-cote"/>
+      <text x="352" y="124" class="t-lab">hauteur<tspan x="352" dy="11">de chute</tspan></text>
+      <!-- amarres -->
+      <g id="ec-amarres" opacity="0">
+        <line id="ec-am1" x1="190" y1="144" x2="134" y2="62" class="s-amarre"/>
+        <line id="ec-am2" x1="226" y1="144" x2="306" y2="62" class="s-amarre"/>
+      </g>
+      <!-- bateau -->
+      <g id="ec-bateau" transform="translate(40,144)">
+        <path d="M -22 0 L 22 0 L 16 9 L -16 9 Z" class="f-coque"/>
+        <rect x="-8" y="-10" width="16" height="10" class="f-cabine"/>
+      </g>
+      <!-- etiquettes -->
+      <text x="8" y="145" class="t-lab">bief aval</text>
+      <text x="220" y="78" class="t-lab" text-anchor="middle">sas</text>
+      <text x="322" y="84" class="t-lab">bief amont</text>
+      <text x="124" y="205" class="t-lab">bajoyer</text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <h3>Passer une écluse sans se faire peur</h3>
+  <ul>
+    <li><b>Préviens</b> l'éclusier à la VHF avant d'arriver, sur le canal indiqué par la carte.</li>
+    <li><b>Ralentis</b> bien avant. Une écluse ne s'aborde pas en vitesse.</li>
+    <li><b>Protège la coque</b> : pare-battages réglés à la bonne hauteur, des deux bords — on peut accoster par bâbord comme par tribord.</li>
+    <li><b>Amarre-toi à l'avant et à l'arrière</b>. Une seule amarre et le bateau se met en travers.</li>
+    <li><b>Laisse toujours coulisser les amarres.</b> Jamais de tour mort bloqué : en descendant, le bateau resterait pendu à son amarre ; en montant, l'amarre casse ou arrache le taquet.</li>
+    <li><b>Coupe le moteur</b> pendant le sassement.</li>
+    <li><b>Ne sors pas</b> avant l'ouverture <b>complète</b> des portes.</li>
+    <li><b>Les instructions de l'éclusier priment</b> sur tout le reste, y compris sur les avis à la batellerie.</li>
+  </ul>
+
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>On enseigne souvent qu'il est « interdit de dépasser à l'approche d'une écluse » et que « les bateaux professionnels sont prioritaires ». Le texte est plus précis.</p>
+    <p><b>L'arrêt complet</b> est obligatoire à <b>50 m</b> des écluses et des ponts routiers mobiles, et à <b>100 m</b> des ponts ferroviaires mobiles, sauf autorisation.</p>
+    <p><b>Le passage se fait dans l'ordre d'arrivée.</b> La priorité absolue est réservée aux bateaux de l'armée, aux embarcations de l'administration, aux secours aux épaves et aux services réguliers de transport de voyageurs. D'autres catégories passent en alternance avec les bateaux en attente. Un bateau déjà engagé dans l'ouvrage ne peut plus être trématé.</p>
+    <p class="art">Arrêté royal du 15 octobre 1935, art. 24 §2 (arrêt), art. 28 §2 à §5 (ordre et priorités), art. 28 §8 (trématage).</p>
+  </div>
+
+  <h3>Le niveau des eaux et la hauteur sous les ponts</h3>
+  <p>C'est le calcul le plus souvent interrogé du chapitre, et le seul où une erreur coûte un mât.</p>
+  <p>La carte donne la hauteur libre sous le pont <b>pour un niveau d'eau de référence</b>. Si le niveau monte — après des pluies, par exemple — la hauteur disponible <b>diminue d'autant</b>. Et il faut encore retirer la marge de sécurité.</p>
+
+  <figure class="anim live" id="outil-pont">
+    <p class="atitle">⚙ Outil : la hauteur libre sous un pont</p>
+    <svg viewBox="0 0 420 215" role="img" aria-label="Coupe d'un pont, du niveau d'eau et d'un bateau, avec les hauteurs cotées">
+      <rect x="0" y="0" width="420" height="215" class="f-ciel"/>
+      <rect x="0" y="195" width="420" height="20" class="f-terre"/>
+      <rect id="pt-eau" x="0" y="150" width="420" height="45" class="f-eau"/>
+      <!-- tablier du pont -->
+      <rect id="pt-tablier" x="0" y="60" width="420" height="14" class="f-mur"/>
+      <!-- piles -->
+      <rect class="f-mur pt-pile" x="18" y="60" width="16" height="140"/>
+      <rect class="f-mur pt-pile" x="386" y="60" width="16" height="140"/>
+      <!-- bateau -->
+      <g id="pt-bateau" transform="translate(200,150)">
+        <path d="M -34 0 L 34 0 L 25 11 L -25 11 Z" class="f-coque"/>
+        <rect x="-10" y="-14" width="20" height="14" class="f-cabine"/>
+        <rect id="pt-mat" x="-1.5" y="-60" width="3" height="46" class="f-mat"/>
+      </g>
+      <!-- cote hauteur libre disponible -->
+      <line id="pt-cote" x1="330" y1="74" x2="330" y2="150" class="s-cote"/>
+      <line id="pt-cote-h" x1="324" y1="74" x2="336" y2="74" class="s-cote"/>
+      <line id="pt-cote-b" x1="324" y1="150" x2="336" y2="150" class="s-cote"/>
+      <text id="pt-cote-t" x="338" y="116" class="t-lab">disponible</text>
+      <text x="8" y="186" class="t-lab">niveau d'eau</text>
+    </svg>
+    <p class="cap" id="pt-cap"></p>
+    <div class="ctl">
+      <label>Pont (carte)
+        <input id="pt-h" type="range" min="4" max="12" step="0.1" value="11">
+        <output id="pt-h-o">11,0 m</output></label>
+      <label>Montée de l'eau
+        <input id="pt-m" type="range" min="0" max="150" step="5" value="40">
+        <output id="pt-m-o">40 cm</output></label>
+      <label>Ton tirant d'air
+        <input id="pt-t" type="range" min="1" max="8" step="0.1" value="5.8">
+        <output id="pt-t-o">5,8 m</output></label>
+    </div>
+  </figure>
+
+  <div class="card">
+    <p class="ctitle">L'exemple classique de l'examen</p>
+    <p>La carte annonce <b>11 m</b> sous le pont. Après des pluies, le niveau est monté de <b>40 cm</b>.</p>
+    <p class="formula">11,00 − 0,40 = 10,60 m</p>
+    <p>Puis on retire la <b>marge de sécurité de 30 cm</b> :</p>
+    <p class="formula">10,60 − 0,30 = 10,30 m</p>
+    <p>C'est la hauteur réellement utilisable.</p>
+  </div>
+
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>La marge de 30 cm existe bien, mais elle ne s'applique <b>pas</b> indifféremment à la largeur, à la longueur, à la hauteur et au tirant d'eau comme on l'enseigne souvent.</p>
+    <p>En <b>hauteur</b> : le chargement et les parties fixes doivent rester <b>0,30 m sous la hauteur libre</b> fixée par le règlement particulier de la voie. C'est bien la marge du calcul ci-dessus.</p>
+    <p>Aux <b>écluses</b> : le bateau doit être plus court d'au moins <b>0,30 m</b> et plus étroit d'au moins <b>0,20 m</b> que le sas — avec une tolérance de 0,10 m pour les écluses de 5,20 m ou moins.</p>
+    <p>Enfin, le règlement général ne fixe <b>aucune</b> hauteur libre minimale sous les ponts : elle est donnée <b>voie par voie</b> par les règlements particuliers.</p>
+    <p class="art">Arrêté royal du 15 octobre 1935, art. 1 §1 (dimensions par voie), §2 (écluses), §3 (hauteur).</p>
+  </div>
+
+  <h3>Le limnimètre</h3>
+  <p>Une <b>échelle graduée</b> fixée verticalement au bord de l'eau, qui donne la hauteur d'eau d'un coup d'œil. C'est l'instrument de base : tout le reste — hauteur sous les ponts, tirant d'eau disponible — se calcule à partir de cette lecture.</p>
+
+  <h3>Les avis à la batellerie</h3>
+  <p>C'est le moyen de communication officiel du gestionnaire de la voie d'eau : avaries, restrictions, chômages, fermetures d'écluses, modifications d'horaires. On les consulte <b>avant</b> de partir.</p>
+  <ul>
+    <li><b>Wallonie</b> — voies-hydrauliques.wallonie.be</li>
+    <li><b>Flandre</b> — visuris.be</li>
+  </ul>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Un avis à la batellerie ne dispense pas d'obéir à l'éclusier. En cas de contradiction sur place, <b>c'est l'éclusier qui prime</b>.</p>
+  </div>
+</section>
+
+<section id="qcm">
+  <p class="kicker">Chapitre 1</p>
+  <h2>Les questions</h2>
+  <p>Chaque proposition est expliquée, la juste comme les fausses. Le score se tient <b>par catégorie</b>, comme à l'examen.</p>
+  <div class="score" id="score" hidden></div>
+
+  <div class="qcm" data-cat="Navigation fluviale" data-bonne="B">
+    <p class="qn">QCM 1</p>
+    <p class="qt">Sur une carte fluviale, la flèche à côté du symbole d'écluse indique :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le sens du courant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>l'amont du fleuve</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le sens d'ouverture des portes</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. Sur un canal il n'y a pas de courant naturel, et la flèche y figure quand même.</li>
+        <li class="ok"><b>B</b> — juste. La flèche montre le côté où le niveau est le plus haut, donc le bief amont.</li>
+        <li class="ko"><b>C</b> — faux. Les portes ne sont pas représentées sur le symbole.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : navigation fluviale</p>
+  </div>
+
+  <div class="qcm" data-cat="Navigation fluviale" data-bonne="C">
+    <p class="qn">QCM 2</p>
+    <p class="qt">Le DNG est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la profondeur minimale garantie du chenal</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la hauteur libre sous les ponts</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le niveau de référence auquel les hauteurs d'eau sont rapportées</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. La profondeur se lit ailleurs, et la ligne pointillée prévient justement qu'elle n'est pas garantie.</li>
+        <li class="ko"><b>B</b> — faux. La hauteur sous les ponts se calcule <i>à partir</i> du DNG, elle n'est pas le DNG.</li>
+        <li class="ok"><b>C</b> — juste. Deuxième Nivellement Général : le zéro de référence belge, calé sur les basses mers à Ostende.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : navigation fluviale</p>
+  </div>
+
+  <div class="qcm" data-cat="Navigation fluviale" data-bonne="A">
+    <p class="qn">QCM 3</p>
+    <p class="qt">Sur une carte fluviale, la distance entre deux bâtonnets s'exprime en :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>kilomètres</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>milles nautiques</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>mètres</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ok"><b>A</b> — juste. On est en eaux intérieures : tout est en kilomètres.</li>
+        <li class="ko"><b>B</b> — faux. Le mille nautique est l'unité de la mer, pas du fleuve.</li>
+        <li class="ko"><b>C</b> — faux. Le mètre sert aux dimensions d'écluse et aux hauteurs, pas aux distances parcourues.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : navigation fluviale</p>
+  </div>
+
+  <div class="qcm" data-cat="Navigation fluviale" data-bonne="B">
+    <p class="qn">QCM 4</p>
+    <p class="qt">Une ligne pointillée au centre du chenal signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la navigation y est interdite</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la profondeur standard de la voie n'est pas garantie</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>c'est une zone de mouillage</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. C'est un avertissement, pas une interdiction.</li>
+        <li class="ok"><b>B</b> — juste. On peut passer, mais la profondeur annoncée n'est pas assurée.</li>
+        <li class="ko"><b>C</b> — faux. Le mouillage a ses propres panneaux, vus au chapitre 3.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : navigation fluviale</p>
+  </div>
+
+  <div class="qcm" data-cat="Écluses" data-bonne="A">
+    <p class="qn">QCM 5</p>
+    <p class="qt">Le bief amont est la portion où :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le niveau DNG est le plus élevé</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le niveau DNG est le plus bas</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le courant est le plus fort</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ok"><b>A</b> — juste. Amont = en haut. C'est le côté que montre la flèche sur la carte.</li>
+        <li class="ko"><b>B</b> — faux. C'est la définition du bief <i>aval</i>.</li>
+        <li class="ko"><b>C</b> — faux. La force du courant ne définit pas le bief.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : écluses</p>
+  </div>
+
+  <div class="qcm" data-cat="Écluses" data-bonne="C">
+    <p class="qn">QCM 6</p>
+    <p class="qt">Le bajoyer désigne :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la porte de l'écluse</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la différence de niveau entre les deux biefs</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le mur latéral de l'écluse</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. La porte se dit simplement la porte, amont ou aval.</li>
+        <li class="ko"><b>B</b> — faux. Cette différence s'appelle la hauteur de chute.</li>
+        <li class="ok"><b>C</b> — juste. Le bajoyer est le mur contre lequel tu poses tes pare-battages.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : écluses</p>
+  </div>
+
+  <div class="qcm" data-cat="Écluses" data-bonne="B">
+    <p class="qn">QCM 7</p>
+    <p class="qt">Pendant le sassement, les amarres doivent :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>être bloquées fermement sur les taquets</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>pouvoir coulisser à tout moment</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>être larguées dès que les portes se ferment</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux, et dangereux. En descendant, le bateau resterait suspendu à son amarre ; en montant, l'amarre casse ou arrache le taquet.</li>
+        <li class="ok"><b>B</b> — juste. On tient l'amarre à la main et on la laisse filer au fur et à mesure.</li>
+        <li class="ko"><b>C</b> — faux. Sans amarre, le bateau part en travers dès que l'eau bouge.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : écluses</p>
+  </div>
+
+  <div class="qcm" data-cat="Écluses" data-bonne="C">
+    <p class="qn">QCM 8</p>
+    <p class="qt">On peut sortir de l'écluse :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>dès que le niveau du sas a rejoint celui du bief</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>dès que les portes commencent à s'ouvrir</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>quand les portes sont complètement ouvertes</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. Le niveau peut être bon et les portes encore fermées.</li>
+        <li class="ko"><b>B</b> — faux. C'est le moment où l'on accroche un bordé contre une porte entrouverte.</li>
+        <li class="ok"><b>C</b> — juste. Ouverture complète, et seulement ensuite.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : écluses</p>
+  </div>
+
+  <div class="qcm" data-cat="Écluses" data-bonne="B">
+    <p class="qn">QCM 9</p>
+    <p class="qt">Sauf autorisation, l'arrêt complet est obligatoire à quelle distance d'une écluse ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>20 m</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>50 m</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>100 m</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. Aucune distance de 20 m dans le règlement.</li>
+        <li class="ok"><b>B</b> — juste. 50 m des écluses et des ponts routiers mobiles.</li>
+        <li class="ko"><b>C</b> — faux, mais c'est la bonne réponse pour les <b>ponts ferroviaires mobiles</b>. Les deux chiffres se confondent facilement.</li>
+      </ul>
+      <p class="art">Arrêté royal du 15 octobre 1935, art. 24 §2.</p>
+    </div>
+    <p class="cat">Catégorie : écluses</p>
+  </div>
+
+  <div class="qcm" data-cat="Niveau des eaux" data-bonne="A">
+    <p class="qn">QCM 10</p>
+    <p class="qt">La carte annonce 11 m sous un pont. Le niveau est monté de 40 cm. Avec la marge de sécurité de 30 cm, la hauteur utilisable est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>10,30 m</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>10,60 m</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>10,70 m</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ok"><b>A</b> — juste. 11,00 − 0,40 = 10,60, puis 10,60 − 0,30 = <b>10,30 m</b>.</li>
+        <li class="ko"><b>B</b> — faux. C'est le résultat si l'on oublie la marge de sécurité. C'est l'erreur la plus fréquente.</li>
+        <li class="ko"><b>C</b> — faux. On a retiré la marge mais pas la montée des eaux.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : niveau des eaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Niveau des eaux" data-bonne="C">
+    <p class="qn">QCM 11</p>
+    <p class="qt">Le limnimètre sert à :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>mesurer la vitesse du courant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>mesurer la profondeur sous la quille</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>lire la hauteur d'eau</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. Rien à voir avec la vitesse.</li>
+        <li class="ko"><b>B</b> — faux. C'est le rôle du sondeur, à bord.</li>
+        <li class="ok"><b>C</b> — juste. Une échelle graduée fixée verticalement, qu'on lit depuis le bateau ou la berge.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : niveau des eaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Niveau des eaux" data-bonne="B">
+    <p class="qn">QCM 12</p>
+    <p class="qt">Un avis à la batellerie annonce une chose, l'éclusier t'en demande une autre. Qui prime ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>l'avis à la batellerie</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>l'éclusier</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>la carte fluviale</span></button>
+    </div>
+    <div class="corr" hidden>
+      <p class="verdict"></p>
+      <ul>
+        <li class="ko"><b>A</b> — faux. L'avis a été publié avant ; l'éclusier voit la situation réelle.</li>
+        <li class="ok"><b>B</b> — juste. Sur place, ses instructions passent avant l'avis.</li>
+        <li class="ko"><b>C</b> — faux. La carte est un document de préparation, jamais une autorité.</li>
+      </ul>
+    </div>
+    <p class="cat">Catégorie : niveau des eaux</p>
+  </div>
+
+  <div class="ctl" style="display:flex;gap:8px;flex-wrap:wrap;">
+    <button type="button" id="qcm-raz" class="menu-item" style="width:auto;padding:10px 16px;">Recommencer les questions</button>
+  </div>
+  <p class="note">Douze questions pour ce chapitre. Le module en comptera plus de cent une fois les onze chapitres écrits.</p>
+</section>
+</main>
+
+<script>
+/* ===== SOCLE COMMUN DES PAGES DU PERMIS BELGE =====
+   Trois choses : la recherche à occurrences, le réglage de la taille du
+   texte, et le moteur d'animations. Plus le QCM, qui compte par catégorie
+   parce que l'examen belge se rate catégorie par catégorie. */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------- outils */
+  function aplatir(s){
+    return Array.from(String(s)).map(function(c){
+      var b = (c.normalize("NFD").charAt(0) || c).toLowerCase();
+      return b.charAt(0) || c;       /* toujours UN caractère */
+    }).join("");
+  }
+  var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------- taille du texte */
+  var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
+  var bPlus = document.getElementById("kam-plus");
+  var bMoins = document.getElementById("kam-moins");
+  function mesurerBarre(){
+    var b = document.querySelector(".kam-bar");
+    var h = b ? b.offsetHeight : 56;
+    if(b) document.documentElement.style.setProperty("--h-kam", h + "px");
+    /* Hauteur TOTALE de ce qui reste collé en haut : la barre « Retour » plus
+       la barre de recherche. C'est elle qui sert de marge de défilement —
+       calculée, jamais devinée, sinon un titre rejoint par un lien se cache
+       dessous. */
+    var c = document.getElementById("kam-chercher");
+    document.documentElement.style.setProperty("--h-collant",
+      (h + (c ? c.offsetHeight : 0) + 12) + "px");
+  }
+  function appliquerTaille(){
+    document.documentElement.style.setProperty("--ech", ECHELLES[iEch]);
+    if(bMoins) bMoins.disabled = (iEch === 0);
+    if(bPlus) bPlus.disabled = (iEch === ECHELLES.length - 1);
+    try{ localStorage.setItem("katamar-permis-taille", String(iEch)); }catch(e){}
+    mesurerBarre();
+  }
+  try{
+    var g = parseInt(localStorage.getItem("katamar-permis-taille"), 10);
+    if(g >= 0 && g < ECHELLES.length) iEch = g;
+  }catch(e){}
+  if(bPlus) bPlus.addEventListener("click", function(){ if(iEch < ECHELLES.length - 1){ iEch++; appliquerTaille(); } });
+  if(bMoins) bMoins.addEventListener("click", function(){ if(iEch > 0){ iEch--; appliquerTaille(); } });
+  mesurerBarre();
+  window.addEventListener("resize", mesurerBarre);
+  window.addEventListener("orientationchange", mesurerBarre);
+  appliquerTaille();
+
+  /* --------------------------------------------- recherche à occurrences */
+  var cours = document.querySelector("main");
+  var champ = document.getElementById("kam-q");
+  if(cours && champ){
+    var compteur = document.getElementById("kam-compteur");
+    var bPrec = document.getElementById("kam-prec");
+    var bSuiv = document.getElementById("kam-suiv");
+    var bVider = document.getElementById("kam-vider");
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var marques = [], courant = -1;
+
+    function aEviter(noeud){
+      var p = noeud.parentNode;
+      while(p && p !== cours){
+        if(p.nodeType === 1){
+          var n = p.nodeName.toUpperCase();
+          if(n === "SCRIPT" || n === "STYLE" || n === "NOSCRIPT" || n === "TEXTAREA") return true;
+          if(p.namespaceURI === SVG_NS) return true;   /* un <mark> casserait le schéma */
+          if(p.id === "kam-chercher") return true;
+          if(p.hidden) return true;                    /* corrections non révélées */
+        }
+        p = p.parentNode;
+      }
+      return false;
+    }
+    function effacerSurlignage(){
+      for(var i = 0; i < marques.length; i++){
+        var m = marques[i], p = m.parentNode;
+        if(!p) continue;
+        p.replaceChild(document.createTextNode(m.textContent), m);
+        p.normalize();
+      }
+      marques = []; courant = -1;
+    }
+    function surligner(mot){
+      var cible = aplatir(mot);
+      if(!cible) return;
+      var promeneur = document.createTreeWalker(cours, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(n){
+          if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+          return aEviter(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var noeuds = [], n;
+      while((n = promeneur.nextNode())) noeuds.push(n);
+      for(var i = 0; i < noeuds.length; i++){
+        var noeud = noeuds[i], texte = noeud.nodeValue, plat = aplatir(texte);
+        var pos = plat.indexOf(cible);
+        if(pos === -1) continue;
+        var frag = document.createDocumentFragment(), depart = 0;
+        while(pos !== -1){
+          if(pos > depart) frag.appendChild(document.createTextNode(texte.slice(depart, pos)));
+          var m = document.createElement("mark");
+          m.className = "kam-occ";
+          m.textContent = texte.slice(pos, pos + cible.length);
+          frag.appendChild(m); marques.push(m);
+          depart = pos + cible.length;
+          pos = plat.indexOf(cible, depart);
+        }
+        if(depart < texte.length) frag.appendChild(document.createTextNode(texte.slice(depart)));
+        noeud.parentNode.replaceChild(frag, noeud);
+      }
+    }
+    function majCompteur(){
+      var mot = champ.value.trim();
+      if(!mot){ compteur.textContent = "Cherche dans tout le module"; compteur.className = ""; return; }
+      if(mot.length < 2){ compteur.textContent = "Encore une lettre…"; compteur.className = ""; return; }
+      if(marques.length === 0){
+        compteur.textContent = "Aucune occurrence de « " + mot + " »";
+        compteur.className = "rien"; return;
+      }
+      compteur.innerHTML = "<b>" + (courant + 1) + "</b> / " + marques.length
+        + (marques.length > 1 ? " occurrences" : " occurrence");
+      compteur.className = "";
+    }
+    function ouvrirLesReplis(el){
+      var p = el.parentNode;
+      while(p && p !== cours){
+        if(p.nodeName === "DETAILS" && !p.open) p.open = true;
+        p = p.parentNode;
+      }
+    }
+    function allerA(i){
+      if(marques.length === 0) return;
+      if(courant >= 0 && marques[courant]) marques[courant].classList.remove("actif");
+      courant = (i + marques.length) % marques.length;
+      var m = marques[courant];
+      m.classList.add("actif");
+      ouvrirLesReplis(m);
+      m.scrollIntoView({ block:"center", behavior: reduit ? "auto" : "smooth" });
+      majCompteur();
+    }
+    var minuteur = null;
+    function chercher(){
+      var mot = champ.value.trim();
+      effacerSurlignage();
+      bVider.classList.toggle("vu", champ.value.length > 0);
+      if(mot.length >= 2) surligner(mot);
+      bPrec.disabled = bSuiv.disabled = (marques.length === 0);
+      if(marques.length > 0) allerA(0); else majCompteur();
+    }
+    champ.addEventListener("input", function(){ clearTimeout(minuteur); minuteur = setTimeout(chercher, 150); });
+    champ.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(marques.length === 0){ clearTimeout(minuteur); chercher(); return; }
+      allerA(courant + (e.shiftKey ? -1 : 1));
+    });
+    bSuiv.addEventListener("click", function(){ allerA(courant + 1); });
+    bPrec.addEventListener("click", function(){ allerA(courant - 1); });
+    bVider.addEventListener("click", function(){ champ.value = ""; clearTimeout(minuteur); chercher(); champ.focus(); });
+  }
+
+  /* --------------------------------------------------------- animations */
+  /* Chaque animation déclare un état de départ, une suite d'images et une
+     fonction de rendu. Entre deux images, les nombres sont interpolés : le
+     sas se remplit sous les yeux au lieu de sauter d'un niveau à l'autre. */
+  var ANIMS = {};
+  window.kamAnim = function(id, def){
+    var fig = document.getElementById(id);
+    if(!fig) return;
+    var cap = fig.querySelector(".cap");
+    var cnt = fig.querySelector(".cnt");
+    var bLect = fig.querySelector("[data-lecture]");
+    var bEtape = fig.querySelector("[data-etape]");
+    var bRejouer = fig.querySelector("[data-rejouer]");
+    var etat = Object.assign({}, def.etat0);
+    var i = -1, enCours = false, tache = null;
+    /* Chaque transition porte un numéro. Deux appuis rapides sur « Étape »
+       lançaient deux boucles en même temps : l'ancienne continuait d'écrire
+       l'état et ramenait le feu au rouge ou le bateau en arrière. Une boucle
+       qui n'est plus la dernière s'arrête d'elle-même. */
+    var gen = 0;
+    /* Cible de la transition en cours. Appuyer sur « Étape » pendant qu'une
+       image se joue doit la TERMINER d'un coup, puis passer à la suivante —
+       sinon le mouvement se fige à mi-chemin : le feu reste entre rouge et
+       vert, et le bateau s'arrête au milieu du sas. */
+    var cibleEnCours = null;
+
+    function rendre(){ def.rendu(etat, fig); }
+    function majCnt(){ if(cnt) cnt.textContent = Math.max(0, i + 1) + " / " + def.images.length; }
+    function poser(n, immediat, apres){
+      var img = def.images[n];
+      var depart = Object.assign({}, etat);
+      var cible = Object.assign({}, etat, img.etat || {});
+      var duree = (immediat || reduit) ? 0 : (img.d || 700);
+      if(cap) cap.innerHTML = img.cap;
+      i = n; majCnt();
+      if(duree === 0){
+        gen++; cibleEnCours = null; etat = cible; rendre(); if(apres) apres();
+        return;
+      }
+      var t0 = performance.now();
+      cibleEnCours = cible;
+      var moi = ++gen;
+      cancelAnimationFrame(tache);
+      (function boucle(t){
+        if(moi !== gen) return;               /* une transition plus récente a pris la main */
+        var k = Math.min(1, (t - t0) / duree);
+        var doux = k < .5 ? 2*k*k : 1 - Math.pow(-2*k + 2, 2)/2;   /* ease-in-out */
+        var e = {};
+        Object.keys(cible).forEach(function(cle){
+          var a = depart[cle], b = cible[cle];
+          e[cle] = (typeof a === "number" && typeof b === "number") ? a + (b - a) * doux : b;
+        });
+        etat = e; rendre();
+        if(k < 1) tache = requestAnimationFrame(boucle);
+        else { cibleEnCours = null; if(apres) apres(); }
+      })(t0);
+    }
+    function terminerEnCours(){
+      if(!cibleEnCours) return;
+      gen++; cancelAnimationFrame(tache);
+      etat = cibleEnCours; cibleEnCours = null; rendre();
+    }
+    function suivante(){
+      terminerEnCours();
+      if(i + 1 >= def.images.length) return false;
+      poser(i + 1, false, null);
+      return true;
+    }
+    function lire(){
+      if(enCours){ enCours = false; couper(); if(bLect) bLect.textContent = "▶ Lecture"; return; }
+      enCours = true; if(bLect) bLect.textContent = "⏸ Pause";
+      var n = (i + 1 >= def.images.length) ? 0 : i + 1;
+      if(n === 0){ etat = Object.assign({}, def.etat0); rendre(); }
+      (function enchaine(k){
+        if(!enCours || k >= def.images.length){
+          enCours = false; if(bLect) bLect.textContent = "▶ Lecture"; return;
+        }
+        poser(k, false, function(){ setTimeout(function(){ enchaine(k + 1); }, reduit ? 0 : 450); });
+      })(n);
+    }
+    function couper(){ gen++; cibleEnCours = null; cancelAnimationFrame(tache); }
+    if(bLect) bLect.addEventListener("click", lire);
+    if(bEtape) bEtape.addEventListener("click", function(){
+      enCours = false; if(bLect) bLect.textContent = "▶ Lecture";
+      /* on ne coupe pas ici : poser() incrémente lui-même le numéro */
+      if(!suivante()){ etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+        if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture »."; }
+    });
+    if(bRejouer) bRejouer.addEventListener("click", function(){
+      enCours = false; couper();
+      if(bLect) bLect.textContent = "▶ Lecture";
+      etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+      if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    });
+    if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    rendre(); majCnt();
+    ANIMS[id] = { rendre: rendre };
+  };
+
+  /* --------------------------------------------------------------- QCM */
+  /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
+     minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
+  var scores = {};
+  function majScore(){
+    var panneau = document.getElementById("score");
+    if(!panneau) return;
+    var cats = Object.keys(scores);
+    if(cats.length === 0){ panneau.hidden = true; return; }
+    panneau.hidden = false;
+    var justes = 0, total = 0;
+    cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
+    var pc = total ? Math.round(justes / total * 100) : 0;
+    var lignes = cats.sort().map(function(c){
+      var s = scores[c], p = Math.round(s.ok / s.n * 100);
+      return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
+           + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
+    }).join("");
+    var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
+      + '<ul class="chapitres">' + lignes + "</ul>"
+      + '<p class="regle">' + (pc >= 60 && !sousBarre
+          ? "Au-dessus des deux barres : 60 % au total, et 50 % dans chaque catégorie."
+          : "Il faut <b>60 % au total</b> ET <b>50 % minimum dans chaque catégorie</b>. "
+            + (pc < 60 ? "Le total n'y est pas. " : "")
+            + (sousBarre ? "Une catégorie au moins est sous la barre." : "")) + "</p>";
+  }
+  document.querySelectorAll(".qcm").forEach(function(q){
+    var bonne = (q.dataset.bonne || "").toUpperCase();
+    var cat = q.dataset.cat || "Général";
+    var corr = q.querySelector(".corr");
+    var boutons = [].slice.call(q.querySelectorAll(".choix button"));
+    boutons.forEach(function(b){
+      b.addEventListener("click", function(){
+        if(q.dataset.repondu) return;
+        q.dataset.repondu = "1";
+        var choisi = (b.dataset.l || "").toUpperCase();
+        var juste = (choisi === bonne);
+        boutons.forEach(function(x){
+          x.disabled = true;
+          var l = (x.dataset.l || "").toUpperCase();
+          if(l === bonne) x.classList.add("juste");
+          else if(l === choisi) x.classList.add("faux");
+        });
+        if(corr){
+          corr.hidden = false;
+          var v = corr.querySelector(".verdict");
+          if(v){
+            v.className = "verdict " + (juste ? "ok" : "ko");
+            v.textContent = juste ? "Juste." : "Faux — la bonne réponse est " + bonne + ".";
+          }
+        }
+        if(!scores[cat]) scores[cat] = { ok:0, n:0 };
+        scores[cat].n++; if(juste) scores[cat].ok++;
+        majScore();
+      });
+    });
+  });
+  var raz = document.getElementById("qcm-raz");
+  if(raz) raz.addEventListener("click", function(){
+    scores = {};
+    document.querySelectorAll(".qcm").forEach(function(q){
+      delete q.dataset.repondu;
+      q.querySelectorAll(".choix button").forEach(function(b){
+        b.disabled = false; b.classList.remove("juste", "faux");
+      });
+      var c = q.querySelector(".corr"); if(c) c.hidden = true;
+    });
+    majScore();
+    var p = document.getElementById("score"); if(p) p.hidden = true;
+  });
+  majScore();
+})();
+
+</script>
+<script>
+/* ===== ANIMATIONS DU CHAPITRE 1 ===== */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------- l'éclusage, en montant */
+  var AVAL = 150, AMONT = 90, FOND = 190, HAUT = 60, HPORTE = 130;
+  window.kamAnim("anim-ecluse", {
+    etat0: { niv: AVAL, pAval: 0, pAmont: 0, bx: 40, feu: 0, amarres: 0 },
+    capDepart: "Tu arrives par le bief aval, en bas à gauche. Touche « Lecture », ou avance pas à pas avec « Étape ».",
+    images: [
+      { cap: "Tu approches par le <b>bief aval</b>. Le feu est <b>rouge</b> : on attend devant les portes, moteur au ralenti.",
+        d: 900, etat: { bx: 95 } },
+      { cap: "Le feu passe au <b>vert</b> et la <b>porte aval</b> s'ouvre. Le dessin montre une porte qui descend ; beaucoup d'écluses ont des portes qui pivotent, le principe est le même.",
+        d: 1000, etat: { feu: 1, pAval: 1 } },
+      { cap: "Tu entres <b>doucement</b> dans le <b>sas</b>, pare-battages dehors des deux bords : on peut accoster par bâbord comme par tribord.",
+        d: 1400, etat: { bx: 215 } },
+      { cap: "Tu t'amarres <b>à l'avant ET à l'arrière</b>. Une seule amarre et le bateau se met en travers. Puis tu <b>coupes le moteur</b>.",
+        d: 600, etat: { amarres: 1 } },
+      { cap: "La <b>porte aval</b> se referme derrière toi.",
+        d: 900, etat: { pAval: 0 } },
+      { cap: "Le sas se remplit. Le bateau monte : tu <b>laisses filer les amarres</b> au fur et à mesure, sans jamais les bloquer.",
+        d: 2400, etat: { niv: AMONT } },
+      { cap: "Le niveau du sas a rejoint celui du <b>bief amont</b>. La différence que tu viens de franchir, c'est la <b>hauteur de chute</b>.",
+        d: 700 },
+      { cap: "La <b>porte amont</b> s'ouvre. On attend qu'elle soit <b>complètement</b> ouverte — pas une seconde avant.",
+        d: 1000, etat: { pAmont: 1 } },
+      { cap: "Tu largues et tu sors vers l'amont. Éclusage terminé.",
+        d: 1600, etat: { amarres: 0, bx: 400 } }
+    ],
+    rendu: function(e, fig){
+      var q = function(s){ return fig.querySelector(s); };
+      var eau = q("#ec-eau-sas");
+      eau.setAttribute("y", e.niv.toFixed(1));
+      eau.setAttribute("height", Math.max(0, FOND - e.niv).toFixed(1));
+      var pa = q("#ec-porte-aval");
+      pa.setAttribute("y", (HAUT + HPORTE * e.pAval).toFixed(1));
+      pa.setAttribute("height", Math.max(0, HPORTE * (1 - e.pAval)).toFixed(1));
+      var pm = q("#ec-porte-amont");
+      pm.setAttribute("y", (HAUT + HPORTE * e.pAmont).toFixed(1));
+      pm.setAttribute("height", Math.max(0, HPORTE * (1 - e.pAmont)).toFixed(1));
+      /* Hors du sas, le bateau flotte au niveau du bief ; dedans, il suit l'eau. */
+      var y = (e.bx < 134) ? AVAL : (e.bx > 306 ? AMONT : e.niv);
+      q("#ec-bateau").setAttribute("transform", "translate(" + e.bx.toFixed(1) + "," + y.toFixed(1) + ")");
+      q("#ec-feu").setAttribute("fill", e.feu > .5 ? "var(--green)" : "var(--red)");
+      q("#ec-amarres").setAttribute("opacity", e.amarres.toFixed(2));
+      var a1 = q("#ec-am1"), a2 = q("#ec-am2");
+      a1.setAttribute("x1", (e.bx - 20).toFixed(1)); a1.setAttribute("y1", y.toFixed(1));
+      a2.setAttribute("x1", (e.bx + 20).toFixed(1)); a2.setAttribute("y1", y.toFixed(1));
+    }
+  });
+
+  /* -------------------------------------------- l'outil « hauteur sous le pont » */
+  (function(){
+    var fig = document.getElementById("outil-pont");
+    if(!fig) return;
+    var hR = document.getElementById("pt-h");
+    var mR = document.getElementById("pt-m");
+    var tR = document.getElementById("pt-t");
+    if(!hR || !mR || !tR) return;
+    var PX = 11;          /* pixels par mètre */
+    var Y_REF = 150;      /* niveau d'eau de référence de la carte */
+    var MARGE = 0.30;     /* marge réglementaire en hauteur */
+    function fr(x, d){ return x.toFixed(d).replace(".", ","); }
+
+    function maj(){
+      var H = parseFloat(hR.value);          /* hauteur libre annoncée par la carte */
+      var M = parseFloat(mR.value) / 100;    /* montée du niveau d'eau, en mètres */
+      var T = parseFloat(tR.value);          /* tirant d'air du bateau */
+      document.getElementById("pt-h-o").textContent = fr(H, 1) + " m";
+      document.getElementById("pt-m-o").textContent = Math.round(M * 100) + " cm";
+      document.getElementById("pt-t-o").textContent = fr(T, 1) + " m";
+
+      var reelle = H - M;
+      var dispo = reelle - MARGE;
+      var reste = dispo - T;
+
+      var yEau = Y_REF - M * PX;
+      var ySous = Y_REF - H * PX;            /* dessous du tablier */
+      fig.querySelector("#pt-eau").setAttribute("y", yEau.toFixed(1));
+      fig.querySelector("#pt-eau").setAttribute("height", Math.max(0, 198 - yEau).toFixed(1));
+      var tab = fig.querySelector("#pt-tablier");
+      tab.setAttribute("y", (ySous - 14).toFixed(1));
+      fig.querySelectorAll(".pt-pile").forEach(function(p){
+        p.setAttribute("y", (ySous - 14).toFixed(1));
+        p.setAttribute("height", Math.max(0, 200 - ySous + 14).toFixed(1));
+      });
+      var hm = Math.max(2, T * PX - 14);
+      var mat = fig.querySelector("#pt-mat");
+      mat.setAttribute("y", (-(14 + hm)).toFixed(1));
+      mat.setAttribute("height", hm.toFixed(1));
+      fig.querySelector("#pt-bateau").setAttribute("transform", "translate(200," + yEau.toFixed(1) + ")");
+      var c = fig.querySelector("#pt-cote");
+      c.setAttribute("y1", ySous.toFixed(1)); c.setAttribute("y2", yEau.toFixed(1));
+      fig.querySelector("#pt-cote-h").setAttribute("y1", ySous.toFixed(1));
+      fig.querySelector("#pt-cote-h").setAttribute("y2", ySous.toFixed(1));
+      fig.querySelector("#pt-cote-b").setAttribute("y1", yEau.toFixed(1));
+      fig.querySelector("#pt-cote-b").setAttribute("y2", yEau.toFixed(1));
+      fig.querySelector("#pt-cote-t").setAttribute("y", ((ySous + yEau) / 2 + 4).toFixed(1));
+      fig.querySelector("#pt-cote-t").textContent = fr(reelle, 2) + " m";
+
+      document.getElementById("pt-cap").innerHTML =
+        "Carte : <b>" + fr(H, 2) + " m</b> — montée : <b>" + Math.round(M * 100) + " cm</b><br>"
+        + fr(H, 2) + " − " + fr(M, 2) + " = <b>" + fr(reelle, 2) + " m</b> réellement libres<br>"
+        + fr(reelle, 2) + " − 0,30 de marge = <b>" + fr(dispo, 2) + " m</b> utilisables<br>"
+        + (reste >= 0
+            ? '<span class="verdict-ok">Tu passes</span>, avec ' + fr(reste, 2) + " m de reste."
+            : '<span class="verdict-ko">Tu ne passes pas</span> : il manque ' + fr(-reste, 2) + " m.");
+    }
+    [hR, mR, tR].forEach(function(r){ r.addEventListener("input", maj); });
+    maj();
+  })();
+})();
+
+</script>
+</body>
+</html>
