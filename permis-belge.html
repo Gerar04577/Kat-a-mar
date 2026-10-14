@@ -615,6 +615,21 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 .cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
 .cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
 .menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+/* QCM : bandeau de reprise, choix fait à l'examen */
+.qz-reprise{ margin:0 0 10px; padding:10px 12px; border-radius:10px; background:var(--sea); border:1px solid var(--navy); font-weight:700; }
+.qz-opt.choisie{ border-color:var(--navy); border-width:2px; background:var(--sea); }
+/* QCM : planche de dessins numérotés */
+.qz-planche{ display:grid; grid-template-columns:repeat(auto-fit, minmax(90px, 1fr)); gap:8px; }
+.qz-planche figure{ margin:0; text-align:center; }
+.qz-planche figcaption{ font-family:var(--mono); font-weight:700; margin-top:4px; }
+/* QCM : un panneau sur fond neutre, de taille raisonnable */
+.qz-panfond{ background:#e9eef2; border-radius:10px; padding:12px; display:flex; justify-content:center; }
+.qz-svg.qz-pan{ width:150px; max-width:100%; height:auto; border:none; border-radius:0; }
+.qz-planche .qz-svg.qz-pan{ max-width:100%; }
+/* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
+   l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
+   de la question (défaut des v1 et v2 du QCM fluvial). */
+#qz [hidden], #qz-regle[hidden]{ display:none !important; }
 
 </style>
 </head>
@@ -622,7 +637,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v8 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM navigation</div>
+  <div class="ver">SOMMAIRE · v9 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM réglementation et navigation</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -733,7 +748,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
           <span class="t">QCM</span>
           <span class="s">Réglementation, Navigation, Sécurité et manœuvres · examen blanc de 200 questions</span>
         </span>
-        <span class="etat">Navigation : 100</span>
+        <span class="etat">R 100 · N 100</span>
       </a>
       <p class="cours-nom"><span class="num">2</span> Côtier — complément au brevet général</p>
       <button type="button" class="menu-item avenir cours-sous" data-bientot="2">

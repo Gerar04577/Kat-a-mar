@@ -622,6 +622,14 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 .qz-planche{ display:grid; grid-template-columns:repeat(auto-fit, minmax(90px, 1fr)); gap:8px; }
 .qz-planche figure{ margin:0; text-align:center; }
 .qz-planche figcaption{ font-family:var(--mono); font-weight:700; margin-top:4px; }
+/* QCM : un panneau sur fond neutre, de taille raisonnable */
+.qz-panfond{ background:#e9eef2; border-radius:10px; padding:12px; display:flex; justify-content:center; }
+.qz-svg.qz-pan{ width:150px; max-width:100%; height:auto; border:none; border-radius:0; }
+.qz-planche .qz-svg.qz-pan{ max-width:100%; }
+/* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
+   l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
+   de la question (défaut des v1 et v2 du QCM fluvial). */
+#qz [hidden], #qz-regle[hidden]{ display:none !important; }
 
 </style>
 </head>
@@ -629,7 +637,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v2 · brevet restreint · Navigation 100 questions</div>
+  <div class="ver">QCM FLUVIAL · v3 · brevet restreint · Réglementation 100 · Navigation 100</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -1050,7 +1058,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 (function(){
   "use strict";
   var C = { rouge:"#d7263d", vert:"#1f8a4c", jaune:"#f2c230", noir:"#1d1d1f", blanc:"#ffffff",
-            eau:"#cfe6f5", ciel:"#eef6fb", terre:"#cfe3b0", trait:"#2a3d4f", gris:"#8a97a3" };
+            bleu:"#1f5fbf", eau:"#cfe6f5", ciel:"#eef6fb", terre:"#cfe3b0", trait:"#2a3d4f", gris:"#8a97a3" };
 
   function cadre(inner, h){
     h = h || 150;
@@ -1290,6 +1298,179 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     return h + "</div>";
   }
 
+
+  /* ========================== RÉGLEMENTATION ==========================
+     Panneaux (appendice 7), feux des ouvrages, feux et marques des bateaux,
+     signaux sonores, scènes de priorité. Mêmes classes CSS (p-…) que le
+     cours, pour qu'un panneau ait partout le même dessin. Repère 100 × 100. */
+  function ptxt(sx, taille, cls, y){
+    return '<text x="50" y="' + (y === undefined ? 50 + taille * 0.35 : y) + '" text-anchor="middle" class="' + cls + '" font-size="' + taille + '">' + sx + "</text>";
+  }
+  function plos(x, y, r, cls){ return '<path d="M ' + x + " " + (y - r) + " L " + (x + r) + " " + y + " L " + x + " " + (y + r) + " L " + (x - r) + " " + y + ' Z" class="' + cls + '"/>'; }
+  var PFIL = '<rect x="4" y="4" width="92" height="92" class="p-filet"/>';
+  var PBORD = '<rect x="7.5" y="7.5" width="85" height="85" class="p-bord"/>';
+  var PBARRE = '<line x1="16" y1="16" x2="84" y2="84" class="p-barre"/>';
+  function pfond(cls){ return '<rect x="4" y="4" width="92" height="92" class="' + cls + '"/>'; }
+  /* pictogrammes redessinés ; t = classe du trait, f = classe du plein */
+  var PICTO = {
+    P: function(t, f, tx){ return ptxt("P", 58, tx); },
+    ancre: function(t){ return '<circle cx="50" cy="24" r="7" class="' + t + '"/><path d="M50 31 L50 82" class="' + t + '"/><path d="M32 42 L68 42" class="' + t + '"/><path d="M24 56 C24 78 50 86 50 86 C50 86 76 78 76 56" class="' + t + '"/>'; },
+    demitour: function(t, f){ return '<path d="M34 84 L34 48 A16 16 0 0 1 66 48 L66 62" class="' + t + '"/><path d="M66 84 L54 60 L78 60 Z" class="' + f + '"/>'; },
+    remous: function(t){ return '<path d="M16 44 C28 30 40 58 52 44 C64 30 76 58 86 48" class="' + t + '"/><path d="M16 68 C28 54 40 82 52 68 C64 54 76 82 86 72" class="' + t + '"/>'; },
+    depasser: function(t, f){ return '<path d="M18 36 L50 36 L58 45 L50 54 L18 54 Z" class="' + f + '"/><path d="M30 58 L62 58 L70 67 L62 76 L30 76 Z" class="' + f + '"/>'; },
+    croiser: function(t, f){ return '<path d="M16 36 L48 36 L56 45 L48 54 L16 54 Z" class="' + f + '"/><path d="M84 58 L52 58 L44 67 L52 76 L84 76 Z" class="' + f + '"/>'; },
+    moteur: function(t, f){ return '<path d="M14 60 L76 60 L68 74 L22 74 Z" class="' + f + '"/><rect x="74" y="52" width="10" height="26" class="' + f + '"/><rect x="34" y="44" width="22" height="16" class="' + f + '"/>'; },
+    voile: function(t, f){ return '<path d="M18 68 L82 68 L72 80 L28 80 Z" class="' + f + '"/><path d="M50 16 L50 64 L80 64 Z" class="' + f + '"/><path d="M46 22 L46 64 L24 64 Z" class="' + f + '"/>'; },
+    rames: function(t, f){ return '<path d="M20 58 L80 58 L72 70 L28 70 Z" class="' + f + '"/><circle cx="50" cy="38" r="7" class="' + f + '"/><path d="M50 46 L50 58" class="' + t + '"/><path d="M22 86 L78 34" class="' + t + '"/>'; },
+    ski: function(t, f){ return '<circle cx="56" cy="22" r="7" class="' + f + '"/><path d="M54 30 L46 56 L60 72" class="' + t + '"/><path d="M50 40 L74 36" class="' + t + '"/><path d="M28 80 L76 80" class="' + t + '"/><path d="M74 36 L90 30" class="' + t + '"/>'; },
+    planche: function(t, f){ return '<path d="M20 80 L80 80" class="' + t + '"/><path d="M48 18 L48 76 L78 70 Z" class="' + f + '"/>'; },
+    jetski: function(t, f){ return '<path d="M16 66 L80 66 L72 78 L22 78 Z" class="' + f + '"/><circle cx="52" cy="34" r="7" class="' + f + '"/><path d="M52 42 L48 62 M52 48 L66 54" class="' + t + '"/>'; },
+    vitesse: function(t, f){ return '<path d="M14 62 L66 62 L58 74 L22 74 Z" class="' + f + '"/><path d="M70 50 L90 50 M70 62 L94 62 M70 74 L90 74" class="' + t + '"/>'; },
+    nage: function(t, f){ return '<circle cx="30" cy="44" r="7" class="' + f + '"/><path d="M38 52 L72 46" class="' + t + '"/><path d="M14 70 C26 60 38 80 50 70 C62 60 74 80 86 70" class="' + t + '"/>'; },
+    miseaeau: function(t, f){ return '<path d="M14 30 L86 80" class="' + t + '"/><path d="M38 34 L64 52 L58 60 L32 42 Z" class="' + f + '"/><path d="M14 84 L86 84" class="' + t + '"/>'; },
+    fleche: function(t, f){ return '<path d="M50 86 L50 42" class="' + t + '"/><path d="M50 16 L74 50 L26 50 Z" class="' + f + '"/>'; },
+    exclam: function(t, f, tx){ return ptxt("!", 60, tx); },
+    radio: function(t, f, tx, o){ return '<path d="M50 26 L50 40" class="' + t + '"/><path d="M38 30 L50 18 L62 30" class="' + t + '"/>' + ptxt(o.texte || "10", 34, tx, 76); },
+    eau: function(t, f){ return '<path d="M30 30 L62 30 L62 42" class="' + t + '"/><path d="M62 52 C54 64 54 70 62 74 C70 70 70 64 62 52 Z" class="' + f + '"/>'; },
+    tel: function(t, f){ return '<path d="M30 30 C26 50 50 74 70 70 L74 60 L62 54 L56 60 C48 56 44 52 40 44 L46 38 L40 26 Z" class="' + f + '"/>'; },
+    eclair: function(t, f){ return '<path d="M58 14 L32 54 L48 54 L40 86 L68 44 L52 44 Z" class="' + f + '"/>'; },
+    bif: function(t, f){ return '<path d="M50 86 L50 50 L24 20 M50 50 L76 20" class="' + t + '"/>'; },
+    affl: function(t, f){ return '<path d="M30 86 L30 14 M30 56 L76 30" class="' + t + '"/>'; },
+    son: function(t, f, tx){ return ptxt("P", 50, tx); }
+  };
+  function panneau(o){
+    var s = "", f = o.fam;
+    if(f === "A1") s = pfond("p-rougef") + '<rect x="4" y="42" width="92" height="16" class="p-picb"/>' + PFIL;
+    else if(f === "E1") s = pfond("p-vertf") + '<rect x="43" y="4" width="14" height="92" class="p-picb"/>' + PFIL;
+    else if(f === "A10") s = '<path d="M50 8 L8 50 L50 92 Z" class="p-rougef"/><path d="M50 8 L92 50 L50 92 Z" class="p-face"/>' + plos(50, 50, 42, "p-filet");
+    else if(f === "A10d") s = '<path d="M50 8 L92 50 L50 92 Z" class="p-rougef"/><path d="M50 8 L8 50 L50 92 Z" class="p-face"/>' + plos(50, 50, 42, "p-filet");
+    else if(f === "D2") s = '<path d="M50 8 L92 50 L50 92 Z" class="p-vertf"/><path d="M50 8 L8 50 L50 92 Z" class="p-face"/>' + plos(50, 50, 42, "p-filet");
+    else if(f === "D1a") s = plos(50, 50, 42, "p-jaunef") + plos(50, 50, 42, "p-filet");
+    else if(f === "D1b") s = plos(27, 50, 22, "p-jaunef") + plos(27, 50, 22, "p-filet") + plos(73, 50, 22, "p-jaunef") + plos(73, 50, 22, "p-filet");
+    else if(f === "D3a") s = pfond("p-bleu") + PFIL + '<path d="M22 50 L60 50" class="p-traitb"/><path d="M80 50 L56 66 L56 34 Z" class="p-picb"/>';
+    else {
+      var bleu = f === "E";
+      var t = bleu ? "p-traitb" : "p-trait", fi = bleu ? "p-picb" : "p-pic", tx = bleu ? "p-txtb" : "p-txt";
+      s = bleu ? pfond("p-bleu") + PFIL : pfond("p-face") + PFIL + PBORD;
+      if(o.pic && PICTO[o.pic]) s += PICTO[o.pic](t, fi, tx, o);
+      else if(o.texte) s += ptxt(o.texte, o.taille || (o.texte.length > 3 ? 28 : 40), tx, o.unite ? 54 : undefined) + (o.unite ? ptxt(o.unite, 14, tx, 84) : "");
+      if(f === "A") s += PBARRE;
+    }
+    var h = o.sous ? 128 : 100;
+    var out = '<svg viewBox="0 0 100 ' + h + '" class="qz-svg qz-pan" role="img">' + s;
+    if(o.sous) out += '<rect x="10" y="102" width="80" height="22" class="p-face" stroke="#2a3d4f" stroke-width="1.4"/>' + ptxt(o.sous, 14, "p-txt", 118);
+    return '<div class="qz-panfond">' + out + "</svg></div>";
+  }
+
+  /* -------- feux d'un ouvrage (écluse, pont) : la nuit, sur le mur -------- */
+  function ouvrage(o){
+    var s = '<svg viewBox="0 0 200 130" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="130" fill="#0e1a2b"/>'
+          + '<rect x="40" y="76" width="120" height="40" fill="#2b3a4d"/>' + '<rect x="0" y="112" width="200" height="18" fill="#16263a"/>';
+    if(o.type === "pont") s += '<rect x="20" y="66" width="160" height="10" fill="#3c4c60"/>';
+    else s += '<rect x="96" y="76" width="8" height="40" fill="#46576b"/>';
+    var coul = { rouge:"#ff4d5e", vert:"#3ddc84", blanc:"#fffbe6", jaune:"#ffd23f" };
+    (o.feux || []).forEach(function(f){
+      var c = coul[f.c];
+      s += '<circle cx="' + f.x + '" cy="' + f.y + '" r="12" fill="' + c + '" opacity=".22"/><circle cx="' + f.x + '" cy="' + f.y + '" r="6.5" fill="' + c + '"/>';
+      if(f.s) s += '<path d="M' + (f.x - 14) + " " + f.y + " L" + (f.x - 20) + " " + f.y + " M" + (f.x + 14) + " " + f.y + " L" + (f.x + 20) + " " + f.y + " M" + f.x + " " + (f.y - 14) + " L" + f.x + " " + (f.y - 20) + '" stroke="' + c + '" stroke-width="2"/>';
+    });
+    if(o.legende) s += txt(100, 126, o.legende, 9, "#e8eef4").replace(/^<text/, '<text style="fill:#e8eef4"');
+    return s + "</svg>";
+  }
+
+  /* -------- un bateau de jour, avec ses marques au mât -------- */
+  function marques(o){
+    var s = '<svg viewBox="0 0 200 150" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="150" fill="' + C.ciel + '"/>'
+          + '<rect x="0" y="110" width="200" height="40" fill="' + C.eau + '"/>'
+          + p("M30 104 L170 104 L156 122 L44 122 Z", "#f4f1ea") + rect(70, 88, 50, 16, "#f4f1ea")
+          + '<line x1="100" y1="88" x2="100" y2="18" stroke="' + C.trait + '" stroke-width="2.4"/>';
+    var y = 22;
+    (o.formes || []).forEach(function(m){
+      var c = C[m.c] || m.c;
+      switch(m.f){
+        case "ballon": s += '<circle cx="100" cy="' + (y + 8) + '" r="8" fill="' + c + '" stroke="' + C.trait + '" stroke-width="1.2"/>'; y += 20; break;
+        case "cone-bas": s += p("M90 " + y + " L110 " + y + " L100 " + (y + 16) + " Z", c); y += 20; break;
+        case "cone-haut": s += p("M100 " + y + " L110 " + (y + 16) + " L90 " + (y + 16) + " Z", c); y += 20; break;
+        case "cylindre": s += rect(93, y, 14, 22, c) + (m.bandes ? rect(93, y, 14, 2.5, C.blanc) + rect(93, y + 2.5, 14, 2.5, C.noir) + rect(93, y + 17, 14, 2.5, C.noir) + rect(93, y + 19.5, 14, 2.5, C.blanc) : ""); y += 26; break;
+        case "bicone": s += p("M100 " + y + " L109 " + (y + 9) + " L100 " + (y + 18) + " L91 " + (y + 9) + " Z", c); y += 22; break;
+        case "pavillon": s += rect(100, y, 26, 18, c); y += 22; break;
+        case "flamme": s += p("M100 " + y + " L132 " + (y + 7) + " L100 " + (y + 14) + " Z", c); y += 18; break;
+        case "panneau-bleu": s += rect(122, 82, 22, 14, "#7fb8e6") + '<circle cx="152" cy="80" r="4" fill="#fffbe6" stroke="' + C.trait + '"/>'; break;
+      }
+    });
+    if(o.legende) s += txt(100, 142, o.legende, 9);
+    return s + "</svg>";
+  }
+
+  /* -------- un bateau de nuit, vu sous un angle : ses feux -------- */
+  function feuxBateau(o){
+    var s = '<svg viewBox="0 0 200 130" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="130" fill="#0e1a2b"/>'
+          + '<rect x="0" y="96" width="200" height="34" fill="#132238"/>';
+    var coul = { rouge:"#ff4d5e", vert:"#3ddc84", blanc:"#fffbe6", jaune:"#ffd23f", bleu:"#4da3ff" };
+    (o.feux || []).forEach(function(f){
+      var c = coul[f.c];
+      s += '<circle cx="' + f.x + '" cy="' + f.y + '" r="11" fill="' + c + '" opacity=".22"/><circle cx="' + f.x + '" cy="' + f.y + '" r="5.5" fill="' + c + '"/>';
+      if(f.s) s += '<path d="M' + (f.x - 13) + " " + f.y + " L" + (f.x - 19) + " " + f.y + " M" + (f.x + 13) + " " + f.y + " L" + (f.x + 19) + " " + f.y + '" stroke="' + c + '" stroke-width="2"/>';
+    });
+    if(o.legende) s += txt(100, 122, o.legende, 9, "#e8eef4").replace(/^<text/, '<text style="fill:#e8eef4"');
+    return s + "</svg>";
+  }
+
+  /* -------- un signal sonore : brefs (1 s) et prolongés (4 s) -------- */
+  function son(o){
+    var seq = o.seq || [], x = 12, s = "", k = 9;
+    seq.forEach(function(e){
+      var d = e === "P" ? 4 : e === "T" ? .25 : 1;
+      s += '<rect x="' + x.toFixed(1) + '" y="34" width="' + (d * k).toFixed(1) + '" height="22" rx="3" fill="' + C.trait + '"/>';
+      x += (d + (e === "T" ? .25 : 1)) * k;
+    });
+    var W = Math.max(200, x + 12);
+    var out = '<svg viewBox="0 0 ' + W.toFixed(0) + ' 90" class="qz-svg" role="img"><rect x="0" y="0" width="' + W.toFixed(0) + '" height="90" fill="#fff"/>'
+            + s
+            + txt(W / 2, 80, o.legende || "court = bref (1 s) · long = prolongé (4 s)", 8);
+    return out + "</svg>";
+  }
+
+  /* -------- scène de priorité, vue de dessus -------- */
+  function scene(o){
+    var s = '<svg viewBox="0 0 200 150" class="qz-svg" role="img">';
+    if(o.large){ s += '<rect x="0" y="0" width="200" height="150" fill="' + C.eau + '"/>'; }
+    else {
+      s += '<rect x="0" y="0" width="200" height="150" fill="' + C.terre + '"/><rect x="0" y="' + (o.etroit ? 52 : 28) + '" width="200" height="' + (o.etroit ? 46 : 94) + '" fill="' + C.eau + '"/>';
+      if(o.courant !== false) s += '<path d="M18 ' + (o.etroit ? 62 : 40) + ' L52 ' + (o.etroit ? 62 : 40) + '" stroke="' + C.trait + '" stroke-width="2"/><path d="M58 ' + (o.etroit ? 62 : 40) + " L50 " + (o.etroit ? 57 : 35) + " L50 " + (o.etroit ? 67 : 45) + ' Z" fill="' + C.trait + '"/>' + txt(36, o.etroit ? 46 : 22, "courant", 9);
+    }
+    if(o.affluent) s += '<rect x="120" y="0" width="34" height="40" fill="' + C.eau + '"/>';
+    if(o.vent) s += '<path d="M' + o.vent[0] + " " + o.vent[1] + " L" + o.vent[2] + " " + o.vent[3] + '" stroke="#555" stroke-width="2.4" stroke-dasharray="5 3"/>' + txt(o.vent[0], o.vent[1] - 6, "vent", 9);
+    if(o.vent) s += '<path d="M' + (o.vent[2] - 6) + " " + (o.vent[3] - 8) + " L" + o.vent[2] + " " + (o.vent[3] + 2) + " L" + (o.vent[2] + 6) + " " + (o.vent[3] - 8) + ' Z" fill="#555"/>';
+    (o.bateaux || []).forEach(function(b){
+      var L = b.grand ? 30 : 16, W = b.grand ? 8 : 6;
+      s += '<g transform="translate(' + b.x + "," + b.y + ") rotate(" + (b.cap || 0) + ')">'
+         + '<path d="M' + (-L) + " " + (-W) + " L" + (L * 0.55) + " " + (-W) + " L" + L + " 0 L" + (L * 0.55) + " " + W + " L" + (-L) + " " + W + ' Z" fill="' + (b.c || "#fff") + '" stroke="' + C.trait + '" stroke-width="1.6"/>';
+      if(b.voile) s += '<path d="M0 0 L' + (b.voile === "b" ? "-12 -16" : "-12 16") + '" stroke="' + C.trait + '" stroke-width="2.6"/>';
+      s += "</g>";
+      if(b.l) s += txt(b.x, b.y + (b.ly || 22), b.l, 9);
+    });
+    return s + "</svg>";
+  }
+
+  /* -------- secteurs des feux, vus de dessus : mât 225°, côtés 112°30', poupe 135° -------- */
+  function secteurs(o){
+    var cx = 100, cy = 78, R = 58, s = '<svg viewBox="0 0 200 150" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="150" fill="#0e1a2b"/>';
+    function pt(deg, r){ var a = (deg - 90) * Math.PI / 180; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
+    function arc(a, b, r, coul, op){
+      var p1 = pt(a, r), p2 = pt(b, r), large = ((b - a + 360) % 360) > 180 ? 1 : 0;
+      return '<path d="M' + cx + " " + cy + " L" + p1[0].toFixed(1) + " " + p1[1].toFixed(1) + " A" + r + " " + r + " 0 " + large + " 1 " + p2[0].toFixed(1) + " " + p2[1].toFixed(1) + ' Z" fill="' + coul + '" opacity="' + op + '"/>';
+    }
+    var f = o.feu;
+    if(!f || f === "mat") s += arc(-112.5, 112.5, R, "#fffbe6", f ? .55 : .18);
+    if(!f || f === "cotes"){ s += arc(0, 112.5, R - 10, "#3ddc84", f ? .6 : .3) + arc(-112.5, 0, R - 10, "#ff4d5e", f ? .6 : .3); }
+    if(!f || f === "poupe") s += arc(112.5, 247.5, R, "#fffbe6", f ? .55 : .18);
+    s += '<path d="M100 56 L108 70 L108 98 L92 98 L92 70 Z" fill="#fff" stroke="' + C.trait + '" stroke-width="1.6"/>';
+    s += txt(100, 14, "avant", 9, "#e8eef4").replace(/^<text/, '<text style="fill:#e8eef4"');
+    if(o.legende) s += txt(100, 146, o.legende, 9, "#e8eef4").replace(/^<text/, '<text style="fill:#e8eef4"');
+    return s + "</svg>";
+  }
+
   /* ---------------------------------------------------- l'aiguillage */
   function dessiner(d){
     if(!d) return "";
@@ -1303,6 +1484,13 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       case "alignement": return alignement(d);
       case "rythme": return rythme(d);
       case "planche":return planche(d);
+      case "panneau":return panneau(d);
+      case "ouvrage":return ouvrage(d);
+      case "marques":return marques(d);
+      case "feux":   return feuxBateau(d);
+      case "son":    return son(d);
+      case "scene":  return scene(d);
+      case "secteurs":return secteurs(d);
       default: return "";
     }
   }
@@ -1311,9 +1499,9 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 
 </script>
 <script>
-/* QCM FLUVIAL — brevet restreint. Bloc 1 : Navigation, 100 questions (N001-N100).
-   Sources : RGP 2006 appendice 8, Tome 1, manuel IBPT 2025. Bonne réponse = o[b].
-   Règle : toute question de balisage a son dessin. */
+/* QCM FLUVIAL — brevet restreint. Réglementation R001-R100, Navigation N001-N100.
+   Sources : Règlement général de police (AR 24/09/2006) et ses appendices, AR 15/10/1935,
+   Tome 1, manuel IBPT 2025. Bonne réponse = o[b]. Toute question de balisage ou de signalisation a son dessin. */
 window.KAM_QCM = {
 "cours": "fluvial",
 "examen": {
@@ -1325,6 +1513,3630 @@ window.KAM_QCM = {
 }
 },
 "questions": [
+{
+"id": "R001",
+"cat": "R",
+"res": false,
+"q": "Une MENUE EMBARCATION, c'est un bateau dont :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"l": "7,55 m"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "la coque fait moins de 20 m",
+"e": "C'est la définition, sauf quelques exceptions nommées."
+},
+{
+"t": "le moteur fait moins de 20 chevaux",
+"e": "La puissance n'entre pas dans la définition."
+},
+{
+"t": "l'encombrement total, balcons compris, fait moins de 20 m",
+"e": "On mesure la coque, pas le balcon ni le bout-dehors."
+}
+],
+"b": 0,
+"ex": "Menue embarcation : coque de moins de 20 m. Le Kat-a-Mar (7,55 m) en est une.",
+"pg": "On mesure la COQUE. Un voilier de 18 m avec 2 m de bout-dehors reste une menue embarcation.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 1.01 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R002",
+"cat": "R",
+"res": false,
+"q": "Un bac de 15 m de long est :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"grand": true,
+"l": "bac de 15 m"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "un grand bateau, parce que les bacs le sont quelle que soit leur taille",
+"e": "Le bac est nommé parmi les exceptions."
+},
+{
+"t": "une menue embarcation, puisqu'il fait moins de 20 m",
+"e": "C'est le piège : les 20 m ne sont pas le seul critère."
+},
+{
+"t": "un grand bateau seulement quand il transporte des passagers",
+"e": "Sa qualité de bac suffit."
+}
+],
+"b": 0,
+"ex": "Comptent comme grands bateaux, quelle que soit leur longueur : remorqueurs, pousseurs, bacs, bateaux à passagers, bateaux de pêche en action de pêche, barges.",
+"pg": "La règle des 20 m a des exceptions : apprends la liste par cœur.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 1.01 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R003",
+"cat": "R",
+"res": false,
+"q": "Un bateau à passagers de 12 m est, pour les priorités :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"l": "12 m, à passagers"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "un grand bateau",
+"e": "Il est nommé dans la liste des exceptions."
+},
+{
+"t": "une menue embarcation",
+"e": "Moins de 20 m, mais c'est un bateau à passagers : il compte comme grand."
+},
+{
+"t": "ni l'un ni l'autre",
+"e": "Tout bateau est l'un ou l'autre."
+}
+],
+"b": 0,
+"ex": "Un bateau à passagers est un grand bateau même sous 20 m. De jour, sous 20 m, il montre un bicône jaune.",
+"pg": "Ne juge pas à la taille : lis d'abord la catégorie du bateau.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 1.01 et 3.15 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R004",
+"cat": "R",
+"res": false,
+"q": "De jour, au large et sans accès à la rive, un bateau en stationnement montre :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "ballon",
+"c": "noir"
+}
+],
+"legende": "au large, sans accès à la rive"
+},
+"o": [
+{
+"t": "un ballon noir à l'avant",
+"e": "De nuit, un feu blanc visible de tous les côtés."
+},
+{
+"t": "deux ballons noirs superposés",
+"e": "Ça, c'est l'incapacité de manœuvrer."
+},
+{
+"t": "un cône noir pointe en bas",
+"e": "Ça, c'est le voilier au moteur."
+}
+],
+"b": 0,
+"ex": "Stationnement : de nuit un feu blanc visible de tous les côtés (ou deux, proue et poupe, côté chenal) ; de jour, seulement au large sans accès à la rive, un ballon noir.",
+"pg": "Un ballon noir = à l'arrêt ; deux ballons noirs = incapable de manœuvrer ; ballon-bicône-ballon = capacité restreinte.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.20 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R005",
+"cat": "R",
+"res": false,
+"q": "On parle de DÉPASSEMENT quand un bateau arrive par l'arrière d'un autre, d'une direction de plus de :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "rattrapant"
+},
+{
+"x": 130,
+"y": 75,
+"cap": 0,
+"l": "rattrapé"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "22°30' sur l'arrière de son travers",
+"e": "C'est la définition du rattrapant."
+},
+{
+"t": "45° sur l'arrière de son travers",
+"e": "Ce n'est pas l'angle du règlement."
+},
+{
+"t": "90°, exactement par l'arrière",
+"e": "Il n'est pas nécessaire d'arriver pile dans l'axe."
+}
+],
+"b": 0,
+"ex": "Le rattrapant arrive d'une direction de plus de 22°30' sur l'arrière du travers du rattrapé — c'est aussi la limite des feux de côté.",
+"pg": "22°30' revient partout : feux de côté, feu de mât, dépassement. Ce n'est pas un hasard : de là, tu ne vois que le feu de poupe.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.09 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R006",
+"cat": "R",
+"res": false,
+"q": "Deux bateaux font route l'un vers l'autre, étrave contre étrave. Le règlement appelle cela :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "A"
+},
+{
+"x": 140,
+"y": 75,
+"cap": 180,
+"l": "B"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "une rencontre",
+"e": "Routes opposées ou presque."
+},
+{
+"t": "un dépassement",
+"e": "Le dépassement vient par l'arrière."
+},
+{
+"t": "des routes qui se croisent",
+"e": "Ce sont tous les autres cas d'approche."
+}
+],
+"b": 0,
+"ex": "Rencontre : routes opposées. Dépassement : par l'arrière. Routes qui se croisent : tous les autres cas.",
+"pg": "En cas de doute, les règles de rencontre et de dépassement passent avant celles des routes qui se croisent.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03 à 6.04 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R007",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "A1"
+},
+"o": [
+{
+"t": "passage interdit, pour tous",
+"e": "A.1 : le signal général d'interdiction de passer."
+},
+{
+"t": "interdit aux bateaux à moteur",
+"e": "Ça, c'est A.12."
+},
+{
+"t": "défense de dépasser",
+"e": "Ça, c'est A.2."
+}
+],
+"b": 0,
+"ex": "A.1 : rouge à bande blanche horizontale. Il peut aussi être un feu rouge ou un pavillon rouge. Deux signaux l'un au-dessus ou à côté de l'autre : interdiction prolongée.",
+"pg": "A.1 n'a pas la forme des autres A : pas de carré blanc, pas de diagonale. C'est l'exception à connaître.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R008",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "depasser"
+},
+"o": [
+{
+"t": "défense de tout dépassement",
+"e": "A.2, pour tous les bateaux."
+},
+{
+"t": "défense de croiser",
+"e": "Croiser ET dépasser, c'est A.4."
+},
+{
+"t": "dépassement obligatoire par la gauche",
+"e": "Un panneau barré interdit, il n'oblige pas."
+}
+],
+"b": 0,
+"ex": "A.2 : défense de tout dépassement. A.3 : seulement entre convois. A.4 : croiser et dépasser.",
+"pg": "La diagonale rouge veut toujours dire « non ».",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.2 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R009",
+"cat": "R",
+"res": false,
+"q": "Le panneau A.3 interdit de dépasser :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"texte": "A.3",
+"taille": 30
+},
+"o": [
+{
+"t": "aux convois, entre eux",
+"e": "Les autres bateaux peuvent encore se dépasser."
+},
+{
+"t": "à tous les bateaux sans exception",
+"e": "Ça, c'est A.2."
+},
+{
+"t": "aux seules embarcations de plaisance",
+"e": "La plaisance n'est pas visée."
+}
+],
+"b": 0,
+"ex": "A.3 : défense aux convois de dépasser un autre convoi.",
+"pg": "A.2, A.3, A.4, A.4.1 se ressemblent : lis QUI est visé.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.3 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R010",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "croiser"
+},
+"o": [
+{
+"t": "défense de croiser et de dépasser",
+"e": "A.4 : ni rencontre, ni dépassement."
+},
+{
+"t": "défense de virer à cet endroit",
+"e": "Ça, c'est A.8, avec un demi-tour dessiné."
+},
+{
+"t": "sens unique pour les convois",
+"e": "Le règlement ne l'exprime pas ainsi."
+}
+],
+"b": 0,
+"ex": "A.4 : défense de croiser et de dépasser. Sous ce panneau, on applique la règle des passages étroits (art. 6.07).",
+"pg": "Deux bateaux en sens opposés dessinés = croisement. Deux bateaux dans le même sens = dépassement.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.4 · Cours amélioré, module 1, chap. 3 et 4"
+},
+{
+"id": "R011",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "P"
+},
+"o": [
+{
+"t": "stationnement interdit du côté du panneau",
+"e": "A.5 : ni ancrage ni amarrage à la rive."
+},
+{
+"t": "parking autorisé pour les bateaux",
+"e": "Le P barré interdit."
+},
+{
+"t": "interdit seulement de s'amarrer à la rive",
+"e": "Ça, c'est A.7."
+}
+],
+"b": 0,
+"ex": "A.5 : stationnement interdit du côté où le panneau est planté. A.5.1 : sur la largeur indiquée en mètres.",
+"pg": "A.5 interdit tout : ancre ET amarre. A.6 seulement l'ancre, A.7 seulement l'amarre.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.5 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R012",
+"cat": "R",
+"res": false,
+"q": "Un panneau barré avec une ancre est planté là. Tu veux t'arrêter. Tu peux :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "ancre"
+},
+"o": [
+{
+"t": "t'amarrer à la rive, mais pas jeter l'ancre",
+"e": "A.6 n'interdit que l'ancre (et le traînage)."
+},
+{
+"t": "jeter l'ancre si tu ne la traînes pas",
+"e": "L'ancrage lui-même est interdit."
+},
+{
+"t": "ni l'un ni l'autre",
+"e": "Ça, ce serait A.5."
+}
+],
+"b": 0,
+"ex": "A.6 : défense d'ancrer, de traîner ancres, câbles ou chaînes, et d'utiliser des pieux d'ancrage. L'amarrage reste permis.",
+"pg": "Trois panneaux, trois portées : A.5 tout, A.6 l'ancre, A.7 l'amarre.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.6 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R013",
+"cat": "R",
+"res": false,
+"q": "Le panneau A.7 interdit :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"texte": "A.7",
+"taille": 30
+},
+"o": [
+{
+"t": "de s'amarrer à la rive où il est planté",
+"e": "Et seulement celle-là."
+},
+{
+"t": "de s'amarrer sur les deux rives",
+"e": "Un panneau ne vaut que pour sa rive."
+},
+{
+"t": "tout stationnement, ancre comprise",
+"e": "Ça, c'est A.5."
+}
+],
+"b": 0,
+"ex": "A.7 : défense de s'amarrer à la rive — celle du panneau. Tu peux encore mouiller au large.",
+"pg": "Ne confonds pas A.7 (amarre) et A.5 (tout stationnement).",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.7 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R014",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "demitour"
+},
+"o": [
+{
+"t": "défense de virer",
+"e": "A.8."
+},
+{
+"t": "aire de virage",
+"e": "C'est le même dessin en BLEU : E.8."
+},
+{
+"t": "défense de dépasser",
+"e": "Ce serait deux bateaux."
+}
+],
+"b": 0,
+"ex": "A.8 : défense de virer. E.8 (bleu, même dessin) : aire de virage.",
+"pg": "Même pictogramme, couleur différente, sens opposé : blanc barré = interdit, bleu = autorisé.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.8 et E.8 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R015",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "remous"
+},
+"o": [
+{
+"t": "défense de créer des remous gênants",
+"e": "A.9 : ralentis pour ne pas faire de vagues."
+},
+{
+"t": "zone de courant fort, prudence",
+"e": "Ce n'est pas un panneau d'information."
+},
+{
+"t": "baignade interdite dans la zone",
+"e": "Ce n'est pas le sens de ce dessin."
+}
+],
+"b": 0,
+"ex": "A.9 : défense de créer des remous gênants — près des berges fragiles, des bateaux amarrés, des chantiers.",
+"pg": "Pas de chiffre sur A.9 : ce n'est pas une limite de vitesse, c'est un résultat à éviter. Ralentis assez pour ne plus faire de vagues.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.9 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R016",
+"cat": "R",
+"res": false,
+"q": "Deux losanges moitié rouges, moitié blancs encadrent une arche de pont, le côté rouge tourné vers l'extérieur. Tu dois :",
+"d": {
+"t": "planche",
+"items": [
+{
+"d": {
+"t": "panneau",
+"fam": "A10"
+},
+"l": "1"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "A10d"
+},
+"l": "2"
+}
+]
+},
+"o": [
+{
+"t": "passer entre les deux",
+"e": "A.10 interdit le passage EN DEHORS de l'espace qu'ils délimitent."
+},
+{
+"t": "passer à l'extérieur de l'un ou de l'autre",
+"e": "C'est exactement ce qui est interdit."
+},
+{
+"t": "renoncer : l'arche est fermée",
+"e": "Ils balisent un passage, ils ne le ferment pas."
+}
+],
+"b": 0,
+"ex": "A.10 : le triangle rouge est du côté interdit, le blanc du côté du passage. Par paire : tu passes entre les deux.",
+"pg": "Rouge et blanc = interdit À CÔTÉ. Vert et blanc (D.2) = conseillé DEDANS. Jaune (D.1) = la passe recommandée.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.10 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R017",
+"cat": "R",
+"res": false,
+"q": "Lequel de ces panneaux ferme la voie aux bateaux à moteur, mais la laisse ouverte aux voiliers et aux avirons ?",
+"d": {
+"t": "planche",
+"items": [
+{
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "moteur"
+},
+"l": "1"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "voile"
+},
+"l": "2"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "rames"
+},
+"l": "3"
+}
+]
+},
+"o": [
+{
+"t": "le n° 1 (A.12)",
+"e": "A.12 : interdit aux bateaux motorisés."
+},
+{
+"t": "le n° 2 (A.15)",
+"e": "A.15 : interdit aux bateaux à voiles."
+},
+{
+"t": "le n° 3 (A.16)",
+"e": "A.16 : interdit aux bateaux mus par la force musculaire."
+}
+],
+"b": 0,
+"ex": "A.12 moteur, A.15 voile, A.16 force musculaire (rames, pagaie, pédalo).",
+"pg": "A.1 interdit à TOUT le monde. Lis d'abord QUI est interdit.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.12, A.15, A.16 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R018",
+"cat": "R",
+"res": false,
+"q": "Tu fais du ski nautique dans une zone autorisée et tu passes ce panneau. Il signifie :",
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "ski"
+},
+"o": [
+{
+"t": "fin de la zone où le ski nautique est autorisé",
+"e": "Au-delà, le ski n'est plus permis."
+},
+{
+"t": "début de la zone de ski nautique",
+"e": "Le début est le même dessin sur fond bleu (E.17)."
+},
+{
+"t": "ski nautique réservé aux bateaux de plaisance",
+"e": "Le panneau ne parle pas de catégorie."
+}
+],
+"b": 0,
+"ex": "Les zones vont par paires : bleu = début (E.17), barré = fin (A.14). Même logique : planche E.20/A.17, grande vitesse E.21/A.18, jet-ski E.24/A.20, natation E.105/A.105.",
+"pg": "Le panneau barré de fin de zone n'est pas une « interdiction spéciale » : au-delà, la règle générale reprend.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.14 et E.17 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R019",
+"cat": "R",
+"res": false,
+"q": "Ce panneau blanc bordé de rouge, sans diagonale, avec une flèche, signifie :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"pic": "fleche"
+},
+"o": [
+{
+"t": "obligation de suivre la direction indiquée",
+"e": "Pas de diagonale : c'est un ordre."
+},
+{
+"t": "direction recommandée",
+"e": "La recommandation de direction est un panneau BLEU (D.3a)."
+},
+{
+"t": "défense d'aller dans ce sens",
+"e": "Il faudrait une diagonale rouge."
+}
+],
+"b": 0,
+"ex": "Famille B : carré blanc bordé de rouge, sans diagonale = obligation.",
+"pg": "Sur l'eau, l'obligation n'est pas bleue comme sur la route : elle est blanche bordée de rouge.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R020",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "12",
+"unite": "km/h"
+},
+"o": [
+{
+"t": "ne pas dépasser 12 km/h",
+"e": "Une vitesse commande ta conduite : famille B."
+},
+{
+"t": "il reste 12 m de largeur",
+"e": "Une largeur serait un C.3, sans « km/h »."
+},
+{
+"t": "canal VHF 12",
+"e": "Un canal radio serait un B.11b avec une antenne, ou un E.23 bleu."
+}
+],
+"b": 0,
+"ex": "B.6 : vitesse maximale en km/h. C'est une OBLIGATION, pas une restriction.",
+"pg": "Un chiffre sur blanc bordé de rouge peut être B (ta conduite) ou C (la voie). Une vitesse = ta conduite = B.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.6 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R021",
+"cat": "R",
+"res": false,
+"q": "Sous un panneau B.5 figure un cartouche « 1000 m ». Cela veut dire :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "B.5",
+"taille": 30,
+"sous": "1000 m"
+},
+"o": [
+{
+"t": "l'arrêt est à observer dans 1000 mètres",
+"e": "Un cartouche de distance annonce où s'applique le panneau."
+},
+{
+"t": "tu dois t'arrêter pendant 1000 mètres",
+"e": "Un arrêt ne se mesure pas en mètres."
+},
+{
+"t": "la hauteur libre est de 10 m",
+"e": "Une hauteur s'écrit sur un C.2."
+}
+],
+"b": 0,
+"ex": "B.5 : obligation de s'arrêter. Le cartouche « 1000 m » annonce que l'arrêt est à 1000 m.",
+"pg": "Un chiffre SOUS un panneau (cartouche) n'est pas un chiffre SUR un panneau : regarde où il est écrit.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.5 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R022",
+"cat": "R",
+"res": false,
+"q": "Ce panneau (avec un « P ») t'impose :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"pic": "son"
+},
+"o": [
+{
+"t": "d'émettre un son prolongé",
+"e": "B.7 : émettre un signal sonore ; le cartouche ou la lettre précise lequel."
+},
+{
+"t": "de stationner à cet endroit",
+"e": "Le P de stationnement est sur A.5 (barré) ou E.5 (bleu)."
+},
+{
+"t": "de prendre un pilote à bord",
+"e": "Ce n'est pas ce panneau."
+}
+],
+"b": 0,
+"ex": "B.7 : obligation d'émettre un signal sonore. « P » = un son prolongé.",
+"pg": "Le même « P » change de sens selon le panneau : bleu = stationnement autorisé, barré = interdit, blanc bordé de rouge sans barre = son prolongé.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.7 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R023",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"pic": "exclam"
+},
+"o": [
+{
+"t": "observer une vigilance particulière",
+"e": "Un ordre : sois très attentif."
+},
+{
+"t": "danger de mort, demi-tour",
+"e": "Ce n'est pas la formulation du règlement."
+},
+{
+"t": "arrêt obligatoire devant le panneau",
+"e": "L'arrêt, c'est B.5."
+}
+],
+"b": 0,
+"ex": "B.8 : obligation d'observer une vigilance particulière.",
+"pg": "B.7 = son, B.5 = arrêt, B.8 = vigilance. Ne les mélange pas.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.8 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R024",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"pic": "radio",
+"texte": "10"
+},
+"o": [
+{
+"t": "obligation d'entrer en liaison radio sur le canal 10",
+"e": "Blanc bordé de rouge : c'est une obligation."
+},
+{
+"t": "information radio disponible sur le canal 10",
+"e": "Ça, c'est E.23, sur fond bleu."
+},
+{
+"t": "vitesse limitée à 10 km/h",
+"e": "Une vitesse s'écrit avec « km/h » et sans antenne."
+}
+],
+"b": 0,
+"ex": "B.11b : obligation d'entrer en liaison radiotéléphonique sur le canal indiqué. E.23 (bleu) : renseignements disponibles par radio.",
+"pg": "Même dessin, couleur différente : blanc/rouge = tu DOIS appeler ; bleu = tu PEUX écouter.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.11 et E.23 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R025",
+"cat": "R",
+"res": false,
+"q": "Tu sors d'une voie affluente. Un panneau B.9 est planté à la sortie. Tu dois :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 140,
+"y": 30,
+"cap": 90,
+"l": "toi, tu sors"
+},
+{
+"x": 60,
+"y": 90,
+"cap": 0,
+"grand": true,
+"l": "voie principale"
+}
+],
+"affluent": true
+},
+"o": [
+{
+"t": "t'assurer que personne n'aura à changer de route ou de vitesse avant de t'engager",
+"e": "C'est la formulation de B.9."
+},
+{
+"t": "t'engager directement, car celui qui sort d'une voie affluente a la priorité",
+"e": "C'est l'inverse."
+},
+{
+"t": "klaxonner trois fois pour prévenir, puis t'engager sans attendre",
+"e": "Aucun signal ne te donne ce droit."
+}
+],
+"b": 0,
+"ex": "B.9 : ne s'engager sur la voie principale qu'après s'être assuré que la manœuvre n'oblige aucun autre bateau à changer de route ou de vitesse.",
+"pg": "B.9 ne dit pas « les autres sont prioritaires » : il te demande de t'ASSURER. C'est la formulation qu'on t'interroge.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.9 · Cours amélioré, module 1, chap. 3 et 4"
+},
+{
+"id": "R026",
+"cat": "R",
+"res": false,
+"q": "Sur la voie principale, tu vois deux feux jaunes scintillants l'un au-dessus de l'autre à la sortie d'un port. Tu dois :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 30,
+"c": "jaune",
+"s": true
+},
+{
+"x": 100,
+"y": 56,
+"c": "jaune",
+"s": true
+}
+],
+"legende": "sortie de port, vue de la voie"
+},
+"o": [
+{
+"t": "modifier route ou vitesse si besoin, pour laisser sortir les bateaux du port",
+"e": "B.10 s'adresse à toi, sur la voie principale."
+},
+{
+"t": "t'arrêter jusqu'à ce qu'ils s'éteignent",
+"e": "Il faut s'adapter, pas forcément s'arrêter."
+},
+{
+"t": "rien : la voie principale a toujours la priorité",
+"e": "B.10 te demande justement d'adapter ta route."
+}
+],
+"b": 0,
+"ex": "B.10 : les bateaux de la voie principale modifient route ou vitesse, si nécessaire, pour laisser sortir ceux du port ou de la voie affluente.",
+"pg": "B.9 est pour celui qui SORT, B.10 pour celui qui PASSE devant.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.10 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R027",
+"cat": "R",
+"res": false,
+"q": "Le panneau C.2 porte « 4,20 ». Il annonce :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "4,20"
+},
+"o": [
+{
+"t": "une hauteur libre limitée à 4,20 m",
+"e": "C.2 : hauteur libre."
+},
+{
+"t": "une vitesse maximale de 4,20 km/h",
+"e": "Une vitesse aurait « km/h » (B.6)."
+},
+{
+"t": "une profondeur d'eau limitée à 4,20 m",
+"e": "La profondeur, c'est C.1."
+}
+],
+"b": 0,
+"ex": "C.1 profondeur, C.2 hauteur libre, C.3 largeur, C.4 restrictions (renseigne-toi), C.5 chenal éloigné de la rive.",
+"pg": "Le chiffre de C.2 n'inclut pas ta marge : retire encore 0,30 m pour savoir si tu passes.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, C.2 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R028",
+"cat": "R",
+"res": false,
+"q": "Le panneau C.4 signifie :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "C.4",
+"taille": 30
+},
+"o": [
+{
+"t": "des restrictions : renseigne-toi",
+"e": "Le seul C qui ne dit pas laquelle."
+},
+{
+"t": "une profondeur d'eau limitée",
+"e": "C'est C.1."
+},
+{
+"t": "une largeur de passe limitée",
+"e": "C'est C.3."
+}
+],
+"b": 0,
+"ex": "C.4 : des restrictions existent ; à toi de te renseigner (avis à la batellerie, éclusier).",
+"pg": "Ne devine pas : C.4 t'oblige à aller chercher l'information.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, C.4 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R029",
+"cat": "R",
+"res": false,
+"q": "Un panneau C.5 porte le chiffre 30. Cela veut dire :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "30"
+},
+"o": [
+{
+"t": "le chenal est éloigné de la rive d'au moins 30 m, comptés depuis le panneau",
+"e": "Distance minimale, à partir du signal."
+},
+{
+"t": "le chenal est toujours à 30 m de la rive, sur toute la voie",
+"e": "La valeur change d'un signal à l'autre."
+},
+{
+"t": "la profondeur est de 30 dm",
+"e": "La profondeur, c'est C.1."
+}
+],
+"b": 0,
+"ex": "C.5 : chenal éloigné de la rive ; le chiffre est la distance minimale en mètres, comptée depuis le signal.",
+"pg": "30 n'est qu'un exemple : aucune valeur n'est « la » valeur.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, C.5 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R030",
+"cat": "R",
+"res": false,
+"q": "Ces trois panneaux appartiennent, dans l'ordre, aux familles :",
+"d": {
+"t": "planche",
+"items": [
+{
+"d": {
+"t": "panneau",
+"fam": "A",
+"pic": "P"
+},
+"l": "1"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "12",
+"unite": "km/h"
+},
+"l": "2"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "P"
+},
+"l": "3"
+}
+]
+},
+"o": [
+{
+"t": "interdiction (A), obligation (B), indication (E)",
+"e": "Barré = A ; blanc bordé de rouge sans barre = B ; bleu = E."
+},
+{
+"t": "obligation, restriction, interdiction",
+"e": "Le bleu n'interdit jamais."
+},
+{
+"t": "interdiction, restriction, obligation",
+"e": "Le bleu n'oblige à rien sur l'eau."
+}
+],
+"b": 0,
+"ex": "La couleur du fond donne la famille : blanc bordé de rouge = A, B ou C ; bleu = E ; losange = D. La diagonale sépare A de B.",
+"pg": "Sur la route, l'obligation est bleue. Sur l'eau, le bleu RENSEIGNE.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R031",
+"cat": "R",
+"res": false,
+"q": "Sous une arche de pont, tu vois UN seul losange jaune. Cela signifie :",
+"d": {
+"t": "panneau",
+"fam": "D1a"
+},
+"o": [
+{
+"t": "passe recommandée, dans les deux sens",
+"e": "Un losange : les deux sens."
+},
+{
+"t": "passage interdit sous cette arche",
+"e": "Le jaune recommande, il n'interdit pas."
+},
+{
+"t": "passe à sens unique, dans ce sens",
+"e": "Il en faudrait deux."
+}
+],
+"b": 0,
+"ex": "D.1a : un losange jaune (ou un feu jaune) = passe recommandée, double sens. D.1b : deux losanges = sens unique.",
+"pg": "Un losange = deux sens ; deux losanges = un seul sens. C'est contre-intuitif, retiens-le.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, D.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R032",
+"cat": "R",
+"res": false,
+"q": "Deux losanges jaunes côte à côte au-dessus d'une passe signifient :",
+"d": {
+"t": "panneau",
+"fam": "D1b"
+},
+"o": [
+{
+"t": "passe recommandée à sens unique",
+"e": "Exact."
+},
+{
+"t": "deux passes recommandées côte à côte",
+"e": "Les deux losanges désignent la même passe."
+},
+{
+"t": "passage interdit sous ces losanges",
+"e": "Le jaune recommande."
+}
+],
+"b": 0,
+"ex": "D.1b : passe recommandée dans le seul sens indiqué ; en sens inverse, elle est interdite.",
+"pg": "Deux losanges jaunes = sens unique.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, D.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R033",
+"cat": "R",
+"res": false,
+"q": "Ce losange moitié vert, moitié blanc signifie :",
+"d": {
+"t": "panneau",
+"fam": "D2"
+},
+"o": [
+{
+"t": "se tenir de préférence dans l'espace indiqué, côté vert",
+"e": "Un conseil, pas une interdiction."
+},
+{
+"t": "passage interdit en dehors de l'espace indiqué",
+"e": "Ça, c'est A.10, rouge et blanc."
+},
+{
+"t": "le chenal est proche de la rive gauche",
+"e": "Celui-là est sur la berge, carré posé sur la pointe."
+}
+],
+"b": 0,
+"ex": "D.2 : recommandation de se tenir dans l'espace indiqué ; le triangle vert est du côté de cet espace.",
+"pg": "Même dessin que A.10, mais VERT : un conseil. Rouge : une interdiction.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, D.2 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R034",
+"cat": "R",
+"res": false,
+"q": "Lequel de ces signaux INTERDIT de passer en dehors de l'espace qu'il indique ?",
+"d": {
+"t": "planche",
+"items": [
+{
+"d": {
+"t": "panneau",
+"fam": "A10"
+},
+"l": "1"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "D2"
+},
+"l": "2"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "D1a"
+},
+"l": "3"
+}
+]
+},
+"o": [
+{
+"t": "le n° 1, rouge et blanc (A.10)",
+"e": "A.10 : interdiction."
+},
+{
+"t": "le n° 2, vert et blanc (D.2)",
+"e": "D.2 : simple recommandation."
+},
+{
+"t": "le n° 3, jaune (D.1a)",
+"e": "D.1a : la passe recommandée, on passe dessous."
+}
+],
+"b": 0,
+"ex": "Rouge et blanc = interdit à côté ; vert et blanc = conseillé dedans ; jaune = la porte.",
+"pg": "Sous une arche, regarde la couleur avant la forme : les trois sont des losanges.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.10, D.1, D.2 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R035",
+"cat": "R",
+"res": false,
+"q": "Ce panneau bleu à flèche blanche signifie :",
+"d": {
+"t": "panneau",
+"fam": "D3a"
+},
+"o": [
+{
+"t": "direction recommandée, celle de la flèche",
+"e": "Famille D : recommandation."
+},
+{
+"t": "obligation de suivre la flèche",
+"e": "L'obligation est blanche bordée de rouge (B.1)."
+},
+{
+"t": "sens interdit dans l'autre direction",
+"e": "Aucune diagonale, aucun rouge."
+}
+],
+"b": 0,
+"ex": "D.3a : recommandation de direction. B.1 : obligation de direction.",
+"pg": "Bleu = conseil ou information ; blanc bordé de rouge = ordre.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, D.3 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R036",
+"cat": "R",
+"res": false,
+"q": "Un feu jaune est allumé au-dessus d'une arche de pont. Il a le même sens que :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 40,
+"c": "jaune"
+}
+],
+"type": "pont",
+"legende": "feu jaune au-dessus de l'arche"
+},
+"o": [
+{
+"t": "un losange jaune : passe recommandée, double sens",
+"e": "Un feu jaune = D.1a."
+},
+{
+"t": "un feu orange de la route : ralentis",
+"e": "Il n'y a pas de feu orange sur l'eau."
+},
+{
+"t": "une interdiction temporaire",
+"e": "Le jaune recommande."
+}
+],
+"b": 0,
+"ex": "D.1a peut être un losange jaune OU un feu jaune ; D.1b deux losanges OU deux feux jaunes.",
+"pg": "La nuit, compte les feux jaunes comme tu compterais les losanges.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, D.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R037",
+"cat": "R",
+"res": false,
+"q": "Ce panneau vert à bande blanche verticale signifie :",
+"d": {
+"t": "panneau",
+"fam": "E1"
+},
+"o": [
+{
+"t": "passage autorisé",
+"e": "Le seul panneau E à fond vert."
+},
+{
+"t": "chenal proche de la rive gauche",
+"e": "Celui-là est vert et blanc, sur la pointe, sur la berge."
+},
+{
+"t": "eau potable",
+"e": "C'est E.13, bleu."
+}
+],
+"b": 0,
+"ex": "E.1 : passage autorisé, signal général. Il peut aussi être un feu vert.",
+"pg": "E.1 est l'exception verte de la famille bleue. Il est le contraire de A.1.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R038",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "P"
+},
+"o": [
+{
+"t": "stationnement autorisé",
+"e": "Bleu = autorisation."
+},
+{
+"t": "stationnement interdit",
+"e": "Il faudrait un carré blanc bordé de rouge barré (A.5)."
+},
+{
+"t": "parking pour voitures",
+"e": "C'est un panneau de voie navigable."
+}
+],
+"b": 0,
+"ex": "E.5 : stationnement autorisé — ancrage ou amarrage. E.5.1 : sur une largeur ; E.5.2 : entre deux distances ; E.5.3 : nombre de bateaux bord à bord.",
+"pg": "Même « P », trois sens : bleu = autorisé (E.5), barré = interdit (A.5), sans barre = son prolongé (B.7).",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.5 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R039",
+"cat": "R",
+"res": false,
+"q": "Ce panneau bleu avec un éclair signifie :",
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "eclair"
+},
+"o": [
+{
+"t": "croisement d'une ligne électrique aérienne",
+"e": "Attention au mât !"
+},
+{
+"t": "borne électrique pour bateaux",
+"e": "C'est E.102, un service."
+},
+{
+"t": "danger d'orage",
+"e": "Le règlement n'a pas ce panneau."
+}
+],
+"b": 0,
+"ex": "E.2 : croisement d'une ligne électrique aérienne. Pour un voilier, c'est vital : vérifie ton tirant d'air.",
+"pg": "Un panneau bleu peut annoncer un danger : il renseigne, il n'autorise pas forcément.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.2 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R040",
+"cat": "R",
+"res": false,
+"q": "Le panneau E.11 annonce :",
+"d": {
+"t": "panneau",
+"fam": "E",
+"texte": "E.11",
+"taille": 28
+},
+"o": [
+{
+"t": "la fin d'une interdiction, d'une obligation ou d'une restriction",
+"e": "Il lève ce qu'un autre avait posé."
+},
+{
+"t": "le début d'une zone de natation autorisée",
+"e": "C'est E.105."
+},
+{
+"t": "la présence d'un poste téléphonique",
+"e": "C'est E.14."
+}
+],
+"b": 0,
+"ex": "E.11 : fin d'une interdiction, d'une obligation valable dans un seul sens, ou d'une restriction.",
+"pg": "Tant que tu n'as pas vu le E.11, la prescription précédente court toujours.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.11 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R041",
+"cat": "R",
+"res": false,
+"q": "Les panneaux E.9 et E.10 te disent :",
+"d": {
+"t": "planche",
+"items": [
+{
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "affl"
+},
+"l": "1"
+},
+{
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "bif"
+},
+"l": "2"
+}
+]
+},
+"o": [
+{
+"t": "si tu es sur la voie principale ou sur la voie affluente",
+"e": "Ils annoncent qui est la voie principale."
+},
+{
+"t": "où se trouvent l'eau et l'électricité",
+"e": "Ce sont les services E.100 à E.104."
+},
+{
+"t": "le sens du courant",
+"e": "Ce n'est pas leur rôle."
+}
+],
+"b": 0,
+"ex": "E.9 : les voies rencontrées sont affluentes de la tienne (tu es sur la principale). E.10 : ta voie est affluente de celle que tu rencontres.",
+"pg": "Ces panneaux sont la clé de la règle « le chenal principal passe avant ».",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.9 et E.10 · Cours amélioré, module 1, chap. 3 et 4"
+},
+{
+"id": "R042",
+"cat": "R",
+"res": false,
+"q": "Ce panneau bleu avec une antenne et le chiffre 10 signifie :",
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "radio",
+"texte": "10"
+},
+"o": [
+{
+"t": "renseignements radio disponibles sur le canal 10",
+"e": "Bleu = information."
+},
+{
+"t": "obligation d'appeler sur le canal 10",
+"e": "Ce serait B.11b, blanc bordé de rouge."
+},
+{
+"t": "vitesse limitée à 10 km/h dans la zone",
+"e": "Ce serait B.6."
+}
+],
+"b": 0,
+"ex": "E.23 : possibilité d'obtenir des renseignements nautiques par radiotéléphonie sur le canal indiqué.",
+"pg": "Bleu : tu PEUX. Blanc bordé de rouge : tu DOIS.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.23 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R043",
+"cat": "R",
+"res": false,
+"q": "Ce panneau signifie :",
+"d": {
+"t": "panneau",
+"fam": "E",
+"pic": "demitour"
+},
+"o": [
+{
+"t": "aire de virage",
+"e": "Bleu : c'est autorisé ici."
+},
+{
+"t": "défense de virer",
+"e": "Ce serait A.8, blanc barré."
+},
+{
+"t": "sens unique, faire demi-tour",
+"e": "Le panneau ne l'impose pas."
+}
+],
+"b": 0,
+"ex": "E.8 : aire de virage — un endroit prévu pour faire demi-tour.",
+"pg": "Même dessin que A.8, couleur bleue : sens opposé.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.8 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R044",
+"cat": "R",
+"res": false,
+"q": "À l'entrée d'une écluse, deux feux rouges l'un AU-DESSUS de l'autre. Cela signifie :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 32,
+"c": "rouge"
+},
+{
+"x": 100,
+"y": 60,
+"c": "rouge"
+}
+],
+"legende": "à l'entrée d'une écluse"
+},
+"o": [
+{
+"t": "accès interdit : l'écluse est hors service",
+"e": "Deux rouges superposés = ouvrage arrêté."
+},
+{
+"t": "l'écluse se prépare à t'accueillir",
+"e": "La préparation, c'est rouge et vert."
+},
+{
+"t": "tu peux entrer prudemment",
+"e": "Aucun rouge ne laisse entrer."
+}
+],
+"b": 0,
+"ex": "Écluse : deux rouges superposés = hors service ; un rouge ou deux rouges côte à côte = l'écluse est manœuvrée, attends.",
+"pg": "Superposés ou côte à côte n'est pas pareil : superposés = inutile d'attendre.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28/1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R045",
+"cat": "R",
+"res": false,
+"q": "À l'entrée d'une écluse, deux feux rouges CÔTE À CÔTE. Cela signifie :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 84,
+"y": 46,
+"c": "rouge"
+},
+{
+"x": 116,
+"y": 46,
+"c": "rouge"
+}
+],
+"legende": "à l'entrée d'une écluse"
+},
+"o": [
+{
+"t": "accès interdit : écluse manœuvrée, attends",
+"e": "Même sens qu'un seul rouge."
+},
+{
+"t": "accès interdit : écluse hors service",
+"e": "Hors service, ce sont deux rouges superposés."
+},
+{
+"t": "tu peux entrer prudemment, au ralenti",
+"e": "Aucun rouge ne laisse entrer."
+}
+],
+"b": 0,
+"ex": "Un rouge, ou deux rouges juxtaposés : l'écluse fonctionne, mais pas pour toi en ce moment. Si l'un des deux s'éteint, elle va être ouverte.",
+"pg": "Côte à côte : on attend. L'un au-dessus de l'autre : c'est arrêté.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28/1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R046",
+"cat": "R",
+"res": false,
+"q": "Un feu rouge en haut et un feu vert en bas, à l'entrée d'une écluse :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 32,
+"c": "rouge"
+},
+{
+"x": 100,
+"y": 60,
+"c": "vert"
+}
+],
+"legende": "à l'entrée d'une écluse"
+},
+"o": [
+{
+"t": "entrée encore interdite : prépare-toi",
+"e": "Moteur prêt, amarres prêtes."
+},
+{
+"t": "entrée autorisée, avec prudence",
+"e": "Tant qu'un rouge brûle, on n'entre pas."
+},
+{
+"t": "écluse hors service, inutile d'attendre",
+"e": "Ce serait deux rouges superposés."
+}
+],
+"b": 0,
+"ex": "A.11 : passage interdit, mais prépare-toi à te mettre en marche — rouge et vert côte à côte, ou rouge au-dessus du vert.",
+"pg": "Le vert en dessous ne t'autorise pas encore : le rouge commande.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28/1 · Règlement général de police (AR 24/09/2006), appendice 7, A.11 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R047",
+"cat": "R",
+"res": false,
+"q": "Aucun feu n'est allumé à l'entrée de l'écluse, aucun panneau. Tu :",
+"d": {
+"t": "ouvrage",
+"feux": [],
+"legende": "écluse : aucun feu allumé"
+},
+"o": [
+{
+"t": "n'entres pas, sauf ordre du personnel",
+"e": "L'absence de feu n'est pas une autorisation."
+},
+{
+"t": "entres si la porte est ouverte",
+"e": "La porte ouverte n'autorise rien par elle-même."
+},
+{
+"t": "entres : rien ne l'interdit",
+"e": "C'est l'erreur classique."
+}
+],
+"b": 0,
+"ex": "Sans feu ni panneau, entrée et sortie de l'écluse sont interdites, sauf instructions du personnel.",
+"pg": "Feu éteint n'est pas feu vert.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28/1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R048",
+"cat": "R",
+"res": false,
+"q": "Deux feux verts l'un au-dessus de l'autre, à l'entrée d'une écluse :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 32,
+"c": "vert"
+},
+{
+"x": 100,
+"y": 60,
+"c": "vert"
+}
+],
+"legende": "à l'entrée d'une écluse"
+},
+"o": [
+{
+"t": "accès autorisé : ouverte, pas manœuvrée",
+"e": "Grand ouvert."
+},
+{
+"t": "accès interdit : écluse hors service",
+"e": "Le vert autorise."
+},
+{
+"t": "l'écluse va fermer, dépêche-toi",
+"e": "Ce n'est pas le sens."
+}
+],
+"b": 0,
+"ex": "Un vert = accès autorisé. Deux verts superposés = ouvert des deux côtés, pas manœuvré.",
+"pg": "Deux feux de même couleur superposés = l'ouvrage ne bouge pas (rouge : arrêté, vert : grand ouvert).",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28/1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R049",
+"cat": "R",
+"res": false,
+"q": "À un pont mobile : un feu rouge au-dessus d'un feu vert SCINTILLANT. Cela veut dire :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 32,
+"c": "rouge"
+},
+{
+"x": 100,
+"y": 60,
+"c": "vert",
+"s": true
+}
+],
+"type": "pont",
+"legende": "à un pont mobile"
+},
+"o": [
+{
+"t": "interdit, sauf au bateau trop près pour s'arrêter",
+"e": "Exact."
+},
+{
+"t": "passage autorisé à tous, avec prudence",
+"e": "Le rouge interdit."
+},
+{
+"t": "pont hors service, il ne s'ouvrira pas",
+"e": "Ce serait deux rouges superposés."
+}
+],
+"b": 0,
+"ex": "A.11.1 : défense de continuer, sauf si tu es déjà si près que tu ne peux plus raisonnablement t'arrêter.",
+"pg": "Le vert scintillant n'est pas une invitation : c'est une tolérance pour celui qui est déjà engagé.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.26 · Règlement général de police (AR 24/09/2006), appendice 7, A.11.1 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R050",
+"cat": "R",
+"res": false,
+"q": "Un pont mobile montre un feu rouge, et sur le pont lui-même un feu jaune. Tu en conclus :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 50,
+"c": "rouge"
+},
+{
+"x": 100,
+"y": 74,
+"c": "jaune"
+}
+],
+"type": "pont",
+"legende": "un rouge, et un jaune sur le pont"
+},
+"o": [
+{
+"t": "interdit, sauf aux bateaux assez bas, double sens",
+"e": "Le jaune est un D.1a : on passe sous le pont fermé si on est assez bas."
+},
+{
+"t": "le pont va s'ouvrir : prépare-toi à passer",
+"e": "Ce serait rouge et vert."
+},
+{
+"t": "passage autorisé à tous, au ralenti",
+"e": "Le rouge interdit aux autres."
+}
+],
+"b": 0,
+"ex": "Un feu jaune sur le pont avec un ou deux rouges : passage sous le pont fermé pour les bateaux bas, double sens. Deux jaunes : sens unique.",
+"pg": "Avant de passer sous le pont fermé, refais le calcul du tirant d'air avec la marge.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.26 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R051",
+"cat": "R",
+"res": false,
+"q": "Deux feux rouges superposés à un pont mobile signifient :",
+"d": {
+"t": "ouvrage",
+"feux": [
+{
+"x": 100,
+"y": 32,
+"c": "rouge"
+},
+{
+"x": 100,
+"y": 60,
+"c": "rouge"
+}
+],
+"type": "pont",
+"legende": "à un pont mobile"
+},
+"o": [
+{
+"t": "interdit : le pont ne sera pas manœuvré",
+"e": "Inutile d'attendre."
+},
+{
+"t": "le pont est en train de s'ouvrir, attends",
+"e": "Ce n'est pas ce que disent deux rouges superposés."
+},
+{
+"t": "passage autorisé aux petits bateaux",
+"e": "Il faudrait un feu jaune."
+}
+],
+"b": 0,
+"ex": "Pont mobile : un rouge = pont manœuvré ; deux rouges superposés = pas manœuvré.",
+"pg": "À l'écluse, deux rouges superposés = hors service ; au pont = pas manœuvré. Dans les deux cas : n'attends pas.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.26 · Cours amélioré, module 1, chap. 3"
+},
+{
+"id": "R052",
+"cat": "R",
+"res": false,
+"q": "À l'approche d'une écluse, tu peux dépasser la péniche qui te précède :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "toi"
+},
+{
+"x": 130,
+"y": 75,
+"cap": 0,
+"grand": true,
+"l": "péniche"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "non : interdit à l'approche d'une écluse",
+"e": "Et on passe dans l'ordre d'arrivée."
+},
+{
+"t": "oui, si tu es nettement plus rapide",
+"e": "La vitesse ne donne aucun droit."
+},
+{
+"t": "oui, si l'éclusier ne s'y oppose pas",
+"e": "C'est interdit, point."
+}
+],
+"b": 0,
+"ex": "Il est interdit de dépasser un autre bateau à l'approche d'une écluse ou dans un garage.",
+"pg": "Le garage, c'est la zone d'attente devant l'écluse : on y garde son rang.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28 · Cours amélioré, module 1, chap. 1"
+},
+{
+"id": "R053",
+"cat": "R",
+"res": false,
+"q": "Tu arrives à une écluse mais tu ne peux pas y entrer tout de suite. Tu dois :",
+"d": {
+"t": "riviere",
+"canal": true,
+"bateau": "avalant",
+"bx": 40,
+"by": 96,
+"l": "toi"
+},
+"o": [
+{
+"t": "t'arrêter avant le panneau B.5",
+"e": "C'est l'obligation du règlement."
+},
+{
+"t": "tourner en rond devant les portes",
+"e": "Tu gênerais les autres."
+},
+{
+"t": "t'amarrer à la porte de l'écluse",
+"e": "C'est interdit et dangereux."
+}
+],
+"b": 0,
+"ex": "À l'approche du garage : réduire la vitesse ; si l'on ne peut pas ou ne veut pas entrer, s'arrêter avant le B.5. Annoncer son intention par un son prolongé ou par radio.",
+"pg": "B.5 = arrêt. C'est là que tu attends.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28 · Cours amélioré, module 1, chap. 1"
+},
+{
+"id": "R054",
+"cat": "R",
+"res": false,
+"q": "Une menue embarcation est éclusée avec des grands bateaux. Elle entre :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 70,
+"y": 60,
+"cap": 0,
+"grand": true,
+"l": "grand"
+},
+{
+"x": 70,
+"y": 100,
+"cap": 0,
+"l": "toi"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "après eux",
+"e": "C'est la règle."
+},
+{
+"t": "avant eux, puisqu'elle est plus petite",
+"e": "C'est l'inverse."
+},
+{
+"t": "en même temps, à côté",
+"e": "Elle attend qu'ils soient entrés."
+}
+],
+"b": 0,
+"ex": "Passage dans l'ordre d'arrivée ; une menue embarcation éclusée avec des grands bateaux n'entre qu'après eux. Priorité seulement aux services publics (feu bleu scintillant) et aux bateaux à flamme rouge.",
+"pg": "Sois aussi le dernier à te placer près d'eux : garde tes distances.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.29 · Cours amélioré, module 1, chap. 1"
+},
+{
+"id": "R055",
+"cat": "R",
+"res": false,
+"q": "Dans l'écluse, ton bateau est amarré. Le moteur :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"l": "dans le sas"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "ne doit pas propulser avant la sortie",
+"e": "Coupe-le dès que tu es amarré."
+},
+{
+"t": "doit tourner pour garder le bateau en place",
+"e": "Ce sont les amarres qui tiennent le bateau."
+},
+{
+"t": "peut servir si tu es seul dans le sas",
+"e": "L'interdiction vaut toujours."
+}
+],
+"b": 0,
+"ex": "Dans l'écluse : ancres relevées, bateau amarré, propulsion interdite jusqu'à l'autorisation de sortie.",
+"pg": "Une hélice qui tourne dans un sas crée des remous dangereux pour les autres.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.28 · Cours amélioré, module 1, chap. 1"
+},
+{
+"id": "R056",
+"cat": "R",
+"res": false,
+"q": "Pour passer une écluse, ton bateau doit être, par rapport au sas :",
+"d": {
+"t": "riviere",
+"canal": true
+},
+"o": [
+{
+"t": "plus court de 0,30 m et plus étroit de 0,20 m, au moins",
+"e": "C'est l'arrêté de 1935, art. 1 §2."
+},
+{
+"t": "plus court et plus étroit d'au moins 1 m",
+"e": "Ce n'est pas la valeur."
+},
+{
+"t": "plus court et plus étroit d'au moins 0,30 m",
+"e": "En largeur, c'est 0,20 m."
+}
+],
+"b": 0,
+"ex": "Aux écluses : au moins 0,30 m plus court et 0,20 m plus étroit que le sas — tolérance de 0,10 m pour les écluses de 5,20 m ou moins.",
+"pg": "On enseigne souvent « 30 cm partout » : en largeur, c'est 20 cm.",
+"ref": "AR 15/10/1935, art. 1 §2 · Cours amélioré, module 1, chap. 1"
+},
+{
+"id": "R057",
+"cat": "R",
+"res": false,
+"q": "Sous un pont, la hauteur libre fixée est de 4,20 m. Les parties fixes de ton bateau doivent rester au moins :",
+"d": {
+"t": "panneau",
+"fam": "B",
+"texte": "4,20"
+},
+"o": [
+{
+"t": "0,30 m sous cette hauteur (3,90 m)",
+"e": "C'est la marge de l'arrêté de 1935."
+},
+{
+"t": "à 4,20 m exactement, sans marge",
+"e": "Il faut une marge."
+},
+{
+"t": "1 m sous cette hauteur (3,20 m)",
+"e": "Ce n'est pas la valeur."
+}
+],
+"b": 0,
+"ex": "Le chargement et les parties fixes doivent rester 0,30 m sous la hauteur libre fixée par le règlement de la voie.",
+"pg": "Le chiffre du panneau C.2 n'inclut pas ta marge : c'est à toi de la retirer.",
+"ref": "AR 15/10/1935, art. 1 §3 · Cours amélioré, module 1, chap. 1"
+},
+{
+"id": "R058",
+"cat": "R",
+"res": false,
+"q": "Rencontre au milieu d'un chenal large. Aucun des deux ne suit le côté du chenal à son tribord. Tu es une menue embarcation, l'autre un grand bateau. Qui s'écarte ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 110,
+"y": 58,
+"cap": 0,
+"grand": true,
+"l": "grand bateau"
+},
+{
+"x": 140,
+"y": 100,
+"cap": 180,
+"l": "toi"
+}
+]
+},
+"o": [
+{
+"t": "toi : la menue laisse la place au grand",
+"e": "Art. 6.02 al. 2."
+},
+{
+"t": "le grand bateau, parce qu'il manœuvre mieux",
+"e": "C'est l'inverse."
+},
+{
+"t": "chacun vient sur tribord, comme d'habitude",
+"e": "Ça, c'est entre bateaux de même catégorie."
+}
+],
+"b": 0,
+"ex": "Quand aucune règle de route ne s'applique entre une menue embarcation et un grand bateau, la menue laisse l'espace nécessaire et ne peut pas exiger qu'il s'écarte.",
+"pg": "Être à la voile ou descendre le courant ne change rien face à un grand bateau : la voile ne compte qu'entre menues.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.02 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R059",
+"cat": "R",
+"res": false,
+"q": "Rencontre. Toi, menue embarcation, tu suis le côté du chenal à ton tribord ; le grand bateau, non. Qui maintient sa route ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 108,
+"cap": 0,
+"l": "toi, suit son tribord",
+"ly": -12
+},
+{
+"x": 140,
+"y": 76,
+"cap": 180,
+"grand": true,
+"l": "grand bateau, au milieu",
+"ly": -14
+}
+]
+},
+"o": [
+{
+"t": "toi : tu suis ton côté tribord",
+"e": "La règle 1 vaut pour tout le monde."
+},
+{
+"t": "le grand bateau, dans tous les cas",
+"e": "La règle du côté tribord n'a pas d'exception menue/grand."
+},
+{
+"t": "aucun : les deux doivent s'arrêter",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "« Le bateau qui suit le côté du chenal à tribord est tenu de maintenir sa route et l'autre bateau de s'écarter. » Pas d'exception pour la menue embarcation.",
+"pg": "La règle 1 l'emporte sur toutes les autres. Mais garde le devoir de vigilance : s'il ne s'écarte pas, tu manœuvres.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03/1 et 6.04 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R060",
+"cat": "R",
+"res": false,
+"q": "Deux bateaux à moteur de même taille se rencontrent droit devant. Aucun ne suit le côté tribord. Ils doivent :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "A"
+},
+{
+"x": 140,
+"y": 75,
+"cap": 180,
+"l": "B"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "venir chacun sur tribord",
+"e": "Chacun vient sur tribord."
+},
+{
+"t": "venir chacun sur bâbord",
+"e": "Ce serait la collision."
+},
+{
+"t": "attendre que l'autre manœuvre",
+"e": "Les deux manœuvrent."
+}
+],
+"b": 0,
+"ex": "Rencontre sans côté tribord : chacun vient sur tribord pour passer à bâbord de l'autre — comme deux voitures sur la route.",
+"pg": "Bâbord à bâbord = chacun garde l'autre sur sa gauche.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.04 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R061",
+"cat": "R",
+"res": false,
+"q": "Routes qui se croisent entre deux bateaux de même catégorie, aucun ne suit le côté tribord. Qui s'écarte ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 70,
+"y": 110,
+"cap": -45,
+"l": "A"
+},
+{
+"x": 150,
+"y": 70,
+"cap": 180,
+"l": "B"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "celui qui voit l'autre sur son tribord",
+"e": "Et il évite de lui couper la route par l'avant."
+},
+{
+"t": "celui qui voit l'autre sur son bâbord",
+"e": "C'est l'inversion la plus fréquente."
+},
+{
+"t": "le plus rapide",
+"e": "La vitesse ne compte pas."
+}
+],
+"b": 0,
+"ex": "Routes qui se croisent : celui qui a l'autre sur tribord s'écarte ; ici A voit B sur sa droite : A s'écarte.",
+"pg": "Comme la priorité à droite sur la route : celui qui vient de ta droite passe.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03/1 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R062",
+"cat": "R",
+"res": false,
+"q": "Entre menues embarcations de types différents, l'ordre de priorité est :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 60,
+"cap": 0,
+"voile": "b",
+"l": "voilier"
+},
+{
+"x": 60,
+"y": 100,
+"cap": 0,
+"l": "à moteur"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "voile, puis rames, puis moteur",
+"e": "Le moteur s'écarte de tout le monde."
+},
+{
+"t": "rames, puis voile, puis moteur",
+"e": "C'est l'inversion d'une page du manuel."
+},
+{
+"t": "moteur, puis voile, puis rames",
+"e": "Le moteur s'écarte de tout le monde : il passe en dernier."
+}
+],
+"b": 0,
+"ex": "Entre menues : la force musculaire s'écarte pour la voile ; le moteur s'écarte pour la voile et pour les rames.",
+"pg": "Une page du manuel donne la priorité aux rames sur la voile dans les passages étroits : c'est faux, le règlement dit l'inverse.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03/1 et 6.04 · Cours amélioré, module 1, chap. 4 · Erreurs du manuel"
+},
+{
+"id": "R063",
+"cat": "R",
+"res": false,
+"q": "Deux menues embarcations : l'une à moteur suit le côté du chenal à son tribord, l'autre est à la voile. Qui s'écarte ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 108,
+"cap": 0,
+"l": "moteur, suit son tribord",
+"ly": -12
+},
+{
+"x": 140,
+"y": 76,
+"cap": 180,
+"voile": "t",
+"l": "voilier, au milieu",
+"ly": -14
+}
+]
+},
+"o": [
+{
+"t": "le voilier : le côté tribord l'emporte sur le type",
+"e": "Règle 1 contre règle 4 : la 1 gagne."
+},
+{
+"t": "le bateau à moteur : la voile passe toujours avant",
+"e": "La règle des types cède devant celle du côté tribord."
+},
+{
+"t": "les deux viennent sur tribord",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Les règles de type ne s'appliquent que « dans le cas où aucun des bateaux ne suit le côté du chenal à tribord ».",
+"pg": "« La voile passe toujours » est faux : elle passe seulement quand personne ne suit son côté tribord.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03/1 et 6.04 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R064",
+"cat": "R",
+"res": false,
+"q": "Passage étroit sur une voie à courant. Un montant et un avalant vont se rencontrer. Qui laisse le passage ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 40,
+"y": 75,
+"cap": 0,
+"l": "avalant"
+},
+{
+"x": 160,
+"y": 75,
+"cap": 180,
+"l": "montant"
+}
+],
+"etroit": true
+},
+"o": [
+{
+"t": "le montant",
+"e": "L'avalant poursuit, le montant attend."
+},
+{
+"t": "l'avalant",
+"e": "C'est l'inversion classique."
+},
+{
+"t": "aucun : chacun vient sur tribord",
+"e": "Dans un passage étroit, on évite la rencontre."
+}
+],
+"b": 0,
+"ex": "Passage étroit avec courant : l'avalant poursuit sa route, le montant laisse le passage — sans exception pour les menues embarcations.",
+"pg": "L'avalant a le courant dans le dos : il s'arrête mal. C'est au montant d'attendre.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.07 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R065",
+"cat": "R",
+"res": false,
+"q": "Passage étroit SANS courant, deux bateaux à moteur de même taille. Qui poursuit sa route ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 40,
+"y": 75,
+"cap": 0,
+"l": "A"
+},
+{
+"x": 160,
+"y": 75,
+"cap": 180,
+"l": "B"
+}
+],
+"etroit": true,
+"courant": false
+},
+"o": [
+{
+"t": "celui qui n'a pas d'obstacle à tribord",
+"e": "L'autre attend."
+},
+{
+"t": "le premier arrivé à l'entrée du passage",
+"e": "Ce n'est pas une file d'attente."
+},
+{
+"t": "le plus grand des deux bateaux",
+"e": "Ils sont de même taille."
+}
+],
+"b": 0,
+"ex": "Sans courant : poursuit celui qui n'a pas d'obstacle à tribord (ou l'extérieur de la courbe à tribord). Entre menue et grand bateau : la menue s'écarte.",
+"pg": "Sans courant, ce n'est plus montant/avalant qui décide.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.07 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R066",
+"cat": "R",
+"res": false,
+"q": "Un chenal secondaire rejoint le chenal principal. Qui passe ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 137,
+"y": 24,
+"cap": 90,
+"l": "chenal secondaire",
+"ly": -12
+},
+{
+"x": 70,
+"y": 80,
+"cap": 0,
+"grand": true,
+"l": "chenal principal"
+}
+],
+"affluent": true
+},
+"o": [
+{
+"t": "celui du chenal principal",
+"e": "Celui qui entre s'assure de ne gêner personne."
+},
+{
+"t": "celui du chenal secondaire",
+"e": "C'est l'inverse."
+},
+{
+"t": "le premier arrivé",
+"e": "Ce n'est pas une file d'attente."
+}
+],
+"b": 0,
+"ex": "Celui qui entre dans la voie principale — sortie de port ou de voie affluente — s'assure qu'il ne gêne personne.",
+"pg": "Les panneaux E.9 et E.10 te disent sur quel chenal tu es.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.16 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R067",
+"cat": "R",
+"res": false,
+"q": "Tu es prioritaire, mais l'autre ne s'écarte pas et l'abordage devient probable. Tu :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "toi, prioritaire"
+},
+{
+"x": 140,
+"y": 75,
+"cap": 180,
+"l": "ne s'écarte pas"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "manœuvres pour éviter l'abordage",
+"e": "Le devoir de vigilance prime."
+},
+{
+"t": "gardes ta route jusqu'au bout",
+"e": "Ce serait la collision avec la règle en main."
+},
+{
+"t": "klaxonnes et continues",
+"e": "Le signal ne remplace pas la manœuvre."
+}
+],
+"b": 0,
+"ex": "L'obligation de maintenir sa route s'arrête là où commence le danger. Et quiconque constate un danger d'abordage émet une série de sons très brefs.",
+"pg": "« J'étais prioritaire » n'a jamais empêché un abordage.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.01 et 1.04 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R068",
+"cat": "R",
+"res": false,
+"q": "Deux voiliers, amures opposées. Qui s'écarte ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"voile": "t",
+"l": "A"
+},
+{
+"x": 140,
+"y": 75,
+"cap": 180,
+"voile": "b",
+"l": "B"
+}
+],
+"large": true,
+"vent": [
+100,
+20,
+100,
+50
+]
+},
+"o": [
+{
+"t": "celui qui reçoit le vent de bâbord",
+"e": "Bâbord amure s'écarte."
+},
+{
+"t": "celui qui reçoit le vent de tribord",
+"e": "C'est l'inverse."
+},
+{
+"t": "celui qui est sous le vent",
+"e": "« Au vent / sous le vent » ne sert qu'aux mêmes amures."
+}
+],
+"b": 0,
+"ex": "Amures opposées : bâbord amure s'écarte ; tribord amure poursuit.",
+"pg": "L'amure se nomme d'après le bord d'où vient le vent, pas d'après le côté de la voile.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03/1 et 6.04 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R069",
+"cat": "R",
+"res": false,
+"q": "Les routes de deux voiliers se croisent ; ils reçoivent le vent du même bord. Qui s'écarte ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 60,
+"cap": 0,
+"voile": "t",
+"l": "au vent"
+},
+{
+"x": 70,
+"y": 112,
+"cap": -35,
+"voile": "t",
+"l": "sous le vent",
+"ly": 34
+}
+],
+"large": true,
+"vent": [
+150,
+20,
+150,
+50
+]
+},
+"o": [
+{
+"t": "celui qui est au vent",
+"e": "Il s'écarte de la route de celui qui est sous le vent."
+},
+{
+"t": "celui qui est sous le vent",
+"e": "C'est l'inversion classique."
+},
+{
+"t": "le plus rapide",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Mêmes amures, routes qui se croisent : le voilier au vent s'écarte.",
+"pg": "Dans un passage étroit, c'est l'inverse : le voilier au vent poursuit.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.03/1 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R070",
+"cat": "R",
+"res": false,
+"q": "Tu rattrapes un caboteur de 80 m avec ton bateau de 7,55 m. Il doit :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "toi"
+},
+{
+"x": 130,
+"y": 75,
+"cap": 0,
+"grand": true,
+"l": "caboteur 80 m"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "rien : pas de devoir de faciliter envers toi",
+"e": "Exception écrite au règlement."
+},
+{
+"t": "ralentir pour te faciliter le dépassement",
+"e": "Pas dans ce cas."
+},
+{
+"t": "s'écarter vers bâbord pour te laisser passer",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Le rattrapé facilite le dépassement — sauf quand c'est une menue embarcation qui rattrape un grand bateau.",
+"pg": "Tu dépasses à tes risques, seulement quand c'est vraiment sûr.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.09 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R071",
+"cat": "R",
+"res": false,
+"q": "En règle générale, le rattrapant dépasse :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 75,
+"cap": 0,
+"l": "rattrapant"
+},
+{
+"x": 130,
+"y": 75,
+"cap": 0,
+"l": "rattrapé"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "à bâbord du rattrapé, en règle générale",
+"e": "Art. 6.10 al. 1."
+},
+{
+"t": "à tribord du rattrapé, dans tous les cas",
+"e": "C'est l'exception."
+},
+{
+"t": "du côté que le rattrapé choisit pour lui",
+"e": "Le rattrapé facilite, il ne choisit pas."
+}
+],
+"b": 0,
+"ex": "Dépassement : à bâbord du rattrapé en règle générale ; s'il peut dépasser sans que le rattrapé change de route ou de vitesse, il ne donne aucun signal sonore.",
+"pg": "« Bâbord » est celui du bateau nommé : ici, le rattrapé.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.10 · Cours amélioré, module 1, chap. 4"
+},
+{
+"id": "R072",
+"cat": "R",
+"res": false,
+"q": "De nuit, tu vois un feu vert et un feu rouge côte à côte, un blanc au-dessus. Le bateau :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 30,
+"c": "blanc"
+},
+{
+"x": 80,
+"y": 70,
+"c": "vert"
+},
+{
+"x": 120,
+"y": 70,
+"c": "rouge"
+}
+],
+"legende": "la nuit, devant toi"
+},
+"o": [
+{
+"t": "vient vers toi, au moteur",
+"e": "Les deux feux de côté ne se voient ensemble que de face ; le blanc est le feu de mât."
+},
+{
+"t": "s'éloigne de toi",
+"e": "De l'arrière, tu ne verrais qu'un blanc."
+},
+{
+"t": "te présente son travers",
+"e": "Du travers, tu ne verrais qu'un feu de côté."
+}
+],
+"b": 0,
+"ex": "Rouge + vert ensemble : il vient vers toi. Le blanc au-dessus : feu de mât, donc bateau à moteur.",
+"pg": "Vu de face, son vert (tribord) est à TA gauche et son rouge à TA droite.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.08 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R073",
+"cat": "R",
+"res": false,
+"q": "Tu ne vois qu'un feu vert. Le bateau :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 60,
+"c": "vert"
+}
+],
+"legende": "la nuit : un seul feu vert"
+},
+"o": [
+{
+"t": "passe de ta gauche vers ta droite",
+"e": "Le vert est à tribord."
+},
+{
+"t": "vient droit sur toi, de face",
+"e": "Tu verrais aussi le rouge."
+},
+{
+"t": "passe de ta droite vers ta gauche",
+"e": "Tu verrais alors le rouge."
+}
+],
+"b": 0,
+"ex": "Un seul feu de côté : tu es sur son travers. Vert = tu vois son tribord, sa proue pointe vers ta droite.",
+"pg": "Vert seul : tu regardes son côté tribord. Rouge seul : son côté bâbord. Retiens « vert à droite du bateau », pas « à ta droite ».",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.01 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R074",
+"cat": "R",
+"res": false,
+"q": "De nuit, tu vois vert et rouge côte à côte, SANS feu blanc au-dessus. C'est sans doute :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 80,
+"y": 60,
+"c": "vert"
+},
+{
+"x": 120,
+"y": 60,
+"c": "rouge"
+}
+],
+"legende": "rouge et vert, sans blanc"
+},
+"o": [
+{
+"t": "un voilier à la voile qui vient vers toi",
+"e": "Un voilier n'a pas de feu de mât."
+},
+{
+"t": "un bateau à moteur qui s'éloigne",
+"e": "De l'arrière, tu verrais un blanc."
+},
+{
+"t": "un bateau au stationnement",
+"e": "Il montrerait un blanc visible de tous les côtés."
+}
+],
+"b": 0,
+"ex": "Voilier à la voile : feux de côté et feu de poupe, jamais de feu de mât. Vu de face : rouge et vert seuls.",
+"pg": "S'il allume son moteur, il ajoute un feu de mât : il devient un bateau à moteur.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.12 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R075",
+"cat": "R",
+"res": false,
+"q": "Tu ne vois qu'un seul feu blanc. Ce peut être :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 60,
+"c": "blanc"
+}
+],
+"legende": "la nuit : un seul feu blanc"
+},
+"o": [
+{
+"t": "un bateau vu de l'arrière, petit ou à l'arrêt",
+"e": "Ralentis et regarde s'il bouge."
+},
+{
+"t": "un bateau à moteur qui vient droit sur toi",
+"e": "Tu verrais ses feux de côté."
+},
+{
+"t": "forcément une marque de bifurcation",
+"e": "Un feu blanc fixe est d'abord un bateau."
+}
+],
+"b": 0,
+"ex": "Un seul blanc : feu de poupe, menue embarcation à feu blanc unique, ou bateau en stationnement.",
+"pg": "Un blanc isolé sur l'eau est d'abord un bateau ; un blanc isophase sur l'eau est une bifurcation.",
+"ref": "Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R076",
+"cat": "R",
+"res": false,
+"q": "Le feu de mât éclaire un secteur de :",
+"d": {
+"t": "secteurs",
+"feu": "mat",
+"legende": "le feu de mât, vu de dessus"
+},
+"o": [
+{
+"t": "225°",
+"e": "De l'avant jusqu'à 22°30' sur l'arrière du travers, de chaque bord."
+},
+{
+"t": "135°",
+"e": "C'est le feu de poupe."
+},
+{
+"t": "360°",
+"e": "C'est le feu visible de tous les côtés."
+}
+],
+"b": 0,
+"ex": "Mât 225°, côtés 112°30' chacun, poupe 135°. Mât + poupe = 360°.",
+"pg": "225 + 135 = 360 : d'où que tu regardes un bateau à moteur, tu vois un feu blanc.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 1.01 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R077",
+"cat": "R",
+"res": false,
+"q": "De jour, un voilier hisse un cône noir pointe en bas. Cela signifie :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "cone-bas",
+"c": "noir"
+}
+],
+"legende": "un voilier, de jour"
+},
+"o": [
+{
+"t": "il est à la voile et au moteur",
+"e": "Il perd sa priorité de voilier."
+},
+{
+"t": "il transporte des matières dangereuses",
+"e": "Ce seraient des cônes BLEUS."
+},
+{
+"t": "il est à l'ancre, au mouillage",
+"e": "Ce serait un ballon noir."
+}
+],
+"b": 0,
+"ex": "Voile + moteur : de jour un cône noir pointe en bas ; de nuit le feu de mât.",
+"pg": "Noir pointe en bas = moteur. Bleu pointe en bas = matières dangereuses. Lis la couleur avant la forme.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.12 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R078",
+"cat": "R",
+"res": false,
+"q": "En tête de mât, rouge au-dessus de vert, visibles de tous les côtés. C'est :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 24,
+"c": "rouge"
+},
+{
+"x": 100,
+"y": 46,
+"c": "vert"
+},
+{
+"x": 80,
+"y": 76,
+"c": "vert"
+},
+{
+"x": 120,
+"y": 76,
+"c": "rouge"
+}
+],
+"legende": "rouge au-dessus de vert"
+},
+"o": [
+{
+"t": "un grand voilier",
+"e": "Il ajoute ces deux feux à ses feux de côté et de poupe."
+},
+{
+"t": "un bac",
+"e": "Le bac, c'est vert au-dessus de blanc."
+},
+{
+"t": "un pilote",
+"e": "Le pilote, c'est blanc sur rouge."
+}
+],
+"b": 0,
+"ex": "Grand voilier : en plus, deux feux superposés visibles de tous les côtés, rouge au-dessus, vert en dessous.",
+"pg": "Rouge sur vert = voilier. Blanc sur rouge = pilote. Vert sur blanc = bac.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.12 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R079",
+"cat": "R",
+"res": false,
+"q": "Une menue embarcation à moteur peut ne porter qu'un seul feu blanc visible de tous les côtés si :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 60,
+"c": "blanc"
+}
+],
+"legende": "petite barque à moteur"
+},
+"o": [
+{
+"t": "non pontée, moins de 7 m, 13 km/h au plus",
+"e": "Les trois conditions."
+},
+{
+"t": "elle fait moins de 20 m de long",
+"e": "Non."
+},
+{
+"t": "elle navigue près de la rive, de jour",
+"e": "Ce n'est pas un critère."
+}
+],
+"b": 0,
+"ex": "Trois conditions ensemble : moins de 7 m, 13 km/h au plus, non pontée.",
+"pg": "Le Kat-a-Mar fait 7,55 m et va vite : il porte ses feux de côté.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.13 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R080",
+"cat": "R",
+"res": false,
+"q": "De jour, ce cylindre jaune bordé de bandes noires et blanches signale :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "cylindre",
+"c": "jaune",
+"bandes": true
+}
+],
+"legende": "de jour"
+},
+"o": [
+{
+"t": "un remorqueur",
+"e": "Le bateau qui tire le convoi."
+},
+{
+"t": "un bateau remorqué",
+"e": "Le remorqué porte un ballon jaune."
+},
+{
+"t": "un bateau à passagers",
+"e": "C'est un bicône jaune."
+}
+],
+"b": 0,
+"ex": "Remorqueur : de jour un cylindre jaune ; de nuit deux feux de mât superposés et un feu de poupe JAUNE.",
+"pg": "Jaune à l'arrière la nuit = il y a quelque chose derrière : ne passe jamais entre lui et le feu blanc qui suit.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.09 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R081",
+"cat": "R",
+"res": false,
+"q": "Un bateau porte de jour un ballon jaune, et de nuit un feu blanc visible de tous les côtés. C'est :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "ballon",
+"c": "jaune"
+}
+],
+"legende": "de jour"
+},
+"o": [
+{
+"t": "un bateau remorqué",
+"e": "Exact."
+},
+{
+"t": "un bac",
+"e": "Le bac porte un ballon VERT."
+},
+{
+"t": "un bateau au mouillage",
+"e": "Le mouillage, c'est un ballon NOIR."
+}
+],
+"b": 0,
+"ex": "Remorqué : ballon jaune de jour, feu blanc visible de tous les côtés la nuit.",
+"pg": "Jaune = convoi ; vert = bac ; noir = stationnement ou incapacité.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.09 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R082",
+"cat": "R",
+"res": false,
+"q": "Trois feux blancs en triangle à l'avant, des feux de côté : c'est de nuit :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 80,
+"y": 30,
+"c": "blanc"
+},
+{
+"x": 100,
+"y": 18,
+"c": "blanc"
+},
+{
+"x": 120,
+"y": 30,
+"c": "blanc"
+},
+{
+"x": 70,
+"y": 70,
+"c": "vert"
+},
+{
+"x": 130,
+"y": 70,
+"c": "rouge"
+}
+],
+"legende": "à l'avant d'un long convoi"
+},
+"o": [
+{
+"t": "un convoi poussé",
+"e": "Trois feux de mât en triangle sur le bateau de tête."
+},
+{
+"t": "un remorqueur",
+"e": "Il en porte deux, l'un au-dessus de l'autre."
+},
+{
+"t": "un dragueur de mines",
+"e": "Il porte trois feux VERTS."
+}
+],
+"b": 0,
+"ex": "Convoi poussé : trois feux de mât en triangle à l'avant, trois feux de poupe alignés sur le pousseur, aucune marque de jour.",
+"pg": "Trois blancs en triangle = poussé ; trois verts en triangle = dragueur de mines.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.10 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R083",
+"cat": "R",
+"res": false,
+"q": "Deux cônes bleus pointe en bas signalent :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "cone-bas",
+"c": "bleu"
+},
+{
+"f": "cone-bas",
+"c": "bleu"
+}
+],
+"legende": "sur une péniche"
+},
+"o": [
+{
+"t": "des matières nocives pour la santé",
+"e": "Un cône : inflammables ; deux : santé ; trois : explosives."
+},
+{
+"t": "des matières inflammables",
+"e": "C'est un seul cône."
+},
+{
+"t": "des matières explosives",
+"e": "C'est trois cônes."
+}
+],
+"b": 0,
+"ex": "Cônes bleus (ou feux bleus) : 1 = inflammables, 2 = nocives pour la santé, 3 = explosives.",
+"pg": "Dans un convoi, c'est le pousseur qui porte la signalisation, et seulement le nombre le plus élevé : on n'additionne pas.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.14 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R084",
+"cat": "R",
+"res": false,
+"q": "Un bateau de moins de 20 m montre de jour un bicône jaune. C'est :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "bicone",
+"c": "jaune"
+}
+],
+"legende": "un bateau de 15 m"
+},
+"o": [
+{
+"t": "un bateau à passagers",
+"e": "Laisse-lui la place."
+},
+{
+"t": "un bac",
+"e": "Le bac montre un ballon vert."
+},
+{
+"t": "un bateau rapide",
+"e": "Le bateau rapide montre deux feux jaunes scintillants."
+}
+],
+"b": 0,
+"ex": "Bicône jaune : bateau à passagers de moins de 20 m. Dans les priorités, c'est un grand bateau.",
+"pg": "Il fait ta taille, mais il passe avant toi.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.15 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R085",
+"cat": "R",
+"res": false,
+"q": "De nuit, un feu vert à environ 1 m au-dessus d'un feu blanc, visibles de tous les côtés. C'est :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 34,
+"c": "vert"
+},
+{
+"x": 100,
+"y": 58,
+"c": "blanc"
+}
+],
+"legende": "vert au-dessus de blanc"
+},
+"o": [
+{
+"t": "un bac",
+"e": "De jour, un ballon vert."
+},
+{
+"t": "un pilote",
+"e": "Le pilote, c'est blanc au-dessus de rouge."
+},
+{
+"t": "un grand voilier",
+"e": "C'est rouge au-dessus de vert."
+}
+],
+"b": 0,
+"ex": "Bac : vert au-dessus de blanc ; de jour un ballon vert. Un bac naviguant librement ajoute feux de côté et de poupe.",
+"pg": "Vert sur blanc = bac. Ne l'inverse pas.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.16 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R086",
+"cat": "R",
+"res": false,
+"q": "Ballon – bicône – ballon noirs, l'un au-dessus de l'autre. De nuit : rouge – blanc – rouge. C'est :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "ballon",
+"c": "noir"
+},
+{
+"f": "bicone",
+"c": "noir"
+},
+{
+"f": "ballon",
+"c": "noir"
+}
+],
+"legende": "de jour"
+},
+"o": [
+{
+"t": "un bateau à capacité de manœuvre restreinte",
+"e": "Dragage, pose de câbles ou de bouées."
+},
+{
+"t": "un bateau échoué sur un haut-fond",
+"e": "Le signal de l'échoué est différent."
+},
+{
+"t": "un bateau de plaisance au mouillage",
+"e": "Un seul ballon noir."
+}
+],
+"b": 0,
+"ex": "Capacité de manœuvre restreinte : rouge-blanc-rouge ; ballon-bicône-ballon. Tu t'écartes de sa route.",
+"pg": "Il ne peut pas s'écarter : c'est toi qui le fais.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.34 et 6.34 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R087",
+"cat": "R",
+"res": false,
+"q": "En eaux intérieures belges, un bateau INCAPABLE DE MANŒUVRER peut montrer de jour :",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "pavillon",
+"c": "rouge"
+}
+],
+"legende": "un pavillon rouge balancé"
+},
+"o": [
+{
+"t": "un pavillon rouge balancé, ou deux ballons noirs superposés",
+"e": "L'article 3.18 prévoit les deux."
+},
+{
+"t": "seulement deux ballons noirs : le pavillon rouge est un signal de mer",
+"e": "Faux : le pavillon est prévu en eaux intérieures."
+},
+{
+"t": "trois ballons noirs superposés",
+"e": "Ça, c'est l'échoué du RIPAM, en mer."
+}
+],
+"b": 0,
+"ex": "Incapable de manœuvrer : de jour pavillon rouge balancé ou deux ballons noirs ; de nuit feu rouge balancé ou deux feux rouges superposés. Signal sonore : quatre sons brefs.",
+"pg": "Le RIPAM (mer) ne connaît que les deux boules ; le règlement belge prévoit aussi le pavillon rouge balancé.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.18 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R088",
+"cat": "R",
+"res": false,
+"q": "Deux feux scintillants jaunes superposés, de jour comme de nuit, signalent :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 40,
+"c": "jaune",
+"s": true
+},
+{
+"x": 100,
+"y": 66,
+"c": "jaune",
+"s": true
+}
+],
+"legende": "deux jaunes scintillants"
+},
+"o": [
+{
+"t": "un bateau rapide — qui n'a aucune priorité",
+"e": "C'est à lui de laisser l'espace aux autres."
+},
+{
+"t": "un bateau prioritaire à qui tu dois t'écarter",
+"e": "C'est le piège."
+},
+{
+"t": "une traversée du chenal",
+"e": "La traversée est un feu jaune sur la berge."
+}
+],
+"b": 0,
+"ex": "Bateau rapide : grand bateau capable de plus de 40 km/h. Il avertit, il ne gagne aucun droit.",
+"pg": "Ces feux préviennent : « je vais vite ». Ils ne disent pas « écarte-toi ».",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.08 et 6.02 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R089",
+"cat": "R",
+"res": false,
+"q": "Un feu bleu SCINTILLANT visible de tous les côtés signale :",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 50,
+"c": "bleu",
+"s": true
+}
+],
+"legende": "bleu scintillant"
+},
+"o": [
+{
+"t": "un service public ou d'urgence en mission",
+"e": "Police, pompiers, secours, gestionnaire."
+},
+{
+"t": "un bateau chargé de matières inflammables",
+"e": "Ce feu bleu-là est FIXE."
+},
+{
+"t": "un bateau qui soutient des plongeurs",
+"e": "La plongée, c'est le pavillon A."
+}
+],
+"b": 0,
+"ex": "Services publics et d'urgence : feu bleu scintillant, de jour comme de nuit. Ils ont la priorité aux écluses.",
+"pg": "Bleu fixe = matières dangereuses ; bleu scintillant = urgence.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 3.27 · Cours amélioré, module 1, chap. 5"
+},
+{
+"id": "R090",
+"cat": "R",
+"res": false,
+"q": "Ce signal — un son bref — signifie :",
+"d": {
+"t": "son",
+"seq": [
+"B"
+]
+},
+"o": [
+{
+"t": "je viens sur tribord",
+"e": "Tribord : un seul « b »."
+},
+{
+"t": "je viens sur bâbord",
+"e": "Ce sont deux sons brefs."
+},
+{
+"t": "attention",
+"e": "Attention, c'est un son prolongé."
+}
+],
+"b": 0,
+"ex": "1 bref tribord ; 2 brefs bâbord ; 3 brefs arrière ; 4 brefs incapable de manœuvrer.",
+"pg": "Truc : triBord (1 b), BâBord (2 b), aRRièRe (3 r), IN-CA-PA-BLE (4 syllabes).",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R091",
+"cat": "R",
+"res": false,
+"q": "Ce signal — deux sons brefs — signifie :",
+"d": {
+"t": "son",
+"seq": [
+"B",
+"B"
+]
+},
+"o": [
+{
+"t": "je viens sur bâbord",
+"e": "Bâbord : deux « b »."
+},
+{
+"t": "je viens sur tribord",
+"e": "Un seul bref."
+},
+{
+"t": "je bats en arrière",
+"e": "Trois brefs."
+}
+],
+"b": 0,
+"ex": "Deux sons brefs : je viens sur bâbord.",
+"pg": "Entre grands bateaux, deux brefs servent aussi à demander ou accepter le passage tribord à tribord (avec le panneau bleu) : pas pour toi.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R092",
+"cat": "R",
+"res": false,
+"q": "Ce signal — trois sons brefs — signifie :",
+"d": {
+"t": "son",
+"seq": [
+"B",
+"B",
+"B"
+]
+},
+"o": [
+{
+"t": "je bats en arrière",
+"e": "Arrière : trois « r »."
+},
+{
+"t": "je traverse la voie",
+"e": "Traverser, ce sont trois PROLONGÉS (signal hors examen)."
+},
+{
+"t": "danger d'abordage",
+"e": "C'est une série de sons TRÈS brefs."
+}
+],
+"b": 0,
+"ex": "Trois sons brefs : je bats en arrière (marche arrière).",
+"pg": "Trois brefs ≠ trois prolongés : compte ET mesure.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R093",
+"cat": "R",
+"res": false,
+"q": "Ce signal — quatre sons brefs — signifie :",
+"d": {
+"t": "son",
+"seq": [
+"B",
+"B",
+"B",
+"B"
+]
+},
+"o": [
+{
+"t": "je suis incapable de manœuvrer",
+"e": "IN-CA-PA-BLE."
+},
+{
+"t": "le dépassement est impossible",
+"e": "C'est cinq brefs, entre grands bateaux (signal hors examen)."
+},
+{
+"t": "demande d'assistance médicale",
+"e": "Quatre brefs SUIVIS d'un prolongé."
+}
+],
+"b": 0,
+"ex": "Quatre sons brefs : incapable de manœuvrer. Quatre brefs + un prolongé : assistance médicale.",
+"pg": "Écoute jusqu'au bout : un prolongé à la fin change tout.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R094",
+"cat": "R",
+"res": false,
+"q": "Un seul son prolongé signifie :",
+"d": {
+"t": "son",
+"seq": [
+"P"
+]
+},
+"o": [
+{
+"t": "attention",
+"e": "C'est aussi le signal de brume du bateau qui fait route."
+},
+{
+"t": "détresse",
+"e": "La détresse : des prolongés RÉPÉTÉS."
+},
+{
+"t": "je viens sur tribord",
+"e": "C'est un bref."
+}
+],
+"b": 0,
+"ex": "Un prolongé (environ 4 s) : attention.",
+"pg": "Un prolongé = attention ; des prolongés répétés = détresse.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R095",
+"cat": "R",
+"res": false,
+"q": "Une série d'au moins six sons très brefs signifie :",
+"d": {
+"t": "son",
+"seq": [
+"T",
+"T",
+"T",
+"T",
+"T",
+"T",
+"T"
+],
+"legende": "très brefs (¼ s), au moins six"
+},
+"o": [
+{
+"t": "danger d'abordage",
+"e": "Écarte-toi, maintenant."
+},
+{
+"t": "détresse",
+"e": "La détresse, ce sont des prolongés répétés."
+},
+{
+"t": "n'approchez pas",
+"e": "C'est bref-prolongé répétés pendant 15 minutes."
+}
+],
+"b": 0,
+"ex": "Série d'au moins six sons très brefs (¼ s chacun) : danger imminent d'abordage.",
+"pg": "Très bref ¼ s ≠ bref 1 s. Six brefs ne veulent rien dire ; cinq brefs, c'est le refus d'un dépassement (hors examen).",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R096",
+"cat": "R",
+"res": false,
+"q": "Des sons prolongés répétés (ou des volées de cloche) signifient :",
+"d": {
+"t": "son",
+"seq": [
+"P",
+"P",
+"P",
+"P",
+"P"
+],
+"legende": "sons prolongés répétés"
+},
+"o": [
+{
+"t": "détresse : venez m'aider",
+"e": "C'est le signal sonore de détresse."
+},
+{
+"t": "danger d'abordage",
+"e": "C'est une série de très brefs."
+},
+{
+"t": "je traverse le chenal",
+"e": "Ce sont exactement trois prolongés (signal hors examen)."
+}
+],
+"b": 0,
+"ex": "Détresse : sons prolongés répétés, ou volées de cloche.",
+"pg": "Danger d'abordage CHASSE (« écarte-toi ») ; détresse APPELLE (« viens »).",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R097",
+"cat": "R",
+"res": false,
+"q": "« Un son prolongé suivi d'un son bref » annonce :",
+"d": {
+"t": "son",
+"seq": [
+"P",
+"B"
+]
+},
+"o": [
+{
+"t": "je vais virer sur tribord",
+"e": "Un prolongé pour le virage, un bref pour tribord."
+},
+{
+"t": "je viens sur tribord",
+"e": "Ce serait un bref seul."
+},
+{
+"t": "je sors du port vers tribord",
+"e": "Ce serait trois prolongés et un bref (signal hors examen)."
+}
+],
+"b": 0,
+"ex": "Virer : un prolongé puis le côté (1 bref tribord, 2 brefs bâbord).",
+"pg": "Une menue embarcation n'émet pas les signaux de virement : elle s'assure seulement que sa manœuvre est sans danger.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.13 · appendice 6 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R098",
+"cat": "R",
+"res": false,
+"q": "Peut-on donner un coup de trompe pour saluer un ami sur la berge ?",
+"d": {
+"t": "son",
+"seq": [
+"B"
+]
+},
+"o": [
+{
+"t": "non : hors des cas prévus, c'est interdit",
+"e": "Un bref voudrait dire « je viens sur tribord »."
+},
+{
+"t": "oui, par un son bref, c'est l'usage",
+"e": "Tu induirais tout le monde en erreur."
+},
+{
+"t": "oui, mais seulement hors des villes",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "On ne sonne que dans les cas prévus par le règlement — sauf pour communiquer, sans prêter à confusion.",
+"pg": "Chaque coup de trompe est une phrase : un salut serait mal compris.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 4.01 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R099",
+"cat": "R",
+"res": false,
+"q": "Par brume, sans radar, tu fais route vers un poste d'amarrage. Tu émets :",
+"d": {
+"t": "son",
+"seq": [
+"P"
+],
+"legende": "un prolongé, chaque minute au plus"
+},
+"o": [
+{
+"t": "un son prolongé, à intervalles d'une minute au plus",
+"e": "Signal du bateau isolé qui fait route."
+},
+{
+"t": "un prolongé et deux brefs toutes les deux minutes",
+"e": "C'est la règle 35 du RIPAM, en mer."
+},
+{
+"t": "rien, pour mieux écouter",
+"e": "Tout bateau isolé qui fait route émet ce signal."
+}
+],
+"b": 0,
+"ex": "Sans radar par visibilité réduite : gagne le poste sûr le plus proche ; en chemin, un prolongé par minute au plus, vigie à l'avant, sur le côté du chenal.",
+"pg": "Ne transpose pas les signaux de brume de la mer sur la voie.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 6.33 · Cours amélioré, module 1, chap. 6"
+},
+{
+"id": "R100",
+"cat": "R",
+"res": false,
+"q": "Un bref suivi d'un prolongé, répétés sans interruption pendant au moins 15 minutes, avec un signal lumineux, signifie :",
+"d": {
+"t": "son",
+"seq": [
+"B",
+"P",
+"B",
+"P",
+"B",
+"P"
+],
+"legende": "bref-prolongé, répétés sans arrêt"
+},
+"o": [
+{
+"t": "« n'approchez pas » (matières dangereuses)",
+"e": "Éloigne-toi, pas de flamme, ne fume pas."
+},
+{
+"t": "détresse : venez m'aider",
+"e": "Ce sont des prolongés répétés."
+},
+{
+"t": "demande d'ouverture d'un pont",
+"e": "Ce n'est pas ce signal."
+}
+],
+"b": 0,
+"ex": "« N'approchez pas » : un bateau risque de perdre des matières dangereuses. Éloigne-toi, ferme les ouvertures, éteins les feux nus.",
+"pg": "Ce signal-là ne demande pas d'aide : il te dit de partir.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 4.04/1 · Cours amélioré, module 1, chap. 6"
+},
 {
 "id": "N001",
 "cat": "N",
@@ -1663,11 +5475,11 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "rouge, isophase ou à éclats réguliers",
+"t": "rouge, isophase ou à éclats",
 "e": "C'est le feu prévu pour le côté droit."
 },
 {
-"t": "vert, isophase",
+"t": "vert, isophase ou à éclats",
 "e": "Le vert est réservé au côté gauche."
 },
 {
@@ -1918,11 +5730,11 @@ window.KAM_QCM = {
 "e": "Le règlement le précise : « en général, avec réflecteur radar »."
 },
 {
-"t": "une cloche",
+"t": "une cloche de brume",
 "e": "Ce n'est pas prévu pour les marques latérales."
 },
 {
-"t": "un pavillon",
+"t": "un pavillon national",
 "e": "Les marques ne portent pas de pavillon."
 }
 ],
@@ -1944,11 +5756,11 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une marque du côté droit du chenal",
+"t": "une marque du côté droit",
 "e": "Le côté droit peut être une bouée, une bouée à voyant ou un espar."
 },
 {
-"t": "une marque spéciale",
+"t": "une marque spéciale jaune",
 "e": "Les marques spéciales sont jaunes."
 },
 {
@@ -2017,15 +5829,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "tu es sans doute sorti du chenal, du côté gauche",
+"t": "tu es sans doute sorti du chenal",
 "e": "En montant, le vert doit être à ta droite. S'il est à ta gauche, tu es entre la bouée et la rive."
 },
 {
-"t": "tout est normal",
+"t": "tout est normal, continue ainsi",
 "e": "Non : en montant, le vert se laisse à tribord."
 },
 {
-"t": "c'est une bifurcation",
+"t": "c'est une marque de bifurcation",
 "e": "Une bifurcation est rouge et verte, pas verte seule."
 }
 ],
@@ -2073,15 +5885,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "aussi bien sur un fleuve que sur un canal",
+"t": "sur les fleuves comme sur les canaux",
 "e": "La couleur ne change pas ; seule la façon de trouver « l'aval » change sur un canal."
 },
 {
-"t": "sur les fleuves seulement",
+"t": "sur les fleuves seulement, pas les canaux",
 "e": "Le canal suit la même règle, avec le bief le plus bas comme aval."
 },
 {
-"t": "seulement en Wallonie",
+"t": "seulement sur les voies de Wallonie",
 "e": "Le balisage SIGNI est le même sur toutes les voies belges."
 }
 ],
@@ -2147,15 +5959,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "ce n'est pas un feu de marque latérale : le vert scintillant est réservé à la bifurcation surmontée d'un cône vert",
+"t": "un feu réservé à la bifurcation, pas au côté gauche",
 "e": "Les marques latérales ont des feux isophases ou à éclats réguliers."
 },
 {
-"t": "c'est normal pour toute bouée verte",
+"t": "un feu normal pour toute bouée verte du chenal",
 "e": "Non : le côté gauche porte un feu isophase ou à éclats réguliers."
 },
 {
-"t": "c'est un feu de détresse",
+"t": "un feu de détresse allumé sur une bouée",
 "e": "Un feu de détresse n'est pas un feu de balisage."
 }
 ],
@@ -2182,7 +5994,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une bifurcation du chenal",
+"t": "une bifurcation",
 "e": "C'est la marque de bifurcation."
 },
 {
@@ -2295,15 +6107,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "le côté où il est préférable de passer, vers le chenal principal",
+"t": "le côté préférable, vers le chenal principal",
 "e": "C'est le rôle du voyant ajouté."
 },
 {
-"t": "un danger : il ne faut pas passer",
+"t": "un danger : il ne faut pas passer de ce côté",
 "e": "Ce n'est pas une interdiction."
 },
 {
-"t": "une épave",
+"t": "une épave signalée près de la bifurcation",
 "e": "Une épave se signale autrement."
 }
 ],
@@ -2390,7 +6202,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "la n° 1 : sphérique, à bandes rouges et vertes, sphère au sommet",
+"t": "la n° 1 : sphérique, rouge et vert",
 "e": "Bifurcation : bouée sphérique (ou à voyant, ou espar), bandes rouges et vertes, voyant sphère."
 },
 {
@@ -2478,7 +6290,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "d'un feu rouge à occultations régulières",
+"t": "d'un feu rouge à occultations",
 "e": "Exact."
 },
 {
@@ -2486,7 +6298,7 @@ window.KAM_QCM = {
 "e": "Vert = côté gauche, et isophase = marque sur l'eau."
 },
 {
-"t": "d'un feu jaune",
+"t": "d'un feu jaune scintillant",
 "e": "Le jaune signale une traversée."
 }
 ],
@@ -2538,15 +6350,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une traversée : le chenal passe d'une rive à l'autre",
+"t": "une traversée du chenal",
 "e": "Jaune et noir = traversée."
 },
 {
-"t": "une marque spéciale",
+"t": "une marque spéciale (câble, zone)",
 "e": "Les marques spéciales sont des marques de mer, jaunes à croix."
 },
 {
-"t": "un danger isolé",
+"t": "un danger isolé dans le chenal",
 "e": "Le danger isolé est noir et rouge."
 }
 ],
@@ -2598,15 +6410,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "un feu jaune à occultations régulières",
+"t": "un feu jaune à occultations",
 "e": "Exact."
 },
 {
-"t": "un feu blanc isophase",
+"t": "un feu blanc isophase 2 s",
 "e": "C'est la bifurcation."
 },
 {
-"t": "deux feux rouges",
+"t": "deux feux rouges superposés",
 "e": "Ce serait une interdiction."
 }
 ],
@@ -2625,7 +6437,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "forment un alignement qui marque l'axe d'une longue traversée",
+"t": "forment un alignement à suivre",
 "e": "C'est leur rôle."
 },
 {
@@ -2695,7 +6507,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "jaunes ; le feu arrière peut être fixe",
+"t": "jaunes",
 "e": "Le règlement le précise."
 },
 {
@@ -2703,7 +6515,7 @@ window.KAM_QCM = {
 "e": "Le rouge est la couleur du côté droit."
 },
 {
-"t": "toujours blancs",
+"t": "blancs",
 "e": "Les signaux de traversée sont jaunes."
 }
 ],
@@ -2824,7 +6636,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "un point dangereux ou un obstacle du côté droit",
+"t": "un obstacle du côté droit",
 "e": "Balise fixe côté droit : cône rouge pointe vers le bas."
 },
 {
@@ -2885,15 +6697,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une bifurcation, par exemple un banc médian : on passe des deux côtés",
+"t": "une bifurcation : on passe des deux côtés",
 "e": "C'est la balise fixe de bifurcation."
 },
 {
-"t": "un danger à ne contourner que par la droite",
+"t": "un danger à contourner par la droite seulement",
 "e": "Les deux côtés sont possibles."
 },
 {
-"t": "une zone interdite",
+"t": "une zone interdite à toute navigation",
 "e": "Ce n'est pas une interdiction."
 }
 ],
@@ -2967,15 +6779,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "des panneaux triangulaires à fond blanc, bordés de rouge ou de vert",
+"t": "des triangles blancs bordés de rouge ou de vert",
 "e": "Le règlement le permet."
 },
 {
-"t": "des pavillons",
+"t": "des pavillons rouges ou verts",
 "e": "Ce n'est pas prévu."
 },
 {
-"t": "des bouées sphériques",
+"t": "des bouées sphériques rouges ou vertes",
 "e": "Ce n'est pas prévu."
 }
 ],
@@ -3003,7 +6815,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une balise flottante de point dangereux, du côté droit",
+"t": "un point dangereux, côté droit",
 "e": "Exact."
 },
 {
@@ -3039,7 +6851,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une balise flottante de point dangereux, du côté gauche",
+"t": "un point dangereux, côté gauche",
 "e": "Exact."
 },
 {
@@ -3067,7 +6879,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "un ouvrage qui avance de la rive dans l'eau, signalé par des balises de point dangereux",
+"t": "un ouvrage qui avance de la rive dans l'eau",
 "e": "C'est pour cela qu'on le balise."
 },
 {
@@ -3075,7 +6887,7 @@ window.KAM_QCM = {
 "e": "Ça, c'est un banc médian."
 },
 {
-"t": "une écluse sans porte",
+"t": "une écluse sans porte, toujours ouverte",
 "e": "Ça n'existe pas."
 }
 ],
@@ -3095,15 +6907,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "des deux côtés, par les balises fixes des points dangereux",
+"t": "des deux côtés, par des balises fixes",
 "e": "Le règlement le prévoit aux dérivations, embouchures et entrées de ports."
 },
 {
-"t": "par des bouées jaunes",
+"t": "par des bouées jaunes, d'un seul côté",
 "e": "Le jaune n'est pas prévu pour cela."
 },
 {
-"t": "seulement de nuit",
+"t": "seulement de nuit, par des feux blancs",
 "e": "Le balisage vaut de jour comme de nuit."
 }
 ],
@@ -3161,7 +6973,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "ne prévoit rien de tel : les bandes blanches signalent des points dangereux",
+"t": "ne prévoit rien de tel",
 "e": "C'est un écart du manuel."
 },
 {
@@ -3311,7 +7123,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "un feu fixe : lumière ininterrompue",
+"t": "un feu fixe",
 "e": "Exact."
 },
 {
@@ -3501,15 +7313,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "une traversée : le chenal change de rive",
+"t": "une traversée du chenal",
 "e": "Exact."
 },
 {
-"t": "un bateau rapide",
+"t": "un bateau rapide qui approche",
 "e": "Le bateau rapide montre deux feux jaunes scintillants, et il est sur l'eau."
 },
 {
-"t": "des travaux",
+"t": "des travaux sur la berge",
 "e": "Les travaux portent un feu jaune scintillant, sur le bateau."
 }
 ],
@@ -3775,15 +7587,15 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "n'a pas de courant naturel ; il passe d'un niveau à l'autre par des écluses",
+"t": "n'a pas de courant naturel et a des écluses",
 "e": "Exact."
 },
 {
-"t": "a toujours un courant vers la mer",
+"t": "a toujours un courant qui va vers la mer",
 "e": "Un canal n'a pas de courant naturel."
 },
 {
-"t": "n'a jamais d'écluse",
+"t": "n'a jamais d'écluse, il est de niveau",
 "e": "Les écluses font justement passer d'un bief à l'autre."
 }
 ],
@@ -3927,7 +7739,7 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "le niveau de référence belge des hauteurs, calé sur les basses mers à Ostende",
+"t": "le niveau de référence belge des hauteurs",
 "e": "Exact."
 },
 {
@@ -3952,7 +7764,7 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "la profondeur standard de la voie n'est pas garantie",
+"t": "profondeur standard non garantie",
 "e": "Exact."
 },
 {
@@ -3960,7 +7772,7 @@ window.KAM_QCM = {
 "e": "Ce n'est pas une interdiction."
 },
 {
-"t": "une frontière",
+"t": "une frontière entre deux régions",
 "e": "Ce n'est pas le sens de ce symbole."
 }
 ],
@@ -3977,15 +7789,15 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "la différence de niveau entre le bief amont et le bief aval",
+"t": "la différence de niveau entre les deux biefs",
 "e": "Exact."
 },
 {
-"t": "la hauteur des portes",
+"t": "la hauteur des portes de l'écluse",
 "e": "Ce n'est pas la définition."
 },
 {
-"t": "la profondeur du sas",
+"t": "la profondeur d'eau dans le sas",
 "e": "Ce n'est pas la définition."
 }
 ],
@@ -4127,7 +7939,7 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "le canal radio sur lequel appeler l'écluse",
+"t": "le canal radio de l'écluse",
 "e": "Exact."
 },
 {
@@ -4202,7 +8014,7 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "la profondeur d'eau sous le bateau, par l'écho d'un signal",
+"t": "la profondeur sous le bateau",
 "e": "Exact."
 },
 {
@@ -4302,7 +8114,7 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "la communication officielle du gestionnaire de la voie : avaries, restrictions, fermetures",
+"t": "un message officiel du gestionnaire de la voie",
 "e": "Exact."
 },
 {
@@ -4310,7 +8122,7 @@ window.KAM_QCM = {
 "e": "Ce n'est pas commercial."
 },
 {
-"t": "un message qu'un plaisancier envoie à l'éclusier",
+"t": "un message du plaisancier à l'éclusier",
 "e": "Le plaisancier ne peut pas en émettre."
 }
 ],
@@ -4327,15 +8139,15 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "Wallonie : voies-hydrauliques.wallonie.be ; Flandre : visuris.be",
+"t": "sur les sites des gestionnaires (Wallonie, Flandre)",
 "e": "Ce sont les deux sites des gestionnaires."
 },
 {
-"t": "uniquement à l'écluse, sur papier",
+"t": "uniquement à l'écluse, sur papier affiché",
 "e": "Ils sont publiés en ligne."
 },
 {
-"t": "à la radio, canal 16",
+"t": "à la radio, sur le canal 16 de la mer",
 "e": "Le canal 16 est la veille en mer."
 }
 ],
@@ -4427,7 +8239,7 @@ window.KAM_QCM = {
 "d": null,
 "o": [
 {
-"t": "entre 0,5 et 1 watt",
+"t": "0,5 à 1 watt",
 "e": "Exact."
 },
 {
