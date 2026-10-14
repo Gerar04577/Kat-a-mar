@@ -171,7 +171,21 @@ body{ font-size:calc(18px * var(--ech)); }
 }
 .menu-item:active{ background:var(--sea); }
 .menu-item.pret{ border-color:var(--navy); }
-.menu-item[aria-disabled="true"]{ opacity:.55; cursor:default; }
+/* Un module pas encore écrit ne doit JAMAIS ressembler à un module prêt :
+   bordure en pointillé, teinte éteinte, et une étiquette qui le dit en toutes
+   lettres. Il répond quand même à l'appui, en expliquant ce qu'il contiendra —
+   une tuile muette se lit comme une panne. */
+.menu-item.avenir{
+  border-style:dashed; background:transparent; color:var(--muted);
+}
+.menu-item.avenir .t{ color:var(--muted); }
+.menu-item.avenir .num{ background:var(--bg); color:var(--muted); }
+.menu-item.avenir .etat{ color:var(--amber); font-weight:700; }
+.menu-item.avenir[aria-expanded="true"]{ border-style:solid; border-color:var(--amber); }
+.bientot{
+  margin:-6px 0 2px; padding:12px 16px; font-size:.95rem; color:var(--ink);
+  background:var(--sea); border-radius:12px; max-width:none;
+}
 .menu-item .num{
   font-family:var(--mono); font-weight:700; font-size:1.3rem; color:var(--navy);
   background:var(--sea); border-radius:11px; padding:10px 13px; flex:0 0 auto;
@@ -372,15 +386,110 @@ section[id], .score, .qcm, figure.anim, [id]{
   main .steps .res, main .res{ white-space:normal; }
 }
 
+/* ---- habillage du chapitre 2 : balisage ---- */
+.f-rouge{ fill:var(--red); }
+.f-vert{ fill:var(--green); }
+.f-noir{ fill:#14263a; }
+.f-jaune{ fill:#f6c453; }
+.f-rose{ fill:var(--paper); stroke:var(--line); stroke-width:1.5; }
+.f-sain{ fill:var(--green); fill-opacity:.30; }
+.f-danger{ fill:var(--red); }
+.t-cote{ font-family:var(--mono); font-size:11px; font-weight:600; fill:var(--navy); }
+/* En thème sombre, le « noir » des bouées doit rester lisible sur fond sombre :
+   on l'éclaircit juste assez pour qu'il se détache, sans devenir gris. */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .f-noir{ fill:#5a6b80; }}
+:root[data-theme="dark"] .f-noir{ fill:#5a6b80; }
+
+/* ---- habillage du chapitre 3 : la signalisation ----
+   Un panneau garde ses VRAIES couleurs dans les deux thèmes : un panneau
+   blanc bordé de rouge reste blanc bordé de rouge, de jour comme de nuit.
+   On n'ajoute qu'un filet gris, pour qu'un panneau blanc ne disparaisse pas
+   sur fond sombre. Ces couleurs sont donc écrites en dur, volontairement. */
+.p-face{ fill:#ffffff; }
+.p-bleu{ fill:#1b5fae; }
+.p-vertf{ fill:#1b8a4b; }
+.p-rougef{ fill:#d7263d; }
+.p-jaunef{ fill:#f2c230; }
+.p-bord{ fill:none; stroke:#d7263d; stroke-width:6; }
+.p-filet{ fill:none; stroke:rgba(108,122,140,.65); stroke-width:1.4; }
+.p-barre{ stroke:#d7263d; stroke-width:7; stroke-linecap:round; }
+.p-pic{ fill:#14263a; }
+.p-picb{ fill:#ffffff; }
+.p-trait{ fill:none; stroke:#14263a; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-traitb{ fill:none; stroke:#ffffff; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-txt{ font-family:var(--mono); font-weight:700; fill:#14263a; }
+.p-txtb{ font-family:var(--mono); font-weight:700; fill:#ffffff; }
+
+/* la grille de l'explorateur de panneaux */
+/* « Recommandation » est un mot long : sous 140 px, il se faisait couper. */
+.opt.cinq{ grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); }
+.opt.cinq button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; }
+.panneaux{ display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:10px; }
+.panneaux button{
+  box-sizing:border-box; font:inherit; cursor:pointer; min-width:0;
+  background:var(--bg); border:2px solid var(--line); border-radius:11px;
+  padding:7px 6px 5px; display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.panneaux button.on{ border-color:var(--navy); background:var(--sea); }
+.panneaux button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+/* plus spécifique que « .anim svg », qui plafonne à 560 px */
+.panneaux button svg{ width:100%; max-width:66px; height:auto; display:block; }
+.panneaux .code{ font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--navy); }
+
+/* les feux d'un ouvrage : des couleurs de lampe, pas des couleurs de thème */
+.f-eteint{ fill:#36404f; }
+.f-feurouge{ fill:#ff3b30; }
+.f-feuvert{ fill:#1fc45c; }
+.s-lampe{ stroke:#14263a; stroke-width:2; }
+
+/* Les tables de panneaux ont une colonne de texte long. Sans cette reprise,
+   la règle « main table { width:max-content } » les étirerait sur plusieurs
+   écrans de large au lieu de les laisser s'enrouler. */
+/* table-layout:fixed : la largeur est DONNÉE, donc le tableau ne peut plus
+   dépasser l'écran quoi qu'on mette dedans. Sans ça, la colonne des codes
+   (« E.5.4 à E.5.15 ») imposait une largeur minimale et entraînait toute la
+   page de côté, surtout au texte agrandi. */
+main table.pan-tab{ display:table; width:100%; table-layout:fixed; }
+main table.pan-tab th:first-child,
+main table.pan-tab td:first-child{ width:28%; white-space:normal; overflow-wrap:anywhere; }
+main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
+
+/* ---- habillage du chapitre 4 : les priorités ---- */
+/* l'étiquette au-dessus de chaque groupe de boutons de l'outil */
+.qlab{
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--muted); margin:2px 0 -4px;
+}
+/* « Courant : tu es montant » est long : les boutons doivent pouvoir
+   s'enrouler plutôt que se faire couper, comme au chapitre 3. */
+.opt.quatre{ grid-template-columns:repeat(auto-fit, minmax(152px, 1fr)); }
+.opt.trois{ grid-template-columns:repeat(auto-fit, minmax(132px, 1fr)); }
+.opt.deux{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.opt.quatre button, .opt.trois button, .opt.deux button{
+  overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+}
+/* la flèche orange de celui qui doit s'écarter */
+.s-ecart{ fill:none; stroke:#e8690b; stroke-width:3.5; stroke-linecap:round; }
+.f-ecart{ fill:#e8690b; }
+.t-ecart{ font-family:var(--mono); font-size:11px; font-weight:700; fill:#e8690b; }
+/* l'axe du chenal, et le feu blanc scintillant du panneau bleu */
+.s-axe{ stroke:var(--line); stroke-width:1.4; stroke-dasharray:7 7; }
+.f-feublanc{ fill:#ffffff; stroke:#8a6a10; stroke-width:1.5; }
+/* les voiliers de l'outil des amures */
+.f-voile{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; }
+.f-mat2{ stroke:var(--ink); stroke-width:2.4; }
+.s-vent{ stroke:var(--navy); stroke-width:2.2; stroke-linecap:round; }
+.f-vent{ fill:var(--navy); }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v1 · chapitre 1</div>
-  <h1>La navigation fluviale</h1>
-  <p>Les cartes, les écluses, le niveau des eaux. Tout le vocabulaire que les dix chapitres suivants vont réutiliser.</p>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v4 · chapitres 1 à 4</div>
+  <h1>Fluvial — le cours</h1>
+  <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
 </header>
 
 <div id="kam-chercher">
@@ -419,9 +528,9 @@ section[id], .score, .qcm, figure.anim, [id]{
   <h2>Les onze chapitres du module</h2>
   <ol class="chapitres">
     <li><span class="n">1</span><a href="#ch1">La navigation fluviale</a></li>
-    <li><span class="n">2</span><span class="avenir">Le balisage — à venir</span></li>
-    <li><span class="n">3</span><span class="avenir">La signalisation fluviale — à venir</span></li>
-    <li><span class="n">4</span><span class="avenir">Les règles de priorité en eaux intérieures — à venir</span></li>
+    <li><span class="n">2</span><a href="#ch2">Le balisage</a></li>
+    <li><span class="n">3</span><a href="#ch3">La signalisation fluviale</a></li>
+    <li><span class="n">4</span><a href="#ch4">Les règles de priorité en eaux intérieures</a></li>
     <li><span class="n">5</span><span class="avenir">Les feux et marques — à venir</span></li>
     <li><span class="n">6</span><span class="avenir">Les signaux sonores — à venir</span></li>
     <li><span class="n">7</span><span class="avenir">Sécurité et premiers secours — à venir</span></li>
@@ -638,7 +747,6 @@ section[id], .score, .qcm, figure.anim, [id]{
   <p class="kicker">Chapitre 1</p>
   <h2>Les questions</h2>
   <p>Chaque proposition est expliquée, la juste comme les fausses. Le score se tient <b>par catégorie</b>, comme à l'examen.</p>
-  <div class="score" id="score" hidden></div>
 
   <div class="qcm" data-cat="Navigation fluviale" data-bonne="B">
     <p class="qn">QCM 1</p>
@@ -869,10 +977,2181 @@ section[id], .score, .qcm, figure.anim, [id]{
     <p class="cat">Catégorie : niveau des eaux</p>
   </div>
 
+</section>
+
+
+<section id="ch2">
+  <p class="kicker">Chapitre 2</p>
+  <h2>Le balisage</h2>
+  <p>Les bouées ne disent pas « danger ici ». Elles disent <b>de quel côté passer</b> — et ce côté dépend du sens dans lequel tu navigues. C'est toute la difficulté du chapitre, et la source de la moitié des erreurs à l'examen.</p>
+
+  <h3>Deux régions dans le monde</h3>
+  <div class="def">
+    <p class="term">Région A — l'Europe, l'Afrique, et tout ce qui n'est pas en région B</p>
+    <p>La marque <b>bâbord</b> est <b>rouge</b> et <b>cylindrique</b>. La marque <b>tribord</b> est <b>verte</b> et <b>conique</b>.</p>
+  </div>
+  <div class="def">
+    <p class="term">Région B — les Amériques, le Pacifique, le Japon, la Corée, les Philippines, les départements français d'Amérique</p>
+    <p>Les formes ne changent pas — bâbord reste cylindrique, tribord reste conique — mais <b>les couleurs sont inversées</b> : bâbord vert, tribord rouge.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>À l'examen belge, les questions portent sur la <b>région A</b>. Si une question ne précise pas la région, c'est A. Mais lis bien : certaines questions nomment la région B exprès, pour voir si tu suis.</p>
+  </div>
+
+  <h3>Le sens conventionnel</h3>
+  <p>Tout le balisage latéral se lit dans un sens unique, qu'on appelle le <b>sens conventionnel</b> : <b>de la mer vers le port</b>, ou <b>vers l'amont</b> d'un fleuve. C'est le sens dans lequel les bouées « sont écrites ».</p>
+  <div class="def">
+    <p class="term">Dans le sens conventionnel, en région A</p>
+    <p>Le <b>rouge cylindrique</b> se laisse à <b>bâbord</b> — à gauche. Le <b>vert conique</b> se laisse à <b>tribord</b> — à droite.</p>
+    <p class="why">Deux formules à retenir telles quelles : <b>« bas si rouge »</b> pour Bâbord–Cylindrique–Rouge, et <b>« tricot vert »</b> pour Tribord–Conique–Vert.</p>
+  </div>
+  <p>Si tu navigues <b>dans l'autre sens</b> — du port vers la mer, ou vers l'aval — les bouées ne changent pas de place : <b>c'est toi qui as tourné</b>. Le rouge se retrouve alors sur ta droite.</p>
+
+  <figure class="anim" id="anim-sens">
+    <p class="atitle">▶ Animation : le même chenal, dans un sens puis dans l'autre</p>
+    <svg viewBox="0 0 420 220" role="img" aria-label="Un chenal balisé, parcouru dans un sens puis dans l'autre">
+      <rect x="0" y="0" width="420" height="220" class="f-ciel"/>
+      <rect x="0" y="40" width="420" height="150" class="f-eau"/>
+      <rect x="0" y="0" width="420" height="40" class="f-terre"/>
+      <rect x="0" y="190" width="420" height="30" class="f-terre"/>
+      <text x="8" y="24" class="t-lab">rive gauche</text>
+      <text x="8" y="210" class="t-lab">rive droite</text>
+      <!-- bouees : cylindres rouges en haut, cones verts en bas -->
+      <g id="bl-rouges">
+        <g transform="translate(90,70)"><rect x="-9" y="-16" width="18" height="16" class="f-rouge"/><rect x="-5" y="-26" width="10" height="10" class="f-rouge"/></g>
+        <g transform="translate(200,70)"><rect x="-9" y="-16" width="18" height="16" class="f-rouge"/><rect x="-5" y="-26" width="10" height="10" class="f-rouge"/></g>
+        <g transform="translate(310,70)"><rect x="-9" y="-16" width="18" height="16" class="f-rouge"/><rect x="-5" y="-26" width="10" height="10" class="f-rouge"/></g>
+      </g>
+      <g id="bl-verts">
+        <g transform="translate(145,160)"><path d="M -10 0 L 10 0 L 0 -20 Z" class="f-vert"/><path d="M -5 -20 L 5 -20 L 0 -30 Z" class="f-vert"/></g>
+        <g transform="translate(255,160)"><path d="M -10 0 L 10 0 L 0 -20 Z" class="f-vert"/><path d="M -5 -20 L 5 -20 L 0 -30 Z" class="f-vert"/></g>
+      </g>
+      <!-- bateau -->
+      <g id="sens-bateau" transform="translate(40,115)">
+        <path d="M -20 -8 L 14 -8 L 24 0 L 14 8 L -20 8 Z" class="f-coque"/>
+        <rect x="-10" y="-5" width="12" height="10" class="f-cabine"/>
+      </g>
+      <!-- etiquettes cote bateau -->
+      <text id="sens-bab" x="40" y="86" class="t-cote" text-anchor="middle">bâbord</text>
+      <text id="sens-tri" x="40" y="150" class="t-cote" text-anchor="middle">tribord</text>
+      <text id="sens-fleche" x="210" y="30" class="t-lab" text-anchor="middle">vers l'amont / vers le port →</text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <h3>Rive droite, rive gauche, montant et avalant</h3>
+  <div class="def">
+    <p class="term">Les rives se nomment dans le sens du courant</p>
+    <p>Le courant va de la <b>source</b> vers l'<b>embouchure</b>. Place-toi dos à la source, face au courant qui s'en va : la <b>rive droite</b> est à ta droite, la <b>rive gauche</b> à ta gauche. Ces noms ne changent <b>jamais</b>, quel que soit ton cap.</p>
+  </div>
+  <div class="def">
+    <p class="term">Montant et avalant</p>
+    <p>Un bateau est dit <b>montant</b> quand il remonte vers la <b>source</b>, et <b>avalant</b> quand il descend vers l'<b>embouchure</b>. Ces deux mots reviennent dans tout le chapitre des priorités.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>« Rive droite » n'est pas « à ma droite ». Un avalant a la rive droite à sa droite ; un montant l'a à sa <b>gauche</b>. La rive ne bouge pas, c'est le bateau qui se retourne.</p>
+  </div>
+
+  <h3>Les numéros des bouées</h3>
+  <p>Les bouées sont numérotées depuis l'<b>embouchure</b>. Les numéros <b>pairs</b> sont sur les marques <b>bâbord</b>, les <b>impairs</b> sur les marques <b>tribord</b>.</p>
+
+  <h3>À l'entrée et à la sortie d'un port</h3>
+  <p>Pour un port, <b>l'intérieur joue le rôle de la source</b> : on entre comme on remonterait un fleuve. À la <b>sortie</b>, les balises portent des <b>rayures blanches</b>. Si elles sont allumées, le feu reprend la couleur de la marque — rouge ou vert.</p>
+
+  <h3>Quand le chenal se divise</h3>
+  <div class="def">
+    <p class="term">La bifurcation de chenal — eaux intérieures uniquement</p>
+    <p>Elle marque l'endroit où le chenal se sépare en deux. <b>On peut passer des deux côtés.</b> Voyant <b>sphérique</b>, bandes <b>horizontales</b> rouges et vertes (ou rouges et noires), et s'il y a un feu, il est <b>blanc isophase</b> — autant de lumière que d'obscurité.</p>
+  </div>
+  <div class="def">
+    <p class="term">Le chenal préféré — en mer</p>
+    <p>Mêmes bandes rouges et vertes, mais le <b>voyant</b> tranche : cylindre rouge ou cône vert. La règle simple : <b>regarde la couleur dominante</b>, celle du haut. Dominante rouge → c'est une bâbord, tu la laisses à gauche. Dominante verte → tribord, tu la laisses à droite.</p>
+  </div>
+
+  <h3>Épis, digues et bancs médians</h3>
+  <p>En plus des marques de rive, des cônes signalent les ouvrages qui avancent dans l'eau et les hauts-fonds au milieu du cours d'eau.</p>
+  <ul>
+    <li><b>Rive gauche</b> — cônes <b>verts, pointe en haut</b>, éventuellement un feu vert.</li>
+    <li><b>Rive droite</b> — cônes <b>rouges, pointe en bas</b>, éventuellement un feu rouge.</li>
+    <li><b>Banc médian</b> — les deux superposés, le <b>rouge au-dessus du vert</b>. On passe des deux côtés.</li>
+  </ul>
+
+  <h3>Les marques de la mer</h3>
+  <div class="def">
+    <p class="term">Danger isolé</p>
+    <p>Un danger de faible étendue — un rocher — <b>entouré d'eaux saines</b>. La marque est posée <b>au-dessus</b> du danger : noire avec une ou plusieurs bandes rouges, voyant de <b>deux boules noires</b>. Au large, on passe de part et d'autre.</p>
+  </div>
+  <div class="def">
+    <p class="term">Eaux saines</p>
+    <p>Rien à craindre ici. Bouée à bandes <b>verticales</b> rouges et blanches, voyant d'<b>une boule rouge</b>. Elle signale une zone d'atterrissage, d'amerrissage, ou un mouillage d'attente. On passe où l'on veut.</p>
+  </div>
+  <div class="def">
+    <p class="term">Marque spéciale</p>
+    <p><b>Jaune</b>, voyant en <b>croix de Saint-André</b> (×). Elle ne signale pas un danger : câble, oléoduc, zone d'exercice, zone interdite à la navigation.</p>
+  </div>
+  <div class="def">
+    <p class="term">Danger nouveau</p>
+    <p>Une obstruction découverte récemment, pas encore sur les cartes — souvent une épave. On la balise avec des marques latérales ou cardinales ordinaires, <b>doublées</b> si le danger est grave. Depuis 2006, une <b>marque d'épave d'urgence</b> bleue et jaune peut être posée en attendant la cardinale.</p>
+  </div>
+
+  <h3>Les cardinales</h3>
+  <p>Une cardinale ne dit pas « passe à droite » : elle dit <b>de quel côté du danger se trouvent les eaux saines</b>. Une cardinale Nord signifie « passe au <b>nord</b> de moi ».</p>
+  <div class="def">
+    <p class="term">Le truc du crayon</p>
+    <p>Imagine que le voyant — les deux cônes noirs — est la <b>pointe d'un crayon</b> : là où la mine pointe, c'est là qu'est le <b>noir</b> sur le corps de la bouée. Pointes en haut → noir en haut → Nord. Pointes en bas → noir en bas → Sud.</p>
+  </div>
+  <div class="def">
+    <p class="term">Le truc de l'horloge</p>
+    <p>Le nombre de scintillements se lit sur un cadran : <b>3 = Est</b> (3 h), <b>6 = Sud</b> (6 h), <b>9 = Ouest</b> (9 h), et le Nord, à midi, scintille <b>sans interruption</b>. Le Sud ajoute un <b>éclat long</b> après ses six scintillements — c'est lui qui le distingue à coup sûr.</p>
+  </div>
+
+  <figure class="anim live" id="anim-cardinales">
+    <p class="atitle">⚙ Les quatre cardinales — touche-en une, le feu bat au vrai rythme</p>
+    <svg viewBox="0 0 420 230" role="img" aria-label="Une marque cardinale et la position des eaux saines autour du danger">
+      <rect x="0" y="0" width="420" height="230" class="f-ciel"/>
+      <!-- rose : le danger au centre, le secteur sain en vert -->
+      <g transform="translate(95,115)">
+        <circle r="62" class="f-rose"/>
+        <path id="card-secteur" d="" class="f-sain"/>
+        <circle r="13" class="f-danger"/>
+        <text x="0" y="-68" class="t-lab" text-anchor="middle">N</text>
+        <text x="70" y="4" class="t-lab" text-anchor="middle">E</text>
+        <text x="0" y="78" class="t-lab" text-anchor="middle">S</text>
+        <text x="-70" y="4" class="t-lab" text-anchor="middle">O</text>
+      </g>
+      <!-- legende, hors de la rose : « danger » ne tenait pas dans la pastille -->
+      <circle cx="22" cy="14" r="6" class="f-danger"/>
+      <text x="34" y="18" class="t-lab">le danger</text>
+      <rect x="100" y="8" width="12" height="12" class="f-sain"/>
+      <text x="118" y="18" class="t-lab">les eaux saines</text>
+      <!-- la bouee -->
+      <g transform="translate(300,0)">
+        <circle id="card-feu" cx="0" cy="34" r="8" fill="#ffffff" stroke="#14263a" stroke-width="1.5"/>
+        <g id="card-voyant"></g>
+        <rect id="card-corps-h" x="-16" y="96" width="32" height="42" class="f-noir"/>
+        <rect id="card-corps-b" x="-16" y="138" width="32" height="42" class="f-jaune"/>
+        <path d="M -16 180 L 16 180 L 22 196 L -22 196 Z" class="f-mur"/>
+      </g>
+      <text id="card-rythme" x="300" y="216" class="t-lab" text-anchor="middle"></text>
+    </svg>
+    <p class="cap" id="card-cap"></p>
+    <div class="ctl">
+      <div class="opt" style="width:100%">
+        <button type="button" data-card="N">Nord</button>
+        <button type="button" data-card="E">Est</button>
+        <button type="button" data-card="S">Sud</button>
+        <button type="button" data-card="O">Ouest</button>
+      </div>
+    </div>
+  </figure>
+
+  <div class="trap">
+    <div class="trap-h">Les trois pièges des cardinales</div>
+    <p><b>1.</b> « Cardinale Nord » ne veut pas dire que le danger est au nord : ça veut dire que <b>tu</b> dois passer au nord. Le danger est <b>au sud</b> de la bouée.</p>
+    <p><b>2.</b> Est et Ouest se confondent. Le voyant <b>Ouest</b> ressemble à un <b>W</b> couché, un sablier — pointes qui se touchent au milieu. L'Est, c'est l'inverse : les bases se touchent.</p>
+    <p><b>3.</b> Six scintillements, c'est le Sud — mais seulement s'ils sont suivis d'un <b>éclat long</b>. Sans l'éclat long, recompte.</p>
+  </div>
+
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>Le balisage des eaux intérieures belges et le balisage maritime sont <b>deux systèmes distincts</b>. Les marques de bifurcation à voyant sphérique et feu blanc isophase décrites plus haut n'existent que <b>sur les voies intérieures</b> ; en mer, on utilise le chenal préféré.</p>
+    <p>Le balisage maritime suit le système <b>AISM/IALA</b>, région A pour la Belgique. Le balisage fluvial belge suit le <b>SIGNI</b>, l'annexe de signalisation du règlement de police pour la navigation sur les eaux intérieures.</p>
+    <p class="art">Système de balisage maritime AISM, région A ; signalisation SIGNI annexée au règlement de police pour la navigation sur les eaux intérieures.</p>
+  </div>
+</section>
+
+<section id="qcm-ch2">
+  <p class="kicker">Chapitre 2</p>
+  <h2>Les questions du balisage</h2>
+  <p>Vingt-quatre questions. C'est le chapitre le plus interrogé de l'examen — et celui qui fait couler la catégorie à 50 %.</p>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 13</p>
+    <p class="qt">En région A, dans le sens conventionnel, la marque bâbord est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>verte et conique</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>rouge et cylindrique</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>rouge et conique</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est la marque tribord.</li>
+      <li class="ok"><b>B</b> — juste. « Bas si rouge » : Bâbord, Cylindrique, Rouge.</li>
+      <li class="ko"><b>C</b> — faux. La couleur est bonne, la forme non : le cône est toujours tribord en région A.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="C">
+    <p class="qn">QCM 14</p>
+    <p class="qt">Le sens conventionnel du balisage, c'est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>toujours le sens du courant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le sens dans lequel on navigue</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>de la mer vers le port, ou vers l'amont</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est l'inverse : le courant descend vers l'embouchure.</li>
+      <li class="ko"><b>B</b> — faux. S'il suivait ton cap, le balisage ne voudrait plus rien dire.</li>
+      <li class="ok"><b>C</b> — juste. Un sens unique, fixé une fois pour toutes.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="A">
+    <p class="qn">QCM 15</p>
+    <p class="qt">Tu descends le fleuve vers la mer. Une bouée rouge cylindrique se présente. Tu dois :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la laisser à tribord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la laisser à bâbord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>passer indifféremment</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Tu navigues à contresens du balisage : le rouge, qui se laisse à bâbord dans le sens conventionnel, se retrouve sur ta droite.</li>
+      <li class="ko"><b>B</b> — faux. C'est la réponse si tu remontais. C'est l'erreur la plus fréquente du chapitre.</li>
+      <li class="ko"><b>C</b> — faux. Une marque latérale impose toujours un côté.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 16</p>
+    <p class="qt">En région B, la marque tribord est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>verte et conique</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>rouge et conique</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>rouge et cylindrique</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est la région A.</li>
+      <li class="ok"><b>B</b> — juste. En région B les couleurs s'inversent, <b>les formes non</b> : tribord reste conique.</li>
+      <li class="ko"><b>C</b> — faux. Le cylindre est toujours bâbord, dans les deux régions.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="C">
+    <p class="qn">QCM 17</p>
+    <p class="qt">La Belgique se trouve en :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>région B</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>ni l'une ni l'autre, elle a son propre système</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>région A</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux. La région B, c'est les Amériques, le Pacifique, le Japon, la Corée.</li>
+      <li class="ko"><b>B</b> — faux. Le balisage maritime belge suit le système AISM, région A.</li>
+      <li class="ok"><b>C</b> — juste. Toute l'Europe est en région A.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="A">
+    <p class="qn">QCM 18</p>
+    <p class="qt">La rive droite d'un fleuve se détermine :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>en regardant dans le sens du courant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>en regardant vers l'amont</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>par rapport au cap du bateau</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Dos à la source, face au courant qui s'en va : la rive droite est à droite.</li>
+      <li class="ko"><b>B</b> — faux, c'est l'inverse, et on obtiendrait la rive gauche.</li>
+      <li class="ko"><b>C</b> — faux. Les rives ne bougent pas quand le bateau tourne.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 19</p>
+    <p class="qt">Un bateau « avalant » est un bateau qui :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>remonte vers la source</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>descend vers l'embouchure</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>est à l'arrêt dans le courant</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, celui-là est « montant ».</li>
+      <li class="ok"><b>B</b> — juste. Il descend, il « avale » le courant.</li>
+      <li class="ko"><b>C</b> — faux. Les deux mots désignent un sens de marche, pas une allure.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="C">
+    <p class="qn">QCM 20</p>
+    <p class="qt">Les bouées portant un numéro pair sont :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>les marques tribord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>les marques cardinales</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>les marques bâbord</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, les marques tribord portent les numéros impairs.</li>
+      <li class="ko"><b>B</b> — faux. Les cardinales ne sont pas numérotées dans cette série.</li>
+      <li class="ok"><b>C</b> — juste. Pairs à bâbord, impairs à tribord, en comptant depuis l'embouchure.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="A">
+    <p class="qn">QCM 21</p>
+    <p class="qt">À la sortie d'un port, les balises portent :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>des rayures blanches</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un voyant sphérique</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>une croix de Saint-André</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Et si elles sont allumées, le feu garde la couleur de la marque.</li>
+      <li class="ko"><b>B</b> — faux, c'est la bifurcation de chenal.</li>
+      <li class="ko"><b>C</b> — faux, c'est la marque spéciale, jaune.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 22</p>
+    <p class="qt">Pour entrer dans un port, on considère que :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>l'intérieur du port est l'embouchure</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>l'intérieur du port est la source</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le balisage ne s'applique plus</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux. Ce serait entrer à contresens du balisage.</li>
+      <li class="ok"><b>B</b> — juste. On entre au port comme on remonterait un fleuve : le rouge à bâbord.</li>
+      <li class="ko"><b>C</b> — faux. Le balisage vaut jusqu'au quai.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="C">
+    <p class="qn">QCM 23</p>
+    <p class="qt">Une marque de bifurcation de chenal, en eaux intérieures, porte :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux boules noires</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux cônes pointes en haut</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un voyant sphérique</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, ce sont les deux boules du danger isolé.</li>
+      <li class="ko"><b>B</b> — faux, c'est le voyant de la cardinale Nord.</li>
+      <li class="ok"><b>C</b> — juste, avec des bandes horizontales, et un feu blanc isophase s'il y en a un.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="A">
+    <p class="qn">QCM 24</p>
+    <p class="qt">Devant une marque de bifurcation de chenal, tu peux :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>passer des deux côtés</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>passer uniquement à droite</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>ne pas passer, c'est une zone interdite</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Elle dit seulement que le chenal se sépare en deux.</li>
+      <li class="ko"><b>B</b> — faux. Si un côté était imposé, ce serait une marque latérale.</li>
+      <li class="ko"><b>C</b> — faux. L'interdiction se signale autrement.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 25</p>
+    <p class="qt">Un feu blanc isophase, c'est un feu dont :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la lumière dure plus longtemps que l'obscurité</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la lumière et l'obscurité durent aussi longtemps</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>l'obscurité dure plus longtemps que la lumière</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est un feu à occultations.</li>
+      <li class="ok"><b>B</b> — juste. « Iso » : des durées égales.</li>
+      <li class="ko"><b>C</b> — faux, c'est un feu à éclats.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="C">
+    <p class="qn">QCM 26</p>
+    <p class="qt">Sur la rive gauche, les épis sont signalés par :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>des cônes rouges pointe en bas</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>des cylindres rouges</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>des cônes verts pointe en haut</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est la rive droite.</li>
+      <li class="ko"><b>B</b> — faux. Le cylindre est une marque latérale, pas une marque d'épi.</li>
+      <li class="ok"><b>C</b> — juste, avec éventuellement un feu vert.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="A">
+    <p class="qn">QCM 27</p>
+    <p class="qt">Un banc médian au milieu du cours d'eau est signalé par :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un cône rouge au-dessus d'un cône vert</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un cône vert au-dessus d'un cône rouge</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>deux boules noires</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : rouge sur vert. On passe des deux côtés.</li>
+      <li class="ko"><b>B</b> — faux. L'ordre compte, et il est l'inverse. Piège classique.</li>
+      <li class="ko"><b>C</b> — faux, c'est le danger isolé, en mer.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 28</p>
+    <p class="qt">Une marque de danger isolé est posée :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>à côté du danger, au nord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>au-dessus du danger</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>à un mille du danger</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, ce serait une cardinale.</li>
+      <li class="ok"><b>B</b> — juste. Elle est <b>sur</b> le rocher, entourée d'eaux saines.</li>
+      <li class="ko"><b>C</b> — faux. Aucune distance n'est prévue.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="C">
+    <p class="qn">QCM 29</p>
+    <p class="qt">Le voyant d'une marque de danger isolé est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>une boule rouge</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>une croix jaune</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>deux boules noires</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est la marque d'eaux saines.</li>
+      <li class="ko"><b>B</b> — faux, c'est la marque spéciale.</li>
+      <li class="ok"><b>C</b> — juste. Deux boules noires superposées, sur un corps noir à bandes rouges.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="A">
+    <p class="qn">QCM 30</p>
+    <p class="qt">Une bouée à bandes verticales rouges et blanches signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>eaux saines</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>danger isolé</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>zone interdite</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Atterrissage, amerrissage, mouillage d'attente : on passe où l'on veut.</li>
+      <li class="ko"><b>B</b> — faux, celui-là est noir à bandes rouges, avec deux boules.</li>
+      <li class="ko"><b>C</b> — faux, l'interdiction se signale en jaune, avec une croix.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Balisage" data-bonne="B">
+    <p class="qn">QCM 31</p>
+    <p class="qt">Une marque jaune portant une croix de Saint-André signale :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>une épave dangereuse</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>une zone particulière, sans danger pour la navigation</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le début d'un chenal</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux. L'épave d'urgence est bleue et jaune depuis 2006.</li>
+      <li class="ok"><b>B</b> — juste : câble, oléoduc, zone d'exercice militaire, zone interdite à la navigation.</li>
+      <li class="ko"><b>C</b> — faux, ce serait une marque d'eaux saines ou une latérale.</li>
+    </ul></div>
+    <p class="cat">Catégorie : balisage</p>
+  </div>
+
+  <div class="qcm" data-cat="Cardinales" data-bonne="C">
+    <p class="qn">QCM 32</p>
+    <p class="qt">Devant une cardinale Nord, tu dois passer :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>au sud de la marque</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>indifféremment des deux côtés</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>au nord de la marque</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est exactement là qu'est le danger.</li>
+      <li class="ko"><b>B</b> — faux. Une cardinale impose toujours un secteur.</li>
+      <li class="ok"><b>C</b> — juste. Le nom de la cardinale dit où <b>tu</b> passes, jamais où est le danger.</li>
+    </ul></div>
+    <p class="cat">Catégorie : cardinales</p>
+  </div>
+
+  <div class="qcm" data-cat="Cardinales" data-bonne="A">
+    <p class="qn">QCM 33</p>
+    <p class="qt">Le voyant de la cardinale Sud, ce sont :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux cônes pointes en bas</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux cônes pointes en haut</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>deux cônes opposés par la pointe</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Le crayon pointe vers le bas : le noir est en bas.</li>
+      <li class="ko"><b>B</b> — faux, c'est le Nord.</li>
+      <li class="ko"><b>C</b> — faux, c'est l'Ouest, le sablier, le « W ».</li>
+    </ul></div>
+    <p class="cat">Catégorie : cardinales</p>
+  </div>
+
+  <div class="qcm" data-cat="Cardinales" data-bonne="B">
+    <p class="qn">QCM 34</p>
+    <p class="qt">Un feu blanc à 9 scintillements signale une cardinale :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>Est</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>Ouest</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>Sud</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, l'Est en fait 3.</li>
+      <li class="ok"><b>B</b> — juste. Sur le cadran d'une horloge, 9 h est à l'ouest.</li>
+      <li class="ko"><b>C</b> — faux, le Sud en fait 6, suivis d'un éclat long.</li>
+    </ul></div>
+    <p class="cat">Catégorie : cardinales</p>
+  </div>
+
+  <div class="qcm" data-cat="Cardinales" data-bonne="C">
+    <p class="qn">QCM 35</p>
+    <p class="qt">Ce qui distingue à coup sûr le feu de la cardinale Sud :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>sa couleur rouge</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>son scintillement continu</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>l'éclat long qui suit les six scintillements</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux. Tous les feux cardinaux sont <b>blancs</b>.</li>
+      <li class="ko"><b>B</b> — faux, c'est le Nord.</li>
+      <li class="ok"><b>C</b> — juste. Compter six scintillements de nuit est risqué ; l'éclat long, lui, ne trompe pas.</li>
+    </ul></div>
+    <p class="cat">Catégorie : cardinales</p>
+  </div>
+
+  <div class="qcm" data-cat="Cardinales" data-bonne="A">
+    <p class="qn">QCM 36</p>
+    <p class="qt">Les couleurs d'une cardinale Ouest, de haut en bas :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>jaune, noir, jaune</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>noir, jaune, noir</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>noir au-dessus, jaune en dessous</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Le voyant en sablier pointe vers le <b>milieu</b> : le noir y est.</li>
+      <li class="ko"><b>B</b> — faux, c'est l'Est, dont les cônes pointent vers le haut <i>et</i> le bas.</li>
+      <li class="ko"><b>C</b> — faux, c'est le Nord.</li>
+    </ul></div>
+    <p class="cat">Catégorie : cardinales</p>
+  </div>
+</section>
+
+<section id="ch3">
+  <p class="kicker">Chapitre 3</p>
+  <h2>La signalisation fluviale</h2>
+  <p>Sur la route, la forme et la couleur d'un panneau suffisent à savoir s'il interdit, s'il oblige ou s'il renseigne. Sur l'eau c'est pareil — mais les codes ne sont <b>pas</b> ceux de la route. C'est là que l'examen pique.</p>
+
+  <h3>De quoi la signalisation est faite</h3>
+  <p>Trois choses, et rien d'autre :</p>
+  <ul>
+    <li>des <b>panneaux</b>, carrés ou rectangulaires pour la plupart, en losange pour les recommandations ;</li>
+    <li>des <b>feux</b> — rouges, verts, jaunes ou blancs, simples ou doubles, fixes ou scintillants ;</li>
+    <li>des <b>panneaux additionnels</b>, cartouches et inscriptions, qui précisent le panneau principal sans jamais le contredire.</li>
+  </ul>
+  <p>Les panneaux se rangent en <b>cinq familles</b>, qui portent chacune une lettre officielle. Cette lettre n'est pas une invention d'école : c'est le code du règlement, et le connaître fait gagner du temps à l'examen comme sur l'eau.</p>
+
+  <div class="def">
+    <p class="term">Les cinq familles</p>
+    <p><b>A — interdiction.</b> Ce que tu ne peux pas faire.<br>
+       <b>B — obligation.</b> Ce que tu dois faire.<br>
+       <b>C — restriction.</b> Une limite physique de la voie : profondeur, hauteur, largeur.<br>
+       <b>D — recommandation.</b> Le passage conseillé.<br>
+       <b>E — indication.</b> Un renseignement, une autorisation, un service.</p>
+  </div>
+
+  <h3>Reconnaître la famille en trois secondes</h3>
+  <p>Avant même de regarder le dessin, la <b>couleur du fond</b> et la <b>bordure</b> t'ont déjà dit l'essentiel.</p>
+
+  <table class="pan-tab">
+    <thead><tr><th>Famille</th><th>À quoi ça ressemble</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>Carré <b>blanc bordé de rouge</b>, pictogramme noir, <b>barré d'une diagonale rouge</b>. Deux exceptions : A.1 (fond rouge à bande blanche) et A.10 (carré rouge et blanc posé sur la pointe).</td></tr>
+      <tr><td>B</td><td>Carré <b>blanc bordé de rouge</b>, pictogramme noir, <b>sans diagonale</b>.</td></tr>
+      <tr><td>C</td><td>Carré <b>blanc bordé de rouge</b>, <b>un chiffre</b> en noir : c'est le chiffre qui porte l'information.</td></tr>
+      <tr><td>D</td><td><b>Losanges</b> — jaunes, ou blancs et verts — suspendus à une arche de pont ou à un passage.</td></tr>
+      <tr><td>E</td><td>Carré ou rectangle <b>bleu à pictogramme blanc</b>. Exception : E.1 (fond vert à bande blanche verticale).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="trap">
+    <div class="trap-h">Le piège, et il tombe souvent</div>
+    <p>Sur la route, une obligation est <b>bleue</b> et une interdiction est <b>ronde</b>. Sur l'eau, <b>rien de tout ça</b> : les interdictions, les obligations et les restrictions se ressemblent — toutes blanches bordées de rouge, toutes carrées. <b>Ce qui les sépare, c'est la barre rouge en diagonale</b> (interdiction) et la présence d'un chiffre (restriction). Et le bleu, lui, n'oblige à rien : il <b>renseigne</b>.</p>
+  </div>
+
+  <figure class="anim" id="anim-berge">
+    <p class="atitle">▶ Animation : cinq panneaux défilent sur la berge</p>
+    <svg viewBox="0 0 460 236" role="img" aria-label="Un bateau remonte un canal en passant devant cinq panneaux plantés sur la rive">
+      <rect x="0" y="0" width="460" height="236" class="f-ciel"/>
+      <rect x="0" y="0" width="460" height="118" class="f-terre"/>
+      <rect x="0" y="118" width="460" height="118" class="f-eau"/>
+      <g id="bg-panneaux"></g>
+      <g id="bg-bateau" transform="translate(40,178)">
+        <path d="M -26 -9 L 18 -9 L 30 0 L 18 9 L -26 9 Z" class="f-coque"/>
+        <rect x="-13" y="-6" width="15" height="12" class="f-cabine"/>
+      </g>
+      <text x="8" y="228" class="t-lab">tu remontes le canal →</text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <figure class="anim live" id="outil-familles">
+    <p class="atitle">⚙ Outil : les panneaux, famille par famille</p>
+    <div class="opt cinq" id="fam-btns">
+      <button type="button" data-fam="A">A · Interdiction</button>
+      <button type="button" data-fam="B">B · Obligation</button>
+      <button type="button" data-fam="C">C · Restriction</button>
+      <button type="button" data-fam="D">D · Recommandation</button>
+      <button type="button" data-fam="E">E · Indication</button>
+    </div>
+    <p class="cap" id="fam-regle"></p>
+    <div class="panneaux" id="fam-grille"></div>
+    <p class="cap" id="fam-cap"></p>
+    <p class="note">Les formes, les couleurs et les codes sont ceux du règlement. Les pictogrammes sont <b>redessinés</b> : quand le dessin exact n'apporte rien, le panneau porte simplement son code. Ce qui s'apprend ici, c'est la <b>famille</b> et le <b>sens</b> — le trait exact, tu le verras sur l'eau.</p>
+  </figure>
+
+  <h3>Les interdictions — famille A</h3>
+  <p>Carré blanc, bord rouge, <b>diagonale rouge</b>. La diagonale est le mot « non ».</p>
+  <table class="pan-tab">
+    <thead><tr><th>Code</th><th>Ce que le panneau interdit</th></tr></thead>
+    <tbody>
+      <tr><td>A.1</td><td>Passage interdit — le signal général. Fond rouge à bande blanche, ou des panneaux rouges, ou des pavillons rouges. Il sert aussi à barrer un chantier.</td></tr>
+      <tr><td>A.2</td><td>Défense de dépasser.</td></tr>
+      <tr><td>A.3</td><td>Défense de dépasser, <b>entre convois seulement</b> — les autres bateaux peuvent se dépasser.</td></tr>
+      <tr><td>A.4</td><td>Défense de croiser et de dépasser.</td></tr>
+      <tr><td>A.4.1</td><td>Défense de croiser et de dépasser, entre convois seulement.</td></tr>
+      <tr><td>A.5</td><td>Stationnement interdit — ni ancrage ni amarrage à la rive, du côté où le panneau est planté.</td></tr>
+      <tr><td>A.5.1</td><td>Stationnement interdit sur la <b>largeur indiquée en mètres</b> à partir du panneau.</td></tr>
+      <tr><td>A.6</td><td>Défense d'ancrer, et de traîner ancres, câbles ou chaînes.</td></tr>
+      <tr><td>A.7</td><td>Défense de s'amarrer à la rive — celle où le panneau est planté.</td></tr>
+      <tr><td>A.8</td><td>Défense de virer.</td></tr>
+      <tr><td>A.9</td><td>Défense de créer des remous.</td></tr>
+      <tr><td>A.10</td><td>Passage interdit <b>en dehors</b> de l'espace délimité. Deux carrés rouges et blancs posés sur la pointe, un de chaque côté d'une arche de pont ou d'un barrage : tu dois passer <b>entre les deux</b>.</td></tr>
+      <tr><td>A.11</td><td>Passage interdit, <b>mais tiens-toi prêt à démarrer</b>. C'est le panneau de l'attente active.</td></tr>
+      <tr><td>A.12</td><td>Interdit aux bateaux motorisés.</td></tr>
+      <tr><td>A.13</td><td>Interdit aux embarcations de sport ou de plaisance.</td></tr>
+      <tr><td>A.14</td><td>Ski nautique interdit.</td></tr>
+      <tr><td>A.15</td><td>Interdit aux bateaux à voile.</td></tr>
+      <tr><td>A.16</td><td>Interdit aux bateaux ni motorisés ni à voile — à la rame, par exemple.</td></tr>
+      <tr><td>A.17</td><td>Planche à voile interdite.</td></tr>
+      <tr><td>A.18</td><td>Fin de la zone autorisée à grande vitesse pour les menues embarcations.</td></tr>
+      <tr><td>A.19</td><td>Mise à l'eau et sortie d'embarcations interdites.</td></tr>
+      <tr><td>A.20</td><td>Motos nautiques — jet-skis — interdites.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>A.1 n'est pas « chenal hors service ».</b> A.1 interdit le passage à tout le monde. Le panneau qui ferme un chenal aux seuls bateaux à moteur, en le laissant ouvert aux avirons et aux voiles, est un <b>A.12</b> — une interdiction de famille A, mais visant une catégorie, pas le passage lui-même. Lis <b>qui</b> est interdit avant de lire <b>quoi</b>.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>A.5 et A.7 ne se valent pas.</b> A.5 interdit de <b>stationner</b> — donc ni ancre, ni amarre. A.7 n'interdit que l'<b>amarrage à la rive</b> : tu peux encore mouiller au large du panneau. Et A.6 n'interdit que l'<b>ancre</b> : tu peux encore t'amarrer. Trois panneaux, trois portées différentes.</p>
+  </div>
+
+  <h3>Les obligations — famille B</h3>
+  <p>Même carré blanc bordé de rouge, <b>sans</b> la diagonale. Un ordre, pas une interdiction.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Code</th><th>Ce que le panneau impose</th></tr></thead>
+    <tbody>
+      <tr><td>B.1</td><td>Suivre la direction indiquée par la flèche.</td></tr>
+      <tr><td>B.2a / B.2b</td><td>Se diriger vers le côté <b>bâbord</b> / <b>tribord</b> du chenal.</td></tr>
+      <tr><td>B.3a / B.3b</td><td><b>Tenir</b> le côté bâbord / tribord du chenal — et y rester.</td></tr>
+      <tr><td>B.4a / B.4b</td><td>Croiser le chenal vers bâbord / vers tribord.</td></tr>
+      <tr><td>B.5</td><td>S'arrêter — dans les conditions prévues par le règlement.</td></tr>
+      <tr><td>B.6</td><td>Ne pas dépasser la <b>vitesse indiquée</b>, en km/h.</td></tr>
+      <tr><td>B.7</td><td>Émettre un signal sonore — un son prolongé.</td></tr>
+      <tr><td>B.8</td><td>Observer une <b>vigilance particulière</b>.</td></tr>
+      <tr><td>B.9a / B.9b</td><td>Ne s'engager sur la voie principale qu'après s'être assuré que la manœuvre n'oblige aucun autre bateau à changer de route ou de vitesse.</td></tr>
+      <tr><td>B.10</td><td>L'inverse, vu de la voie principale : les bateaux qui la suivent modifient route ou vitesse, si besoin, pour laisser sortir ceux du port ou de la voie affluente.</td></tr>
+      <tr><td>B.11a / B.11b</td><td>Entrer en liaison radiotéléphonique — B.11b précise le <b>canal</b>. En Belgique, c'est très souvent le <b>canal 10</b>.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>B.6 ressemble à un panneau de restriction, et n'en est pas un.</b> Un chiffre sur fond blanc bordé de rouge peut être une <b>obligation</b> (B.6 : ne dépasse pas 12 km/h) ou une <b>restriction</b> (C.2 : il n'y a que 4,20 m de hauteur libre). Le repère : C décrit la <b>voie</b> — profondeur, hauteur, largeur, distance. B commande ta <b>conduite</b>. Une vitesse, c'est ta conduite.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>B.9 n'est pas une priorité donnée, c'est une prudence imposée.</b> Il ne dit pas « les autres sont prioritaires » : il dit « ne t'engage que si personne n'a à changer quoi que ce soit ». Le résultat ressemble à une priorité, mais la formulation de l'examen porte sur l'obligation de s'assurer.</p>
+  </div>
+
+  <h3>Les restrictions — famille C</h3>
+  <p>La voie elle-même est limitée. Le <b>chiffre</b> est toute l'information.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Code</th><th>Ce que le chiffre annonce</th></tr></thead>
+    <tbody>
+      <tr><td>C.1</td><td><b>Profondeur d'eau</b> limitée.</td></tr>
+      <tr><td>C.2</td><td><b>Hauteur libre</b> au-dessus du plan d'eau limitée.</td></tr>
+      <tr><td>C.3</td><td><b>Largeur</b> de la passe ou du chenal limitée.</td></tr>
+      <tr><td>C.4</td><td>Restrictions imposées à la navigation : <b>renseigne-toi</b>. Le panneau ne dit pas lesquelles.</td></tr>
+      <tr><td>C.5</td><td>Le <b>chenal est éloigné de la rive</b> — droite ou gauche. Le chiffre blanc donne la distance minimale en mètres, comptée <b>depuis le signal</b>.</td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>On retient « C.5, c'est 30 m ». <b>Non</b> : 30 n'est qu'un exemple. Le chiffre varie d'un signal à l'autre, et il se compte <b>à partir du panneau</b>, pas à partir du bord de l'eau. Même logique pour C.1, C.2 et C.3 : aucune valeur n'est « la » valeur.</p>
+  </div>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>Les cinq familles, leur forme, leurs couleurs et leurs codes ne sont pas une convention d'école : ils figurent à l'<b>appendice 7 du Règlement général de police pour la navigation sur les eaux intérieures</b> (arrêté royal du 24 septembre 2006), qui reprend la signalisation européenne CEVNI/SIGNI. C'est la même signalisation sur les voies belges, néerlandaises, allemandes et françaises.</p>
+    <p>Un chiffre lu sur un panneau C est une <b>donnée de la voie</b>, pas une marge de sécurité : la marge, c'est à toi de la retirer — revois le calcul de la hauteur sous les ponts au chapitre 1.</p>
+    <p class="art">Arrêté royal du 24 septembre 2006, Règlement général de police pour la navigation sur les eaux intérieures, appendice 7 (signalisation de la voie navigable).</p>
+  </div>
+
+  <h3>Les recommandations — famille D</h3>
+  <p>Ce sont les <b>losanges</b>, suspendus au-dessus de l'eau à une arche de pont ou à une passe de barrage.</p>
+  <div class="def">
+    <p class="term">La règle du nombre de losanges</p>
+    <p><b>Un losange</b> : la passe est recommandée <b>dans les deux sens</b>.<br>
+       <b>Deux losanges</b> côte à côte : la passe est recommandée <b>à sens unique</b> — dans l'autre sens, elle est interdite.</p>
+  </div>
+  <table class="pan-tab">
+    <thead><tr><th>Code</th><th>Ce que le panneau recommande</th></tr></thead>
+    <tbody>
+      <tr><td>D.1a / D.1b</td><td>Passe recommandée dans les <b>deux sens</b> — un losange.</td></tr>
+      <tr><td>D.1c à D.1f</td><td>Passe recommandée <b>dans un seul sens</b>, interdite dans l'autre — deux losanges.</td></tr>
+      <tr><td>D.2</td><td>Il est recommandé de se tenir <b>dans l'espace indiqué</b>, entre les signaux.</td></tr>
+      <tr><td>D.3</td><td>Se diriger dans le sens de la flèche, ou dans le sens qui va du <b>feu fixe</b> vers le <b>feu rythmé</b> (isophase).</td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège, le plus beau du chapitre</div>
+    <p>Sous une arche de pont, <b>deux signaux en losange se ressemblent et disent le contraire</b>.</p>
+    <p>Les carrés <b>rouges et blancs</b> posés sur la pointe sont des <b>A.10</b> : ils bornent une zone <b>interdite de chaque côté</b>, donc tu passes <b>entre eux</b>.</p>
+    <p>Les losanges <b>jaunes</b>, ou <b>blancs et verts</b>, sont des <b>D.1</b> : ils désignent la passe <b>recommandée</b>, donc tu passes <b>dessous</b>.</p>
+    <p>Rouge et blanc = une borne, tu passes à côté. Jaune ou vert = une porte, tu passes dessous.</p>
+  </div>
+
+  <h3>Les indications — famille E</h3>
+  <p>Fond bleu, pictogramme blanc. Le bleu ne commande rien : il autorise, il renseigne, il montre un service.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Code</th><th>Ce que le panneau indique</th></tr></thead>
+    <tbody>
+      <tr><td>E.1</td><td><b>Passage autorisé</b> — le signal général. Seul panneau E à fond <b>vert</b>, barré d'une bande blanche verticale.</td></tr>
+      <tr><td>E.2</td><td>Croisement d'une <b>ligne électrique aérienne</b>.</td></tr>
+      <tr><td>E.3</td><td><b>Barrage.</b> Le panneau annonce l’ouvrage ; la façon de le franchir, elle, est donnée par les signaux de la passe.</td></tr>
+      <tr><td>E.4a / E.4b</td><td>Bac <b>ne naviguant pas librement</b> / <b>naviguant librement</b>.</td></tr>
+      <tr><td>E.5</td><td>Stationnement autorisé — ancrage ou amarrage à la rive.</td></tr>
+      <tr><td>E.5.1</td><td>Stationnement autorisé sur la <b>largeur indiquée</b> en mètres.</td></tr>
+      <tr><td>E.5.2</td><td>Stationnement autorisé <b>entre deux distances</b> indiquées.</td></tr>
+      <tr><td>E.5.3</td><td><b>Nombre maximal</b> de bateaux autorisés à stationner bord à bord.</td></tr>
+      <tr><td>E.5.4 à E.5.15</td><td>Aires réservées — au poussage, aux autres bateaux, ou à tous — selon le nombre de cônes ou de feux bleus exigés.</td></tr>
+      <tr><td>E.6</td><td>Ancrage autorisé, traînage d'ancres, câbles et chaînes autorisé.</td></tr>
+      <tr><td>E.7</td><td>Amarrage à la rive autorisé.</td></tr>
+      <tr><td>E.7.1</td><td>Aire réservée au <b>chargement et déchargement des véhicules</b>.</td></tr>
+      <tr><td>E.8</td><td><b>Aire de virage.</b></td></tr>
+      <tr><td>E.9</td><td>Les voies rencontrées sont <b>affluentes</b> de celle que tu suis — tu es sur la voie principale.</td></tr>
+      <tr><td>E.10</td><td>L'inverse : <b>ta</b> voie est affluente de celle que tu rencontres.</td></tr>
+      <tr><td>E.11</td><td><b>Fin</b> d'une interdiction, d'une obligation valable dans un seul sens, ou d'une restriction.</td></tr>
+      <tr><td>E.12</td><td>Signaux avancés à feu blanc : <b>fixe</b> = difficultés au-delà, arrête-toi si le règlement l'exige ; <b>isophase</b> = tu peux avancer.</td></tr>
+      <tr><td>E.13</td><td>Point d'<b>eau potable</b>.</td></tr>
+      <tr><td>E.14</td><td><b>Poste téléphonique</b>.</td></tr>
+      <tr><td>E.15 à E.20</td><td>Autorisé, selon le pictogramme : bateaux motorisés, plaisance, ski nautique, voile, bateaux ni motorisés ni à voile, planche à voile.</td></tr>
+      <tr><td>E.21</td><td>Zone autorisée à <b>grande vitesse</b> pour les menues embarcations.</td></tr>
+      <tr><td>E.22</td><td><b>Mise à l'eau</b> et sortie d'embarcations autorisées.</td></tr>
+      <tr><td>E.23</td><td>Renseignements nautiques par <b>radiotéléphonie</b>, sur le canal indiqué.</td></tr>
+      <tr><td>E.24</td><td>Motos nautiques — jet-skis — autorisées.</td></tr>
+      <tr><td>E.25</td><td><b>Branchement électrique</b> à terre disponible.</td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Chaque autorisation E a son interdiction A en miroir — E.17 et A.14 pour le ski nautique, E.24 et A.20 pour le jet-ski, E.20 et A.17 pour la planche à voile. <b>Ne les apprends pas par leur numéro</b>, apprends-les par leur <b>couleur</b> : bleu, c'est permis ; blanc barré de rouge, c'est défendu. À l'examen, la question montre un fond, pas un numéro.</p>
+  </div>
+
+  <h3>Les panneaux additionnels</h3>
+  <p>Sous un panneau principal, un petit panneau complémentaire ou un <b>cartouche</b> précise sa portée. Il ne change jamais le sens du panneau : il dit <b>où</b>, <b>depuis quand</b>, <b>sur quelle longueur</b> ou <b>dans quelle direction</b>.</p>
+  <ul>
+    <li>Une <b>distance</b> : le panneau s'applique à tant de mètres devant toi. Un B.5 avec « 1000 m » veut dire : l'arrêt est à mille mètres, pas ici.</li>
+    <li>Une <b>longueur</b> : la prescription vaut sur tant de mètres de voie.</li>
+    <li>Une <b>flèche</b> : la prescription vise le côté montré.</li>
+    <li>Une <b>inscription</b> : une explication ou une restriction de catégorie.</li>
+  </ul>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Un chiffre sous un panneau n'est <b>pas</b> le même qu'un chiffre <b>sur</b> un panneau. Sur un C.2, « 4,20 » est la hauteur libre. Sous un B.5, « 1000 m » est une distance d'annonce. Regarde toujours <b>où</b> le chiffre est écrit.</p>
+  </div>
+
+  <h3>Les signaux du chenal, plantés sur la rive</h3>
+  <p>Hors des bouées, des panneaux plantés sur la berge disent <b>où est le chenal</b> par rapport à la rive, et où il la rejoint ou la quitte. Ils servent aussi de repères.</p>
+  <ul>
+    <li>Sur la <b>rive gauche</b> : les panneaux qui annoncent que le chenal s'en rapproche, éventuellement accompagnés d'un <b>feu vert</b>.</li>
+    <li>Sur la <b>rive droite</b> : les mêmes, éventuellement accompagnés d'un <b>feu rouge</b>.</li>
+    <li>Pour une <b>traversée</b> — le chenal qui passe d'une rive à l'autre — des signaux donnent le point de départ et l'<b>axe</b> de la traversée. <b>Deux panneaux placés l'un derrière l'autre forment un alignement</b> : tu les gardes superposés et tu es sur l'axe.</li>
+  </ul>
+  <div class="def">
+    <p class="term">Le moyen mnémotechnique du chapitre</p>
+    <p>Sur ces panneaux, <b>la flèche pointe toujours vers l'eau</b> — jamais vers la terre. Si tu hésites sur le sens de lecture d'un signal de berge, c'est ce repère qui tranche.</p>
+    <p class="why">Et la couleur reste celle de la rive : <b>vert à gauche, rouge à droite</b>, exactement comme les marques d'épis du chapitre 2.</p>
+  </div>
+
+  <h3>Les feux des ouvrages</h3>
+  <p>Écluses et ponts mobiles parlent par feux. Le vocabulaire est court et il ne varie pas : <b>rouge, tu ne passes pas ; rouge et vert, tu te prépares ; vert, tu passes</b>.</p>
+
+  <figure class="anim" id="anim-feux">
+    <p class="atitle">▶ Animation : les phases des feux d'une écluse</p>
+    <svg viewBox="0 0 420 226" role="img" aria-label="Vue de dessus de l'entrée d'une écluse, avec ses deux feux et ses portes, au fil des phases d'éclusage">
+      <rect x="0" y="0" width="420" height="226" class="f-ciel"/>
+      <rect x="0" y="18" width="420" height="78" class="f-terre"/>
+      <rect x="0" y="96" width="420" height="90" class="f-eau"/>
+      <rect x="0" y="186" width="420" height="40" class="f-terre"/>
+      <!-- bajoyers de l'écluse -->
+      <rect x="160" y="78" width="260" height="20" class="f-mur"/>
+      <rect x="160" y="184" width="260" height="20" class="f-mur"/>
+      <!-- portes : deux vantaux qui s'effacent dans les bajoyers -->
+      <rect id="fx-porte-h" x="166" y="96" width="14" height="45" class="f-porte"/>
+      <rect id="fx-porte-b" x="166" y="141" width="14" height="45" class="f-porte"/>
+      <!-- mât des feux, planté sur la rive avant l'écluse -->
+      <rect x="126" y="68" width="6" height="28" class="f-mat"/>
+      <circle id="fx-haut" cx="129" cy="30" r="11" class="f-eteint s-lampe"/>
+      <circle id="fx-bas" cx="129" cy="56" r="11" class="f-eteint s-lampe"/>
+      <text x="8" y="14" class="t-lab">les deux feux de l'entrée</text>
+      <text x="300" y="150" class="t-lab" text-anchor="middle">le sas</text>
+      <!-- bateau -->
+      <g id="fx-bateau" transform="translate(50,141)">
+        <path d="M -24 -9 L 16 -9 L 28 0 L 16 9 L -24 9 Z" class="f-coque"/>
+        <rect x="-12" y="-6" width="14" height="12" class="f-cabine"/>
+      </g>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <table class="pan-tab">
+    <thead><tr><th>Ce que tu vois</th><th>Ce que ça veut dire</th></tr></thead>
+    <tbody>
+      <tr><td>Deux feux rouges</td><td>Écluse <b>hors service</b> ou fermée : <b>entrée et sortie interdites</b>.</td></tr>
+      <tr><td>Un feu rouge</td><td><b>Entrée interdite.</b> L'écluse fonctionne, mais pas pour toi en ce moment.</td></tr>
+      <tr><td>Rouge en haut, vert en bas</td><td><b>Entrée encore interdite, autorisation imminente.</b> C'est le feu « prépare-toi ».</td></tr>
+      <tr><td>Feu(x) vert(s)</td><td><b>Entrée autorisée.</b> Deux feux verts : l'écluse est ouverte des deux côtés.</td></tr>
+      <tr><td>Aucun feu allumé</td><td><b>Ce n'est pas une autorisation.</b> Entrée et sortie interdites, sauf ordre du personnel de service.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="def">
+    <p class="term">Un feu ou deux, c'est pareil</p>
+    <p>Beaucoup d'ouvrages n'ont qu'une seule lampe. <b>Deux feux rouges horizontaux peuvent être remplacés par un seul feu rouge</b>, et deux verts par un seul vert. Ce n'est pas le nombre qui commande, c'est la <b>couleur</b>. Dès qu'un rouge est allumé, l'accès est interdit — temporairement ou définitivement.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>Feu éteint n'est pas feu vert.</b> Une écluse sans aucun feu allumé est fermée, pas ouverte. C'est l'erreur qui coûte la question — et, sur l'eau, la porte.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>Tous les feux rouges ne sont pas des feux d'écluse.</b> À l'entrée d'un port, des feux marquent l'ouvrage lui-même et ce qui y est interdit — s'y amarrer, notamment. Ne cherche pas une phase d'éclusage là où il n'y a pas d'écluse : regarde d'abord <b>sur quoi</b> le feu est posé.</p>
+  </div>
+
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>Le passage des <b>ponts mobiles</b>, celui des <b>écluses</b> et l'<b>entrée et la sortie des écluses</b> font chacun l'objet d'un article propre : <b>6.26</b>, <b>6.28</b> et <b>6.28/1</b>. Les feux eux-mêmes sont décrits à l'<b>appendice 7</b>, section G — <b>G.2</b> pour les ponts mobiles (en service et hors service), <b>G.4</b> pour les écluses, y compris le cas de l'écluse munie d'un pont mobile.</p>
+    <p>Un pont mobile parle le même langage que l'écluse : rouge interdit, rouge et vert annoncent, vert autorise. Et un ouvrage <b>hors service</b> se signale par deux feux rouges.</p>
+    <p class="art">Règlement général de police pour la navigation sur les eaux intérieures, art. 6.26, 6.28 et 6.28/1 ; appendice 7, G.2 et G.4.</p>
+  </div>
+
+  <div class="keep">
+    <p class="kt">À retenir du chapitre 3</p>
+    <p><b>La couleur du fond</b> donne la famille : blanc bordé de rouge = A, B ou C ; bleu = E ; losange = D.<br>
+    <b>La barre rouge</b> sépare l'interdiction (A) de l'obligation (B).<br>
+    <b>Le chiffre</b> sépare la restriction (C) : il décrit la voie, pas ta conduite.<br>
+    <b>Sous une arche</b> : rouge et blanc = borne, tu passes entre ; jaune ou vert = porte, tu passes dessous. Un losange = deux sens, deux losanges = sens unique.<br>
+    <b>Aux ouvrages</b> : rouge = non, rouge + vert = prépare-toi, vert = oui, rien = non.</p>
+  </div>
+
+</section>
+
+<section id="qcm-ch3">
+  <p class="kicker">Chapitre 3</p>
+  <h2>Les questions de la signalisation</h2>
+  <p>Vingt-huit questions, en trois catégories comme à l'examen : les panneaux, le chenal, et les feux des ouvrages.</p>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="B">
+    <p class="qn">QCM 37</p>
+    <p class="qt">Combien de familles de panneaux la signalisation fluviale compte-t-elle ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>trois</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>cinq</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>sept</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste : interdiction, obligation, restriction, recommandation, indication — A, B, C, D, E.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="C">
+    <p class="qn">QCM 38</p>
+    <p class="qt">Ce qui distingue un panneau d'interdiction d'un panneau d'obligation, c'est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la couleur du fond — rouge pour l'un, bleu pour l'autre</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la forme — rond pour l'un, carré pour l'autre</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>la barre rouge en diagonale, présente sur l'interdiction</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : les deux sont blancs bordés de rouge. Le bleu, c'est la famille E.</li>
+      <li class="ko"><b>B</b> — faux : les deux sont carrés. Le rond, c'est la route.</li>
+      <li class="ok"><b>C</b> — juste. La diagonale est le seul signe du « non ».</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="A">
+    <p class="qn">QCM 39</p>
+    <p class="qt">Un panneau à fond bleu avec un pictogramme blanc est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un panneau d'indication</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un panneau d'obligation</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un panneau de restriction</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : famille E, le bleu renseigne ou autorise.</li>
+      <li class="ko"><b>B</b> — faux, et c'est le piège de la route : sur l'eau, l'obligation est blanche bordée de rouge.</li>
+      <li class="ko"><b>C</b> — faux : la restriction aussi est blanche bordée de rouge.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="A">
+    <p class="qn">QCM 40</p>
+    <p class="qt">Le panneau A.1 signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>passage interdit</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>interdit aux bateaux à moteur</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>défense de dépasser</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : le signal général d'interdiction de passer, qui sert aussi à fermer un chantier.</li>
+      <li class="ko"><b>B</b> — faux, c'est A.12.</li>
+      <li class="ko"><b>C</b> — faux, c'est A.2.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="C">
+    <p class="qn">QCM 41</p>
+    <p class="qt">Un panneau ferme le chenal aux bateaux à moteur, mais le laisse ouvert aux avirons et aux voiles. Il s'agit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>d'un A.1, passage interdit</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>d'un panneau d'indication, puisqu'il reste du passage</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>d'un A.12, interdit aux bateaux motorisés</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : A.1 interdit le passage à tout le monde, sans exception de catégorie.</li>
+      <li class="ko"><b>B</b> — faux : c'est bien une interdiction, visant une catégorie de bateaux.</li>
+      <li class="ok"><b>C</b> — juste. Lis toujours <b>qui</b> est visé avant de lire <b>quoi</b>.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="B">
+    <p class="qn">QCM 42</p>
+    <p class="qt">Le panneau A.7 interdit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>de s'amarrer sur les deux rives</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>de s'amarrer à la rive où il est planté</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>tout stationnement, ancre comprise</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : un panneau ne vaut que pour sa rive.</li>
+      <li class="ok"><b>B</b> — juste : la rive qui porte le panneau, et elle seule.</li>
+      <li class="ko"><b>C</b> — faux, cela c'est A.5. A.7 n'interdit que l'amarrage.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="C">
+    <p class="qn">QCM 43</p>
+    <p class="qt">Tu veux mouiller à l'ancre. Un A.6 est planté là. Tu peux :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>mouiller : A.6 ne vise que les câbles et les chaînes</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>mouiller si tu ne traînes pas l'ancre</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>ne pas mouiller, mais tu peux encore t'amarrer à la rive</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : A.6 interdit d'ancrer, et aussi de traîner ancres, câbles et chaînes.</li>
+      <li class="ko"><b>B</b> — faux : l'ancrage lui-même est interdit.</li>
+      <li class="ok"><b>C</b> — juste. A.6 ne dit rien de l'amarrage : c'est A.7 qui s'en charge.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="B">
+    <p class="qn">QCM 44</p>
+    <p class="qt">Le panneau A.11 signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>passage autorisé, mais restez vigilant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>passage interdit, mais tenez-vous prêt à démarrer</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>arrêt obligatoire pendant une heure</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : c'est une interdiction, pas une autorisation.</li>
+      <li class="ok"><b>B</b> — juste : l'interdiction tient encore, mais elle va être levée. Moteur prêt.</li>
+      <li class="ko"><b>C</b> — faux : aucun panneau ne donne une durée pareille.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="A">
+    <p class="qn">QCM 45</p>
+    <p class="qt">Le panneau A.3 interdit de dépasser :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>entre convois seulement</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>à tous les bateaux sans exception</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>aux seules embarcations de plaisance</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Les autres bateaux peuvent encore se dépasser entre eux.</li>
+      <li class="ko"><b>B</b> — faux, cela c'est A.2.</li>
+      <li class="ko"><b>C</b> — faux : la plaisance n'est pas visée par ce panneau.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="C">
+    <p class="qn">QCM 46</p>
+    <p class="qt">Un carré blanc bordé de rouge, sans diagonale, portant le chiffre 12. C'est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>une restriction : il reste 12 m de largeur</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>une indication : le canal VHF 12</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>une obligation : ne pas dépasser 12 km/h</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — piège : une largeur limitée est aussi un panneau blanc à chiffre (C.3). Mais la question ne dit rien de la voie, et une vitesse est une conduite.</li>
+      <li class="ko"><b>B</b> — faux : une indication serait <b>bleue</b>.</li>
+      <li class="ok"><b>C</b> — juste : B.6. C décrit la voie, B commande ta conduite.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="C">
+    <p class="qn">QCM 47</p>
+    <p class="qt">Le panneau B.8 impose :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>d'émettre un signal sonore prolongé</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>de s'arrêter</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>d'observer une vigilance particulière</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est B.7.</li>
+      <li class="ko"><b>B</b> — faux, c'est B.5.</li>
+      <li class="ok"><b>C</b> — juste.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="A">
+    <p class="qn">QCM 48</p>
+    <p class="qt">Sur les voies belges, le panneau qui impose d'entrer en liaison radio indique très souvent :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le canal 10</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le canal 16</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le canal 72</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : B.11b avec « 10 ».</li>
+      <li class="ko"><b>B</b> — le 16 est la veille et la détresse en mer, pas le canal de service d'une voie intérieure.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="B">
+    <p class="qn">QCM 49</p>
+    <p class="qt">Le panneau C.4 signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>profondeur limitée</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>restrictions imposées à la navigation : renseigne-toi</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>largeur limitée</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est C.1.</li>
+      <li class="ok"><b>B</b> — juste : c'est le seul panneau C qui ne te donne pas la restriction, mais t'oblige à aller la chercher.</li>
+      <li class="ko"><b>C</b> — faux, c'est C.3.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="B">
+    <p class="qn">QCM 50</p>
+    <p class="qt">Sous un panneau B.5 figure un cartouche « 1000 m ». Cela veut dire :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>que tu dois t'arrêter pendant 1000 mètres</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>que l'arrêt est à observer dans 1000 mètres</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>que la hauteur libre y est de 10 m</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : un arrêt ne se mesure pas en mètres parcourus.</li>
+      <li class="ok"><b>B</b> — juste : un cartouche de distance annonce où la prescription s'applique.</li>
+      <li class="ko"><b>C</b> — faux : une hauteur libre s'écrit <b>sur</b> un C.2, pas sous un B.5.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="A">
+    <p class="qn">QCM 51</p>
+    <p class="qt">Le panneau E.1 se reconnaît à :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>son fond vert barré d'une bande blanche verticale</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>son fond bleu à pictogramme blanc, comme tous les E</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>son losange jaune</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : E.1, passage autorisé, est l'exception verte de la famille E.</li>
+      <li class="ko"><b>B</b> — c'est la règle de la famille, mais justement pas celle d'E.1.</li>
+      <li class="ko"><b>C</b> — faux : le losange, c'est la famille D.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Panneaux" data-bonne="C">
+    <p class="qn">QCM 52</p>
+    <p class="qt">Le panneau E.11 annonce :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le début d'une zone de baignade</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un poste téléphonique</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>la fin d'une interdiction, d'une obligation à sens unique ou d'une restriction</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ko"><b>B</b> — faux, c'est E.14.</li>
+      <li class="ok"><b>C</b> — juste : c'est le panneau qui lève ce qu'un autre avait posé.</li>
+    </ul></div>
+    <p class="cat">Catégorie : panneaux</p>
+  </div>
+
+  <div class="qcm" data-cat="Chenal" data-bonne="A">
+    <p class="qn">QCM 53</p>
+    <p class="qt">Sous une arche de pont, tu vois <b>un seul</b> losange jaune. Tu en déduis :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>que la passe est recommandée dans les deux sens</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>que le passage est interdit</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>que la passe est à sens unique</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Un losange : les deux sens.</li>
+      <li class="ko"><b>B</b> — faux : l'interdiction, ce sont les carrés rouges et blancs posés sur la pointe.</li>
+      <li class="ko"><b>C</b> — faux : il en faudrait deux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : chenal</p>
+  </div>
+
+  <div class="qcm" data-cat="Chenal" data-bonne="B">
+    <p class="qn">QCM 54</p>
+    <p class="qt">Deux carrés rouges et blancs posés sur la pointe encadrent une arche de pont. Tu dois :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>passer à l'extérieur de l'un ou de l'autre</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>passer entre les deux</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>renoncer : l'arche est fermée</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est exactement ce qui est interdit.</li>
+      <li class="ok"><b>B</b> — juste : A.10 interdit le passage <b>en dehors</b> de l'espace qu'ils délimitent.</li>
+      <li class="ko"><b>C</b> — faux : ils balisent un passage, ils ne le ferment pas.</li>
+    </ul></div>
+    <p class="cat">Catégorie : chenal</p>
+  </div>
+
+  <div class="qcm" data-cat="Chenal" data-bonne="C">
+    <p class="qn">QCM 55</p>
+    <p class="qt">Deux losanges côte à côte au-dessus d'une passe signifient :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux passes recommandées</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>passage interdit</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>passe recommandée à sens unique</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : les deux losanges désignent la même passe.</li>
+      <li class="ko"><b>B</b> — faux : jaune ou vert recommande, il n'interdit pas.</li>
+      <li class="ok"><b>C</b> — juste. Et dans l'autre sens, elle est interdite.</li>
+    </ul></div>
+    <p class="cat">Catégorie : chenal</p>
+  </div>
+
+  <div class="qcm" data-cat="Chenal" data-bonne="B">
+    <p class="qn">QCM 56</p>
+    <p class="qt">Un panneau C.5 porte le chiffre 30. Cela veut dire :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>que le chenal est toujours à 30 m de la rive, partout sur la voie</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>que le chenal est éloigné d'au moins 30 m, comptés depuis le panneau</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>que la profondeur est de 30 dm</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : la valeur change d'un signal à l'autre, et 30 n'est qu'un exemple.</li>
+      <li class="ok"><b>B</b> — juste : distance minimale, comptée à partir du signal.</li>
+      <li class="ko"><b>C</b> — faux : la profondeur, c'est C.1.</li>
+    </ul></div>
+    <p class="cat">Catégorie : chenal</p>
+  </div>
+
+  <div class="qcm" data-cat="Chenal" data-bonne="A">
+    <p class="qn">QCM 57</p>
+    <p class="qt">Deux panneaux de traversée sont placés l'un derrière l'autre sur la rive. Ils servent à :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>former un alignement, à garder superposés pour tenir l'axe</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>indiquer deux chenaux différents</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>doubler le signal en cas de panne du premier</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : deux marques superposées dans l'œil, et tu es sur l'axe de la traversée.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ko"><b>C</b> — faux : ce n'est pas une redondance, c'est une géométrie.</li>
+    </ul></div>
+    <p class="cat">Catégorie : chenal</p>
+  </div>
+
+  <div class="qcm" data-cat="Chenal" data-bonne="C">
+    <p class="qn">QCM 58</p>
+    <p class="qt">Sur un panneau de berge indiquant la position du chenal, la flèche pointe :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>toujours vers l'amont</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>toujours vers la terre</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>toujours vers la surface de l'eau</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : elle ne dit rien du sens de navigation.</li>
+      <li class="ko"><b>B</b> — faux, et c'est l'inverse.</li>
+      <li class="ok"><b>C</b> — juste. C'est le repère qui tranche quand on hésite sur la lecture.</li>
+    </ul></div>
+    <p class="cat">Catégorie : chenal</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux des ouvrages" data-bonne="B">
+    <p class="qn">QCM 59</p>
+    <p class="qt">À l'entrée d'une écluse, deux feux rouges sont allumés. Cela signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>que l'écluse se prépare à t'accueillir</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>que l'entrée et la sortie sont interdites</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>que tu peux entrer prudemment</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : la préparation, c'est rouge <b>et</b> vert.</li>
+      <li class="ok"><b>B</b> — juste : écluse hors service ou fermée.</li>
+      <li class="ko"><b>C</b> — faux : aucun rouge ne laisse entrer.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux des ouvrages</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux des ouvrages" data-bonne="C">
+    <p class="qn">QCM 60</p>
+    <p class="qt">Un feu rouge en haut et un feu vert en bas :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>écluse hors service</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>entrée autorisée avec prudence</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>entrée encore interdite, autorisation imminente</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : hors service, ce sont deux rouges.</li>
+      <li class="ko"><b>B</b> — faux : tant qu'un rouge brûle, on n'entre pas.</li>
+      <li class="ok"><b>C</b> — juste : c'est le feu « prépare-toi ». Moteur en route, pare-battages dehors, amarres prêtes.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux des ouvrages</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux des ouvrages" data-bonne="A">
+    <p class="qn">QCM 61</p>
+    <p class="qt">Aucun feu n'est allumé à l'entrée de l'écluse. Tu :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>n'entres pas : entrée et sortie sont interdites, sauf ordre du personnel</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>entres si la porte est ouverte</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>entres : rien n'interdit le passage</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Seul le personnel de service peut lever l'interdiction.</li>
+      <li class="ko"><b>B</b> — faux : la porte ouverte n'autorise rien par elle-même.</li>
+      <li class="ko"><b>C</b> — faux, et c'est l'erreur classique : un feu éteint n'est pas un feu vert.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux des ouvrages</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux des ouvrages" data-bonne="B">
+    <p class="qn">QCM 62</p>
+    <p class="qt">Un ouvrage ne porte qu'une seule lampe, allumée en vert. Par rapport à deux feux verts :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le sens est différent : un seul feu ne vaut qu'avertissement</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le sens est le même : c'est la couleur qui commande, pas le nombre</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un seul feu est toujours hors service</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste : deux feux horizontaux peuvent être remplacés par un seul, rouge ou vert.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux des ouvrages</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux des ouvrages" data-bonne="A">
+    <p class="qn">QCM 63</p>
+    <p class="qt">Le langage des feux d'un <b>pont mobile</b>, par rapport à celui d'une écluse :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>est le même : rouge interdit, rouge et vert annoncent, vert autorise</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>est inversé : le vert y interdit le passage</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>n'existe pas : un pont mobile se signale par panneaux seulement</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Le règlement traite les deux ouvrages dans la même section de l'appendice 7.</li>
+      <li class="ko"><b>B</b> — faux : aucune signalisation n'inverse le rouge et le vert.</li>
+      <li class="ko"><b>C</b> — faux : l'article 6.26 lui est consacré.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux des ouvrages</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux des ouvrages" data-bonne="C">
+    <p class="qn">QCM 64</p>
+    <p class="qt">Un feu rouge est allumé à l'entrée d'un port, sur la tête de la jetée. Tu en conclus :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>que l'écluse du port est fermée</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>que la sortie des bateaux est en cours</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>qu'il faut d'abord regarder sur quoi le feu est posé : tout feu rouge n'est pas un feu d'écluse</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : rien ne dit qu'il y a une écluse.</li>
+      <li class="ko"><b>B</b> — faux : ce n'est pas ce que dit un feu fixe sur un ouvrage.</li>
+      <li class="ok"><b>C</b> — juste. Un feu se lit avec son support : jetée, écluse, pont mobile — ce ne sont pas les mêmes signaux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux des ouvrages</p>
+  </div>
+</section>
+
+<section id="ch4">
+  <p class="kicker">Chapitre 4</p>
+  <h2>Les règles de priorité en eaux intérieures</h2>
+  <p>Le mot « priorité » est trompeur. Sur l'eau, personne n'a le droit de forcer le passage : un bateau a le <b>devoir de s'écarter</b>, l'autre a le <b>devoir de garder sa route et sa vitesse</b> pour rester prévisible. Et tous les deux gardent le devoir d'éviter l'abordage, quoi qu'il arrive.</p>
+
+  <h3>Les deux mots qui commandent tout le chapitre</h3>
+  <div class="def">
+    <p class="term">Menue embarcation</p>
+    <p>Un bateau dont la <b>coque fait moins de 20 m</b>. Le Kat-a-Mar, avec ses 7,55 m, en est une — et c'est la clé de lecture de tout ce chapitre : <b>presque toutes les règles te placent du côté de celui qui s'efface</b>.</p>
+  </div>
+  <div class="def">
+    <p class="term">Grand bateau</p>
+    <p>Vingt mètres ou plus. Mais la définition ne s'arrête pas à la taille : comptent aussi comme grands bateaux, quelle que soit leur longueur, les <b>remorqueurs</b>, les <b>pousseurs</b>, les <b>bacs</b>, les <b>bateaux à passagers</b>, les <b>bateaux de pêche en action de pêche</b> et les <b>barges</b>.</p>
+    <p class="why">Un bac de 15 m reste un grand bateau. C'est une question d'examen classique.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>On mesure la <b>coque</b>, pas l'encombrement. Un voilier de 18 m avec deux mètres de balcon et un bout-dehors reste une <b>menue embarcation</b>. Et un bateau à passagers de 12 m ne l'est pas, parce qu'il est nommé dans la liste.</p>
+  </div>
+  <p>Deuxième mot, revu du chapitre 2 : le <b>montant</b> remonte vers la source, l'<b>avalant</b> descend vers l'embouchure. Dès qu'il y a du courant, ces deux mots décident.</p>
+
+  <h3>La règle qui passe avant toutes les autres</h3>
+  <div class="keep">
+    <p class="kt">Si tu ne retiens qu'une phrase de ce chapitre</p>
+    <p>Une <b>menue embarcation</b> doit laisser à tous les autres bateaux l'espace nécessaire pour poursuivre leur route et pour manœuvrer. <b>Elle ne peut jamais exiger qu'on s'écarte pour elle.</b></p>
+  </div>
+  <p>Cette règle écrase les autres. Tu peux être à la voile, être sur ta droite, descendre le courant : devant un grand bateau, <b>tu t'écartes</b>. Les règles qui suivent ne servent qu'entre bateaux de même monde — menue contre menue, ou grand contre grand.</p>
+
+  <figure class="anim live" id="outil-priorite">
+    <p class="atitle">⚙ Outil : qui doit s'écarter ?</p>
+    <p class="note">Compose la situation. L'outil donne la réponse <b>et l'article</b> qui la fonde.</p>
+    <p class="qlab">Ton bateau</p>
+    <div class="opt quatre" id="pr-moi">
+      <button type="button" data-v="grand">Grand bateau</button>
+      <button type="button" data-v="moteur">Menue à moteur</button>
+      <button type="button" data-v="voile">Menue à voile</button>
+      <button type="button" data-v="rames">Menue à rames</button>
+    </div>
+    <p class="qlab">L'autre bateau</p>
+    <div class="opt quatre" id="pr-autre">
+      <button type="button" data-v="grand">Grand bateau</button>
+      <button type="button" data-v="moteur">Menue à moteur</button>
+      <button type="button" data-v="voile">Menue à voile</button>
+      <button type="button" data-v="rames">Menue à rames</button>
+    </div>
+    <p class="qlab">La situation</p>
+    <div class="opt quatre" id="pr-situ">
+      <button type="button" data-v="devant">Droit devant</button>
+      <button type="button" data-v="croise">Routes qui se croisent</button>
+      <button type="button" data-v="montant">Courant : tu es montant</button>
+      <button type="button" data-v="avalant">Courant : tu es avalant</button>
+    </div>
+    <p class="qlab">Tu suis le côté tribord de la passe</p>
+    <div class="opt deux" id="pr-trib">
+      <button type="button" data-v="oui">Oui</button>
+      <button type="button" data-v="non">Non</button>
+    </div>
+    <svg viewBox="0 0 420 148" role="img" aria-label="Deux bateaux dans un chenal, avec une flèche sur celui qui doit s'écarter">
+      <rect x="0" y="0" width="420" height="148" class="f-ciel"/>
+      <rect x="0" y="22" width="420" height="104" class="f-eau"/>
+      <rect x="0" y="0" width="420" height="22" class="f-terre"/>
+      <rect x="0" y="126" width="420" height="22" class="f-terre"/>
+      <g id="pr-bat-moi" transform="translate(90,74)">
+        <path d="M -24 -9 L 16 -9 L 28 0 L 16 9 L -24 9 Z" class="f-coque"/>
+        <rect x="-12" y="-6" width="14" height="12" class="f-cabine"/>
+      </g>
+      <text id="pr-lab-moi" x="90" y="110" class="t-cote" text-anchor="middle">toi</text>
+      <g id="pr-bat-autre" transform="translate(330,74) rotate(180)">
+        <path d="M -24 -9 L 16 -9 L 28 0 L 16 9 L -24 9 Z" class="f-coque"/>
+        <rect x="-12" y="-6" width="14" height="12" class="f-cabine"/>
+      </g>
+      <text id="pr-lab-autre" x="330" y="110" class="t-cote" text-anchor="middle">l'autre</text>
+      <g id="pr-fl-moi" transform="translate(90,74)" opacity="0">
+        <path d="M -6 -20 Q 20 -40 42 -30" class="s-ecart"/>
+        <path d="M 52 -27 L 37 -36 L 39 -22 Z" class="f-ecart"/>
+        <text x="14" y="-46" class="t-ecart" text-anchor="middle">s'écarte</text>
+      </g>
+      <g id="pr-fl-autre" transform="translate(330,74)" opacity="0">
+        <path d="M 6 -20 Q -20 -40 -42 -30" class="s-ecart"/>
+        <path d="M -52 -27 L -37 -36 L -39 -22 Z" class="f-ecart"/>
+        <text x="-14" y="-46" class="t-ecart" text-anchor="middle">s'écarte</text>
+      </g>
+    </svg>
+    <p class="cap" id="pr-cap"></p>
+  </figure>
+
+  <h3>Les cinq règles, dans l'ordre</h3>
+  <p>Ton manuel range les priorités en cinq règles numérotées, de la plus forte à la plus faible. C'est une échelle d'examen commode, et elle fonctionne — à condition de la lire dans le bon sens : <b>la règle 1 l'emporte sur la règle 5</b>.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Règle</th><th>Ce qu'elle dit</th></tr></thead>
+    <tbody>
+      <tr><td>Règle 1</td><td>Le bateau qui <b>suit le côté tribord</b> du chenal poursuit sa route. En eaux intérieures, le chenal tient lieu de rive.</td></tr>
+      <tr><td>Règle 2</td><td>Le <b>grand bateau</b> passe avant la <b>menue embarcation</b>.</td></tr>
+      <tr><td>Règle 3</td><td>Le <b>chenal principal</b> passe avant les chenaux secondaires.</td></tr>
+      <tr><td>Règle 4</td><td>La <b>voile</b> passe avant les <b>rames</b>, qui passent avant le <b>moteur</b>.</td></tr>
+      <tr><td>Règle 5</td><td>Même type, même taille : deux bateaux à moteur viennent <b>tous les deux sur tribord</b> ; entre deux voiliers, c'est la règle des <b>amures</b>.</td></tr>
+    </tbody>
+  </table>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>La règle 1 n'est pas une invention d'école : elle figure en toutes lettres dans le texte, à la fin de l'article sur les routes qui se croisent, et elle y est écrite comme une <b>réserve</b> qui s'applique aussi bien aux règles de type (voile, rames, moteur) qu'aux règles d'amures. Citation littérale : « <i>L'embarcation qui suit le côté de la passe navigable à tribord doit toutefois poursuivre sa route.</i> »</p>
+    <p>Autrement dit, l'ordre des cinq règles n'est pas un moyen mnémotechnique : c'est la structure du texte.</p>
+    <p class="art">Règlement de la navigation sur la Meuse mitoyenne, art. 6.03a, alinéas 2 et 3 (dernière phrase). Le Règlement général de police pour la navigation sur les eaux intérieures porte la même règle sous le numéro 6.03bis.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>La <b>règle 4 du manuel</b> — voile avant rames avant moteur — est juste, et c'est bien ce que dit le texte : « <i>l'embarcation motorisée s'écarte de la route de l'autre embarcation, et l'embarcation mue par la force musculaire s'écarte de la route de l'embarcation à voile</i> ».</p>
+    <p>Mais la page « passages étroits » de ton manuel écrit l'inverse : « le bateau à rames a priorité sur un bateau à voiles qui remonte au vent ». <b>Les deux pages du manuel se contredisent.</b> Je n'ai trouvé cette règle de louvoyage dans aucun texte officiel, et la planche officielle belge des passages étroits donne au contraire la « priorité pour le voilier ». <b>Retiens le texte : voile avant rames avant moteur</b> — mais sache que la formule du manuel existe, au cas où une question la reprendrait telle quelle.</p>
+  </div>
+
+  <h3>La rencontre droit devant</h3>
+  <p>Deux bateaux étrave contre étrave. C'est la situation la plus simple, et elle a deux versions selon qu'il y a du courant ou non.</p>
+  <div class="def">
+    <p class="term">Sans courant — la règle de base</p>
+    <p><b>Chacun vient sur tribord pour passer à bâbord de l'autre.</b> On se croise donc <b>bâbord à bâbord</b>, comme deux voitures se croisent à droite. Personne n'a la priorité : les deux manœuvrent.</p>
+  </div>
+  <div class="def">
+    <p class="term">Avec courant — montant contre avalant</p>
+    <p>Le <b>montant</b> doit réserver une route appropriée à l'<b>avalant</b>. En clair : <b>celui qui descend le courant a la priorité</b>, parce que c'est lui qui s'arrête le moins bien — le courant le pousse.</p>
+    <p class="why">Et c'est le <b>montant</b>, celui qui s'efface, <b>qui choisit le côté</b>. L'avalant passe du côté laissé libre.</p>
+  </div>
+
+  <figure class="anim" id="anim-rencontre">
+    <p class="atitle">▶ Animation : la rencontre, et le panneau bleu</p>
+    <svg viewBox="0 0 460 222" role="img" aria-label="Deux bateaux se rencontrent droit devant dans un chenal, puis le montant montre le panneau bleu">
+      <rect x="0" y="0" width="460" height="222" class="f-ciel"/>
+      <rect x="0" y="26" width="460" height="170" class="f-eau"/>
+      <rect x="0" y="0" width="460" height="26" class="f-terre"/>
+      <rect x="0" y="196" width="460" height="26" class="f-terre"/>
+      <line x1="0" y1="111" x2="460" y2="111" class="s-axe"/>
+      <text id="rc-courant" x="230" y="18" class="t-lab" text-anchor="middle">pas de courant</text>
+      <!-- toi : montant, cap à droite -->
+      <g id="rc-a" transform="translate(60,111)">
+        <path d="M -26 -10 L 18 -10 L 31 0 L 18 10 L -26 10 Z" class="f-coque"/>
+        <rect x="-13" y="-7" width="16" height="14" class="f-cabine"/>
+        <!-- panneau bleu + feu scintillant, montrés à tribord : vers le bas -->
+        <g id="rc-bleu" opacity="0">
+          <rect x="-6" y="13" width="18" height="13" class="p-bleu"/>
+          <rect x="-6" y="13" width="18" height="13" class="p-filet"/>
+          <circle cx="18" cy="19" r="5" class="f-feublanc">
+            <animate attributeName="opacity" values="1;0.15;1" dur="0.55s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </g>
+      <text id="rc-lab-a" x="60" y="146" class="t-cote" text-anchor="middle">toi · montant</text>
+      <!-- l'autre : avalant, cap à gauche -->
+      <g id="rc-b" transform="translate(400,111) rotate(180)">
+        <path d="M -26 -10 L 18 -10 L 31 0 L 18 10 L -26 10 Z" class="f-coque"/>
+        <rect x="-13" y="-7" width="16" height="14" class="f-cabine"/>
+        <g id="rc-bleu-b" opacity="0">
+          <rect x="-6" y="13" width="18" height="13" class="p-bleu"/>
+          <rect x="-6" y="13" width="18" height="13" class="p-filet"/>
+          <circle cx="18" cy="19" r="5" class="f-feublanc">
+            <animate attributeName="opacity" values="1;0.15;1" dur="0.55s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </g>
+      <text id="rc-lab-b" x="400" y="80" class="t-cote" text-anchor="middle">l'autre · avalant</text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <div class="def">
+    <p class="term">Le panneau bleu</p>
+    <p>Quand le montant laisse la route de l'avalant <b>à bâbord</b> — le cas normal — il ne montre <b>rien du tout</b>.</p>
+    <p>Quand il la laisse <b>à tribord</b> — l'inverse de la règle — il doit montrer à tribord, et à temps, un <b>panneau bleu</b> visible de l'avant et de l'arrière, accompagné d'un <b>feu blanc scintillant</b> visible sur tout l'horizon. Il les garde jusqu'à ce que le passage soit fait.</p>
+    <p>L'avalant <b>passe du côté laissé libre</b> et <b>répète</b> les signaux du montant.</p>
+    <p class="why">Si le montant craint de ne pas avoir été compris : <b>un son bref</b> pour un passage à bâbord, <b>deux sons brefs</b> pour un passage à tribord.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Le panneau bleu est <b>montré par le montant</b>, pas par l'avalant — alors que c'est l'avalant qui a la priorité. Celui qui s'efface est celui qui parle. Et tout l'article ne s'applique <b>ni à une menue embarcation en vue d'un autre bateau, ni à deux menues embarcations entre elles</b> : pour le Kat-a-Mar, le panneau bleu est quelque chose qu'on <b>lit</b>, pas quelque chose qu'on montre.</p>
+  </div>
+
+  <h3>Les routes qui se croisent</h3>
+  <div class="def">
+    <p class="term">La règle générale</p>
+    <p>Quand deux routes se croisent avec un danger d'abordage, <b>celui qui voit l'autre sur tribord s'écarte</b> — et, si les circonstances le permettent, il évite de lui couper la route sur l'avant.</p>
+    <p class="why">Elle ne s'applique <b>pas</b> à une menue embarcation en vue d'un autre bateau : entre menues, ce sont les règles de type et d'amures qui prennent le relais.</p>
+  </div>
+  <div class="def">
+    <p class="term">L'autre moitié de la règle</p>
+    <p>Quand un bateau doit s'écarter, <b>l'autre doit maintenir sa route et sa vitesse</b>. Ce n'est pas un privilège : c'est une obligation, pour rester lisible. Mais si celui qui devait s'écarter s'y prend trop tard et que la manœuvre ne suffit plus, <b>celui qui gardait sa route doit à son tour manœuvrer</b> pour éviter l'abordage.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>« J'étais prioritaire » n'a jamais empêché une tôle froissée et n'excuse rien devant un tribunal. Le texte impose d'éviter l'abordage <b>même quand on a raison</b>.</p>
+  </div>
+
+  <h3>Les voiliers entre eux</h3>
+  <figure class="anim live" id="outil-voiliers">
+    <p class="atitle">⚙ Outil : la règle des amures</p>
+    <div class="opt trois" id="vo-btns">
+      <button type="button" data-cas="opposees">Amures opposées</button>
+      <button type="button" data-cas="memes">Mêmes amures</button>
+      <button type="button" data-cas="doute">Dans le doute</button>
+    </div>
+    <svg viewBox="0 0 420 190" role="img" aria-label="Deux voiliers et la direction du vent, avec la règle d'amures qui s'applique">
+      <rect x="0" y="0" width="420" height="190" class="f-ciel"/>
+      <rect x="0" y="0" width="420" height="190" class="f-eau"/>
+      <!-- le vent, toujours du haut vers le bas -->
+      <g class="vent">
+        <line x1="60" y1="12" x2="60" y2="40" class="s-vent"/>
+        <path d="M 60 48 L 54 36 L 66 36 Z" class="f-vent"/>
+        <line x1="210" y1="12" x2="210" y2="40" class="s-vent"/>
+        <path d="M 210 48 L 204 36 L 216 36 Z" class="f-vent"/>
+        <line x1="360" y1="12" x2="360" y2="40" class="s-vent"/>
+        <path d="M 360 48 L 354 36 L 366 36 Z" class="f-vent"/>
+      </g>
+      <text x="8" y="22" class="t-lab">le vent souffle du haut</text>
+      <g id="vo-a" transform="translate(120,118)">
+        <path d="M -22 8 L 22 8 L 14 20 L -14 20 Z" class="f-coque"/>
+        <line x1="0" y1="8" x2="0" y2="-40" class="f-mat2"/>
+        <path id="vo-voile-a" d="M 0 -38 L 0 4 L 30 4 Z" class="f-voile"/>
+      </g>
+      <text id="vo-lab-a" x="120" y="156" class="t-cote" text-anchor="middle">A</text>
+      <g id="vo-b" transform="translate(300,118)">
+        <path d="M -22 8 L 22 8 L 14 20 L -14 20 Z" class="f-coque"/>
+        <line x1="0" y1="8" x2="0" y2="-40" class="f-mat2"/>
+        <path id="vo-voile-b" d="M 0 -38 L 0 4 L -30 4 Z" class="f-voile"/>
+      </g>
+      <text id="vo-lab-b" x="300" y="156" class="t-cote" text-anchor="middle">B</text>
+      <text id="vo-verdict" x="210" y="180" class="t-cote" text-anchor="middle"></text>
+    </svg>
+    <p class="cap" id="vo-cap"></p>
+  </figure>
+
+  <div class="def">
+    <p class="term">Les trois règles, dans l'ordre</p>
+    <p><b>Amures opposées</b> — celui qui reçoit le vent de <b>bâbord</b> s'écarte. Donc <b>tribord amure est prioritaire</b>.</p>
+    <p><b>Mêmes amures</b> — celui qui est <b>au vent</b> s'écarte de la route de celui qui est <b>sous le vent</b>.</p>
+    <p><b>Dans le doute</b> — si tu reçois le vent de bâbord, que tu vois un voilier au vent et que tu n'arrives pas à déterminer de quel bord il reçoit le vent, <b>c'est toi qui t'écartes</b>.</p>
+    <p class="why">Et par-dessus les trois : le voilier qui <b>suit le côté tribord</b> de la passe poursuit sa route.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>L'amure se nomme d'après le bord <b>d'où vient le vent</b>, pas d'après le côté où la voile est bordée. Vent sur le flanc droit = <b>tribord amure</b>, et la voile est alors portée à <b>bâbord</b>. La question d'examen montre souvent la voile, pas le vent : raisonne à l'envers.</p>
+  </div>
+
+  <h3>Le dépassement</h3>
+  <figure class="anim" id="anim-depassement">
+    <p class="atitle">▶ Animation : dépasser, et se faire dépasser</p>
+    <svg viewBox="0 0 460 206" role="img" aria-label="Un bateau en rattrape un autre et le dépasse par bâbord">
+      <rect x="0" y="0" width="460" height="206" class="f-ciel"/>
+      <rect x="0" y="24" width="460" height="158" class="f-eau"/>
+      <rect x="0" y="0" width="460" height="24" class="f-terre"/>
+      <rect x="0" y="182" width="460" height="24" class="f-terre"/>
+      <text x="8" y="18" class="t-lab">rive gauche</text>
+      <text x="8" y="198" class="t-lab">rive droite — le rattrapé serre souvent ce bord</text>
+      <g id="dp-rattrape" transform="translate(300,132)">
+        <path d="M -30 -11 L 20 -11 L 34 0 L 20 11 L -30 11 Z" class="f-coque"/>
+        <rect x="-15" y="-8" width="18" height="16" class="f-cabine"/>
+      </g>
+      <text x="300" y="166" class="t-cote" text-anchor="middle">le rattrapé</text>
+      <g id="dp-rattrapant" transform="translate(70,132)">
+        <path d="M -24 -9 L 16 -9 L 28 0 L 16 9 L -24 9 Z" class="f-coque"/>
+        <rect x="-12" y="-6" width="14" height="12" class="f-cabine"/>
+      </g>
+      <text id="dp-lab" x="70" y="112" class="t-cote" text-anchor="middle">le rattrapant</text>
+      <text id="dp-son" x="230" y="46" class="t-cote" text-anchor="middle"></text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <div class="def">
+    <p class="term">La règle</p>
+    <p>On ne dépasse qu'<b>après s'être assuré que la manœuvre peut avoir lieu sans danger</b>. Le rattrapant passe <b>à bâbord</b> du rattrapé ; <b>si l'espace disponible le permet</b>, il peut dépasser à tribord.</p>
+    <p class="why">Pourquoi bâbord par défaut ? Parce que le rattrapé tient normalement <b>son</b> côté tribord, donc le bord le plus proche de la rive : la place libre est de l'autre côté.</p>
+  </div>
+  <div class="def">
+    <p class="term">Le devoir du rattrapé</p>
+    <p>Il doit <b>faciliter le dépassement</b> autant que nécessaire et possible, et <b>réduire sa vitesse</b> s'il le faut, pour que la manœuvre soit courte et sûre.</p>
+    <p><b>Avec une exception</b> : ce devoir ne vaut <b>pas</b> pour un bateau, autre qu'une menue embarcation, qui est rattrapé par une <b>menue embarcation</b>. Un caboteur n'a pas à ralentir pour te laisser passer.</p>
+  </div>
+  <div class="def">
+    <p class="term">Les signaux sonores du dépassement</p>
+    <p>Si le dépassement se fait sans que le rattrapé ait à changer de route, <b>aucun signal n'est obligatoire</b>.</p>
+    <p>Sinon, le rattrapant annonce : <b>deux sons prolongés suivis de deux sons brefs</b> pour dépasser à <b>bâbord</b>, <b>deux sons prolongés suivis d'un son bref</b> pour dépasser à <b>tribord</b>.</p>
+    <p>Le rattrapé répond en s'écartant : <b>un son bref</b> s'il va sur tribord, <b>deux sons brefs</b> s'il va sur bâbord. Et si le dépassement est impossible sans danger : <b>cinq sons brefs</b>.</p>
+    <p class="why">Comme pour le panneau bleu, ces signaux ne s'appliquent ni à une menue embarcation en vue d'un autre bateau, ni à deux menues entre elles. Le chapitre 6 reprend tous les signaux sonores.</p>
+  </div>
+  <div class="def">
+    <p class="term">Le cas des voiliers</p>
+    <p>Entre deux voiliers, le rattrapant passe <b>si possible du côté d'où le rattrapé reçoit le vent</b>. Et quand c'est un voilier qui dépasse un autre bateau, le rattrapé lui facilite le passage du côté d'où le <b>rattrapant</b> reçoit le vent.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>« Bâbord » dans cette règle, c'est le <b>bâbord du rattrapé</b> — donc le rattrapant arrive sur le côté gauche de celui qu'il double. Si tu te demandes de quel bâbord on parle, c'est toujours celui du bateau <b>nommé</b> dans la phrase.</p>
+  </div>
+
+  <h3>Les passages étroits</h3>
+  <p>Quand deux bateaux se rencontrent et que la place manque, l'ordre se simplifie.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Cas</th><th>Qui passe</th></tr></thead>
+    <tbody>
+      <tr><td>Avec courant</td><td><b>Priorité à l'avalant.</b> Celui qui remonte attend.</td></tr>
+      <tr><td>Sans courant</td><td>La <b>menue embarcation s'écarte</b> pour le grand bateau.</td></tr>
+      <tr><td>Sans courant</td><td>Le <b>voilier</b> passe avant les bateaux à rames et à moteur.</td></tr>
+      <tr><td>Dans une courbe</td><td>Celui qui n'a <b>pas d'obstacle à tribord</b>, ou qui se trouve du <b>côté extérieur</b> de la courbe, passe en premier.</td></tr>
+      <tr><td>Entre voiliers</td><td>La règle des <b>amures</b>, comme partout ailleurs.</td></tr>
+      <tr><td>Toujours</td><td>La <b>bonne pratique de la navigation</b> l'emporte sur tout le reste.</td></tr>
+    </tbody>
+  </table>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement — et ce que je n'ai pas pu vérifier</div>
+    <p>Les règles de rencontre, de routes qui se croisent, d'amures et de dépassement ci-dessus sont reprises <b>mot pour mot</b> d'un texte réglementaire belge en vigueur : le <b>Règlement de la navigation sur la Meuse mitoyenne</b>, articles 6.03, 6.03a, 6.04, 6.05, 6.09 et 6.10. Le Règlement général de police pour la navigation sur les eaux intérieures porte les mêmes règles, l'article 6.03a y étant numéroté <b>6.03bis</b>.</p>
+    <p>Le tableau des passages étroits, lui, vient de la <b>planche officielle du SPF Mobilité</b> consacrée à l'article <b>6.07</b>. Je n'ai pas pu lire le texte littéral de cet article : ni le PDF du règlement belge, ni celui du règlement rhénan, ni le Code des transports français n'étaient lisibles au-delà de leur chapitre 3. <b>Le tableau est donc fiable sur le fond, mais sa formulation n'est pas celle du texte.</b></p>
+    <p>Attention enfin à la numérotation : en Belgique, <b>6.04</b> est la rencontre droit devant et <b>6.05</b> la rencontre montant / avalant avec panneau bleu. Sur le Rhin, c'est 6.04 qui porte le panneau bleu. Si tu révises sur un site français ou allemand, les numéros ne correspondront pas.</p>
+    <p class="art">Règlement de la navigation sur la Meuse mitoyenne, art. 6.03, 6.03a, 6.04, 6.05, 6.09, 6.10 ; SPF Mobilité et Transports, vademecum « règles de navigation en images », planche de l'art. 6.07.</p>
+  </div>
+
+  <div class="keep">
+    <p class="kt">En cas de doute</p>
+    <p>La question à se poser n'est pas « qui a raison ? » mais : <b>qui s'arrêtera le plus vite et le plus facilement ?</b> Celui-là manœuvre. C'est la réponse attendue à l'examen, et la seule qui tienne sur l'eau.</p>
+  </div>
+
+  <div class="keep">
+    <p class="kt">À retenir du chapitre 4</p>
+    <p><b>Menue embarcation</b> = coque de moins de 20 m. Elle laisse l'espace à tout le monde et n'exige jamais rien.<br>
+    <b>Grand bateau</b> = 20 m ou plus, <i>plus</i> remorqueurs, pousseurs, bacs, bateaux à passagers, pêcheurs en action et barges.<br>
+    <b>Droit devant, sans courant</b> : chacun vient sur tribord, on se croise bâbord à bâbord.<br>
+    <b>Avec courant</b> : l'avalant a la priorité, le montant choisit le côté et montre le panneau bleu s'il laisse passer à tribord.<br>
+    <b>Routes qui se croisent</b> : celui qui voit l'autre sur tribord s'écarte.<br>
+    <b>Entre menues</b> : voile avant rames avant moteur — sauf celui qui suit le côté tribord, qui garde sa route.<br>
+    <b>Voiliers</b> : bâbord amure s'écarte ; mêmes amures, celui au vent s'écarte ; dans le doute, tu t'écartes.<br>
+    <b>Dépassement</b> : à bâbord par défaut, à tribord si la place le permet ; le rattrapé facilite et ralentit — sauf devant une menue.</p>
+  </div>
+</section>
+
+<section id="qcm-ch4">
+  <p class="kicker">Chapitre 4</p>
+  <h2>Les questions des priorités</h2>
+  <p>Vingt-huit questions, en trois catégories : les priorités, la rencontre et le dépassement, et les voiliers.</p>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="C">
+    <p class="qn">QCM 65</p>
+    <p class="qt">Une menue embarcation, c'est un bateau dont :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le moteur fait moins de 20 chevaux</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>l'encombrement total fait moins de 20 m</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>la coque fait moins de 20 m</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : la puissance n'entre pas dans la définition.</li>
+      <li class="ko"><b>B</b> — faux : on mesure la coque, pas le balcon ni le bout-dehors.</li>
+      <li class="ok"><b>C</b> — juste. Le Kat-a-Mar, 7,55 m, en est une.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="A">
+    <p class="qn">QCM 66</p>
+    <p class="qt">Un bac de 15 m de long est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un grand bateau, parce que les bacs le sont quelle que soit leur taille</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>une menue embarcation, puisqu'il fait moins de 20 m</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un grand bateau seulement quand il transporte des passagers</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Les bacs figurent nommément dans la définition du grand bateau.</li>
+      <li class="ko"><b>B</b> — faux, et c'est le piège : la règle des 20 m n'est pas le seul critère.</li>
+      <li class="ko"><b>C</b> — faux : sa qualité de bac suffit.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="B">
+    <p class="qn">QCM 67</p>
+    <p class="qt">Lesquels de ces bateaux comptent comme grands bateaux même en dessous de 20 m ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>les voiliers et les bateaux de plaisance</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>les remorqueurs, pousseurs, bacs, bateaux à passagers, pêcheurs en action et barges</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>aucun : seule la longueur compte</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : ce sont justement des menues embarcations sous 20 m.</li>
+      <li class="ok"><b>B</b> — juste, et cette liste est à connaître par cœur.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="B">
+    <p class="qn">QCM 68</p>
+    <p class="qt">Tu es à la voile sur ton côté tribord du chenal, tu descends le courant. Un caboteur de 60 m remonte en face. Tu :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>gardes ta route : tu cumules la voile, le tribord et le courant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>t'écartes : une menue embarcation laisse l'espace à tous les autres bateaux</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>gardes ta route mais tu préviens à la VHF</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est l'erreur la plus dangereuse du chapitre : rien ne se cumule contre un grand bateau.</li>
+      <li class="ok"><b>B</b> — juste. La règle de la menue embarcation écrase toutes les autres.</li>
+      <li class="ko"><b>C</b> — prévenir est utile, mais ça ne te donne aucun droit.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="A">
+    <p class="qn">QCM 69</p>
+    <p class="qt">Une menue embarcation peut-elle exiger qu'un autre bateau s'écarte pour elle ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>jamais</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>oui, si elle est à la voile</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>oui, si elle suit le côté tribord du chenal</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : le texte le dit en toutes lettres.</li>
+      <li class="ko"><b>B</b> — faux : la voile ne vaut qu'entre menues embarcations.</li>
+      <li class="ko"><b>C</b> — faux : la réserve du côté tribord ne joue, elle aussi, qu'entre menues embarcations.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="C">
+    <p class="qn">QCM 70</p>
+    <p class="qt">Entre menues embarcations, l'ordre de priorité est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>moteur, puis voile, puis rames</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>rames, puis voile, puis moteur</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>voile, puis rames, puis moteur</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le moteur s'écarte de tout le monde.</li>
+      <li class="ko"><b>B</b> — faux, et c'est l'inversion que fait une page de ton manuel : c'est l'embarcation mue par la force musculaire qui s'écarte devant le voilier.</li>
+      <li class="ok"><b>C</b> — juste.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="A">
+    <p class="qn">QCM 71</p>
+    <p class="qt">Deux menues embarcations : l'une à moteur qui suit le côté tribord de la passe, l'autre à la voile. Qui s'écarte ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le voilier : celle qui suit le côté tribord poursuit sa route</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le bateau à moteur : la voile passe toujours avant le moteur</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>les deux viennent sur tribord</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. La réserve du côté tribord est écrite après la règle de type, et elle l'emporte : c'est la règle 1 contre la règle 4.</li>
+      <li class="ko"><b>B</b> — c'est la règle de type, mais elle cède devant celle du côté tribord.</li>
+      <li class="ko"><b>C</b> — faux : ce cas-là ne se règle pas ainsi.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="B">
+    <p class="qn">QCM 72</p>
+    <p class="qt">Dans l'échelle des cinq règles, laquelle l'emporte sur les autres ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la règle 5, parce qu'elle est la plus précise</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>la règle 1, celle du côté tribord du chenal</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>aucune : elles valent toutes autant</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : c'est la plus faible.</li>
+      <li class="ok"><b>B</b> — juste : la règle 1 l'emporte sur la règle 5, et le texte l'écrit comme une réserve.</li>
+      <li class="ko"><b>C</b> — faux : l'ordre est précisément ce qui fait la règle.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="C">
+    <p class="qn">QCM 73</p>
+    <p class="qt">Un chenal secondaire rejoint le chenal principal. Qui passe ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le premier arrivé</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>celui du chenal secondaire, qui a moins de place</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>celui du chenal principal</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : ce n'est pas une file d'attente.</li>
+      <li class="ko"><b>B</b> — faux, et c'est l'inverse.</li>
+      <li class="ok"><b>C</b> — juste : c'est la règle 3. Les panneaux E.9 et E.10 te disent sur quel chenal tu es.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="C">
+    <p class="qn">QCM 74</p>
+    <p class="qt">Quand un bateau doit s'écarter, l'autre doit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>accélérer pour dégager plus vite</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>faire ce qu'il veut, puisqu'il est prioritaire</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>maintenir sa route et sa vitesse</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : changer de vitesse, c'est devenir imprévisible.</li>
+      <li class="ko"><b>B</b> — faux : garder sa route est une obligation, pas un privilège.</li>
+      <li class="ok"><b>C</b> — juste. Et si l'autre s'y prend trop tard, il doit quand même manœuvrer pour éviter l'abordage.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Priorités" data-bonne="A">
+    <p class="qn">QCM 75</p>
+    <p class="qt">Tu es prioritaire, mais l'autre ne s'écarte pas et l'abordage devient probable. Tu :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>manœuvres : le texte impose d'éviter l'abordage même quand on a raison</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>gardes ta route jusqu'au bout : c'est ton obligation</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>klaxonnes et continues</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. L'obligation de maintenir sa route s'arrête là où commence le danger.</li>
+      <li class="ko"><b>B</b> — faux : ce serait la collision avec la règle en main.</li>
+      <li class="ko"><b>C</b> — le signal est utile, mais il ne remplace pas la manœuvre.</li>
+    </ul></div>
+    <p class="cat">Catégorie : priorités</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 76</p>
+    <p class="qt">Deux bateaux se rencontrent droit devant, sans courant. Ils doivent :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>venir tous les deux sur bâbord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>venir tous les deux sur tribord et se croiser bâbord à bâbord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>attendre que l'un des deux prenne l'initiative</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et ce serait la collision.</li>
+      <li class="ok"><b>B</b> — juste. Chacun vient sur tribord <i>pour passer à bâbord de l'autre</i>.</li>
+      <li class="ko"><b>C</b> — faux : personne n'a la priorité, les deux manœuvrent.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 77</p>
+    <p class="qt">Il y a du courant. Un montant et un avalant se rencontrent. Qui réserve la route à qui ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>le montant réserve une route appropriée à l'avalant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>l'avalant réserve une route appropriée au montant</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>chacun vient sur tribord, comme sans courant</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : l'avalant est poussé par le courant, c'est lui qui s'arrête le moins bien.</li>
+      <li class="ko"><b>B</b> — faux, et c'est l'inversion classique.</li>
+      <li class="ko"><b>C</b> — faux : dès qu'il y a du courant, la règle change.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="C">
+    <p class="qn">QCM 78</p>
+    <p class="qt">Qui choisit le côté de la rencontre entre un montant et un avalant ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>l'avalant, puisqu'il a la priorité</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le premier qui signale</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le montant, celui-là même qui doit s'effacer</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est tout le piège : avoir la priorité n'est pas choisir.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste : le montant réserve la route, donc il désigne le côté. L'avalant passe du côté laissé libre.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 79</p>
+    <p class="qt">Un montant laisse la route de l'avalant à bâbord — le cas normal. Il montre :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un panneau bleu à bâbord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>rien du tout</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un feu blanc scintillant seul</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le panneau bleu annonce l'<i>autre</i> cas, et il se montre à tribord.</li>
+      <li class="ok"><b>B</b> — juste. Pas de signal pour le cas normal.</li>
+      <li class="ko"><b>C</b> — faux : le feu accompagne le panneau, il ne se montre pas seul.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 80</p>
+    <p class="qt">Le panneau bleu est montré :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>par le montant, à tribord, avec un feu blanc scintillant</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>par l'avalant, à bâbord, avec un feu rouge</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>par celui des deux qui est le plus grand</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste, et il le garde jusqu'à ce que le passage soit fait.</li>
+      <li class="ko"><b>B</b> — faux sur les trois points.</li>
+      <li class="ko"><b>C</b> — faux : la taille n'entre pas en jeu ici.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="C">
+    <p class="qn">QCM 81</p>
+    <p class="qt">Face à un montant qui montre le panneau bleu, l'avalant doit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>l'ignorer : il est prioritaire</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>montrer un panneau rouge en réponse</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>passer du côté laissé libre et répéter les signaux</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ko"><b>B</b> — faux : il n'existe pas de panneau rouge pour ça.</li>
+      <li class="ok"><b>C</b> — juste : il répète les signaux visuels et sonores, pour dire qu'il a compris.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 82</p>
+    <p class="qt">Les règles du panneau bleu s'appliquent-elles entre deux menues embarcations ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>oui, exactement comme aux grands bateaux</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>non : l'article ne s'applique pas aux menues embarcations entre elles</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>oui, mais sans le feu scintillant</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste : pour ton bateau, le panneau bleu se lit, il ne se montre pas.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 83</p>
+    <p class="qt">Deux routes se croisent avec un danger d'abordage, entre deux grands bateaux. Qui s'écarte ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>celui qui voit l'autre sur bâbord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>celui qui voit l'autre sur tribord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le plus rapide des deux</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est l'inversion la plus fréquente.</li>
+      <li class="ok"><b>B</b> — juste, et il évite en plus de lui couper la route sur l'avant.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 84</p>
+    <p class="qt">Le dépassement se fait en principe :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>à bâbord du rattrapé, et à tribord si l'espace le permet</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>à tribord du rattrapé, toujours</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>du côté que choisit le rattrapé</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Le rattrapé tient son côté tribord, donc la place est à bâbord.</li>
+      <li class="ko"><b>B</b> — faux : c'est l'exception, pas la règle.</li>
+      <li class="ko"><b>C</b> — faux : c'est le rattrapant qui demande, le rattrapé qui répond.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="C">
+    <p class="qn">QCM 85</p>
+    <p class="qt">Tu rattrapes un caboteur de 80 m avec ton bateau de 7,55 m. Il doit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>ralentir pour te faciliter le passage</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>s'écarter vers bâbord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>rien : le devoir de faciliter ne vaut pas quand une menue embarcation rattrape un grand bateau</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : l'exception est écrite noir sur blanc dans l'article.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste. Tu dépasses à tes risques, quand c'est vraiment sûr.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 86</p>
+    <p class="qt">Le rattrapant veut dépasser à bâbord et doit l'annoncer. Il émet :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux sons prolongés suivis de deux sons brefs</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux sons prolongés suivis d'un son bref</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>cinq sons brefs</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Deux brefs pour bâbord : deux comme dans « bâbord à deux syllabes », si ça t'aide.</li>
+      <li class="ko"><b>B</b> — c'est la demande de dépasser à <b>tribord</b>.</li>
+      <li class="ko"><b>C</b> — c'est le refus du rattrapé : dépassement impossible sans danger.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 87</p>
+    <p class="qt">Cinq sons brefs du rattrapé veulent dire :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>dépasse par tribord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le dépassement est impossible sans danger</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>j'ai compris, vas-y</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste. C'est un refus, pas une impatience.</li>
+      <li class="ko"><b>C</b> — faux, et c'en est l'exact contraire.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="C">
+    <p class="qn">QCM 88</p>
+    <p class="qt">Le dépassement se fait sans que le rattrapé ait à changer de route. Le rattrapant :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>doit quand même émettre son signal</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>doit appeler à la VHF</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>n'a pas à émettre de signal, mais peut le faire</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le signal n'est obligatoire que si le rattrapé doit s'écarter, ou s'il risque de n'avoir pas compris.</li>
+      <li class="ko"><b>B</b> — faux : rien ne l'impose ici.</li>
+      <li class="ok"><b>C</b> — juste.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Voiliers" data-bonne="A">
+    <p class="qn">QCM 89</p>
+    <p class="qt">Deux voiliers, amures opposées. Qui s'écarte ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>celui qui reçoit le vent de bâbord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>celui qui reçoit le vent de tribord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>celui qui est sous le vent</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : bâbord amure s'écarte, tribord amure poursuit.</li>
+      <li class="ko"><b>B</b> — faux, c'est l'inverse.</li>
+      <li class="ko"><b>C</b> — faux : la règle du vent arrière ne joue qu'à amures <i>identiques</i>.</li>
+    </ul></div>
+    <p class="cat">Catégorie : voiliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Voiliers" data-bonne="C">
+    <p class="qn">QCM 90</p>
+    <p class="qt">Deux voiliers reçoivent le vent du même bord. Qui s'écarte ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>celui qui est sous le vent</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le plus rapide</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>celui qui est au vent</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est l'inversion classique : celui sous le vent est le moins manœuvrant.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste : celui qui est au vent s'écarte de la route de celui qui est sous le vent.</li>
+    </ul></div>
+    <p class="cat">Catégorie : voiliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Voiliers" data-bonne="B">
+    <p class="qn">QCM 91</p>
+    <p class="qt">Tu reçois le vent de bâbord. Tu vois un voilier au vent sans pouvoir dire de quel bord il reçoit le vent. Tu :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>gardes ta route et tu attends d'y voir clair</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>t'écartes</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>l'appelles à la VHF</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le doute se tranche en ta défaveur, et c'est voulu.</li>
+      <li class="ok"><b>B</b> — juste. Le texte prévoit le cas du doute, et il te désigne.</li>
+      <li class="ko"><b>C</b> — ça ne remplace pas la manœuvre.</li>
+    </ul></div>
+    <p class="cat">Catégorie : voiliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Voiliers" data-bonne="A">
+    <p class="qn">QCM 92</p>
+    <p class="qt">Un voilier en rattrape un autre. De quel côté passe-t-il, si possible ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>du côté d'où le rattrapé reçoit le vent</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>du côté sous le vent du rattrapé</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>à bâbord, comme tout le monde</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : on passe au vent du rattrapé, pour ne pas lui voler son vent au mauvais moment.</li>
+      <li class="ko"><b>B</b> — faux, c'est l'inverse.</li>
+      <li class="ko"><b>C</b> — la règle générale cède ici devant la règle propre aux voiliers.</li>
+    </ul></div>
+    <p class="cat">Catégorie : voiliers</p>
+  </div>
+</section>
+
+<section id="bilan">
+  <p class="kicker">Bilan</p>
+  <h2>Ton score</h2>
+  <p>Il se remplit au fur et à mesure que tu réponds, et il applique la règle de l'examen : <b>60 % au total</b> et <b>50 % minimum dans chaque catégorie</b>.</p>
+  <div class="score" id="score" hidden></div>
   <div class="ctl" style="display:flex;gap:8px;flex-wrap:wrap;">
     <button type="button" id="qcm-raz" class="menu-item" style="width:auto;padding:10px 16px;">Recommencer les questions</button>
   </div>
-  <p class="note">Douze questions pour ce chapitre. Le module en comptera plus de cent une fois les onze chapitres écrits.</p>
+  <p class="note">92 questions pour les quatre premiers chapitres. Le module en comptera plus de cent une fois les onze chapitres écrits.</p>
 </section>
 </main>
 
@@ -1139,6 +3418,19 @@ section[id], .score, .qcm, figure.anim, [id]{
     ANIMS[id] = { rendre: rendre };
   };
 
+  /* ------------------------------------------- modules pas encore écrits */
+  document.querySelectorAll("[data-bientot]").forEach(function(b){
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", "bientot-" + b.dataset.bientot);
+    b.addEventListener("click", function(){
+      var note = document.getElementById("bientot-" + b.dataset.bientot);
+      if(!note) return;
+      var ouvert = !note.hidden;
+      note.hidden = ouvert;
+      b.setAttribute("aria-expanded", ouvert ? "false" : "true");
+    });
+  });
+
   /* --------------------------------------------------------------- QCM */
   /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
      minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
@@ -1329,5 +3621,788 @@ section[id], .score, .qcm, figure.anim, [id]{
 })();
 
 </script>
+<script>
+/* ===== ANIMATIONS DU CHAPITRE 2 — LE BALISAGE ===== */
+(function(){
+  "use strict";
+
+  /* ------------------------- le sens conventionnel, aller puis retour ------ */
+  /* cap = 1 : on remonte (sens conventionnel) ; cap = -1 : on redescend.
+     Le bateau se retourne, les bouées ne bougent pas : c'est tout le sujet. */
+  window.kamAnim("anim-sens", {
+    etat0: { bx: 40, cap: 1, ombre: 0 },
+    capDepart: "Tu remontes le chenal, dans le sens conventionnel. Touche « Lecture ».",
+    images: [
+      { cap: "Tu remontes vers l'amont : c'est le <b>sens conventionnel</b>, celui dans lequel le balisage est écrit.",
+        d: 700 },
+      { cap: "Les <b>cylindres rouges</b> défilent sur ta <b>gauche</b> : tu les laisses à <b>bâbord</b>.",
+        d: 1600, etat: { bx: 180 } },
+      { cap: "Les <b>cônes verts</b> défilent sur ta <b>droite</b> : tu les laisses à <b>tribord</b>. « Bas si rouge », « tricot vert ».",
+        d: 1600, etat: { bx: 340 } },
+      { cap: "Maintenant tu fais demi-tour et tu redescends vers l'embouchure.",
+        d: 900, etat: { cap: -1, ombre: 1 } },
+      { cap: "<b>Les bouées n'ont pas bougé d'un mètre.</b> C'est toi qui as tourné.",
+        d: 700 },
+      { cap: "Le <b>rouge</b> est maintenant sur ta <b>droite</b>, le <b>vert</b> sur ta <b>gauche</b>. Tu navigues à contresens du balisage — et c'est normal.",
+        d: 1800, etat: { bx: 60 } },
+      { cap: "Retiens la question d'examen : « tu descends le fleuve, une bouée rouge se présente » → tu la laisses à <b>tribord</b>.",
+        d: 600 }
+    ],
+    rendu: function(e, fig){
+      var q = function(s){ return fig.querySelector(s); };
+      var angle = e.cap >= 0 ? 0 : 180;
+      q("#sens-bateau").setAttribute("transform",
+        "translate(" + e.bx.toFixed(1) + ",115) rotate(" + (e.cap >= .5 ? 0 : (e.cap <= -.5 ? 180 : (1 - e.cap) * 90)) + ")");
+      /* Les étiquettes bâbord / tribord suivent le bateau et changent de côté. */
+      var haut = e.cap >= 0 ? "bâbord" : "tribord";
+      var bas  = e.cap >= 0 ? "tribord" : "bâbord";
+      var b = q("#sens-bab"), t = q("#sens-tri");
+      b.textContent = haut; t.textContent = bas;
+      b.setAttribute("x", e.bx.toFixed(1)); t.setAttribute("x", e.bx.toFixed(1));
+      q("#sens-fleche").textContent = e.cap >= 0
+        ? "vers l'amont / vers le port →" : "← vers l'aval / vers la mer";
+    }
+  });
+
+  /* ------------------------------------------- les quatre cardinales ------- */
+  (function(){
+    var fig = document.getElementById("anim-cardinales");
+    if(!fig) return;
+    var R = 62;
+    /* Pour chaque cardinale : secteur des eaux saines, voyant, corps,
+       rythme du feu (en millisecondes, lumière/obscurité alternées). */
+    var CARD = {
+      N: { nom:"Nord", sect:[-45, 45], haut:"noir", bas:"jaune",
+           voyant:"haut-haut",
+           rythme:"scintillement continu — VQ ou Q",
+           motif:[180, 180],
+           cap:"<b>Cardinale Nord.</b> Les eaux saines sont au <b>nord</b> de la marque : tu passes au nord. "
+              + "Voyant : deux cônes <b>pointes en haut</b> — le crayon pointe vers le haut, donc le <b>noir est en haut</b>. "
+              + "Feu blanc <b>continu</b> : midi sur le cadran." },
+      E: { nom:"Est", sect:[45, 135], haut:"noir", bas:"noir", bande:"jaune",
+           voyant:"bas-haut",
+           rythme:"3 scintillements",
+           motif:[160,160,160,160,160,1400],
+           cap:"<b>Cardinale Est.</b> Tu passes à l'<b>est</b>. Voyant : deux cônes <b>base contre base</b>, "
+              + "pointes vers l'extérieur — noir en haut <b>et</b> en bas, bande jaune au milieu. "
+              + "Feu blanc à <b>3 scintillements</b> : 3 h sur le cadran." },
+      S: { nom:"Sud", sect:[135, 225], haut:"jaune", bas:"noir",
+           voyant:"bas-bas",
+           rythme:"6 scintillements + 1 éclat long",
+           motif:[150,150,150,150,150,150,150,150,150,150,150,150,700,1200],
+           cap:"<b>Cardinale Sud.</b> Tu passes au <b>sud</b>. Voyant : deux cônes <b>pointes en bas</b> — "
+              + "le noir est en bas. Feu blanc à <b>6 scintillements suivis d'un éclat long</b> : "
+              + "c'est l'éclat long qui l'identifie à coup sûr." },
+      O: { nom:"Ouest", sect:[225, 315], haut:"jaune", bas:"jaune", bande:"noir",
+           voyant:"haut-bas",
+           rythme:"9 scintillements",
+           motif:[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,1300],
+           cap:"<b>Cardinale Ouest.</b> Tu passes à l'<b>ouest</b>. Voyant : deux cônes <b>opposés par la pointe</b>, "
+              + "un sablier qui dessine un <b>W</b> — le noir est au <b>milieu</b>. "
+              + "Feu blanc à <b>9 scintillements</b> : 9 h sur le cadran." }
+    };
+
+    function secteur(a, b){
+      /* Arc du cercle entre deux azimuts, en coordonnées SVG (0° = nord). */
+      var p = function(deg){
+        var r = (deg - 90) * Math.PI / 180;
+        return [(R * Math.cos(r)).toFixed(1), (R * Math.sin(r)).toFixed(1)];
+      };
+      var d1 = p(a), d2 = p(b);
+      var grand = ((b - a + 360) % 360) > 180 ? 1 : 0;
+      return "M 0 0 L " + d1[0] + " " + d1[1] + " A " + R + " " + R + " 0 " + grand + " 1 "
+             + d2[0] + " " + d2[1] + " Z";
+    }
+    function voyant(forme){
+      /* Deux cônes de 18 px, empilés, au-dessus de la bouée. */
+      var haut = '<path d="M -9 92 L 9 92 L 0 74 Z" class="f-noir"/>';
+      var basH = '<path d="M -9 74 L 9 74 L 0 56 Z" class="f-noir"/>';
+      var basB = '<path d="M -9 56 L 9 56 L 0 74 Z" class="f-noir"/>';
+      var hautB = '<path d="M -9 74 L 9 74 L 0 92 Z" class="f-noir"/>';
+      if(forme === "haut-haut") return basH + haut;                 /* Nord : les deux vers le haut */
+      if(forme === "bas-bas")   return basB + hautB;                /* Sud : les deux vers le bas */
+      if(forme === "bas-haut")  return basB + haut;                 /* Est : bases jointes */
+      return basH + hautB;                                          /* Ouest : pointes jointes */
+    }
+
+    var minuteur = null, choix = null;
+    function battre(motif){
+      clearTimeout(minuteur);
+      var feu = fig.querySelector("#card-feu"), i = 0, allume = true;
+      (function pas(){
+        feu.setAttribute("fill", allume ? "#ffffff" : "rgba(0,0,0,0)");
+        feu.setAttribute("stroke", allume ? "#8a6a10" : "#14263a");
+        feu.setAttribute("stroke-width", allume ? "3" : "1.5");
+        var d = motif[i % motif.length];
+        i++; allume = !allume;
+        minuteur = setTimeout(pas, d);
+      })();
+    }
+    function montrer(k){
+      var c = CARD[k];
+      if(!c) return;
+      choix = k;
+      fig.querySelector("#card-secteur").setAttribute("d", secteur(c.sect[0], c.sect[1]));
+      fig.querySelector("#card-voyant").innerHTML = voyant(c.voyant);
+      var h = fig.querySelector("#card-corps-h"), b = fig.querySelector("#card-corps-b");
+      if(c.bande){
+        /* Trois bandes : on réutilise les deux rectangles et on en dessine une 3e. */
+        h.setAttribute("y", "96"); h.setAttribute("height", "28");
+        h.setAttribute("class", c.haut === "noir" ? "f-noir" : "f-jaune");
+        b.setAttribute("y", "152"); b.setAttribute("height", "28");
+        b.setAttribute("class", c.bas === "noir" ? "f-noir" : "f-jaune");
+        var m = fig.querySelector("#card-bande");
+        if(!m){
+          m = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          m.setAttribute("id", "card-bande"); m.setAttribute("x", "-16"); m.setAttribute("width", "32");
+          h.parentNode.insertBefore(m, b);
+        }
+        m.setAttribute("y", "124"); m.setAttribute("height", "28");
+        m.setAttribute("class", c.bande === "noir" ? "f-noir" : "f-jaune");
+      }else{
+        h.setAttribute("y", "96"); h.setAttribute("height", "42");
+        h.setAttribute("class", c.haut === "noir" ? "f-noir" : "f-jaune");
+        b.setAttribute("y", "138"); b.setAttribute("height", "42");
+        b.setAttribute("class", c.bas === "noir" ? "f-noir" : "f-jaune");
+        var vieux = fig.querySelector("#card-bande");
+        if(vieux) vieux.remove();
+      }
+      fig.querySelector("#card-rythme").textContent = c.rythme;
+      document.getElementById("card-cap").innerHTML = c.cap;
+      fig.querySelectorAll("[data-card]").forEach(function(x){
+        x.classList.toggle("on", x.dataset.card === k);
+      });
+      battre(c.motif);
+    }
+    fig.querySelectorAll("[data-card]").forEach(function(b){
+      b.addEventListener("click", function(){ montrer(b.dataset.card); });
+    });
+    montrer("N");
+    /* On arrête de clignoter quand la page n'est plus visible : inutile de
+       faire tourner un minuteur dans une page en arrière-plan. */
+    document.addEventListener("visibilitychange", function(){
+      if(document.hidden) clearTimeout(minuteur);
+      else if(choix) battre(CARD[choix].motif);
+    });
+  })();
+})();
+
+</script>
+<script>
+/* ===== ANIMATIONS DU CHAPITRE 3 — LA SIGNALISATION ===== */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------------
+     Un panneau se dessine toujours de la même façon : un fond, un filet,
+     une bordure, un pictogramme, et pour la famille A une barre rouge
+     par-dessus. Tout le chapitre réutilise cette fonction — l'animation de
+     la berge comme l'explorateur — de sorte qu'un panneau ne peut pas se
+     dessiner de deux manières différentes selon l'endroit.
+     Repère : 100 × 100 unités.
+     --------------------------------------------------------------------- */
+  var FILET = '<rect x="4" y="4" width="92" height="92" class="p-filet"/>';
+  var BORD  = '<rect x="7.5" y="7.5" width="85" height="85" class="p-bord"/>';
+  var BARRE = '<line x1="16" y1="84" x2="84" y2="16" class="p-barre"/>';
+
+  function fond(cls){ return '<rect x="4" y="4" width="92" height="92" class="' + cls + '"/>'; }
+
+  /* Le texte porte sa taille en ATTRIBUT : sans elle, il hériterait de la
+     taille du corps de page, qui change avec les boutons A / A. */
+  function txt(s, taille, cls, y){
+    return '<text x="50" y="' + (y === undefined ? 50 + taille * 0.35 : y) + '" text-anchor="middle"'
+         + ' class="' + cls + '" font-size="' + taille + '">' + s + '</text>';
+  }
+  function losange(x, y, r, cls){
+    return '<path d="M ' + x + ' ' + (y - r) + ' L ' + (x + r) + ' ' + y
+         + ' L ' + x + ' ' + (y + r) + ' L ' + (x - r) + ' ' + y + ' Z" class="' + cls + '"/>';
+  }
+
+  /* --- quelques pictogrammes, redessinés : noir sur blanc, blanc sur bleu --- */
+  function ancre(t){   /* t = "p-trait" (noir) ou "p-traitb" (blanc) */
+    return '<circle cx="50" cy="24" r="7" class="' + t + '"/>'
+         + '<path d="M50 31 L50 82" class="' + t + '"/>'
+         + '<path d="M32 42 L68 42" class="' + t + '"/>'
+         + '<path d="M24 56 C24 78 50 86 50 86 C50 86 76 78 76 56" class="' + t + '"/>';
+  }
+  function demiTour(t, p){
+    return '<path d="M34 84 L34 48 A16 16 0 0 1 66 48 L66 62" class="' + t + '"/>'
+         + '<path d="M66 84 L54 60 L78 60 Z" class="' + p + '"/>';
+  }
+  function mat(t, p){   /* petite antenne, pour les panneaux radio */
+    return '<path d="M50 26 L50 40" class="' + t + '"/>'
+         + '<path d="M38 30 L50 18 L62 30" class="' + t + '"/>';
+  }
+
+  /* ------------------------------------------------- les cinq familles --- */
+  var FAM = {
+    A: {
+      titre: "Famille A — interdiction",
+      regle: "Carré <b>blanc bordé de rouge</b>, pictogramme noir, <b>barré d'une diagonale rouge</b>. "
+           + "Deux exceptions : <b>A.1</b> (fond rouge à bande blanche) et <b>A.10</b> (carré rouge et blanc posé sur la pointe).",
+      liste: [
+        { c:"A.1", n:"Passage interdit — le signal général. Il ferme la voie à tout le monde, et sert aussi à barrer un chantier.",
+          brut: fond("p-rougef") + '<rect x="4" y="42" width="92" height="16" class="p-picb"/>' + FILET },
+        { c:"A.2", n:"Défense de dépasser — pour tous les bateaux, sans exception. À ne pas confondre avec A.3, qui ne vise que les convois entre eux.",
+          pic: '<path d="M18 36 L50 36 L58 45 L50 54 L18 54 Z" class="p-pic"/>'
+             + '<path d="M30 58 L62 58 L70 67 L62 76 L30 76 Z" class="p-pic"/>' },
+        { c:"A.5", n:"Stationnement interdit : ni ancrage, ni amarrage à la rive, du côté du panneau.",
+          pic: txt("P", 58, "p-txt") },
+        { c:"A.6", n:"Défense d'ancrer, et de traîner ancres, câbles ou chaînes. L'amarrage à la rive, lui, reste possible.",
+          pic: ancre("p-trait") },
+        { c:"A.8", n:"Défense de virer.",
+          pic: demiTour("p-trait", "p-pic") },
+        { c:"A.9", n:"Défense de créer des remous. C'est le panneau des abords de chantier, de port et de bateaux amarrés.",
+          pic: '<path d="M16 44 C28 30 40 58 52 44 C64 30 76 58 86 48" class="p-trait"/>'
+             + '<path d="M16 68 C28 54 40 82 52 68 C64 54 76 82 86 72" class="p-trait"/>' },
+        { c:"A.10", n:"Passage interdit EN DEHORS de l'espace délimité. Par paire, sous une arche de pont ou à un barrage : tu passes entre les deux.",
+          brut: '<path d="M50 8 L92 50 L50 50 Z" class="p-rougef"/>'
+              + '<path d="M50 8 L8 50 L50 50 Z" class="p-face"/>'
+              + '<path d="M50 92 L92 50 L50 50 Z" class="p-face"/>'
+              + '<path d="M50 92 L8 50 L50 50 Z" class="p-rougef"/>'
+              + losange(50, 50, 42, "p-filet") }
+      ]
+    },
+    B: {
+      titre: "Famille B — obligation",
+      regle: "Même carré <b>blanc bordé de rouge</b>, pictogramme noir, <b>sans diagonale</b>. "
+           + "C'est un ordre : la diagonale manquante est toute la différence avec la famille A.",
+      liste: [
+        { c:"B.1", n:"Suivre la direction indiquée par la flèche.",
+          pic: '<path d="M50 86 L50 42" class="p-trait"/><path d="M50 16 L74 50 L26 50 Z" class="p-pic"/>' },
+        { c:"B.3a", n:"Tenir le côté bâbord du chenal — et y rester. B.3b est son symétrique à tribord.",
+          pic: txt("B.3a", 24, "p-txt") },
+        { c:"B.5", n:"S'arrêter, dans les conditions prévues par le règlement. Un cartouche en dessous peut annoncer la distance.",
+          pic: txt("B.5", 28, "p-txt") },
+        { c:"B.6", n:"Ne pas dépasser la vitesse indiquée, en km/h. C'est une OBLIGATION, pas une restriction : elle vise ta conduite, pas la voie.",
+          pic: txt("12", 38, "p-txt", 52) + txt("km/h", 14, "p-txt", 84) },
+        { c:"B.8", n:"Observer une vigilance particulière.",
+          pic: txt("!", 60, "p-txt") },
+        { c:"B.11b", n:"Entrer en liaison radiotéléphonique sur le canal indiqué. En Belgique, très souvent le canal 10.",
+          pic: mat("p-trait") + txt("10", 34, "p-txt", 76) }
+      ]
+    },
+    C: {
+      titre: "Famille C — restriction",
+      regle: "Carré <b>blanc bordé de rouge</b>, un <b>chiffre</b> en noir. Le chiffre décrit la <b>voie</b> — "
+           + "profondeur, hauteur, largeur, distance — jamais ta conduite. Et aucune valeur n'est « la » valeur.",
+      liste: [
+        { c:"C.1", n:"Profondeur d'eau limitée.", pic: txt("2,50", 30, "p-txt") },
+        { c:"C.2", n:"Hauteur libre au-dessus du plan d'eau limitée. N'oublie pas d'en retirer encore ta marge.",
+          pic: txt("4,20", 30, "p-txt") },
+        { c:"C.3", n:"Largeur de la passe ou du chenal limitée.", pic: txt("12", 44, "p-txt") },
+        { c:"C.4", n:"Restrictions imposées à la navigation : renseigne-toi. Le seul panneau C qui ne te dit pas laquelle.",
+          pic: txt("C.4", 28, "p-txt") },
+        { c:"C.5", n:"Chenal éloigné de la rive. Le chiffre donne la distance minimale en mètres, comptée depuis le signal.",
+          pic: txt("30", 44, "p-txt") }
+      ]
+    },
+    D: {
+      titre: "Famille D — recommandation",
+      regle: "Des <b>losanges</b> — jaunes, ou blancs et verts — suspendus au-dessus de l'eau. "
+           + "<b>Un losange : les deux sens. Deux losanges : sens unique.</b>",
+      liste: [
+        { c:"D.1a", n:"Passe recommandée dans les DEUX sens. Un seul losange.",
+          brut: losange(50, 50, 42, "p-jaunef") + losange(50, 50, 42, "p-filet") },
+        { c:"D.1c", n:"Passe recommandée dans UN SEUL sens — interdite dans l'autre. Deux losanges côte à côte.",
+          brut: losange(27, 50, 22, "p-jaunef") + losange(27, 50, 22, "p-filet")
+              + losange(73, 50, 22, "p-jaunef") + losange(73, 50, 22, "p-filet") },
+        { c:"D.2", n:"Il est recommandé de se tenir dans l'espace indiqué, entre les signaux.",
+          brut: losange(50, 50, 42, "p-jaunef") + losange(50, 50, 42, "p-filet") + txt("D.2", 24, "p-txt") },
+        { c:"D.3", n:"Se diriger dans le sens de la flèche, ou dans le sens qui va du feu fixe vers le feu rythmé (isophase).",
+          brut: losange(50, 50, 42, "p-jaunef") + losange(50, 50, 42, "p-filet")
+              + '<path d="M28 50 L62 50" class="p-trait"/><path d="M78 50 L56 64 L56 36 Z" class="p-pic"/>' }
+      ]
+    },
+    E: {
+      titre: "Famille E — indication",
+      regle: "Carré ou rectangle <b>bleu à pictogramme blanc</b>. Le bleu n'ordonne rien : il autorise, il renseigne, "
+           + "il montre un service. Exception : <b>E.1</b>, fond vert à bande blanche verticale.",
+      liste: [
+        { c:"E.1", n:"Passage autorisé — le signal général. Seul panneau E à fond vert.",
+          brut: fond("p-vertf") + '<rect x="43" y="4" width="14" height="92" class="p-picb"/>' + FILET },
+        { c:"E.2", n:"Croisement d'une ligne électrique aérienne.",
+          pic: '<path d="M58 14 L32 54 L48 54 L40 86 L68 44 L52 44 Z" class="p-picb"/>' },
+        { c:"E.5", n:"Stationnement autorisé — ancrage ou amarrage à la rive.",
+          pic: txt("P", 58, "p-txtb") },
+        { c:"E.6", n:"Ancrage autorisé, et traînage d'ancres, câbles et chaînes autorisé.",
+          pic: ancre("p-traitb") },
+        { c:"E.7", n:"Amarrage à la rive autorisé.",
+          pic: '<rect x="42" y="44" width="16" height="40" class="p-picb"/>'
+             + '<rect x="34" y="34" width="32" height="12" class="p-picb"/>'
+             + '<path d="M18 60 C30 48 42 72 50 62" class="p-traitb"/>' },
+        { c:"E.8", n:"Aire de virage.",
+          pic: demiTour("p-traitb", "p-picb") },
+        { c:"E.23", n:"Renseignements nautiques par radiotéléphonie, sur le canal indiqué.",
+          pic: mat("p-traitb") + txt("10", 34, "p-txtb", 76) }
+      ]
+    }
+  };
+
+  /* Assemble un panneau complet à partir de sa fiche. */
+  function dessiner(fam, p){
+    if(p.brut) return p.brut;
+    if(fam === "E") return fond("p-bleu") + FILET + (p.pic || txt(p.c, 24, "p-txtb"));
+    var s = fond("p-face") + FILET + BORD + (p.pic || txt(p.c, 24, "p-txt"));
+    if(fam === "A") s += BARRE;
+    return s;
+  }
+  function svgPanneau(fam, p, classe){
+    return '<svg viewBox="0 0 100 100" class="' + (classe || "") + '" role="img" aria-label="Panneau '
+         + p.c + '">' + dessiner(fam, p) + "</svg>";
+  }
+  /* Retrouve une fiche par son code, où qu'elle soit. */
+  function fiche(code){
+    var lettres = Object.keys(FAM);
+    for(var i = 0; i < lettres.length; i++){
+      var l = FAM[lettres[i]].liste;
+      for(var j = 0; j < l.length; j++) if(l[j].c === code) return { fam:lettres[i], p:l[j] };
+    }
+    return null;
+  }
+
+  /* ========================= l'explorateur de panneaux ==================== */
+  (function(){
+    var fig = document.getElementById("outil-familles");
+    if(!fig) return;
+    var grille = document.getElementById("fam-grille");
+    var regle = document.getElementById("fam-regle");
+    var cap = document.getElementById("fam-cap");
+    var btns = fig.querySelectorAll("[data-fam]");
+    if(!grille || !regle || !cap) return;
+
+    function choisirPanneau(fam, i){
+      var p = FAM[fam].liste[i];
+      grille.querySelectorAll("button").forEach(function(b, k){ b.classList.toggle("on", k === i); });
+      cap.innerHTML = "<b>" + p.c + "</b> — " + p.n;
+    }
+    function montrerFamille(fam){
+      var f = FAM[fam];
+      if(!f) return;
+      btns.forEach(function(b){ b.classList.toggle("on", b.dataset.fam === fam); });
+      regle.innerHTML = "<b>" + f.titre + ".</b> " + f.regle;
+      grille.innerHTML = f.liste.map(function(p){
+        return '<button type="button">' + svgPanneau(fam, p)
+             + '<span class="code">' + p.c + "</span></button>";
+      }).join("");
+      grille.querySelectorAll("button").forEach(function(b, i){
+        b.addEventListener("click", function(){ choisirPanneau(fam, i); });
+      });
+      cap.innerHTML = "Touche un panneau pour lire ce qu'il veut dire.";
+    }
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){ montrerFamille(b.dataset.fam); });
+    });
+    montrerFamille("A");
+  })();
+
+  /* ========================= la berge qui défile ========================= */
+  (function(){
+    var fig = document.getElementById("anim-berge");
+    if(!fig) return;
+    var hote = fig.querySelector("#bg-panneaux");
+    if(!hote) return;
+
+    /* cinq panneaux plantés sur la rive, de quatre familles différentes */
+    var SUITE = ["B.8", "A.2", "C.2", "B.6", "E.5"];
+    var XS = [70, 158, 246, 334, 400];
+    var marque = "";
+    SUITE.forEach(function(code, k){
+      var f = fiche(code);
+      if(!f) return;
+      var x = XS[k];
+      marque += '<g id="bg-p' + (k + 1) + '" opacity="0.45">'
+             +   '<rect x="' + (x + 19.5) + '" y="72" width="5" height="46" class="f-mat"/>'
+             +   '<g id="bg-d' + (k + 1) + '" transform="translate(' + x + ',30) scale(0.44)">'
+             +     dessiner(f.fam, f.p) + "</g>"
+             + "</g>"
+             + '<rect id="bg-h' + (k + 1) + '" x="' + (x - 4) + '" y="26" width="52" height="52" rx="7"'
+             +   ' fill="none" stroke="#e8690b" stroke-width="3" opacity="0"/>';
+    });
+    hote.innerHTML = marque;
+
+    window.kamAnim("anim-berge", {
+      etat0: { bx: 40, act: 0 },
+      capDepart: "Tu remontes le canal. Cinq panneaux t'attendent sur la rive. Touche « Lecture ».",
+      images: [
+        { cap: "Premier panneau. Avant de chercher le dessin, regarde le <b>fond</b> : blanc bordé de rouge, "
+             + "pictogramme noir, <b>pas de barre</b> → famille <b>B</b>, une <b>obligation</b>. "
+             + "Ici <b>B.8 : vigilance particulière</b>.",
+          d: 1500, etat: { bx: 92, act: 1 } },
+        { cap: "Même fond blanc bordé de rouge — mais une <b>barre rouge en diagonale</b> → famille <b>A</b>, "
+             + "une <b>interdiction</b>. Deux bateaux barrés : <b>A.2, défense de dépasser</b>.",
+          d: 1500, etat: { bx: 180, act: 2 } },
+        { cap: "Toujours blanc bordé de rouge, pas de barre, mais ce qui compte est le <b>chiffre</b> → famille <b>C</b>, "
+             + "une <b>restriction</b>. <b>C.2 : hauteur libre limitée à 4,20 m.</b> Et il te restera à retirer ta marge.",
+          d: 1600, etat: { bx: 268, act: 3 } },
+        { cap: "Encore un chiffre sur fond blanc… mais celui-là vise ta <b>conduite</b>, pas la voie : "
+             + "<b>B.6, ne pas dépasser 12 km/h</b>. Une obligation, pas une restriction.",
+          d: 1600, etat: { bx: 356, act: 4 } },
+        { cap: "Dernier : <b>fond bleu, pictogramme blanc</b> → famille <b>E</b>, une <b>indication</b>. "
+             + "Le P : <b>E.5, stationnement autorisé</b>. Le bleu n'ordonne rien.",
+          d: 1400, etat: { bx: 420, act: 5 } },
+        { cap: "Retiens l'ordre de lecture : <b>la couleur du fond</b> d'abord, <b>la barre rouge</b> ensuite, "
+             + "<b>le chiffre</b> en dernier. Le dessin ne vient qu'après.",
+          d: 700, etat: { bx: 430, act: 0 } }
+      ],
+      rendu: function(e, fig){
+        fig.querySelector("#bg-bateau").setAttribute("transform",
+          "translate(" + e.bx.toFixed(1) + ",178)");
+        var a = Math.round(e.act);
+        for(var i = 1; i <= SUITE.length; i++){
+          var g = fig.querySelector("#bg-p" + i);
+          if(g) g.setAttribute("opacity", a === i ? "1" : "0.45");
+          var h = fig.querySelector("#bg-h" + i);
+          if(h) h.setAttribute("opacity", a === i ? "1" : "0");
+        }
+      }
+    });
+  })();
+
+  /* ====================== les phases des feux d'écluse =================== */
+  (function(){
+    if(!document.getElementById("anim-feux")) return;
+
+    /* Les couleurs sont des CHAÎNES, pas des nombres : le moteur n'interpole
+       que les nombres, donc un feu change de couleur d'un coup — un feu qui
+       passerait progressivement du rouge au vert n'existe pas. */
+    function lampe(el, etat){
+      if(!el) return;
+      el.setAttribute("class",
+        (etat === "rouge" ? "f-feurouge" : etat === "vert" ? "f-feuvert" : "f-eteint") + " s-lampe");
+    }
+
+    window.kamAnim("anim-feux", {
+      etat0: { h:"rouge", b:"rouge", ouv: 0, bx: 50 },
+      capDepart: "Tu arrives à l'écluse, deux feux rouges allumés. Touche « Lecture » pour dérouler les phases.",
+      images: [
+        { cap: "<b>Deux feux rouges.</b> Entrée <b>et</b> sortie interdites : l'écluse est fermée ou hors service. "
+             + "Tu restes à distance et tu attends.",
+          d: 900, etat: { h:"rouge", b:"rouge", ouv: 0, bx: 50 } },
+        { cap: "<b>Un seul feu rouge.</b> <b>Entrée interdite.</b> L'écluse travaille — mais pas pour toi. "
+             + "Tu patientes toujours, sans t'approcher des portes.",
+          d: 1200, etat: { h:"eteint", b:"rouge" } },
+        { cap: "<b>Rouge en haut, vert en bas.</b> Entrée <b>encore interdite</b>, mais l'autorisation est "
+             + "<b>imminente</b> : moteur en route, pare-battages dehors, amarres prêtes.",
+          d: 1400, etat: { h:"rouge", b:"vert" } },
+        { cap: "<b>Deux feux verts, les portes s'ouvrent.</b> Passage autorisé — l'écluse est ouverte des deux côtés. "
+             + "Tu entres <b>au ralenti</b>.",
+          d: 1600, etat: { h:"vert", b:"vert", ouv: 1, bx: 250 } },
+        { cap: "Un <b>seul</b> feu vert dirait exactement la même chose. Deux feux peuvent toujours être remplacés "
+             + "par un seul : <b>c'est la couleur qui commande, pas le nombre</b>.",
+          d: 1200, etat: { h:"eteint", b:"vert" } },
+        { cap: "Et si <b>aucun feu</b> n'est allumé ? Ce n'est <b>pas</b> une autorisation : entrée et sortie "
+             + "interdites, sauf ordre du personnel de service. Feu éteint n'est jamais feu vert.",
+          d: 1200, etat: { h:"eteint", b:"eteint", ouv: 0, bx: 250 } }
+      ],
+      rendu: function(e, fig){
+        lampe(fig.querySelector("#fx-haut"), e.h);
+        lampe(fig.querySelector("#fx-bas"), e.b);
+        var l = 45 * (1 - e.ouv);
+        var ph = fig.querySelector("#fx-porte-h"), pb = fig.querySelector("#fx-porte-b");
+        ph.setAttribute("y", "96"); ph.setAttribute("height", l.toFixed(1));
+        pb.setAttribute("y", (186 - l).toFixed(1)); pb.setAttribute("height", l.toFixed(1));
+        fig.querySelector("#fx-bateau").setAttribute("transform",
+          "translate(" + e.bx.toFixed(1) + ",141)");
+      }
+    });
+  })();
+})();
+
+</script>
+<script>
+/* ===== ANIMATIONS DU CHAPITRE 4 — LES PRIORITÉS ===== */
+(function(){
+  "use strict";
+
+  /* ============== l'outil « qui doit s'écarter ? » ======================
+     Les quatre boutons composent une situation ; la fonction juger() rend
+     le verdict ET l'article. Elle suit l'ordre du texte, pas l'intuition :
+     la menue embarcation s'efface d'abord, le courant ensuite, le type et
+     les amures en dernier — et la réserve du côté tribord passe devant les
+     deux derniers. */
+  (function(){
+    var fig = document.getElementById("outil-priorite");
+    if(!fig) return;
+    var cap = document.getElementById("pr-cap");
+    var choix = { moi:"moteur", autre:"grand", situ:"devant", trib:"non" };
+    var GROUPES = { moi:"pr-moi", autre:"pr-autre", situ:"pr-situ", trib:"pr-trib" };
+
+    var NOM = {
+      grand:  "un grand bateau",
+      moteur: "une menue embarcation à moteur",
+      voile:  "une menue embarcation à voile",
+      rames:  "une menue embarcation à rames"
+    };
+    var RANG = { voile:3, rames:2, moteur:1 };   /* voile > rames > moteur */
+
+    function juger(moi, autre, situ, trib){
+      var gM = (moi === "grand"), gA = (autre === "grand");
+
+      /* 1. La règle qui écrase les autres : la menue embarcation s'efface. */
+      if(!gM && gA) return { qui:"moi",
+        t:"<b>Tu t'écartes.</b> Une menue embarcation doit laisser à tous les autres bateaux "
+         + "l'espace nécessaire pour poursuivre leur route et pour manœuvrer, et ne peut jamais "
+         + "exiger qu'on s'écarte pour elle. Ni la voile, ni le courant, ni le côté tribord n'y changent rien."
+         + (situ === "avalant" ? " <b>Même en descendant le courant.</b>" : "") };
+      if(gM && !gA) return { qui:"autre",
+        t:"<b>L'autre s'écarte</b>, et toi tu maintiens route et vitesse. C'est une menue embarcation : "
+         + "elle te laisse l'espace de passer et de manœuvrer. Si elle s'y prend trop tard, "
+         + "tu manœuvres quand même pour éviter l'abordage." };
+
+      /* 2. Deux grands bateaux : le courant d'abord, la géométrie ensuite. */
+      if(gM && gA){
+        if(situ === "montant") return { qui:"moi",
+          t:"<b>Tu réserves une route appropriée à l'avalant.</b> Montant, c'est toi qui t'effaces — "
+           + "et c'est donc toi qui <b>choisis le côté</b>. Si tu lui laisses la route à bâbord, tu ne "
+           + "montres rien ; si tu la lui laisses à tribord, tu montres le <b>panneau bleu</b> et le "
+           + "<b>feu blanc scintillant</b> à tribord. <i>(art. 6.05)</i>" };
+        if(situ === "avalant") return { qui:"autre",
+          t:"<b>Tu as la priorité</b> : le montant doit te réserver une route appropriée. Mais c'est "
+           + "<b>lui</b> qui désigne le côté. Tu passes du côté qu'il laisse libre et tu <b>répètes</b> "
+           + "ses signaux. <i>(art. 6.05)</i>" };
+        if(situ === "devant") return { qui:"deux",
+          t:"<b>Vous venez tous les deux sur tribord</b> pour passer à <b>bâbord</b> l'un de l'autre. "
+           + "Personne n'a la priorité : les deux manœuvrent. <i>(art. 6.04, al. 1)</i>" };
+        return { qui:"moi",
+          t:"<b>Celui qui voit l'autre sur tribord s'écarte</b> — ici, l'autre arrive sur ton tribord, "
+           + "donc c'est toi, et tu évites de lui couper la route sur l'avant. S'il arrivait sur ton "
+           + "<b>bâbord</b>, ce serait l'inverse. <i>(art. 6.03bis, al. 1)</i>" };
+      }
+
+      /* 3. Deux menues embarcations. */
+      var rappelCourant = (situ === "montant" || situ === "avalant")
+        ? " <i>Le courant ne tranche pas ici : l'article du montant et de l'avalant ne s'applique "
+          + "pas aux menues embarcations entre elles.</i>" : "";
+
+      if(trib === "oui") return { qui:"autre",
+        t:"<b>Tu poursuis ta route.</b> Tu suis le côté tribord de la passe navigable, et cette réserve "
+         + "passe avant la règle des types comme avant celle des amures : « <i>L'embarcation qui suit le "
+         + "côté de la passe navigable à tribord doit toutefois poursuivre sa route.</i> » "
+         + "<i>(art. 6.03bis, al. 2 et 3)</i>" + rappelCourant };
+
+      if(RANG[moi] > RANG[autre]) return { qui:"autre",
+        t:"<b>L'autre s'écarte.</b> Entre menues embarcations : la <b>voile</b> passe avant les "
+         + "<b>rames</b>, qui passent avant le <b>moteur</b>. Tu es " + NOM[moi] + ", en face "
+         + NOM[autre] + ". <i>(art. 6.03bis, al. 2)</i>" + rappelCourant };
+      if(RANG[moi] < RANG[autre]) return { qui:"moi",
+        t:"<b>Tu t'écartes.</b> Entre menues embarcations : la <b>voile</b> passe avant les <b>rames</b>, "
+         + "qui passent avant le <b>moteur</b>. Tu es " + NOM[moi] + ", en face " + NOM[autre]
+         + ". <i>(art. 6.03bis, al. 2)</i>" + rappelCourant };
+
+      if(moi === "voile") return { qui:"deux",
+        t:"<b>Deux voiliers : c'est la règle des amures qui décide</b>, pas celle des types. "
+         + "Amures opposées, bâbord amure s'écarte. Mêmes amures, celui qui est au vent s'écarte. "
+         + "Dans le doute, c'est toi. <i>(art. 6.03bis, al. 3 — voir l'outil des amures ci-dessous)</i>"
+         + rappelCourant };
+      return { qui:"deux",
+        t:"<b>Même type, même monde : vous venez tous les deux sur tribord</b> et vous vous croisez "
+         + "bâbord à bâbord. Aucune des règles de type ne départage deux " + NOM[moi].slice(21)
+         + "s. <i>(art. 6.04, al. 2)</i>" + rappelCourant };
+    }
+
+    /* --- le petit schéma : où sont les bateaux, qui porte la flèche --- */
+    function dessinerSchema(verdict, situ){
+      var croise = (situ === "croise");
+      var yMoi = croise ? 56 : 74, xAutre = croise ? 320 : 330, yAutre = croise ? 110 : 74;
+      var rotAutre = croise ? -153 : 180;
+      fig.querySelector("#pr-bat-moi").setAttribute("transform", "translate(90," + yMoi + ")");
+      fig.querySelector("#pr-bat-autre").setAttribute("transform",
+        "translate(" + xAutre + "," + yAutre + ") rotate(" + rotAutre + ")");
+      fig.querySelector("#pr-lab-moi").setAttribute("y", yMoi + 36);
+      fig.querySelector("#pr-lab-autre").setAttribute("y", croise ? yAutre - 26 : yAutre + 36);
+      var fm = fig.querySelector("#pr-fl-moi"), fa = fig.querySelector("#pr-fl-autre");
+      fm.setAttribute("transform", "translate(90," + yMoi + ")");
+      fa.setAttribute("transform", "translate(" + xAutre + "," + yAutre + ")");
+      fm.setAttribute("opacity", (verdict.qui === "moi" || verdict.qui === "deux") ? "1" : "0");
+      fa.setAttribute("opacity", (verdict.qui === "autre" || verdict.qui === "deux") ? "1" : "0");
+    }
+
+    function majPriorite(){
+      var v = juger(choix.moi, choix.autre, choix.situ, choix.trib);
+      dessinerSchema(v, choix.situ);
+      cap.innerHTML = v.t;
+    }
+    Object.keys(GROUPES).forEach(function(cle){
+      var g = document.getElementById(GROUPES[cle]);
+      if(!g) return;
+      g.querySelectorAll("button").forEach(function(b){
+        b.addEventListener("click", function(){
+          choix[cle] = b.dataset.v;
+          g.querySelectorAll("button").forEach(function(x){
+            x.classList.toggle("on", x === b);
+          });
+          majPriorite();
+        });
+      });
+      /* allume le bouton qui correspond au choix de départ */
+      g.querySelectorAll("button").forEach(function(b){
+        b.classList.toggle("on", b.dataset.v === choix[cle]);
+      });
+    });
+    majPriorite();
+  })();
+
+  /* ================= la rencontre droit devant et le panneau bleu ======= */
+  window.kamAnim("anim-rencontre", {
+    etat0: { ay: 111, by: 111, ax: 60, bx: 400, bleu: 0, bleuB: 0, courant: 0 },
+    capDepart: "Deux bateaux, étrave contre étrave. Touche « Lecture ».",
+    images: [
+      { cap: "<b>Sans courant</b>, la règle est simple et symétrique : personne n'a la priorité.",
+        d: 800, etat: { ay: 111, by: 111, ax: 60, bx: 400, bleu: 0, bleuB: 0, courant: 0 } },
+      { cap: "<b>Chacun vient sur tribord.</b> Toi qui fais route à droite, ton tribord est vers le bas ; "
+           + "pour l'autre, qui fait route à gauche, son tribord est vers le haut.",
+        d: 1300, etat: { ay: 148, by: 74 } },
+      { cap: "On se croise donc <b>bâbord à bâbord</b> — comme deux voitures se croisent à droite.",
+        d: 1500, etat: { ax: 190, bx: 270 } },
+      { cap: "Croisement fait. <b>Les deux ont manœuvré</b> : c'est ce qui distingue cette règle de toutes "
+           + "les autres du chapitre.",
+        d: 1200, etat: { ax: 330, bx: 130 } },
+      { cap: "Maintenant, <b>avec du courant</b>. Tu es <b>montant</b>, l'autre est <b>avalant</b> : "
+           + "c'est lui qui a la priorité, parce que le courant le pousse et qu'il s'arrête mal.",
+        d: 1000, etat: { ax: 60, bx: 400, ay: 111, by: 111, courant: 1 } },
+      { cap: "<b>C'est toi, le montant, qui réserves la route — et qui choisis le côté.</b> "
+           + "Tu décides de le laisser passer à <b>tribord</b>, l'inverse de la règle : tu montes donc "
+           + "le <b>panneau bleu</b> et le <b>feu blanc scintillant</b> à ton tribord.",
+        d: 1500, etat: { ay: 74, bleu: 1 } },
+      { cap: "L'avalant <b>passe du côté laissé libre</b> et <b>répète</b> tes signaux pour dire qu'il a "
+           + "compris. Un son bref voudrait dire « à bâbord », deux sons brefs « à tribord ».",
+        d: 1600, etat: { by: 148, bleuB: 1, ax: 170, bx: 290 } },
+      { cap: "Dernier mot, et il est pour toi : tout cet article <b>ne s'applique pas aux menues "
+           + "embarcations entre elles</b>, ni à une menue en vue d'un autre bateau. Le panneau bleu, "
+           + "sur le Kat-a-Mar, se <b>lit</b> — il ne se montre pas.",
+        d: 1200, etat: { ax: 300, bx: 150 } }
+    ],
+    rendu: function(e, fig){
+      fig.querySelector("#rc-a").setAttribute("transform",
+        "translate(" + e.ax.toFixed(1) + "," + e.ay.toFixed(1) + ")");
+      fig.querySelector("#rc-b").setAttribute("transform",
+        "translate(" + e.bx.toFixed(1) + "," + e.by.toFixed(1) + ") rotate(180)");
+      fig.querySelector("#rc-lab-a").setAttribute("x", e.ax.toFixed(1));
+      fig.querySelector("#rc-lab-a").setAttribute("y", (e.ay + 35).toFixed(1));
+      fig.querySelector("#rc-lab-b").setAttribute("x", e.bx.toFixed(1));
+      fig.querySelector("#rc-lab-b").setAttribute("y", (e.by - 24).toFixed(1));
+      fig.querySelector("#rc-bleu").setAttribute("opacity", e.bleu.toFixed(2));
+      fig.querySelector("#rc-bleu-b").setAttribute("opacity", e.bleuB.toFixed(2));
+      fig.querySelector("#rc-courant").textContent =
+        e.courant >= 0.5 ? "le courant descend vers la gauche" : "pas de courant";
+      fig.querySelector("#rc-lab-a").textContent = e.courant >= 0.5 ? "toi · montant" : "toi";
+      fig.querySelector("#rc-lab-b").textContent = e.courant >= 0.5 ? "l'autre · avalant" : "l'autre";
+    }
+  });
+
+  /* ====================== les amures, entre voiliers ==================== */
+  (function(){
+    var fig = document.getElementById("outil-voiliers");
+    if(!fig) return;
+    var cap = document.getElementById("vo-cap");
+    /* Le vent souffle du haut de l'image vers le bas.
+       Un voilier qui reçoit le vent sur son flanc TRIBORD porte sa voile à
+       bâbord — c'est le piège d'examen, et le dessin doit le montrer. */
+    var CAS = {
+      opposees: {
+        /* A tribord amure (voile à bâbord), B bâbord amure (voile à tribord) */
+        voileA: 1, voileB: -1, labA: "A · tribord amure", labB: "B · bâbord amure",
+        verdict: "B s'écarte", ecart: "B",
+        t: "<b>Amures opposées.</b> A reçoit le vent de <b>tribord</b>, B le reçoit de <b>bâbord</b>. "
+         + "« <i>Quand les deux embarcations reçoivent le vent d'un bord différent, celle qui reçoit le "
+         + "vent de bâbord s'écarte de la route de l'autre.</i> » Donc <b>B s'écarte</b> et A poursuit : "
+         + "<b>tribord amure est prioritaire</b>."
+      },
+      memes: {
+        /* les deux bâbord amure ; A est au vent (plus près du vent, en haut) */
+        voileA: -1, voileB: -1, labA: "A · au vent", labB: "B · sous le vent",
+        verdict: "A s'écarte", ecart: "A", decalerA: -26,
+        t: "<b>Mêmes amures.</b> Les deux reçoivent le vent du même bord ; A est <b>au vent</b>, B est "
+         + "<b>sous le vent</b>. « <i>Quand les deux embarcations reçoivent le vent du même bord, celle "
+         + "qui est au vent s'écarte de la route de celle qui est sous le vent.</i> » Donc <b>A s'écarte</b>. "
+         + "C'est logique : celui sous le vent est le moins manœuvrant des deux."
+      },
+      doute: {
+        voileA: -1, voileB: 0, labA: "A · vent de bâbord", labB: "B · vent indéterminé",
+        verdict: "A s'écarte", ecart: "A", decalerB: -26,
+        t: "<b>Dans le doute.</b> A reçoit le vent de <b>bâbord</b>, voit B <b>au vent</b>, et n'arrive pas "
+         + "à déterminer de quel bord B reçoit le vent. « <i>La première s'écarte de la route de l'autre.</i> » "
+         + "Donc <b>A s'écarte</b>. Le doute se tranche contre celui qui doute — c'est voulu, et c'est la "
+         + "seule règle sûre."
+      }
+    };
+
+    function voile(sens){
+      /* sens = +1 : voile portée à tribord du dessin (à droite) ; -1 : à gauche ;
+         0 : voile floue, on ne sait pas */
+      if(sens === 0) return "M 0 -38 L 0 4 L 22 -6 Z";
+      return "M 0 -38 L 0 4 L " + (30 * sens) + " 4 Z";
+    }
+    function montrerAmures(k){
+      var c = CAS[k];
+      if(!c) return;
+      fig.querySelectorAll("[data-cas]").forEach(function(b){
+        b.classList.toggle("on", b.dataset.cas === k);
+      });
+      var yA = 118 + (c.decalerA || 0), yB = 118 + (c.decalerB || 0);
+      fig.querySelector("#vo-a").setAttribute("transform", "translate(120," + yA + ")");
+      fig.querySelector("#vo-b").setAttribute("transform", "translate(300," + yB + ")");
+      fig.querySelector("#vo-voile-a").setAttribute("d", voile(c.voileA));
+      fig.querySelector("#vo-voile-b").setAttribute("d", voile(c.voileB));
+      var la = fig.querySelector("#vo-lab-a"), lb = fig.querySelector("#vo-lab-b");
+      la.textContent = c.labA; la.setAttribute("y", yA + 38);
+      lb.textContent = c.labB; lb.setAttribute("y", yB + 38);
+      fig.querySelector("#vo-verdict").textContent = c.verdict;
+      cap.innerHTML = c.t;
+    }
+    fig.querySelectorAll("[data-cas]").forEach(function(b){
+      b.addEventListener("click", function(){ montrerAmures(b.dataset.cas); });
+    });
+    montrerAmures("opposees");
+  })();
+
+  /* ========================== le dépassement ============================ */
+  window.kamAnim("anim-depassement", {
+    etat0: { rx: 70, ry: 132, dx: 300, dy: 132, son: 0 },
+    capDepart: "Tu rattrapes un bateau plus lent. Touche « Lecture ».",
+    images: [
+      { cap: "Tu es le <b>rattrapant</b>. Première obligation, avant tout le reste : "
+           + "<b>t'assurer que la manœuvre peut avoir lieu sans danger</b>.",
+        d: 900, etat: { rx: 130, son: 0 } },
+      { cap: "Le rattrapé tient normalement <b>son</b> côté tribord — le bord le plus proche de la rive. "
+           + "La place libre est donc de l'autre côté : on dépasse <b>à bâbord du rattrapé</b>.",
+        d: 1300, etat: { rx: 190, ry: 88 } },
+      { cap: "S'il doit s'écarter pour te laisser passer, tu l'annonces : "
+           + "<b>deux sons prolongés suivis de deux sons brefs</b> pour un dépassement à bâbord.",
+        d: 1400, etat: { son: 1 } },
+      { cap: "Le rattrapé <b>facilite la manœuvre</b> et <b>réduit sa vitesse</b> si nécessaire. "
+           + "Il répond en s'écartant : un son bref s'il va sur tribord, deux s'il va sur bâbord.",
+        d: 1500, etat: { son: 2, dy: 150, rx: 260 } },
+      { cap: "Tu passes, court et net. <b>Deux sons prolongés et un seul son bref</b> auraient demandé "
+           + "l'autre côté — à tribord, permis seulement <b>si l'espace disponible le permet</b>.",
+        d: 1500, etat: { rx: 360, son: 0 } },
+      { cap: "Et <b>cinq sons brefs</b> du rattrapé ? Ce n'est pas de l'impatience : c'est un refus. "
+           + "<b>Le dépassement est impossible sans danger.</b>",
+        d: 1300, etat: { rx: 420, ry: 110, son: 3 } },
+      { cap: "L'exception à retenir : le devoir de faciliter <b>ne vaut pas</b> pour un bateau, autre qu'une "
+           + "menue embarcation, <b>rattrapé par une menue embarcation</b>. Un caboteur n'a pas à ralentir "
+           + "pour le Kat-a-Mar.",
+        d: 1000, etat: { son: 0 } }
+    ],
+    rendu: function(e, fig){
+      fig.querySelector("#dp-rattrapant").setAttribute("transform",
+        "translate(" + e.rx.toFixed(1) + "," + e.ry.toFixed(1) + ")");
+      fig.querySelector("#dp-rattrape").setAttribute("transform",
+        "translate(" + e.dx.toFixed(1) + "," + e.dy.toFixed(1) + ")");
+      var lab = fig.querySelector("#dp-lab");
+      lab.setAttribute("x", e.rx.toFixed(1));
+      lab.setAttribute("y", (e.ry - 20).toFixed(1));
+      var s = Math.round(e.son);
+      fig.querySelector("#dp-son").textContent =
+        s === 1 ? "— —  · ·   « je dépasse à bâbord »" :
+        s === 2 ? "·   « je m'écarte sur tribord »" :
+        s === 3 ? "· · · · ·   « impossible sans danger »" : "";
+    }
+  });
+})();
+
+</script>
+
 </body>
 </html>
