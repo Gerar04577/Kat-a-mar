@@ -434,7 +434,12 @@ section[id], .score, .qcm, figure.anim, [id]{
 .panneaux button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
 /* plus spécifique que « .anim svg », qui plafonne à 560 px */
 .panneaux button svg{ width:100%; max-width:66px; height:auto; display:block; }
-.panneaux .code{ font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--navy); }
+/* un nom long (« Pavillon rouge balancé ») doit s'enrouler dans sa case,
+   surtout au texte agrandi, au lieu d'en déborder. */
+.panneaux .code{
+  font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--navy);
+  max-width:100%; text-align:center; overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto;
+}
 
 /* les feux d'un ouvrage : des couleurs de lampe, pas des couleurs de thème */
 .f-eteint{ fill:#36404f; }
@@ -481,13 +486,46 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .s-vent{ stroke:var(--navy); stroke-width:2.2; stroke-linecap:round; }
 .f-vent{ fill:var(--navy); }
 
+/* ---- habillage du chapitre 5 : feux et marques ----
+   Les scènes de nuit gardent un fond sombre dans les DEUX thèmes : un feu
+   de navigation se lit sur du noir, pas sur du papier. */
+.f-nuit{ fill:#0e1a2b; }
+.f-eau-nuit{ fill:#13263d; }
+.f-coque-nuit{ fill:#2a3a52; stroke:#6b7f9c; stroke-width:1.4; }
+.f-cabine-nuit{ fill:#1f2e45; stroke:#6b7f9c; stroke-width:1.2; }
+.s-mat-nuit{ stroke:#8a9bb5; stroke-width:2.2; stroke-linecap:round; }
+.s-cote-nuit{ stroke:#8a9bb5; stroke-width:1.2; stroke-dasharray:4 3; }
+.s-cable{ stroke:#8a9bb5; stroke-width:1.6; stroke-dasharray:5 4; }
+.t-nuit{ font-family:var(--mono); font-size:10px; fill:#c7d2e3; }
+/* les lampes : couleur réelle et un halo, comme des feux dans la nuit */
+.l-blanc{ fill:#ffffff; stroke:rgba(255,255,255,.45); stroke-width:4; }
+.l-vert{ fill:#22e06a; stroke:rgba(34,224,106,.45); stroke-width:4; }
+.l-rouge{ fill:#ff4a3d; stroke:rgba(255,74,61,.45); stroke-width:4; }
+.l-jaune{ fill:#ffd23f; stroke:rgba(255,210,63,.45); stroke-width:4; }
+.l-bleu{ fill:#3b8bff; stroke:rgba(59,139,255,.5); stroke-width:4; }
+/* les secteurs de l'outil des angles */
+.sec-blanc{ fill:#ffffff; fill-opacity:.11; }
+.sec-vert{ fill:#22e06a; fill-opacity:.22; }
+.sec-rouge{ fill:#ff4a3d; fill-opacity:.22; }
+.s-orbite{ fill:none; stroke:#8a9bb5; stroke-width:1; stroke-dasharray:3 5; }
+.f-toi{ fill:#e8690b; stroke:#ffffff; stroke-width:1.5; }
+.t-toi{ font-family:var(--mono); font-size:9px; font-weight:700; fill:#ffffff; }
+/* les marques de jour, en couleurs réelles */
+.m-noir{ fill:#14263a; }
+.m-jaune{ fill:#f2c230; stroke:#8a6a10; stroke-width:1; }
+.m-bleu{ fill:#1b5fae; }
+.m-vert{ fill:#1b8a4b; }
+.m-rouge{ fill:#d7263d; }
+.m-blanc{ fill:#ffffff; }
+.s-balance{ fill:none; stroke:#d7263d; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:4 3; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v4 · chapitres 1 à 4</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v5 · chapitres 1 à 5</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
 </header>
@@ -531,7 +569,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
     <li><span class="n">2</span><a href="#ch2">Le balisage</a></li>
     <li><span class="n">3</span><a href="#ch3">La signalisation fluviale</a></li>
     <li><span class="n">4</span><a href="#ch4">Les règles de priorité en eaux intérieures</a></li>
-    <li><span class="n">5</span><span class="avenir">Les feux et marques — à venir</span></li>
+    <li><span class="n">5</span><a href="#ch5">Les feux et marques</a></li>
     <li><span class="n">6</span><span class="avenir">Les signaux sonores — à venir</span></li>
     <li><span class="n">7</span><span class="avenir">Sécurité et premiers secours — à venir</span></li>
     <li><span class="n">8</span><span class="avenir">La technique des moteurs — à venir</span></li>
@@ -3143,6 +3181,720 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   </div>
 </section>
 
+<section id="ch5">
+  <p class="kicker">Chapitre 5</p>
+  <h2>Les feux et marques</h2>
+  <p>La nuit, un bateau ne se voit pas : on ne voit que ses feux. Et la couleur que tu vois dépend de l'<b>angle</b> sous lequel tu le regardes. Tout le chapitre tient dans cette idée — le reste n'est qu'un catalogue, et un catalogue s'apprend avec des dessins.</p>
+
+  <h3>Les quatre feux de base</h3>
+  <p>Un feu n'éclaire pas tout l'horizon : il éclaire un <b>secteur</b>. C'est ce qui permet, de nuit, de savoir si un bateau vient vers toi, s'éloigne, ou te croise.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Feu</th><th>Couleur, secteur, position</th></tr></thead>
+    <tbody>
+      <tr><td>Feu de mât</td><td><b>Blanc, puissant</b>, sur l'axe du bateau. Secteur de <b>225°</b> : depuis l'avant jusqu'à 22°30' sur l'arrière du travers, de chaque bord.</td></tr>
+      <tr><td>Feux de côté</td><td><b>Vert à tribord, rouge à bâbord</b>, feux clairs. <b>112°30'</b> chacun, depuis l'avant jusqu'à 22°30' sur l'arrière du travers de leur côté. Masqués vers l'intérieur : on ne voit jamais le vert depuis bâbord.</td></tr>
+      <tr><td>Feu de poupe</td><td><b>Blanc</b>, clair ou ordinaire, à l'arrière. Secteur de <b>135°</b> : 67°30' de chaque bord à partir de l'arrière.</td></tr>
+      <tr><td>Feu visible de tous les côtés</td><td>Un feu qui éclaire sur <b>360°</b>. C'est lui qu'on retrouve sur les petits bateaux, les bateaux au stationnement, les remorqués.</td></tr>
+    </tbody>
+  </table>
+  <div class="def">
+    <p class="term">Le compte qui rassure</p>
+    <p>225° + 135° = <b>360°</b>. Le feu de mât et le feu de poupe se complètent exactement : d'où que tu regardes un bateau à moteur, tu vois <b>toujours un feu blanc</b> — celui de l'avant ou celui de l'arrière, jamais les deux depuis le travers.</p>
+    <p class="why">Et 112,5° + 112,5° = 225° : les deux feux de côté couvrent ensemble le même secteur que le feu de mât.</p>
+  </div>
+  <div class="def">
+    <p class="term">Puissant, clair, ordinaire</p>
+    <p>Trois intensités, fixées par une norme européenne. Retiens seulement la hiérarchie : le feu de <b>mât</b> est <b>puissant</b>, les feux de <b>côté</b> sont <b>clairs</b>, le feu de <b>poupe</b> est clair ou <b>ordinaire</b>. Sur une menue embarcation, chacun peut descendre d'un cran.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Les feux sont obligatoires <b>du coucher au lever du soleil</b> — et <b>aussi de jour quand la visibilité est réduite</b> : brume, pluie, neige. « Il fait jour » n'est pas une réponse.</p>
+  </div>
+
+  <figure class="anim live" id="outil-secteurs">
+    <p class="atitle">⚙ Outil : ce que tu vois selon l'angle</p>
+    <div class="opt trois" id="sc-type">
+      <button type="button" data-t="moteur">Bateau à moteur</button>
+      <button type="button" data-t="voile">Voilier</button>
+      <button type="button" data-t="petit">Menue &lt; 7 m lente</button>
+    </div>
+    <svg viewBox="0 0 420 300" role="img" aria-label="Un bateau vu de dessus, avec les secteurs de ses feux, et ta position tout autour">
+      <rect x="0" y="0" width="420" height="300" class="f-nuit"/>
+      <g transform="translate(210,150)">
+        <!-- secteurs, dessinés depuis le centre ; 0° = l'avant, en haut -->
+        <path id="sc-mat" class="sec-blanc" d=""/>
+        <path id="sc-poupe" class="sec-blanc" d=""/>
+        <path id="sc-vert" class="sec-vert" d=""/>
+        <path id="sc-rouge" class="sec-rouge" d=""/>
+        <path id="sc-tout" class="sec-blanc" d=""/>
+        <circle r="118" class="s-orbite"/>
+        <!-- le bateau, étrave vers le haut -->
+        <path d="M 0 -34 L 13 -12 L 13 26 L -13 26 L -13 -12 Z" class="f-coque"/>
+        <rect x="-7" y="-6" width="14" height="18" class="f-cabine"/>
+        <circle id="sc-l-mat" cx="0" cy="-16" r="4" class="l-blanc"/>
+        <circle id="sc-l-vert" cx="11" cy="-4" r="3.5" class="l-vert"/>
+        <circle id="sc-l-rouge" cx="-11" cy="-4" r="3.5" class="l-rouge"/>
+        <circle id="sc-l-poupe" cx="0" cy="22" r="3.5" class="l-blanc"/>
+        <!-- toi, sur l'orbite -->
+        <g id="sc-toi" transform="rotate(0) translate(0,-118)">
+          <circle r="9" class="f-toi"/>
+          <text y="4" class="t-toi" text-anchor="middle">toi</text>
+        </g>
+      </g>
+      <text x="8" y="16" class="t-nuit">avant du bateau : en haut</text>
+      <text id="sc-rel" x="412" y="292" class="t-nuit" text-anchor="end"></text>
+    </svg>
+    <p class="cap" id="sc-cap"></p>
+    <div class="ctl">
+      <label>Tu es à … du bateau (relèvement depuis sa proue)
+        <input id="sc-angle" type="range" min="0" max="359" step="1" value="0">
+        <output id="sc-angle-o">0°</output></label>
+    </div>
+  </figure>
+  <div class="keep">
+    <p class="kt">Les trois cas qu'on te demande</p>
+    <p><b>Rouge et vert ensemble</b>, avec ou sans blanc au-dessus : il <b>vient vers toi</b>.<br>
+    <b>Un seul feu de côté</b> : tu es sur son travers — <b>vert</b>, il passe de gauche à droite ; <b>rouge</b>, de droite à gauche.<br>
+    <b>Un seul feu blanc</b> : soit tu le vois <b>par l'arrière</b> (feu de poupe), soit c'est une <b>menue embarcation</b> ou un bateau <b>au stationnement</b>. Ralentis, et regarde s'il bouge.</p>
+  </div>
+
+  <h3>Les marques de jour</h3>
+  <p>De jour, les feux cèdent la place à des formes noires, jaunes, bleues ou vertes hissées là où on les voit. Elles doivent être assez grandes pour se lire de loin.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Marque</th><th>Dimensions minimales</th></tr></thead>
+    <tbody>
+      <tr><td>Ballon</td><td>Diamètre <b>0,60 m</b>.</td></tr>
+      <tr><td>Cône</td><td>Hauteur <b>0,60 m</b>, diamètre de base <b>0,60 m</b>.</td></tr>
+      <tr><td>Cylindre</td><td>Hauteur <b>0,80 m</b>, diamètre <b>0,50 m</b>.</td></tr>
+      <tr><td>Bicône</td><td>Hauteur <b>0,80 m</b>, diamètre de base <b>0,50 m</b>.</td></tr>
+      <tr><td>Panneaux et pavillons</td><td><b>1 m</b> de long et de haut — <b>0,60 m</b> sur une menue embarcation.</td></tr>
+      <tr><td>Flammes</td><td><b>1 m</b> de long, <b>0,50 m</b> de haut à la hampe.</td></tr>
+    </tbody>
+  </table>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement</div>
+    <p>Ton manuel donne au ballon <b>0,80 m</b> de diamètre et au cône <b>0,80 m de haut sur 0,50 m de base</b>. Le texte dit autre chose : le ballon fait <b>0,60 m</b>, le cône <b>0,60 m sur 0,60 m</b>. Les valeurs 0,80 × 0,50 sont celles du <b>cylindre</b> et du <b>bicône</b>. Le manuel a glissé d'une ligne.</p>
+    <p>Et le texte n'attribue <b>aucune couleur générale</b> aux marques : la couleur se lit article par article — ballon <b>jaune</b> du remorqué, cylindre <b>jaune</b> du remorqueur, cône <b>noir</b> du voilier au moteur, cônes <b>bleus</b> des matières dangereuses, bicône <b>jaune</b> du bateau à passagers, ballon <b>vert</b> du bac.</p>
+    <p>Une menue embarcation peut utiliser des marques plus petites, pourvu qu'elles restent facilement visibles.</p>
+    <p class="art">Règlement général de police pour la navigation sur les eaux intérieures, art. 3.03 (panneaux, pavillons, flammes) et 3.04 (cylindres, ballons, cônes, bicônes).</p>
+  </div>
+
+  <h3>Le bateau à moteur qui fait route</h3>
+  <figure class="anim" id="anim-moteur">
+    <p class="atitle">▶ Animation : les feux se posent un à un</p>
+    <svg viewBox="0 0 460 210" role="img" aria-label="Un bateau à moteur vu de côté, la nuit, dont les feux s'allument un à un">
+      <rect x="0" y="0" width="460" height="210" class="f-nuit"/>
+      <rect x="0" y="150" width="460" height="60" class="f-eau-nuit"/>
+      <!-- grand bateau, avant à droite -->
+      <g id="mo-bateau">
+        <path id="mo-coque" d="M 40 150 L 420 150 L 440 128 L 60 128 Z" class="f-coque-nuit"/>
+        <rect id="mo-cabine" x="90" y="98" width="70" height="30" class="f-cabine-nuit"/>
+        <line id="mo-mat1" x1="330" y1="128" x2="330" y2="56" class="s-mat-nuit"/>
+        <line id="mo-mat2" x1="120" y1="98" x2="120" y2="30" class="s-mat-nuit" opacity="0"/>
+        <circle id="mo-f-mat" cx="330" cy="52" r="7" class="l-blanc" opacity="0"/>
+        <circle id="mo-f-mat2" cx="120" cy="26" r="7" class="l-blanc" opacity="0"/>
+        <circle id="mo-f-vert" cx="300" cy="84" r="6" class="l-vert" opacity="0"/>
+        <circle id="mo-f-rouge" cx="360" cy="84" r="6" class="l-rouge" opacity="0"/>
+        <circle id="mo-f-poupe" cx="48" cy="118" r="6" class="l-blanc" opacity="0"/>
+        <circle id="mo-f-tout" cx="330" cy="52" r="7" class="l-blanc" opacity="0"/>
+      </g>
+      <!-- cotes -->
+      <g id="mo-cotes" opacity="0">
+        <line x1="400" y1="150" x2="400" y2="52" class="s-cote-nuit"/>
+        <text x="406" y="104" class="t-nuit">≥ 5 m</text>
+        <line x1="380" y1="84" x2="380" y2="52" class="s-cote-nuit"/>
+        <text x="386" y="70" class="t-nuit">≥ 1 m</text>
+      </g>
+      <text id="mo-titre" x="8" y="18" class="t-nuit"></text>
+      <text x="452" y="198" class="t-nuit" text-anchor="end">avant →</text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+
+  <div class="def">
+    <p class="term">Le grand bateau à moteur isolé</p>
+    <p>De nuit : un <b>feu de mât</b> à l'avant, sur l'axe, à <b>5 m</b> au moins — 4 m suffisent si le bateau ne dépasse pas 40 m ; des <b>feux de côté</b> à la même hauteur, <b>au moins 1 m plus bas</b> que le feu de mât ; un <b>feu de poupe</b> à l'arrière.</p>
+    <p>Un bateau de <b>plus de 110 m</b> porte obligatoirement un <b>second feu de mât</b>, derrière le premier et <b>au moins 3 m plus haut</b>. Les autres peuvent le porter.</p>
+    <p class="why">Un <b>bateau rapide</b> — un grand bateau capable de plus de 40 km/h — ajoute, de jour comme de nuit, <b>deux feux scintillants jaunes</b> superposés à 1 m l'un de l'autre. Il n'a <b>aucune priorité</b> pour autant.</p>
+  </div>
+  <div class="def">
+    <p class="term">La menue embarcation à moteur</p>
+    <p>Les mêmes feux, un cran moins forts : le feu de mât peut être <b>clair</b> au lieu de puissant, les feux de côté <b>ordinaires</b>, et ils peuvent être <b>réunis dans une même lanterne</b> à la proue.</p>
+    <p>Autre option : remplacer le feu de mât par un <b>feu blanc visible de tous les côtés</b> — et alors le feu de poupe <b>n'est plus porté</b>, puisque le blanc éclaire déjà l'arrière.</p>
+    <p>Et pour une menue embarcation <b>non pontée</b>, de <b>moins de 7 m</b>, dont la vitesse ne dépasse pas <b>13 km/h</b> : <b>un seul feu blanc visible de tous les côtés</b> suffit.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Le feu blanc unique a <b>trois conditions</b>, pas une : moins de 7 m, <b>et</b> 13 km/h au plus, <b>et</b> non pontée. Le Kat-a-Mar fait 7,55 m et 30 nœuds : il porte ses feux de côté, quoi qu'on en dise au ponton.</p>
+  </div>
+
+  <h3>Le voilier qui fait route</h3>
+  <div class="def">
+    <p class="term">Pas de feu de mât</p>
+    <p>Un voilier <b>à la voile</b> porte ses <b>feux de côté</b> et son <b>feu de poupe</b> — <b>jamais de feu de mât</b>. Vu de l'avant, un voilier n'est que rouge et vert ; vu de l'arrière, il n'est qu'un blanc. C'est à ça qu'on le reconnaît de nuit.</p>
+    <p>Un <b>grand voilier</b> porte en plus, en tête de mât, <b>deux feux superposés visibles de tous les côtés : rouge au-dessus, vert en dessous</b>.</p>
+    <p>Une <b>menue embarcation à voile</b> peut réunir feux de côté et feu de poupe <b>dans une même lanterne en tête de mât</b>. Si elle fait moins de 7 m, un feu blanc visible de tous les côtés suffit — et, en cas de risque d'abordage, elle montre un <b>second feu blanc</b> pour attirer l'attention.</p>
+  </div>
+  <div class="def">
+    <p class="term">À la voile et au moteur en même temps</p>
+    <p>Dès qu'un voilier fait tourner son moteur, il <b>devient un bateau à moteur</b> : de nuit il allume son <b>feu de mât</b>, de jour il hisse un <b>cône noir, pointe en bas</b>, le plus haut possible.</p>
+    <p class="why">Et il <b>perd</b> sa priorité de voilier : c'est le sens même du cône.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Le cône est <b>noir</b> et pointe <b>en bas</b>. La pointe en haut, c'est la marque d'épi du chapitre 2. La couleur bleue, ce sont les matières dangereuses. À l'examen, le dessin est petit : lis la couleur et le sens de la pointe avant de répondre.</p>
+  </div>
+
+  <h3>Les convois</h3>
+  <figure class="anim live" id="outil-convois">
+    <p class="atitle">⚙ Outil : les feux des convois, vus de dessus</p>
+    <div class="opt quatre" id="cv-btns">
+      <button type="button" data-cv="remorque">Convoi remorqué</button>
+      <button type="button" data-cv="pousse">Convoi poussé</button>
+      <button type="button" data-cv="couple">Formation à couple</button>
+      <button type="button" data-cv="assiste">Bateau assisté</button>
+    </div>
+    <svg viewBox="0 0 460 190" role="img" aria-label="Un convoi vu de dessus avec ses feux de nuit et ses marques de jour">
+      <rect x="0" y="0" width="460" height="190" class="f-nuit"/>
+      <g id="cv-scene"></g>
+      <text x="452" y="182" class="t-nuit" text-anchor="end">avant →</text>
+    </svg>
+    <p class="cap" id="cv-cap"></p>
+  </figure>
+  <table class="pan-tab">
+    <thead><tr><th>Convoi</th><th>Nuit, puis jour</th></tr></thead>
+    <tbody>
+      <tr><td>Remorqueur</td><td><b>Deux feux de mât superposés</b> à l'avant, à 1 m l'un de l'autre (<b>trois</b> s'il y a plusieurs remorqueurs) ; feux de côté ; à l'arrière, un <b>feu jaune</b> à la place du feu de poupe blanc. Jour : un <b>cylindre jaune</b> bordé en haut et en bas d'une bande noire et d'une bande blanche.</td></tr>
+      <tr><td>Remorqué</td><td>Un <b>feu blanc visible de tous les côtés</b>, à 5 m (4 m jusqu'à 40 m de long). Jour : un <b>ballon jaune</b>. Plus de 110 m : <b>deux</b> feux, un à l'avant, un à l'arrière. Plus de deux bateaux accouplés : seuls les <b>bateaux extérieurs</b> les portent. Le <b>dernier</b> bateau du convoi porte en plus un <b>feu de poupe</b>.</td></tr>
+      <tr><td>Convoi poussé</td><td><b>Trois feux de mât en triangle</b> à l'avant du bateau de tête, feux de côté sur la partie la plus large, <b>trois feux de poupe</b> alignés sur le pousseur. <b>Pas de marque de jour.</b> Jusqu'à 110 m × 12 m, il compte comme un bateau à moteur isolé.</td></tr>
+      <tr><td>Formation à couple</td><td>Un <b>feu de mât sur chaque bateau</b> — un bateau non motorisé peut le remplacer par un feu blanc visible de tous les côtés — feux de côté <b>à l'extérieur</b> de la formation, un feu de poupe sur chaque bateau. Pas de marque de jour.</td></tr>
+      <tr><td>Assisté</td><td>Un bateau motorisé, un convoi poussé ou une formation à couple <b>aidé par un autre bateau motorisé</b> hisse de jour un <b>ballon jaune</b> ; les feux de poupe du pousseur assisté deviennent <b>jaunes</b>.</td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>Jaune à l'arrière = il y a quelque chose derrière.</b> Le feu de poupe jaune du remorqueur te dit qu'un câble et une barge suivent, dans le noir. Ne passe jamais entre un feu de poupe jaune et le feu blanc qui le suit.</p>
+  </div>
+
+  <h3>Les signaux particuliers</h3>
+  <figure class="anim live" id="outil-marques">
+    <p class="atitle">⚙ Outil : les marques et feux particuliers</p>
+    <div class="panneaux" id="mq-grille"></div>
+    <p class="cap" id="mq-cap">Touche une marque pour lire ce qu'elle signale.</p>
+  </figure>
+  <table class="pan-tab">
+    <thead><tr><th>Situation</th><th>Signal</th></tr></thead>
+    <tbody>
+      <tr><td>Bac</td><td>Nuit : un <b>feu vert</b> au-dessus d'un <b>feu blanc</b>, visibles de tous les côtés, à 5 m. Jour : un <b>ballon vert</b>. Un bac <b>naviguant librement</b> ajoute ses feux de route.</td></tr>
+      <tr><td>Bateau à passagers de moins de 20 m</td><td>Jour : un <b>bicône jaune</b>. Il compte comme un <b>grand bateau</b> pour les priorités.</td></tr>
+      <tr><td>Matières dangereuses</td><td><b>Un</b> cône bleu pointe en bas / un feu bleu : matières <b>inflammables</b>. <b>Deux</b> : nocives pour la <b>santé</b>. <b>Trois</b> : <b>explosives</b>. Dans un convoi, c'est le pousseur qui les porte, et seulement le nombre le plus élevé.</td></tr>
+      <tr><td>Prioritaire aux écluses</td><td>Une <b>flamme rouge</b> à l'avant.</td></tr>
+      <tr><td>Incapable de manœuvrer</td><td>Nuit : un <b>feu rouge balancé</b>, visible de tous les côtés — une menue embarcation peut balancer un feu blanc. Jour : un <b>pavillon rouge balancé</b>. Plus les signaux sonores.</td></tr>
+      <tr><td>Au stationnement</td><td>Un <b>feu blanc</b> visible de tous les côtés, du côté de la passe, à 3 m au moins. Une menue embarcation : un feu blanc à l'endroit le plus visible. Dispense dans les zones désignées, le long d'une rive éclairée, ou à un endroit sûr.</td></tr>
+      <tr><td>Engin au travail, échoué ou coulé</td><td>Côté où le passage est <b>libre</b> : <b>deux feux verts</b> superposés. Côté où il ne l'est <b>pas</b> : <b>un feu rouge</b>. S'il faut le protéger des remous : <b>rouge au-dessus, blanc en dessous</b>.</td></tr>
+      <tr><td>Contrôle, incendie, secours</td><td>Un <b>feu bleu scintillant</b> visible de tous les côtés, de jour comme de nuit.</td></tr>
+      <tr><td>Bateau rapide</td><td><b>Deux feux scintillants jaunes</b> superposés — et aucune priorité.</td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p><b>Les distances « 10, 50, 100 m » des matières dangereuses</b> que donne ton manuel ne sont pas dans l'article des feux et marques : ce sont des distances de <b>stationnement</b>, à ne pas confondre avec les cônes eux-mêmes. À l'examen, la question porte presque toujours sur le <b>nombre de cônes</b> et ce qu'il signifie.</p>
+  </div>
+
+  <h3>Ce qui vient du RIPAM — et que tu reverras au module 2</h3>
+  <p>Ton manuel glisse dans ce chapitre plusieurs signaux qui n'existent <b>pas</b> dans le règlement des eaux intérieures : ils viennent du <b>RIPAM</b>, le règlement pour prévenir les abordages <b>en mer</b>, qui fait le programme du brevet général. Je te les laisse ici, avec les moyens mnémotechniques du manuel, parce qu'ils tombent — mais sache d'où ils viennent.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Navire</th><th>Signaux RIPAM (en mer)</th></tr></thead>
+    <tbody>
+      <tr><td>Non maître de sa manœuvre</td><td>Jour : <b>deux boules noires</b> superposées. Nuit : <b>deux feux rouges</b> superposés, plus feux de côté et de poupe s'il a de l'erre. « <i>J'ai les boules, mon bateau est en panne.</i> » Le plus haut niveau de privilège.</td></tr>
+      <tr><td>Capacité de manœuvre restreinte</td><td>Jour : <b>boule – bicône – boule</b>. Nuit : <b>rouge – blanc – rouge</b>, plus les feux de route s'il fait route. Côté obstrué : deux boules / deux rouges ; côté libre : deux bicônes / deux verts. « <i>J'ai les boules, mais pas trop.</i> »</td></tr>
+      <tr><td>Handicapé par son tirant d'eau</td><td>Jour : un <b>cylindre noir</b>. Nuit : <b>trois feux rouges</b> superposés. « <i>La barrique est pleine de rouge.</i> »</td></tr>
+      <tr><td>Échoué</td><td>Jour : <b>trois boules</b>. Nuit : feux de mouillage plus <b>deux feux rouges</b>.</td></tr>
+      <tr><td>En pêche</td><td>Jour : <b>deux cônes réunis par la pointe</b>. Nuit, chalutier : <b>vert sur blanc</b> ; autre pêche : <b>rouge sur blanc</b>. « <i>Chaluter = vert.</i> »</td></tr>
+      <tr><td>Pilote</td><td>Jour : pavillon <b>H</b>, blanc et rouge. Nuit : <b>blanc sur rouge</b> en tête de mât. « <i>Casquette blanche, nez rouge.</i> »</td></tr>
+      <tr><td>Chasseur de mines</td><td>Jour : <b>trois boules</b> en triangle. Nuit : <b>trois feux verts</b> en triangle. Ne pas approcher à moins de 1 000 m.</td></tr>
+      <tr><td>Plongée</td><td>Pavillon <b>A</b> du code international. Ne pas approcher à moins de 100 m.</td></tr>
+    </tbody>
+  </table>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement — et ce que je n'ai pas pu vérifier</div>
+    <p>Les feux de base, les marques et leurs dimensions, le bateau à moteur, le voilier, les menues embarcations, les trois convois, les matières dangereuses, le bateau à passagers et le bac sont repris <b>mot pour mot</b> du Règlement général de police pour la navigation sur les eaux intérieures, articles 3.01 à 3.16. Pour le stationnement, l'incapacité de manœuvrer, les engins au travail et le feu bleu scintillant, je me suis appuyé sur le texte frère de la <b>Meuse mitoyenne</b>, dont la numérotation est différente.</p>
+    <p>Je n'ai <b>pas</b> pu lire le texte de la flamme rouge des bateaux prioritaires aux écluses (art. 3.17), ni celui de la plongée (art. 3.36) : les documents officiels s'arrêtent avant. Le manuel les donne, la planche officielle du SPF en confirme l'existence, mais je ne te cite pas une phrase que je n'ai pas lue.</p>
+    <p>Enfin, le texte belge connaît un bateau « <b>incapable de manœuvrer</b> » — feu rouge balancé, pavillon rouge balancé — mais <b>pas</b> le « navire non maître de sa manœuvre » à deux boules, ni le « handicapé par son tirant d'eau » : ceux-là sont du RIPAM.</p>
+    <p class="art">Règlement général de police pour la navigation sur les eaux intérieures, art. 1.01, 3.01, 3.03, 3.04, 3.08 à 3.16 ; Règlement de la navigation sur la Meuse mitoyenne, art. 3.18, 3.20, 3.27, 3.35, 3.45.</p>
+  </div>
+
+  <div class="keep">
+    <p class="kt">À retenir du chapitre 5</p>
+    <p><b>Mât 225°, côtés 112,5° chacun, poupe 135°</b> — mât + poupe = 360°.<br>
+    <b>Rouge et vert ensemble</b> : il vient vers toi. <b>Un seul blanc</b> : il s'éloigne, ou il est petit, ou il est à l'arrêt.<br>
+    <b>Voilier à la voile</b> : pas de feu de mât. <b>Voile et moteur</b> : cône noir pointe en bas, et il devient un bateau à moteur.<br>
+    <b>Remorqueur</b> : deux feux de mât, poupe jaune, cylindre jaune. <b>Remorqué</b> : un blanc 360°, ballon jaune. <b>Poussé</b> : trois feux en triangle, trois à l'arrière, rien de jour.<br>
+    <b>Cônes bleus</b> : 1 inflammable, 2 santé, 3 explosif. <b>Bicône jaune</b> : passagers, grand bateau. <b>Ballon vert</b> : bac.<br>
+    <b>Marques</b> : ballon 0,60 — cône 0,60 — cylindre et bicône 0,80.</p>
+  </div>
+</section>
+
+<section id="qcm-ch5">
+  <p class="kicker">Chapitre 5</p>
+  <h2>Les questions des feux et marques</h2>
+  <p>Vingt-huit questions, en trois catégories : les feux de route, les marques et convois, et les signaux particuliers.</p>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="B">
+    <p class="qn">QCM 93</p>
+    <p class="qt">Le feu de mât éclaire un secteur de :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>135°</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>225°</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>360°</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est le feu de poupe.</li>
+      <li class="ok"><b>B</b> — juste : depuis l'avant jusqu'à 22°30' sur l'arrière du travers, de chaque bord.</li>
+      <li class="ko"><b>C</b> — faux : c'est le feu « visible de tous les côtés ».</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="A">
+    <p class="qn">QCM 94</p>
+    <p class="qt">Chaque feu de côté couvre :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>112°30', depuis l'avant jusqu'à 22°30' sur l'arrière du travers</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>180°, tout un bord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>90°, de l'avant au travers</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Les deux ensemble font 225°, comme le feu de mât.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ko"><b>C</b> — faux : le secteur dépasse le travers de 22°30'.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="C">
+    <p class="qn">QCM 95</p>
+    <p class="qt">De nuit, tu vois un feu vert et un feu rouge côte à côte, un blanc au-dessus. Le bateau :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>s'éloigne de toi</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>te présente son travers</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>vient vers toi, au moteur</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : de l'arrière tu ne verrais qu'un blanc.</li>
+      <li class="ko"><b>B</b> — faux : du travers tu ne verrais qu'un seul feu de côté.</li>
+      <li class="ok"><b>C</b> — juste. Les deux feux de côté ne se voient ensemble que depuis l'avant ; le blanc au-dessus, c'est le feu de mât d'un bateau à moteur.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="C">
+    <p class="qn">QCM 96</p>
+    <p class="qt">Tu ne vois qu'un feu vert. Le bateau :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>vient droit sur toi</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>passe de ta droite vers ta gauche</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>passe de ta gauche vers ta droite, tu es sur son tribord</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : tu verrais aussi le rouge.</li>
+      <li class="ko"><b>B</b> — faux : ce serait le rouge.</li>
+      <li class="ok"><b>C</b> — juste. Le vert est à tribord ; si tu le vois seul, tu es sur son tribord, et sa proue pointe vers ta droite.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="B">
+    <p class="qn">QCM 97</p>
+    <p class="qt">Le feu de mât d'un grand bateau à moteur est placé à une hauteur d'au moins :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>3 m, et 2 m jusqu'à 40 m de long</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>5 m, et 4 m jusqu'à 40 m de long</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>8 m, sans exception</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste, et les feux de côté sont au moins 1 m plus bas.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="A">
+    <p class="qn">QCM 98</p>
+    <p class="qt">Un bateau à moteur de plus de 110 m doit porter :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un second feu de mât, derrière le premier, au moins 3 m plus haut</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux feux de poupe</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>des feux de côté doublés</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Les bateaux plus courts peuvent le porter ; au-delà de 110 m, ils le doivent.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="A">
+    <p class="qn">QCM 99</p>
+    <p class="qt">Une menue embarcation à moteur peut ne porter qu'un seul feu blanc visible de tous les côtés si :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>elle est non pontée, fait moins de 7 m et ne dépasse pas 13 km/h</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>elle fait moins de 20 m</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>elle navigue de jour</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : trois conditions, toutes les trois.</li>
+      <li class="ko"><b>B</b> — faux : à 19 m, elle porte feux de côté et feu de mât ou blanc 360°.</li>
+      <li class="ko"><b>C</b> — faux : de jour, par bonne visibilité, elle ne porte aucun feu.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="C">
+    <p class="qn">QCM 100</p>
+    <p class="qt">Un voilier qui fait route à la voile seule porte de nuit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un feu de mât, des feux de côté et un feu de poupe</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un seul feu blanc visible de tous les côtés</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>des feux de côté et un feu de poupe, sans feu de mât</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le feu de mât est celui d'un bateau à moteur.</li>
+      <li class="ko"><b>B</b> — seulement s'il fait moins de 7 m.</li>
+      <li class="ok"><b>C</b> — juste. Vu de l'avant, un voilier n'est que rouge et vert.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="B">
+    <p class="qn">QCM 101</p>
+    <p class="qt">Un voilier fait route à la voile et au moteur en même temps. De jour, il hisse :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un ballon noir</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un cône noir, pointe en bas</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un cône bleu, pointe en bas</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste. Et il perd sa priorité de voilier : il est devenu un bateau à moteur.</li>
+      <li class="ko"><b>C</b> — faux : le bleu annonce des matières dangereuses.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Feux de route" data-bonne="A">
+    <p class="qn">QCM 102</p>
+    <p class="qt">Un grand voilier porte en tête de mât deux feux superposés visibles de tous les côtés :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>rouge au-dessus, vert en dessous</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>vert au-dessus, rouge en dessous</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>deux feux blancs</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste.</li>
+      <li class="ko"><b>B</b> — faux, c'est l'inverse — et vert sur blanc, ce serait un chalutier.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : feux de route</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="C">
+    <p class="qn">QCM 103</p>
+    <p class="qt">Le diamètre minimal d'un ballon est de :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>0,80 m</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>1 m</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>0,60 m</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est la valeur du manuel, et elle est fausse : 0,80 m est la hauteur du cylindre et du bicône.</li>
+      <li class="ko"><b>B</b> — faux : 1 m, c'est le côté des panneaux et pavillons.</li>
+      <li class="ok"><b>C</b> — juste, article 3.04.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="B">
+    <p class="qn">QCM 104</p>
+    <p class="qt">Le cylindre a pour dimensions minimales :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>0,60 m de haut, 0,60 m de diamètre</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>0,80 m de haut, 0,50 m de diamètre</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>1 m de haut, 1 m de diamètre</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est le cône.</li>
+      <li class="ok"><b>B</b> — juste, comme le bicône.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="B">
+    <p class="qn">QCM 105</p>
+    <p class="qt">De jour, le remorqueur en tête d'un convoi porte :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un ballon jaune</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un cylindre jaune bordé de bandes noire et blanche</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un cône noir</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le ballon jaune est sur le <b>remorqué</b>.</li>
+      <li class="ok"><b>B</b> — juste, les bandes blanches aux extrémités.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="A">
+    <p class="qn">QCM 106</p>
+    <p class="qt">De nuit, à l'arrière, le remorqueur porte :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un feu jaune, à la place du feu de poupe blanc</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux feux blancs</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un feu rouge</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Jaune à l'arrière : il y a quelque chose derrière.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="C">
+    <p class="qn">QCM 107</p>
+    <p class="qt">Combien de feux de mât superposés porte un remorqueur, quand plusieurs remorqueurs tirent le convoi ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>trois</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est un bateau isolé.</li>
+      <li class="ko"><b>B</b> — c'est le remorqueur seul.</li>
+      <li class="ok"><b>C</b> — juste : chacun en porte trois.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="A">
+    <p class="qn">QCM 108</p>
+    <p class="qt">Un bateau remorqué porte, de nuit et de jour :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un feu blanc visible de tous les côtés, et un ballon jaune</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>des feux de côté, et un cylindre jaune</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un feu jaune, et un ballon noir</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Deux feux s'il dépasse 110 m, et un feu de poupe en plus pour le dernier du convoi.</li>
+      <li class="ko"><b>B</b> — faux : c'est le remorqueur qui a le cylindre.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="B">
+    <p class="qn">QCM 109</p>
+    <p class="qt">Un convoi poussé porte de nuit, à l'avant :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux feux de mât superposés</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>trois feux de mât en triangle</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un feu blanc et un feu jaune</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est le remorqueur.</li>
+      <li class="ok"><b>B</b> — juste : triangle à base horizontale, le feu du haut à 5 m au moins — et trois feux de poupe alignés sur le pousseur.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="C">
+    <p class="qn">QCM 110</p>
+    <p class="qt">De jour, un convoi poussé montre :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un ballon jaune</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un cylindre jaune</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>aucune marque</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — seulement s'il est <b>assisté</b> par un autre bateau motorisé.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste, et la formation à couple non plus.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="A">
+    <p class="qn">QCM 111</p>
+    <p class="qt">Dans une formation à couple, les feux de côté sont placés :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>à l'extérieur de la formation</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>sur chaque bateau, à leur place habituelle</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>sur le seul bateau motorisé</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : la formation se signale comme un seul bateau large.</li>
+      <li class="ko"><b>B</b> — faux : on verrait un rouge au milieu d'un ensemble.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Marques et convois" data-bonne="C">
+    <p class="qn">QCM 112</p>
+    <p class="qt">Un bateau à passagers de moins de 20 m montre de jour :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un ballon vert</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un cône bleu</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un bicône jaune</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, c'est le bac.</li>
+      <li class="ko"><b>B</b> — faux, ce sont les matières dangereuses.</li>
+      <li class="ok"><b>C</b> — juste. Et il compte comme un grand bateau dans les priorités.</li>
+    </ul></div>
+    <p class="cat">Catégorie : marques et convois</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="B">
+    <p class="qn">QCM 113</p>
+    <p class="qt">Deux cônes bleus pointe en bas signalent :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>des matières inflammables</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>des matières nocives pour la santé</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>des matières explosives</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est un cône.</li>
+      <li class="ok"><b>B</b> — juste.</li>
+      <li class="ko"><b>C</b> — c'est trois cônes.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="A">
+    <p class="qn">QCM 114</p>
+    <p class="qt">Un convoi poussé transporte, dans deux barges, des matières inflammables et des matières explosives. Il montre :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>trois cônes bleus, sur le pousseur</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un cône sur une barge et trois sur l'autre</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>quatre cônes sur le pousseur</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : c'est le pousseur qui porte la signalisation, et seulement celle du nombre le plus élevé.</li>
+      <li class="ko"><b>B</b> — faux : les barges ne la portent pas.</li>
+      <li class="ko"><b>C</b> — faux : on n'additionne pas.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="C">
+    <p class="qn">QCM 115</p>
+    <p class="qt">De nuit, un bac ne naviguant pas librement montre :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un feu blanc au-dessus d'un feu vert</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux feux rouges superposés</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un feu vert au-dessus d'un feu blanc, visibles de tous les côtés</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — l'ordre est inversé.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste : le vert à 1 m environ au-dessus du blanc, et un ballon vert de jour.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="B">
+    <p class="qn">QCM 116</p>
+    <p class="qt">Un bateau incapable de manœuvrer montre, en eaux intérieures belges :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux boules noires le jour, deux feux rouges la nuit</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un pavillon rouge balancé le jour, un feu rouge balancé la nuit</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>trois feux rouges superposés</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est le « navire non maître de sa manœuvre » du <b>RIPAM</b>, en mer.</li>
+      <li class="ok"><b>B</b> — juste. Une menue embarcation peut balancer un feu blanc. Et elle émet les signaux sonores prévus.</li>
+      <li class="ko"><b>C</b> — c'est le « handicapé par son tirant d'eau » du RIPAM.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="A">
+    <p class="qn">QCM 117</p>
+    <p class="qt">Un engin au travail dans le chenal montre deux feux verts superposés d'un côté. Cela veut dire :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>que le passage est libre de ce côté</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>que le passage est interdit de ce côté</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>qu'il transporte des matières dangereuses</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Du côté non libre, c'est un feu rouge.</li>
+      <li class="ko"><b>B</b> — faux, c'est le rouge.</li>
+      <li class="ko"><b>C</b> — faux : ce serait bleu.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="B">
+    <p class="qn">QCM 118</p>
+    <p class="qt">Un feu bleu scintillant visible de tous les côtés signale :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un bateau transportant des matières inflammables</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un bateau des autorités de contrôle, des pompiers ou des secours</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un bateau de plongée</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : le feu bleu des matières dangereuses est <b>fixe</b>, pas scintillant.</li>
+      <li class="ok"><b>B</b> — juste, de jour comme de nuit.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="C">
+    <p class="qn">QCM 119</p>
+    <p class="qt">Deux feux scintillants jaunes superposés, de jour comme de nuit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un bateau prioritaire, à qui tu dois t'écarter</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un bateau de pêche</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un bateau rapide — qui n'a aucune priorité</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est le piège : ces feux avertissent, ils ne donnent aucun droit.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste : un grand bateau capable de plus de 40 km/h.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="A">
+    <p class="qn">QCM 120</p>
+    <p class="qt">Lequel de ces signaux vient du RIPAM — le règlement en mer — et non du règlement intérieur belge ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>trois feux rouges superposés, navire handicapé par son tirant d'eau</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le cône noir pointe en bas du voilier au moteur</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>les cônes bleus des matières dangereuses</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Le règlement intérieur ne connaît pas ce navire ; tu le reverras au module 2.</li>
+      <li class="ko"><b>B</b> — faux : article 3.12.</li>
+      <li class="ko"><b>C</b> — faux : article 3.14.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux particuliers</p>
+  </div>
+</section>
+
 <section id="bilan">
   <p class="kicker">Bilan</p>
   <h2>Ton score</h2>
@@ -3151,7 +3903,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   <div class="ctl" style="display:flex;gap:8px;flex-wrap:wrap;">
     <button type="button" id="qcm-raz" class="menu-item" style="width:auto;padding:10px 16px;">Recommencer les questions</button>
   </div>
-  <p class="note">92 questions pour les quatre premiers chapitres. Le module en comptera plus de cent une fois les onze chapitres écrits.</p>
+  <p class="note">120 questions pour les cinq premiers chapitres — l'objectif des cent est dépassé, et les six chapitres suivants en ajouteront encore.</p>
 </section>
 </main>
 
@@ -4400,6 +5152,302 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
         s === 3 ? "· · · · ·   « impossible sans danger »" : "";
     }
   });
+})();
+
+</script>
+<script>
+/* ===== ANIMATIONS DU CHAPITRE 5 — FEUX ET MARQUES ===== */
+(function(){
+  "use strict";
+
+  /* ======================= ce que tu vois selon l'angle ================= */
+  (function(){
+    var fig = document.getElementById("outil-secteurs");
+    if(!fig) return;
+    var R = 118, RS = 112;           /* orbite de « toi », rayon des secteurs */
+    var curseur = document.getElementById("sc-angle");
+    var sortie = document.getElementById("sc-angle-o");
+    var cap = document.getElementById("sc-cap");
+    var type = "moteur";
+
+    /* Un point sur le cercle, à un relèvement donné : 0° = la proue, en haut,
+       et on tourne dans le sens des aiguilles d'une montre. */
+    function pt(deg, r){
+      var a = deg * Math.PI / 180;
+      return [(r * Math.sin(a)).toFixed(1), (-r * Math.cos(a)).toFixed(1)];
+    }
+    function secteurFeu(a, b){
+      var p1 = pt(a, RS), p2 = pt(b, RS);
+      var bal = ((b - a + 360) % 360) > 180 ? 1 : 0;
+      return "M 0 0 L " + p1[0] + " " + p1[1] + " A " + RS + " " + RS + " 0 " + bal + " 1 "
+           + p2[0] + " " + p2[1] + " Z";
+    }
+    var q = function(s){ return fig.querySelector(s); };
+    q("#sc-mat").setAttribute("d", secteurFeu(247.5, 112.5));    /* 225° autour de la proue */
+    q("#sc-vert").setAttribute("d", secteurFeu(0, 112.5));        /* tribord */
+    q("#sc-rouge").setAttribute("d", secteurFeu(247.5, 360));     /* bâbord */
+    q("#sc-poupe").setAttribute("d", secteurFeu(112.5, 247.5));   /* 135° autour de la poupe */
+    q("#sc-tout").setAttribute("d", "M 0 -" + RS + " A " + RS + " " + RS + " 0 1 1 0 " + RS
+                                    + " A " + RS + " " + RS + " 0 1 1 0 -" + RS + " Z");
+
+    function visible(t, deg){
+      var avant = (deg <= 112.5 || deg >= 247.5);
+      var v = { mat:false, vert:false, rouge:false, poupe:false, tout:false };
+      if(t === "petit"){ v.tout = true; return v; }
+      v.vert = (deg <= 112.5);
+      v.rouge = (deg >= 247.5 || deg === 0);   /* 0° ferme aussi le secteur bâbord */
+      v.poupe = (deg > 112.5 && deg < 247.5);
+      v.mat = (t === "moteur") && avant;
+      return v;
+    }
+    function lireFeux(t, deg, v){
+      var feux = [];
+      if(v.mat) feux.push("un <b>blanc</b> en haut (feu de mât)");
+      if(v.vert) feux.push("un <b>vert</b>");
+      if(v.rouge) feux.push("un <b>rouge</b>");
+      if(v.poupe) feux.push("un <b>blanc</b> bas (feu de poupe)");
+      if(v.tout) feux.push("un <b>seul blanc</b>, visible de tous les côtés");
+      var ce = "Tu vois " + feux.join(", ") + ". ";
+      if(t === "petit")
+        return ce + "Une menue embarcation lente — ou un bateau au stationnement : <b>ce feu ne te dit rien de son cap</b>. Ralentis et regarde s'il bouge.";
+      if(deg <= 10 || deg >= 350)
+        return ce + (t === "moteur"
+          ? "Rouge <b>et</b> vert ensemble, un blanc au-dessus : <b>un bateau à moteur qui vient droit sur toi</b>."
+          : "Rouge <b>et</b> vert, <b>sans blanc au-dessus</b> : <b>un voilier qui vient droit sur toi</b>.");
+      if(v.vert)
+        return ce + "Tu es sur son <b>tribord</b>. Sa proue pointe vers <b>ta droite</b> : il passe de ta gauche vers ta droite."
+          + (t === "voile" ? " Pas de blanc : c'est un voilier." : "");
+      if(v.rouge)
+        return ce + "Tu es sur son <b>bâbord</b>. Sa proue pointe vers <b>ta gauche</b> : il passe de ta droite vers ta gauche."
+          + (t === "voile" ? " Pas de blanc : c'est un voilier." : "");
+      return ce + "Tu es <b>derrière</b> lui : un seul feu blanc, bas. <b>Il s'éloigne.</b> Même silhouette pour un voilier ou un bateau à moteur.";
+    }
+    function majSecteurs(){
+      var deg = parseInt(curseur.value, 10) || 0;
+      sortie.textContent = deg + "°";
+      q("#sc-toi").setAttribute("transform", "rotate(" + deg + ") translate(0,-" + R + ")");
+      var v = visible(type, deg);
+      /* secteurs présents selon le type */
+      q("#sc-mat").style.display = (type === "moteur") ? "" : "none";
+      q("#sc-vert").style.display = q("#sc-rouge").style.display = q("#sc-poupe").style.display
+        = (type === "petit") ? "none" : "";
+      q("#sc-tout").style.display = (type === "petit") ? "" : "none";
+      /* lampes : allumées si tu les vois, éteintes sinon, absentes si le type ne les porte pas */
+      function lampeVue(id, porte, vue){
+        var l = q(id);
+        l.style.display = porte ? "" : "none";
+        l.setAttribute("opacity", vue ? "1" : "0.22");
+      }
+      lampeVue("#sc-l-mat", type === "moteur" || type === "petit", v.mat || v.tout);
+      lampeVue("#sc-l-vert", type !== "petit", v.vert);
+      lampeVue("#sc-l-rouge", type !== "petit", v.rouge);
+      lampeVue("#sc-l-poupe", type !== "petit", v.poupe);
+      q("#sc-rel").textContent = "relèvement " + deg + "°";
+      cap.innerHTML = lireFeux(type, deg, v);
+    }
+    curseur.addEventListener("input", majSecteurs);
+    fig.querySelectorAll("[data-t]").forEach(function(b){
+      b.addEventListener("click", function(){
+        type = b.dataset.t;
+        fig.querySelectorAll("[data-t]").forEach(function(x){ x.classList.toggle("on", x === b); });
+        majSecteurs();
+      });
+    });
+    fig.querySelector('[data-t="moteur"]').classList.add("on");
+    majSecteurs();
+  })();
+
+  /* ========================= les feux se posent un à un ================= */
+  window.kamAnim("anim-moteur", {
+    etat0: { mat:0, vert:0, rouge:0, poupe:0, mat2:0, cotes:0, tout:0, titre:"" },
+    capDepart: "Un grand bateau à moteur, la nuit, vu de son tribord. Touche « Lecture ».",
+    images: [
+      { cap: "D'abord le <b>feu de mât</b> : blanc, puissant, à l'avant sur l'axe du bateau, à <b>5 m</b> au moins "
+           + "— 4 m suffisent jusqu'à 40 m de long.",
+        d: 900, etat: { mat:1, cotes:1, titre:"le grand bateau à moteur" } },
+      { cap: "Les <b>feux de côté</b> : vert à tribord, rouge à bâbord, à la même hauteur, <b>au moins 1 m plus bas</b> "
+           + "que le feu de mât. Vu d'ici, tu ne vois que le <b>vert</b> : le rouge est de l'autre bord, masqué.",
+        d: 1100, etat: { vert:1, rouge:0.25 } },
+      { cap: "Le <b>feu de poupe</b> : blanc, à l'arrière, sur 135°. Mât et poupe se complètent : d'où que tu regardes, "
+           + "tu vois toujours un blanc.",
+        d: 1000, etat: { poupe:1 } },
+      { cap: "<b>Plus de 110 m</b> : un <b>second feu de mât</b>, derrière le premier et <b>au moins 3 m plus haut</b>. "
+           + "Obligatoire au-delà de 110 m, permis en dessous.",
+        d: 1200, etat: { mat2:1 } },
+      { cap: "La <b>menue embarcation</b> à moteur porte les mêmes feux, un cran moins forts : feu de mât <b>clair</b>, "
+           + "feux de côté <b>ordinaires</b>, qui peuvent être <b>réunis dans une même lanterne</b> à la proue.",
+        d: 1100, etat: { mat2:0, cotes:0, titre:"la menue embarcation à moteur" } },
+      { cap: "Autre option pour elle : un <b>feu blanc visible de tous les côtés</b> à la place du feu de mât. "
+           + "Alors le feu de poupe <b>n'est plus porté</b> : le blanc éclaire déjà l'arrière.",
+        d: 1200, etat: { mat:0, poupe:0, tout:1 } },
+      { cap: "Et la plus petite — <b>non pontée</b>, <b>moins de 7 m</b>, <b>13 km/h</b> au plus : "
+           + "<b>un seul feu blanc</b> visible de tous les côtés. Trois conditions, pas une.",
+        d: 1000, etat: { vert:0, rouge:0, titre:"non pontée, < 7 m, ≤ 13 km/h" } }
+    ],
+    rendu: function(e, fig){
+      var q = function(s){ return fig.querySelector(s); };
+      q("#mo-f-mat").setAttribute("opacity", e.mat.toFixed(2));
+      q("#mo-f-vert").setAttribute("opacity", e.vert.toFixed(2));
+      q("#mo-f-rouge").setAttribute("opacity", e.rouge.toFixed(2));
+      q("#mo-f-poupe").setAttribute("opacity", e.poupe.toFixed(2));
+      q("#mo-f-mat2").setAttribute("opacity", e.mat2.toFixed(2));
+      q("#mo-mat2").setAttribute("opacity", e.mat2.toFixed(2));
+      q("#mo-f-tout").setAttribute("opacity", e.tout.toFixed(2));
+      q("#mo-cotes").setAttribute("opacity", e.cotes.toFixed(2));
+      q("#mo-titre").textContent = e.titre;
+    }
+  });
+
+  /* ============================ les convois ============================= */
+  (function(){
+    var fig = document.getElementById("outil-convois");
+    if(!fig) return;
+    var scene = fig.querySelector("#cv-scene");
+    var cap = document.getElementById("cv-cap");
+
+    function coque(x, y, w, h, cls){
+      /* vue de dessus, avant à droite */
+      return '<path d="M ' + x + ' ' + y + ' L ' + (x + w - 14) + ' ' + y + ' L ' + (x + w) + ' ' + (y + h / 2)
+           + ' L ' + (x + w - 14) + ' ' + (y + h) + ' L ' + x + ' ' + (y + h) + ' Z" class="' + (cls || "f-coque-nuit") + '"/>';
+    }
+    function feu(x, y, cls, r){ return '<circle cx="' + x + '" cy="' + y + '" r="' + (r || 5) + '" class="' + cls + '"/>'; }
+    function lab(x, y, s, anc){
+      return '<text x="' + x + '" y="' + y + '" class="t-nuit"' + (anc ? ' text-anchor="' + anc + '"' : "") + '>' + s + "</text>";
+    }
+    var SCENES = {
+      remorque: {
+        svg: coque(290, 70, 120, 50) + coque(60, 78, 130, 36)
+           + '<line x1="190" y1="96" x2="290" y2="95" class="s-cable"/>'
+           /* remorqueur : deux feux de mât (superposés, donc dessinés côte à côte ici), côtés, poupe jaune */
+           + feu(372, 95, "l-blanc") + feu(386, 95, "l-blanc")
+           + feu(340, 118, "l-vert") + feu(340, 72, "l-rouge") + feu(296, 95, "l-jaune")
+           /* remorqué : un blanc 360°, et le feu de poupe du dernier bateau */
+           + feu(125, 96, "l-blanc") + feu(66, 96, "l-blanc")
+           + lab(452, 150, "remorqueur : 2 feux de mât · poupe jaune", "end")
+           + lab(125, 140, "remorqué : 1 blanc 360°", "middle")
+           + lab(66, 62, "+ feu de poupe du dernier", "start"),
+        t: "<b>Convoi remorqué.</b> Le remorqueur porte <b>deux feux de mât superposés</b> (trois s'il y a plusieurs remorqueurs), "
+         + "ses feux de côté, et à l'arrière un <b>feu jaune</b> au lieu du blanc. Le remorqué porte <b>un feu blanc visible de "
+         + "tous les côtés</b> — deux s'il dépasse 110 m — et le dernier bateau ajoute un feu de poupe. "
+         + "De jour : <b>cylindre jaune</b> sur le remorqueur, <b>ballon jaune</b> sur le remorqué."
+      },
+      pousse: {
+        svg: coque(40, 60, 90, 70, "f-coque-nuit") + coque(130, 50, 140, 90) + coque(270, 50, 140, 90)
+           /* trois feux de mât en triangle à l'avant de la barge de tête */
+           + feu(392, 80, "l-blanc") + feu(380, 100, "l-blanc") + feu(392, 110, "l-blanc")
+           /* feux de côté sur la partie la plus large, près du pousseur */
+           + feu(150, 140, "l-vert") + feu(150, 50, "l-rouge")
+           /* trois feux de poupe alignés sur le pousseur */
+           + feu(46, 78, "l-blanc") + feu(46, 95, "l-blanc") + feu(46, 112, "l-blanc")
+           + lab(380, 158, "3 feux de mât en triangle", "middle")
+           + lab(46, 160, "3 feux de poupe alignés", "start"),
+        t: "<b>Convoi poussé.</b> <b>Trois feux de mât en triangle</b> à l'avant du bateau de tête, le feu du haut à 5 m au moins ; "
+         + "feux de côté sur la <b>partie la plus large</b>, au plus près du pousseur ; <b>trois feux de poupe alignés</b> sur le "
+         + "pousseur. <b>Aucune marque de jour.</b> Jusqu'à 110 m × 12 m, il compte comme un bateau à moteur isolé."
+      },
+      couple: {
+        svg: coque(120, 40, 220, 48) + coque(120, 100, 220, 48)
+           + feu(318, 64, "l-blanc") + feu(318, 124, "l-blanc")
+           + feu(230, 40, "l-rouge") + feu(230, 148, "l-vert")
+           + feu(126, 64, "l-blanc") + feu(126, 124, "l-blanc")
+           + lab(318, 28, "un feu de mât sur chaque bateau", "middle")
+           + lab(230, 172, "feux de côté à l'EXTÉRIEUR", "middle"),
+        t: "<b>Formation à couple</b> — des bateaux accouplés bord à bord, dont un au moins est motorisé. "
+         + "<b>Un feu de mât sur chaque bateau</b> (un non motorisé peut le remplacer par un blanc visible de tous les côtés), "
+         + "les feux de côté <b>à l'extérieur</b> de la formation, un feu de poupe sur chacun. Pas de marque de jour."
+      },
+      assiste: {
+        svg: coque(150, 60, 220, 60) + coque(60, 120, 90, 36)
+           + feu(350, 90, "l-blanc") + feu(260, 120, "l-vert") + feu(260, 60, "l-rouge") + feu(156, 90, "l-jaune")
+           + '<circle cx="330" cy="40" r="11" class="m-jaune"/>'
+           + lab(330, 24, "ballon jaune, de jour", "middle")
+           + lab(105, 172, "le bateau qui assiste", "middle")
+           + lab(156, 140, "poupe jaune", "middle"),
+        t: "<b>Bateau assisté.</b> Un bateau motorisé, un convoi poussé ou une formation à couple <b>aidé par un autre bateau "
+         + "motorisé</b> hisse de jour un <b>ballon jaune</b> à l'avant, à 5 m au moins ; de nuit, ses feux de poupe deviennent "
+         + "<b>jaunes</b>. Le bateau qui assiste porte, lui, les feux d'un remorqueur."
+      }
+    };
+    function montrerConvoi(k){
+      var s = SCENES[k];
+      if(!s) return;
+      fig.querySelectorAll("[data-cv]").forEach(function(b){ b.classList.toggle("on", b.dataset.cv === k); });
+      scene.innerHTML = s.svg;
+      cap.innerHTML = s.t;
+    }
+    fig.querySelectorAll("[data-cv]").forEach(function(b){
+      b.addEventListener("click", function(){ montrerConvoi(b.dataset.cv); });
+    });
+    montrerConvoi("remorque");
+  })();
+
+  /* ====================== les marques et feux particuliers ============== */
+  (function(){
+    var grille = document.getElementById("mq-grille");
+    var cap = document.getElementById("mq-cap");
+    if(!grille || !cap) return;
+
+    var JOUR = '<rect x="4" y="4" width="92" height="92" class="p-face"/><rect x="4" y="4" width="92" height="92" class="p-filet"/>';
+    var NUIT = '<rect x="4" y="4" width="92" height="92" class="f-nuit"/><rect x="4" y="4" width="92" height="92" class="p-filet"/>';
+    function cone(cx, cy, cls, basEnBas){
+      /* pointe en bas par défaut (matières dangereuses, voile + moteur) */
+      return basEnBas
+        ? '<path d="M ' + (cx - 16) + ' ' + (cy - 14) + ' L ' + (cx + 16) + ' ' + (cy - 14) + ' L ' + cx + ' ' + (cy + 16) + ' Z" class="' + cls + '"/>'
+        : '<path d="M ' + (cx - 16) + ' ' + (cy + 14) + ' L ' + (cx + 16) + ' ' + (cy + 14) + ' L ' + cx + ' ' + (cy - 16) + ' Z" class="' + cls + '"/>';
+    }
+    function lampeMarque(cx, cy, cls){ return '<circle cx="' + cx + '" cy="' + cy + '" r="9" class="' + cls + '"/>'; }
+    function matMarque(){ return '<line x1="50" y1="18" x2="50" y2="86" class="s-mat-nuit"/>'; }
+
+    var MARQUES = [
+      { c:"Ballon jaune", n:"Remorqué de jour — ou bateau <b>assisté</b> par un autre bateau motorisé.",
+        d: JOUR + matMarque() + '<circle cx="50" cy="40" r="17" class="m-jaune"/>' },
+      { c:"Cylindre jaune", n:"Le <b>remorqueur</b>, de jour : jaune, bordé en haut et en bas d'une bande noire et d'une bande blanche, les blanches aux extrémités.",
+        d: JOUR + matMarque() + '<rect x="36" y="22" width="28" height="46" class="m-jaune"/>'
+            + '<rect x="36" y="22" width="28" height="5" class="m-blanc"/><rect x="36" y="27" width="28" height="5" class="m-noir"/>'
+            + '<rect x="36" y="58" width="28" height="5" class="m-noir"/><rect x="36" y="63" width="28" height="5" class="m-blanc"/>' },
+      { c:"Cône noir, pointe en bas", n:"Un <b>voilier qui fait route aussi au moteur</b>. Il est devenu un bateau à moteur et perd sa priorité de voilier.",
+        d: JOUR + matMarque() + cone(50, 44, "m-noir", true) },
+      { c:"Bicône jaune", n:"<b>Bateau à passagers de moins de 20 m</b>. Il compte comme un grand bateau pour les priorités.",
+        d: JOUR + matMarque() + cone(50, 32, "m-jaune", true) + cone(50, 62, "m-jaune", false) },
+      { c:"Ballon vert", n:"Un <b>bac</b>, de jour.", d: JOUR + matMarque() + '<circle cx="50" cy="40" r="17" class="m-vert"/>' },
+      { c:"Un cône bleu", n:"Matières <b>inflammables</b>. De nuit : un feu bleu.", d: JOUR + matMarque() + cone(50, 44, "m-bleu", true) },
+      { c:"Deux cônes bleus", n:"Matières <b>nocives pour la santé</b>. De nuit : deux feux bleus.",
+        d: JOUR + matMarque() + cone(50, 30, "m-bleu", true) + cone(50, 64, "m-bleu", true) },
+      { c:"Trois cônes bleus", n:"Matières <b>explosives</b>. De nuit : trois feux bleus. Dans un convoi, c'est le pousseur qui les porte, et seulement le nombre le plus élevé.",
+        d: JOUR + matMarque() + cone(50, 24, "m-bleu", true) + cone(50, 50, "m-bleu", true) + cone(50, 76, "m-bleu", true) },
+      { c:"Flamme rouge", n:"Bateau <b>prioritaire aux écluses</b>, à l'avant. Donné par ton manuel et par la planche officielle ; je n'ai pas pu lire l'article (3.17) lui-même.",
+        d: JOUR + matMarque() + '<path d="M 50 24 L 88 36 L 50 48 Z" class="m-rouge"/>' },
+      { c:"Pavillon rouge balancé", n:"Bateau <b>incapable de manœuvrer</b>, de jour. De nuit : un feu rouge balancé — une menue embarcation peut balancer un feu blanc.",
+        d: JOUR + matMarque() + '<path d="M 50 22 L 86 28 L 50 50 Z" class="m-rouge"/><path d="M 30 70 q 20 -10 40 0" class="s-balance"/>' },
+      { c:"Feu bleu scintillant", n:"<b>Autorités de contrôle, pompiers, secours</b> — de jour comme de nuit.",
+        d: NUIT + lampeMarque(50, 50, "l-bleu") + '<text x="50" y="86" class="t-nuit" text-anchor="middle" font-size="11">scintillant</text>' },
+      { c:"Deux verts / un rouge", n:"<b>Engin au travail, bateau échoué ou coulé</b> : deux feux verts superposés du côté où le passage est <b>libre</b>, un feu rouge du côté où il ne l'est <b>pas</b>.",
+        d: NUIT + lampeMarque(30, 36, "l-vert") + lampeMarque(30, 64, "l-vert") + lampeMarque(70, 50, "l-rouge")
+            + '<text x="30" y="90" class="t-nuit" text-anchor="middle" font-size="10">libre</text>'
+            + '<text x="70" y="90" class="t-nuit" text-anchor="middle" font-size="10">fermé</text>' },
+      { c:"Rouge sur blanc", n:"Engin au travail <b>à protéger des remous</b> : feu rouge au-dessus, feu blanc en dessous.",
+        d: NUIT + lampeMarque(50, 34, "l-rouge") + lampeMarque(50, 66, "l-blanc") },
+      { c:"Un feu blanc 360°", n:"Bateau <b>au stationnement</b> — du côté de la passe, à 3 m au moins. Ou une menue embarcation lente, ou un remorqué : ce feu seul ne dit rien du cap.",
+        d: NUIT + lampeMarque(50, 50, "l-blanc") },
+      { c:"Vert sur blanc", n:"Un <b>bac</b>, de nuit : feu vert à 1 m environ au-dessus d'un feu blanc, visibles de tous les côtés.",
+        d: NUIT + lampeMarque(50, 34, "l-vert") + lampeMarque(50, 66, "l-blanc") },
+      { c:"Rouge sur vert", n:"Un <b>grand voilier</b> faisant route : en tête de mât, rouge au-dessus, vert en dessous, visibles de tous les côtés.",
+        d: NUIT + lampeMarque(50, 34, "l-rouge") + lampeMarque(50, 66, "l-vert") },
+      { c:"Deux scintillants jaunes", n:"Un <b>bateau rapide</b> — capable de plus de 40 km/h. Il n'a <b>aucune priorité</b>.",
+        d: NUIT + lampeMarque(50, 34, "l-jaune") + lampeMarque(50, 66, "l-jaune")
+            + '<text x="50" y="92" class="t-nuit" text-anchor="middle" font-size="10">scintillants</text>' }
+    ];
+    grille.innerHTML = MARQUES.map(function(m){
+      return '<button type="button"><svg viewBox="0 0 100 100" role="img" aria-label="' + m.c + '">' + m.d
+           + '</svg><span class="code">' + m.c + "</span></button>";
+    }).join("");
+    grille.querySelectorAll("button").forEach(function(b, i){
+      b.addEventListener("click", function(){
+        grille.querySelectorAll("button").forEach(function(x, k){ x.classList.toggle("on", k === i); });
+        cap.innerHTML = "<b>" + MARQUES[i].c + "</b> — " + MARQUES[i].n;
+      });
+    });
+  })();
 })();
 
 </script>
