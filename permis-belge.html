@@ -580,7 +580,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v5 · cours officiels · cours amélioré : module 1, chapitres 1 à 6</div>
+  <div class="ver">SOMMAIRE · v6 · cours officiels · cours amélioré : module 1, chapitres 1 à 6</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -656,13 +656,13 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
         </span>
         <span class="etat">…</span>
       </a>
-      <a class="menu-item pret" href="./manuel-vhf-ibpt-2025.pdf" target="_blank" rel="noopener">
+      <a class="menu-item pret tome-local" data-local="./manuel-vhf-ibpt-2025.pdf" href="#" target="_blank" rel="noopener" aria-disabled="true">
         <span class="num">R</span>
         <span class="txt">
           <span class="t">Radiotéléphonie — IBPT</span>
           <span class="s">Manuel officiel de préparation au certificat restreint de radiotéléphoniste, version 2025</span>
         </span>
-        <span class="etat">PDF</span>
+        <span class="etat">…</span>
       </a>
       <p class="od-etat" id="od-etat" aria-live="polite"></p>
     </div>
@@ -1135,7 +1135,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
       var ouvrir = cible.hidden;
       cible.hidden = !ouvrir;
       b.setAttribute("aria-expanded", ouvrir ? "true" : "false");
-      if(ouvrir && b.dataset.groupe === "officiel") odPreparer(false);
+      if(ouvrir && b.dataset.groupe === "officiel"){ locPreparer(); odPreparer(false); }
     });
   });
 
@@ -1298,7 +1298,55 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
       }
     });
   });
-  window.kamOneDriveCours = { preparer: odPreparer };   /* pour le banc d'essai */
+  /* ------------------------------------------- le manuel radio (dans le dépôt)
+     Ouvert par son adresse, il s'affichait DANS l'application, plein écran,
+     sans aucun bouton pour revenir : sur iPhone, une page du même site
+     s'ouvre dans la fenêtre de l'app. On l'ouvre donc comme les documents
+     de l'écran Documents, qui se referment bien : une copie en mémoire
+     (adresse « blob: »), préparée à l'avance pour que le toucher l'ouvre
+     sans attente. Hors ligne, le service worker fournit le fichier déjà vu. */
+  var locaux = Array.prototype.slice.call(document.querySelectorAll("[data-local]"));
+  var copiesLocales = {};
+  var locEnCours = null;
+  function locPreparer(){
+    if(locEnCours) return locEnCours;
+    locEnCours = (async function(){
+      for(var i = 0; i < locaux.length; i++){
+        var a = locaux[i], src = a.dataset.local;
+        if(copiesLocales[src]) continue;
+        a.querySelector(".etat").textContent = "…";
+        try{
+          var r = await fetch(src);
+          if(!r.ok) throw new Error("HTTP " + r.status);
+          var blob = await r.blob();
+          var url = URL.createObjectURL(new Blob([blob], { type: "application/pdf" }));
+          copiesLocales[src] = url;
+          a.setAttribute("href", url);
+          a.removeAttribute("aria-disabled");
+          a.querySelector(".etat").textContent = "Ouvrir";
+        }catch(e){
+          a.setAttribute("aria-disabled", "true");
+          a.setAttribute("href", "#");
+          a.querySelector(".etat").textContent = "Réseau";
+        }
+      }
+    })();
+    locEnCours.then(function(){ locEnCours = null; }, function(){ locEnCours = null; });
+    return locEnCours;
+  }
+  locaux.forEach(function(a){
+    a.addEventListener("click", function(ev){
+      if(copiesLocales[a.dataset.local]) return;      /* prête : le lien s'ouvre tout seul */
+      ev.preventDefault();
+      locPreparer().then(function(){
+        odMessage(copiesLocales[a.dataset.local]
+          ? "Le manuel radio est prêt : touche-le encore une fois."
+          : "Le manuel radio n'a pas pu être chargé. Vérifie le réseau et réessaie.");
+      });
+    });
+  });
+
+  window.kamOneDriveCours = { preparer: odPreparer, local: locPreparer };   /* pour le banc d'essai */
 })();
 
 </script>
