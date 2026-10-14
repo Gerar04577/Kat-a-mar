@@ -1,11 +1,12 @@
-/* Kat-a-Mar — service worker — v31
+/* Kat-a-Mar — service worker — v32
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v31";
+const CACHE = "kat-a-mar-v32";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
 const FILES = ["./", "./index.html", "./permis-hauturier.html",
                "./permis-belge.html", "./permis-belge-m1.html",
-               "./permis-belge-erreurs.html",
+               "./permis-belge-erreurs.html", "./permis-belge-qcm-fluvial.html",
+               "./certificat-vhf.html",
                "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {

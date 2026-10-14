@@ -1,0 +1,4227 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>QCM Fluvial · Permis Belge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+
+/* Layout: one airy column; each notion = definition, why, diagram, formula, worked examples, trap, exercise */
+:root{
+  --bg:#f2f5f6; --paper:#ffffff; --ink:#14263a; --muted:#566a7c; --line:#cfd9e0;
+  --sea:#e1eef6; --navy:#1d4e89; --red:#c0392b; --green:#1f7a3f; --amber:#a86400; --water:#9cc6ea; --land:#cfe3b0; --sun:#f6c453; --warm:#d1443a; --cold:#2f6fd0; --occl:#7a4fc2; --warmair:#f2b24a; --coldair:#7fb2e6; --cloud:#c9cdd1; --cloudd:#7c838a; --rain:#3b7ad8;
+  --display:"Zilla Slab",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.7;padding:0 16px}
+main{max-width:680px;margin:0 auto;padding-block:32px 72px;display:flex;flex-direction:column;gap:56px}
+header{display:flex;flex-direction:column;gap:10px}
+header h1{font-family:var(--display);font-size:2.1rem;line-height:1.15;margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+.ver{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+section{display:flex;flex-direction:column;gap:22px;min-width:0}
+.kicker{margin:0;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+h2{font-family:var(--display);font-size:1.6rem;line-height:1.2;margin:-14px 0 0;text-wrap:balance;border-bottom:2px solid var(--line);padding-bottom:10px}
+h3{font-family:var(--display);font-size:1.15rem;margin:8px 0 -8px;color:var(--navy)}
+p{margin:0;max-width:62ch}
+ul,ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+.def{background:var(--sea);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.def .term{font-weight:700;color:var(--navy);font-size:1.05rem}
+.why{color:var(--muted)}
+.why b{color:var(--ink)}
+.formula{font-family:var(--mono);font-size:1.15rem;text-align:center;background:var(--paper);border:2px solid var(--navy);border-radius:10px;padding:14px 12px;max-width:none;font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.ctitle{font-weight:700;font-size:1.05rem}
+.given-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px}
+.given{gap:4px}
+.steps{list-style:decimal;gap:8px}
+.steps li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.steps .what{min-width:0}
+.steps .res{font-family:var(--mono);font-weight:500;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.result{font-weight:700;color:var(--green);margin-top:4px}
+.trap{border-left:4px solid var(--red);padding:12px 16px;background:var(--paper);border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:4px}
+.trap-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);font-weight:700}
+details.ex{border:2px dashed var(--navy);border-radius:12px;padding:14px 18px;display:block}
+details.ex summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details.ex[open] summary{margin-bottom:10px}
+details.ex[open]{display:flex;flex-direction:column;gap:10px}
+.fig{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px}
+svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+.t-m{fill:var(--muted)} .t-n{fill:var(--navy)} .t-r{fill:var(--red)} .t-g{fill:var(--green)} .t-a{fill:var(--amber)}
+.s-ink{stroke:var(--ink)} .s-n{stroke:var(--navy)} .s-r{stroke:var(--red)} .s-g{stroke:var(--green)} .s-a{stroke:var(--amber)} .s-l{stroke:var(--line)}
+.f-sea{fill:var(--sea)} .f-paper{fill:var(--paper)} .f-n{fill:var(--navy)} .f-r{fill:var(--red)} .f-g{fill:var(--green)} .f-a{fill:var(--amber)} .f-ink{fill:var(--ink)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td:first-child{font-family:var(--mono);font-weight:500;color:var(--navy);white-space:nowrap}
+.plus{color:var(--green);font-weight:700} .minus{color:var(--red);font-weight:700}
+nav.toc ol{gap:6px}
+nav.toc a{color:var(--navy)}
+.memo{font-family:var(--mono);font-size:.95rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;white-space:pre;overflow-x:auto;line-height:1.9}
+
+.sym{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.sym p{max-width:none}
+.sym b{font-family:var(--mono);color:var(--navy);display:inline-block;min-width:3.2em}
+.note{font-size:.85rem;color:var(--muted)}
+td.hl{background:var(--amber);color:var(--paper);font-weight:700;border-radius:4px}
+
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px}
+.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+.anim.live .ctl label{display:flex;align-items:center;gap:8px;flex:1 1 100%;min-width:0;font-size:.9rem;color:var(--muted);font-weight:700}
+.anim.live .ctl label input{flex:1 1 0;width:0;min-width:60px;accent-color:var(--navy)}
+.anim.live .ctl label output{font-family:var(--mono);font-size:.8rem;color:var(--navy);flex:0 0 auto;text-align:right;white-space:nowrap}
+.anim.live .ctl button.on{background:var(--sea)}
+figure.anim{margin:0;min-width:0}
+.anim .ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--navy)}
+.anim .ctl .tm{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.opt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt button{font:inherit;font-weight:700;font-size:.92rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:7px 10px;cursor:pointer;min-width:0}
+.opt button.on{background:var(--sea)}
+.opt button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cards div{background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0}
+.cards .l{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.cards .v{font-size:.95rem;font-weight:700;line-height:1.35}
+.keep{border:2px solid var(--green);border-radius:10px;padding:12px 14px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.keep .kt{font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--green);font-weight:700;margin:0}
+.lead{color:var(--muted)}
+.ok{color:var(--green);font-weight:700} .ko{color:var(--red);font-weight:700}
+.mto-sub{display:flex;flex-direction:column;gap:18px;min-width:0}
+.mto-sub td:first-child,.cmp td:first-child,.symt td:first-child{font-family:var(--body);font-weight:700;white-space:normal}
+.mto .memo{font-size:.85rem}
+svg.sy{width:40px;height:30px;margin:0}
+.qcm .opts{list-style:none;padding-left:0}
+.qcm .rep{padding-left:1.1em}
+.qcm .rep li.ok>b:first-child{color:var(--green)} .qcm .rep li.ko>b:first-child{color:var(--red)}
+.qcm .rep li{color:var(--ink);font-weight:400}
+.tp{gap:8px}.tp .tpt{font-weight:700;font-size:1.05rem}
+.tpx{background:var(--sea);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.tpx p{max-width:none}.tko span,.tok span{display:inline-block;font-weight:700;margin-right:6px}
+.tko span{color:var(--red)}.tok span{color:var(--green)}.tpk{color:var(--navy)}
+@media (max-width:560px){.mto .tw table{font-size:.82rem}.mto .tw td,.mto .tw th{padding:7px 4px;-webkit-hyphens:auto;hyphens:auto}}
+
+
+.anim{background:var(--paper);border:2px solid var(--navy);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:10px}
+.anim .atitle{font-weight:700;color:var(--navy);font-size:.95rem}
+.anim svg{max-width:560px}
+.anim .cap{min-height:4.6em;background:var(--sea);border-radius:8px;padding:10px 12px;font-size:.98rem;line-height:1.5;max-width:none}
+.anim .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.anim .ctl button{font:inherit;font-weight:700;font-size:.95rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:8px 14px;cursor:pointer}
+.anim .ctl button.pri{background:var(--navy);color:var(--paper)}
+.anim .ctl button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.anim .ctl .cnt{margin-left:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.tool-prot path.body{fill:var(--paper);fill-opacity:.82;stroke:var(--ink);stroke-width:1.5}
+.tool-prot line{stroke:var(--ink)}
+.tool-prot text{font-size:9px;fill:var(--ink)}
+.tool-comp line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.tool-comp circle{fill:var(--amber)}
+
+
+.rappel{background:var(--paper);border:2px solid var(--amber);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.rappel .rt{font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.rappel p{font-family:var(--mono);font-size:.95rem;max-width:none;line-height:1.6}
+.etapes{display:flex;flex-direction:column;gap:14px}
+.etape{border-left:4px solid var(--navy);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.etape .et{font-weight:700;color:var(--navy)}
+.etape .ef{font-family:var(--mono);font-size:.92rem;color:var(--muted)}
+.etape .ec{font-family:var(--mono);font-size:1rem;font-weight:500}
+.etape .es{font-size:.95rem}
+
+</style>
+<style>
+/* ===== AJOUTS PROPRES AU PERMIS BELGE =====
+   Reprend les jetons du permis hauturier ; n'ajoute que ce qui lui manque :
+   les sous-menus, l'encadré « ce que dit le règlement », le QCM interactif,
+   la recherche à occurrences et le réglage de taille. */
+:root{
+  --ech:1;                 /* multiplicateur de taille, boutons A / A */
+  --h-kam:56px;            /* hauteur réelle de la barre « Retour », mesurée */
+  --surl:#ffe2a0; --surl-actif:#ffd0a3; --surl-trait:#e8690b;
+  font-size:calc(16px * var(--ech));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}}
+:root[data-theme="dark"]{ --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442; }
+body{ font-size:calc(18px * var(--ech)); }
+
+/* ---- sous-menus du sommaire ---- */
+.menus{ display:flex; flex-direction:column; gap:12px; }
+.menu-item{
+  /* sans box-sizing, width:100% + 18px de padding + 2px de bordure débordaient
+     de 40 px : la page du sommaire glissait latéralement sur l'iPhone. */
+  box-sizing:border-box;
+  display:flex; align-items:center; gap:14px; text-align:left;
+  background:var(--paper); border:2px solid var(--line); border-radius:14px;
+  padding:16px 18px; font:inherit; color:var(--ink); cursor:pointer;
+  text-decoration:none; width:100%;
+}
+.menu-item:active{ background:var(--sea); }
+.menu-item.pret{ border-color:var(--navy); }
+/* Un module pas encore écrit ne doit JAMAIS ressembler à un module prêt :
+   bordure en pointillé, teinte éteinte, et une étiquette qui le dit en toutes
+   lettres. Il répond quand même à l'appui, en expliquant ce qu'il contiendra —
+   une tuile muette se lit comme une panne. */
+.menu-item.avenir{
+  border-style:dashed; background:transparent; color:var(--muted);
+}
+.menu-item.avenir .t{ color:var(--muted); }
+.menu-item.avenir .num{ background:var(--bg); color:var(--muted); }
+.menu-item.avenir .etat{ color:var(--amber); font-weight:700; }
+.menu-item.avenir[aria-expanded="true"]{ border-style:solid; border-color:var(--amber); }
+.bientot{
+  margin:-6px 0 2px; padding:12px 16px; font-size:.95rem; color:var(--ink);
+  background:var(--sea); border-radius:12px; max-width:none;
+}
+.menu-item .num{
+  font-family:var(--mono); font-weight:700; font-size:1.3rem; color:var(--navy);
+  background:var(--sea); border-radius:11px; padding:10px 13px; flex:0 0 auto;
+}
+.menu-item .txt{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.menu-item .t{ font-family:var(--display); font-weight:700; font-size:1.2rem; }
+.menu-item .s{ color:var(--muted); font-size:.92rem; }
+.menu-item .etat{
+  margin-left:auto; flex:0 0 auto; font-family:var(--mono); font-size:.72rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.menu-item.pret .etat{ color:var(--green); }
+
+/* ---- sommaire interne d'un module ---- */
+.chapitres{ display:flex; flex-direction:column; gap:6px; list-style:none; padding-left:0; }
+.chapitres li{ display:flex; gap:10px; align-items:baseline; }
+.chapitres .n{ font-family:var(--mono); color:var(--navy); font-weight:700; flex:0 0 auto; }
+.chapitres a{ color:var(--ink); }
+.chapitres .avenir{ color:var(--muted); }
+
+/* ---- encadré « ce que dit le règlement » ---- */
+.regl{
+  border-left:4px solid var(--red); background:var(--paper);
+  border-radius:0 10px 10px 0; padding:14px 16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.regl .rh{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--red); font-weight:700;
+}
+.regl .art{ font-family:var(--mono); font-size:.85rem; color:var(--navy); }
+.regl p{ max-width:none; }
+
+/* ---- QCM interactif ---- */
+.qcm{
+  background:var(--paper); border:2px solid var(--navy); border-radius:12px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:12px;
+}
+.qcm .qn{
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--navy);
+}
+.qcm .qt{ font-weight:700; font-size:1.05rem; max-width:none; }
+.qcm .choix{ display:flex; flex-direction:column; gap:8px; }
+.qcm .choix button{
+  font:inherit; text-align:left; background:var(--bg); color:var(--ink);
+  border:1.5px solid var(--line); border-radius:10px; padding:11px 14px;
+  cursor:pointer; display:flex; gap:10px; align-items:flex-start;
+}
+.qcm .choix button .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qcm .choix button:active{ background:var(--sea); }
+.qcm .choix button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+.qcm .choix button.juste{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qcm .choix button.faux{ border-color:var(--red); background:color-mix(in srgb, var(--red) 10%, var(--paper)); }
+.qcm .choix button[disabled]{ cursor:default; }
+.qcm .corr{ display:flex; flex-direction:column; gap:8px; }
+.qcm .corr .verdict{ font-weight:700; }
+.qcm .corr .verdict.ok{ color:var(--green); }
+.qcm .corr .verdict.ko{ color:var(--red); }
+.qcm .corr ul{ list-style:none; padding-left:0; gap:7px; }
+.qcm .corr li{ font-size:.95rem; }
+.qcm .corr li b{ font-family:var(--mono); }
+.qcm .corr li.ok b{ color:var(--green); }
+.qcm .corr li.ko b{ color:var(--red); }
+.qcm .cat{
+  font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.score{
+  background:var(--sea); border-radius:12px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.score .big{ font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--navy); }
+.score .regle{ font-size:.88rem; color:var(--muted); }
+
+/* ---- barre de recherche (identique au permis hauturier) ---- */
+#kam-chercher{
+  position:sticky; top:var(--h-kam); z-index:40;
+  background:var(--bg); border-bottom:1.5px solid var(--line);
+  margin:-28px -16px 0; padding:12px 16px 10px;
+}
+#kam-chercher .ligne{ display:flex; gap:10px; align-items:stretch; max-width:680px; margin:0 auto; }
+#kam-chercher .boite{ position:relative; flex:1; min-width:0; }
+#kam-q{
+  width:100%; height:calc(56px * var(--ech));
+  font-family:var(--body); font-size:calc(19px * var(--ech)); font-weight:600;
+  color:var(--ink); background:var(--paper);
+  border:2px solid var(--line); border-radius:14px; padding:0 46px;
+}
+#kam-q::placeholder{ color:var(--muted); font-weight:400; }
+#kam-q:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px var(--sea); }
+#kam-chercher .loupe{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; pointer-events:none; color:var(--muted);
+}
+#kam-vider{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:var(--line); color:var(--ink); font-size:19px; line-height:1;
+  cursor:pointer; display:none;
+}
+#kam-vider.vu{ display:block; }
+#kam-chercher .fleches{ display:flex; gap:8px; }
+#kam-chercher .fleche{
+  width:calc(60px * var(--ech)); height:calc(56px * var(--ech));
+  border:2px solid var(--navy); border-radius:14px;
+  background:var(--paper); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; padding:0;
+}
+#kam-chercher .fleche svg{ width:28px; height:28px; }
+#kam-chercher .fleche:active{ background:var(--sea); }
+#kam-chercher .fleche:disabled{ opacity:.3; cursor:default; }
+#kam-chercher .fleche:focus-visible{ outline:3px solid var(--surl-trait); outline-offset:2px; }
+#kam-chercher .bas{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin:9px auto 0; min-height:26px; max-width:680px;
+}
+#kam-compteur{
+  font-family:var(--mono); font-weight:600; font-variant-numeric:tabular-nums;
+  font-size:calc(16px * var(--ech)); color:var(--muted); letter-spacing:.02em;
+}
+#kam-compteur b{ color:var(--surl-trait); font-size:calc(19px * var(--ech)); }
+#kam-compteur.rien{ color:var(--amber); }
+#kam-chercher .tailles{ display:flex; align-items:center; gap:6px; }
+#kam-chercher .tailles i{
+  font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-right:2px;
+}
+#kam-chercher .tbtn{
+  width:44px; height:38px; border:2px solid var(--line); border-radius:11px;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--body); font-weight:700; line-height:1; padding:0;
+}
+#kam-chercher .tbtn:active{ background:var(--sea); }
+#kam-chercher .tbtn:disabled{ opacity:.35; cursor:default; }
+#kam-chercher .tbtn.pt{ font-size:14px; }
+#kam-chercher .tbtn.gd{ font-size:21px; }
+mark.kam-occ{
+  background:var(--surl); color:inherit; border-radius:4px; padding:1px 2px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+@media (max-width:420px){ #kam-chercher .tailles i{ display:none; } }
+
+/* ---- habillage des schémas ---- */
+.f-ciel{ fill:var(--bg); }
+.f-terre{ fill:var(--land); }
+.f-eau{ fill:var(--water); }
+.f-mur{ fill:var(--cloudd); }
+.f-porte{ fill:var(--ink); }
+.f-coque{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; }
+.f-cabine{ fill:var(--sea); stroke:var(--ink); stroke-width:1.4; }
+.f-mat{ fill:var(--ink); }
+.s-cote{ stroke:var(--navy); stroke-width:1.6; }
+.s-amarre{ stroke:var(--red); stroke-width:2; stroke-linecap:round; }
+.t-lab{ font-family:var(--mono); font-size:10px; fill:var(--muted); }
+.cards .v{ font-weight:700; }
+.anim .cap .verdict-ok{ color:var(--green); font-weight:700; }
+.anim .cap .verdict-ko{ color:var(--red); font-weight:700; }
+
+
+/* ---- corrections d'affichage sur téléphone ----
+   Trouvées en regardant la page rendue, pas en lisant le code. */
+
+/* La pastille d'état passe sous le texte quand la largeur ne suffit plus. */
+@media (max-width:470px){
+  .menu-item{ flex-wrap:wrap; }
+  .menu-item .etat{ margin-left:0; width:100%; text-align:right; }
+}
+
+/* Les curseurs des animations : la valeur était coupée au bord du cadre.
+   Sur téléphone, le curseur passe sur sa propre ligne, pleine largeur. */
+@media (max-width:560px){
+  .anim.live .ctl label{ flex-wrap:wrap; }
+  .anim.live .ctl label input{ order:3; flex:1 1 100%; width:auto; min-width:0; }
+  .anim.live .ctl label output{ margin-left:auto; }
+}
+
+/* Deux flèches un peu moins larges : sans ça, « Chercher un mot… » était
+   tronqué dès 390 px de large. */
+@media (max-width:430px){
+  #kam-chercher .fleche{ width:calc(50px * var(--ech)); }
+  #kam-q{ padding-left:42px; padding-right:42px; }
+}
+
+/* La barre « Retour » et la barre de recherche sont collantes : sans marge de
+   défilement, tout ce qu'on rejoint par un lien ou par le score se retrouvait
+   caché dessous. */
+section[id], .score, .qcm, figure.anim, [id]{
+  scroll-margin-top: var(--h-collant, 170px);
+}
+
+/* Même précaution que sur le permis hauturier : au texte agrandi, un tableau
+   ne doit jamais entraîner toute la page de côté. */
+@media (max-width:620px){
+  main table{ display:block; width:max-content; max-width:100%; overflow-x:auto; }
+  main .steps .res, main .res{ white-space:normal; }
+}
+
+/* ---- habillage du chapitre 2 : balisage ---- */
+.f-rouge{ fill:var(--red); }
+.f-vert{ fill:var(--green); }
+.f-noir{ fill:#14263a; }
+.f-jaune{ fill:#f6c453; }
+.f-rose{ fill:var(--paper); stroke:var(--line); stroke-width:1.5; }
+.f-sain{ fill:var(--green); fill-opacity:.30; }
+.f-danger{ fill:var(--red); }
+.t-cote{ font-family:var(--mono); font-size:11px; font-weight:600; fill:var(--navy); }
+/* En thème sombre, le « noir » des bouées doit rester lisible sur fond sombre :
+   on l'éclaircit juste assez pour qu'il se détache, sans devenir gris. */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .f-noir{ fill:#5a6b80; }}
+:root[data-theme="dark"] .f-noir{ fill:#5a6b80; }
+
+/* ---- habillage du chapitre 3 : la signalisation ----
+   Un panneau garde ses VRAIES couleurs dans les deux thèmes : un panneau
+   blanc bordé de rouge reste blanc bordé de rouge, de jour comme de nuit.
+   On n'ajoute qu'un filet gris, pour qu'un panneau blanc ne disparaisse pas
+   sur fond sombre. Ces couleurs sont donc écrites en dur, volontairement. */
+.p-face{ fill:#ffffff; }
+.p-bleu{ fill:#1b5fae; }
+.p-vertf{ fill:#1b8a4b; }
+.p-rougef{ fill:#d7263d; }
+.p-jaunef{ fill:#f2c230; }
+.p-bord{ fill:none; stroke:#d7263d; stroke-width:6; }
+.p-filet{ fill:none; stroke:rgba(108,122,140,.65); stroke-width:1.4; }
+.p-barre{ stroke:#d7263d; stroke-width:7; stroke-linecap:round; }
+.p-pic{ fill:#14263a; }
+.p-picb{ fill:#ffffff; }
+.p-trait{ fill:none; stroke:#14263a; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-traitb{ fill:none; stroke:#ffffff; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-txt{ font-family:var(--mono); font-weight:700; fill:#14263a; }
+.p-txtb{ font-family:var(--mono); font-weight:700; fill:#ffffff; }
+
+/* la grille de l'explorateur de panneaux */
+/* « Recommandation » est un mot long : sous 140 px, il se faisait couper. */
+.opt.cinq{ grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); }
+.opt.cinq button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; }
+.panneaux{ display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:10px; }
+.panneaux button{
+  box-sizing:border-box; font:inherit; cursor:pointer; min-width:0;
+  background:var(--bg); border:2px solid var(--line); border-radius:11px;
+  padding:7px 6px 5px; display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.panneaux button.on{ border-color:var(--navy); background:var(--sea); }
+.panneaux button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+/* plus spécifique que « .anim svg », qui plafonne à 560 px */
+.panneaux button svg{ width:100%; max-width:66px; height:auto; display:block; }
+/* un nom long (« Pavillon rouge balancé ») doit s'enrouler dans sa case,
+   surtout au texte agrandi, au lieu d'en déborder. */
+.panneaux .code{
+  font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--navy);
+  max-width:100%; text-align:center; overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto;
+}
+
+/* les feux d'un ouvrage : des couleurs de lampe, pas des couleurs de thème */
+.f-eteint{ fill:#36404f; }
+.f-feurouge{ fill:#ff3b30; }
+.f-feuvert{ fill:#1fc45c; }
+.s-lampe{ stroke:#14263a; stroke-width:2; }
+
+/* Les tables de panneaux ont une colonne de texte long. Sans cette reprise,
+   la règle « main table { width:max-content } » les étirerait sur plusieurs
+   écrans de large au lieu de les laisser s'enrouler. */
+/* table-layout:fixed : la largeur est DONNÉE, donc le tableau ne peut plus
+   dépasser l'écran quoi qu'on mette dedans. Sans ça, la colonne des codes
+   (« E.5.4 à E.5.15 ») imposait une largeur minimale et entraînait toute la
+   page de côté, surtout au texte agrandi. */
+main table.pan-tab{ display:table; width:100%; table-layout:fixed; }
+main table.pan-tab th:first-child,
+main table.pan-tab td:first-child{ width:28%; white-space:normal; overflow-wrap:anywhere; }
+main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
+
+/* ---- habillage du chapitre 4 : les priorités ---- */
+/* l'étiquette au-dessus de chaque groupe de boutons de l'outil */
+.qlab{
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--muted); margin:2px 0 -4px;
+}
+/* « Courant : tu es montant » est long : les boutons doivent pouvoir
+   s'enrouler plutôt que se faire couper, comme au chapitre 3. */
+.opt.quatre{ grid-template-columns:repeat(auto-fit, minmax(152px, 1fr)); }
+.opt.trois{ grid-template-columns:repeat(auto-fit, minmax(132px, 1fr)); }
+.opt.deux{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.opt.quatre button, .opt.trois button, .opt.deux button{
+  overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+}
+/* la flèche orange de celui qui doit s'écarter */
+.s-ecart{ fill:none; stroke:#e8690b; stroke-width:3.5; stroke-linecap:round; }
+.f-ecart{ fill:#e8690b; }
+.t-ecart{ font-family:var(--mono); font-size:11px; font-weight:700; fill:#e8690b; }
+/* l'axe du chenal, et le feu blanc scintillant du panneau bleu */
+.s-axe{ stroke:var(--line); stroke-width:1.4; stroke-dasharray:7 7; }
+.f-feublanc{ fill:#ffffff; stroke:#8a6a10; stroke-width:1.5; }
+/* les voiliers de l'outil des amures */
+.f-voile{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; }
+.f-mat2{ stroke:var(--ink); stroke-width:2.4; }
+.s-vent{ stroke:var(--navy); stroke-width:2.2; stroke-linecap:round; }
+.f-vent{ fill:var(--navy); }
+
+/* ---- habillage du chapitre 5 : feux et marques ----
+   Les scènes de nuit gardent un fond sombre dans les DEUX thèmes : un feu
+   de navigation se lit sur du noir, pas sur du papier. */
+.f-nuit{ fill:#0e1a2b; }
+.f-eau-nuit{ fill:#13263d; }
+.f-coque-nuit{ fill:#2a3a52; stroke:#6b7f9c; stroke-width:1.4; }
+.f-cabine-nuit{ fill:#1f2e45; stroke:#6b7f9c; stroke-width:1.2; }
+.s-mat-nuit{ stroke:#8a9bb5; stroke-width:2.2; stroke-linecap:round; }
+.s-cote-nuit{ stroke:#8a9bb5; stroke-width:1.2; stroke-dasharray:4 3; }
+.s-cable{ stroke:#8a9bb5; stroke-width:1.6; stroke-dasharray:5 4; }
+.t-nuit{ font-family:var(--mono); font-size:10px; fill:#c7d2e3; }
+/* les lampes : couleur réelle et un halo, comme des feux dans la nuit */
+.l-blanc{ fill:#ffffff; stroke:rgba(255,255,255,.45); stroke-width:4; }
+.l-vert{ fill:#22e06a; stroke:rgba(34,224,106,.45); stroke-width:4; }
+.l-rouge{ fill:#ff4a3d; stroke:rgba(255,74,61,.45); stroke-width:4; }
+.l-jaune{ fill:#ffd23f; stroke:rgba(255,210,63,.45); stroke-width:4; }
+.l-bleu{ fill:#3b8bff; stroke:rgba(59,139,255,.5); stroke-width:4; }
+/* les secteurs de l'outil des angles */
+.sec-blanc{ fill:#ffffff; fill-opacity:.11; }
+.sec-vert{ fill:#22e06a; fill-opacity:.22; }
+.sec-rouge{ fill:#ff4a3d; fill-opacity:.22; }
+.s-orbite{ fill:none; stroke:#8a9bb5; stroke-width:1; stroke-dasharray:3 5; }
+.f-toi{ fill:#e8690b; stroke:#ffffff; stroke-width:1.5; }
+.t-toi{ font-family:var(--mono); font-size:9px; font-weight:700; fill:#ffffff; }
+/* les marques de jour, en couleurs réelles */
+.m-noir{ fill:#14263a; }
+.m-jaune{ fill:#f2c230; stroke:#8a6a10; stroke-width:1; }
+.m-bleu{ fill:#1b5fae; }
+.m-vert{ fill:#1b8a4b; }
+.m-rouge{ fill:#d7263d; }
+.m-blanc{ fill:#ffffff; }
+.s-balance{ fill:none; stroke:#d7263d; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:4 3; }
+
+/* ---- habillage du chapitre 6 : les signaux sonores ---- */
+.sn-bar{ fill:#3a4a63; stroke:#8a9bb5; stroke-width:1; }
+.sn-bar.on{ fill:#ffd23f; stroke:#ffffff; }
+.s-tete{ stroke:#e8690b; stroke-width:2.5; stroke-linecap:round; }
+.f-brume{ fill:#b9c4d2; }
+/* dix-sept boutons de signaux : deux colonnes, texte qui s'enroule */
+#sn-btns button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; text-align:left; }
+
+/* ---- la page des erreurs du manuel ---- */
+.err{
+  border-left:4px solid var(--red); background:var(--paper); border-radius:0 12px 12px 0;
+  padding:14px 16px; display:flex; flex-direction:column; gap:7px;
+}
+.err.ok{ border-left-color:var(--green); }
+.err .ek{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--red); font-weight:700;
+}
+.err.ok .ek{ color:var(--green); }
+.err .em{ color:var(--muted); font-style:italic; max-width:none; }
+.err .er{ max-width:none; }
+.err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.err .ea a{ color:var(--navy); font-weight:700; }
+
+/* ---- questions hors du programme officiel de l'examen ---- */
+.qcm[data-hors]{ border-style:dashed; border-color:var(--muted); }
+.badge-hors{
+  display:inline-block; margin-left:6px; padding:1px 7px; border-radius:6px;
+  background:var(--amber); color:var(--paper); font-weight:700; letter-spacing:.06em;
+}
+.score li.hors{ color:var(--muted); }
+/* encadré de matière hors examen : même bordure pointillée que les questions hors examen */
+.def.hors-def{ background:transparent; border:2px dashed var(--muted); }
+/* étiquettes d'un écart du manuel : article, programme, lieu d'application */
+.err .tg{ display:flex; flex-wrap:wrap; gap:6px; max-width:none; }
+.err .tg span{
+  font-family:var(--mono); font-size:.74rem; padding:2px 8px; border-radius:6px;
+  background:var(--sea); color:var(--navy); overflow-wrap:anywhere;
+}
+.err .tg span.oui{ background:var(--green); color:var(--paper); font-weight:700; }
+.err .tg span.non{ background:var(--amber); color:var(--paper); font-weight:700; }
+/* ---- les deux groupes du sommaire : cours officiels, cours amélioré ---- */
+.menu-item.groupe .num{ background:var(--navy); color:var(--paper); }
+.menu-item.groupe[aria-expanded="true"]{ background:var(--sea); }
+.sousmenu{
+  display:flex; flex-direction:column; gap:10px;
+  margin:-2px 0 4px 10px; padding-left:12px; border-left:3px solid var(--sea);
+}
+.sousmenu[hidden]{ display:none; }
+.menu-item.tome[aria-disabled="true"]{ border-style:dashed; }
+.menu-item.tome[aria-disabled="true"] .etat{ color:var(--amber); }
+.od-etat{ margin:0; font-size:.92rem; color:var(--muted); max-width:none; }
+.od-etat:empty{ display:none; }
+.od-etat a{ color:var(--navy); font-weight:700; }
+
+/* ===================== moteur des QCM (pages QCM des cours) ===================== */
+.qz-mini{ display:block; height:5px; background:var(--sea); border-radius:3px; margin-top:6px; overflow:hidden; }
+.qz-mini span{ display:block; height:100%; background:var(--green); }
+.qz-tete{ position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0 10px; }
+.qz-titre{ font-family:var(--display); font-weight:700; font-size:1.1rem; }
+.qz-compteur{ font-family:var(--mono); font-size:.9rem; margin:4px 0 6px; }
+.qz-ok{ color:var(--green); font-weight:700; } .qz-ko{ color:var(--red); font-weight:700; }
+.qz-barre{ height:10px; background:var(--sea); border-radius:6px; overflow:hidden; }
+.qz-barre span{ display:block; height:100%; background:var(--navy); transition:width .3s; }
+.qz-carte{ background:var(--paper); border:2px solid var(--line); border-radius:14px; padding:14px 16px; margin:10px 0; display:flex; flex-direction:column; gap:10px; }
+.qz-num{ margin:0; font-family:var(--mono); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.qz-q{ margin:0; font-weight:700; font-size:1.08rem; max-width:none; }
+.qz-dessin{ display:flex; justify-content:center; }
+.qz-svg{ width:100%; max-width:340px; height:auto; border-radius:10px; border:1px solid var(--line); }
+.qz-choix{ display:flex; flex-direction:column; gap:8px; }
+.qz-opt{ box-sizing:border-box; width:100%; display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; text-align:left;
+  font:inherit; color:var(--ink); background:var(--bg); border:2px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer; }
+.qz-opt .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qz-opt .qz-t{ flex:1 1 0; min-width:0; }
+.qz-opt.bonne{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qz-opt.fausse{ border-color:var(--red); background:color-mix(in srgb, var(--red) 12%, var(--paper)); }
+.qz-opt:disabled{ cursor:default; opacity:1; color:var(--ink); }
+.qz-e{ flex:1 0 100%; font-size:.92rem; color:var(--muted); }
+.qz-verdict{ margin:0; font-weight:800; } .qz-verdict.ok{ color:var(--green); } .qz-verdict.ko{ color:var(--red); }
+.qz-ex{ margin:0; max-width:none; }
+.qz-piege{ border-left:4px solid var(--amber); background:color-mix(in srgb, var(--amber) 12%, var(--paper)); padding:10px 12px; border-radius:0 10px 10px 0; }
+.qz-piege p{ margin:4px 0 0; max-width:none; }
+.qz-ref{ margin:0; font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.qz-tarep{ margin:0; color:var(--red); max-width:none; }
+.qz-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 20px; }
+.qz-btn{ font:inherit; font-weight:700; padding:12px 16px; border-radius:12px; border:2px solid var(--line); background:var(--paper); color:var(--ink); cursor:pointer; }
+.qz-btn.pri{ background:var(--navy); color:var(--paper); border-color:var(--navy); flex:1 1 auto; }
+.qz-resultat.ok{ color:var(--green); font-size:1.3rem; } .qz-resultat.ko{ color:var(--red); font-size:1.3rem; }
+.menu-item.qz-cat[disabled]{ cursor:default; }
+/* QCM : tableau des parties (3 colonnes courtes) */
+main table.qz-regle-tab th:first-child, main table.qz-regle-tab td:first-child{ width:55%; overflow-wrap:normal; }
+main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:first-child){ text-align:center; }
+/* sommaire : nom du cours, puis ses entrées « Cours » et « QCM » en retrait */
+.cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
+.cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
+.menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+
+</style>
+</head>
+<body>
+<div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
+<main>
+<header>
+  <div class="ver">QCM FLUVIAL · v1 · brevet restreint · Navigation 100 questions</div>
+  <h1>QCM du brevet restreint (fluvial)</h1>
+  <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
+</header>
+
+<section id="qz-regle">
+  <h2>La règle de l'examen</h2>
+  <table class="pan-tab qz-regle-tab">
+    <thead><tr><th>Partie</th><th>Q.</th><th>Min.</th></tr></thead>
+    <tbody>
+      <tr><td><b>Réglementation</b></td><td>12</td><td>6</td></tr>
+      <tr><td><b>Navigation</b></td><td>10</td><td>5</td></tr>
+      <tr><td><b>Sécurité et manœuvres</b></td><td>8</td><td>4</td></tr>
+      <tr><td><b>Total</b></td><td><b>30</b></td><td><b>18</b></td></tr>
+    </tbody>
+  </table>
+  <p class="why"><b>Q.</b> = nombre de questions · <b>Min.</b> = bonnes réponses exigées au minimum. Sur ordinateur, à choix multiple ; une bonne réponse = 1 point.</p>
+  <h3>Ce que comprend chaque partie</h3>
+  <p class="why"><b>Réglementation</b> — Règlement général de police de 2006 : définitions, priorités, signalisation et panneaux, feux et marques, signaux sonores, ponts et écluses, mauvaise visibilité, stationnement, détresse. Arrêté de 1935 (art. 1 §2-3 et 29), Meuse mitoyenne (6.33a-b, annexes II-III), canal de Bruxelles au Rupel (art. 3 §1 et 11).</p>
+  <p class="why"><b>Navigation</b> — Courant, montant et avalant. Balisage SIGNI : formes, couleurs, feux, signaux à terre, points dangereux, chenal, entrées de port. Sondeur, loch, notions de VHF. Carte des voies navigables, échelle, profondeurs, distances, symboles, préparation du voyage, DNG. Avis à la batellerie.</p>
+  <p class="why"><b>Sécurité et manœuvres</b> — Types de bateaux, propulsion, hélice, gouvernail, manœuvres de base. Bulletins météo. Moteurs, incendie, gaz, assèchement, engins de sauvetage, documents de bord, homme à la mer, signaux de détresse, pollution, électrolyse. Premiers secours.</p>
+  <div class="trap">
+    <div class="trap-h">Pour réussir : les DEUX conditions</div>
+    <p><b>60 % au total</b> (18 sur 30) <b>et au moins 50 % dans chaque partie</b> (6 sur 12, 5 sur 10, 4 sur 8). On peut avoir 75 % au total et être recalé, avec une seule partie sous 50 %.</p>
+  </div>
+  <p class="why">L'examen blanc de l'app compte <b>200 questions</b> dans les mêmes proportions — 80 en réglementation, 67 en navigation, 53 en sécurité et manœuvres — et il est noté avec les mêmes deux conditions.</p>
+  <p class="note">Vérifié sur 5 sources concordantes : la page officielle du SPF Mobilité (brevet restreint et général), sa copie française, Altair Formations, Nautibel et Flexi Sailing. Le contenu des parties vient de la matière d'examen officielle du SPF (version 1).</p>
+</section>
+
+<section id="qz">
+  <h2>Choisis</h2>
+  <div class="menus" id="qz-menu"></div>
+  <div id="qz-jeu" hidden></div>
+</section>
+</main>
+
+<script>
+/* ===== SOCLE COMMUN DES PAGES DU PERMIS BELGE =====
+   Trois choses : la recherche à occurrences, le réglage de la taille du
+   texte, et le moteur d'animations. Plus le QCM, qui compte par catégorie
+   parce que l'examen belge se rate catégorie par catégorie. */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------- outils */
+  function aplatir(s){
+    return Array.from(String(s)).map(function(c){
+      var b = (c.normalize("NFD").charAt(0) || c).toLowerCase();
+      return b.charAt(0) || c;       /* toujours UN caractère */
+    }).join("");
+  }
+  var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------- taille du texte */
+  var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
+  var bPlus = document.getElementById("kam-plus");
+  var bMoins = document.getElementById("kam-moins");
+  function mesurerBarre(){
+    var b = document.querySelector(".kam-bar");
+    var h = b ? b.offsetHeight : 56;
+    if(b) document.documentElement.style.setProperty("--h-kam", h + "px");
+    /* Hauteur TOTALE de ce qui reste collé en haut : la barre « Retour » plus
+       la barre de recherche. C'est elle qui sert de marge de défilement —
+       calculée, jamais devinée, sinon un titre rejoint par un lien se cache
+       dessous. */
+    var c = document.getElementById("kam-chercher");
+    document.documentElement.style.setProperty("--h-collant",
+      (h + (c ? c.offsetHeight : 0) + 12) + "px");
+  }
+  function appliquerTaille(){
+    document.documentElement.style.setProperty("--ech", ECHELLES[iEch]);
+    if(bMoins) bMoins.disabled = (iEch === 0);
+    if(bPlus) bPlus.disabled = (iEch === ECHELLES.length - 1);
+    try{ localStorage.setItem("katamar-permis-taille", String(iEch)); }catch(e){}
+    mesurerBarre();
+  }
+  try{
+    var g = parseInt(localStorage.getItem("katamar-permis-taille"), 10);
+    if(g >= 0 && g < ECHELLES.length) iEch = g;
+  }catch(e){}
+  if(bPlus) bPlus.addEventListener("click", function(){ if(iEch < ECHELLES.length - 1){ iEch++; appliquerTaille(); } });
+  if(bMoins) bMoins.addEventListener("click", function(){ if(iEch > 0){ iEch--; appliquerTaille(); } });
+  mesurerBarre();
+  window.addEventListener("resize", mesurerBarre);
+  window.addEventListener("orientationchange", mesurerBarre);
+  appliquerTaille();
+
+  /* --------------------------------------------- recherche à occurrences */
+  var cours = document.querySelector("main");
+  var champ = document.getElementById("kam-q");
+  if(cours && champ){
+    var compteur = document.getElementById("kam-compteur");
+    var bPrec = document.getElementById("kam-prec");
+    var bSuiv = document.getElementById("kam-suiv");
+    var bVider = document.getElementById("kam-vider");
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var marques = [], courant = -1;
+
+    function aEviter(noeud){
+      var p = noeud.parentNode;
+      while(p && p !== cours){
+        if(p.nodeType === 1){
+          var n = p.nodeName.toUpperCase();
+          if(n === "SCRIPT" || n === "STYLE" || n === "NOSCRIPT" || n === "TEXTAREA") return true;
+          if(p.namespaceURI === SVG_NS) return true;   /* un <mark> casserait le schéma */
+          if(p.id === "kam-chercher") return true;
+          if(p.hidden) return true;                    /* corrections non révélées */
+        }
+        p = p.parentNode;
+      }
+      return false;
+    }
+    function effacerSurlignage(){
+      for(var i = 0; i < marques.length; i++){
+        var m = marques[i], p = m.parentNode;
+        if(!p) continue;
+        p.replaceChild(document.createTextNode(m.textContent), m);
+        p.normalize();
+      }
+      marques = []; courant = -1;
+    }
+    function surligner(mot){
+      var cible = aplatir(mot);
+      if(!cible) return;
+      var promeneur = document.createTreeWalker(cours, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(n){
+          if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+          return aEviter(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var noeuds = [], n;
+      while((n = promeneur.nextNode())) noeuds.push(n);
+      for(var i = 0; i < noeuds.length; i++){
+        var noeud = noeuds[i], texte = noeud.nodeValue, plat = aplatir(texte);
+        var pos = plat.indexOf(cible);
+        if(pos === -1) continue;
+        var frag = document.createDocumentFragment(), depart = 0;
+        while(pos !== -1){
+          if(pos > depart) frag.appendChild(document.createTextNode(texte.slice(depart, pos)));
+          var m = document.createElement("mark");
+          m.className = "kam-occ";
+          m.textContent = texte.slice(pos, pos + cible.length);
+          frag.appendChild(m); marques.push(m);
+          depart = pos + cible.length;
+          pos = plat.indexOf(cible, depart);
+        }
+        if(depart < texte.length) frag.appendChild(document.createTextNode(texte.slice(depart)));
+        noeud.parentNode.replaceChild(frag, noeud);
+      }
+    }
+    function majCompteur(){
+      var mot = champ.value.trim();
+      if(!mot){ compteur.textContent = "Cherche dans tout le module"; compteur.className = ""; return; }
+      if(mot.length < 2){ compteur.textContent = "Encore une lettre…"; compteur.className = ""; return; }
+      if(marques.length === 0){
+        compteur.textContent = "Aucune occurrence de « " + mot + " »";
+        compteur.className = "rien"; return;
+      }
+      compteur.innerHTML = "<b>" + (courant + 1) + "</b> / " + marques.length
+        + (marques.length > 1 ? " occurrences" : " occurrence");
+      compteur.className = "";
+    }
+    function ouvrirLesReplis(el){
+      var p = el.parentNode;
+      while(p && p !== cours){
+        if(p.nodeName === "DETAILS" && !p.open) p.open = true;
+        p = p.parentNode;
+      }
+    }
+    function allerA(i){
+      if(marques.length === 0) return;
+      if(courant >= 0 && marques[courant]) marques[courant].classList.remove("actif");
+      courant = (i + marques.length) % marques.length;
+      var m = marques[courant];
+      m.classList.add("actif");
+      ouvrirLesReplis(m);
+      m.scrollIntoView({ block:"center", behavior: reduit ? "auto" : "smooth" });
+      majCompteur();
+    }
+    var minuteur = null;
+    function chercher(){
+      var mot = champ.value.trim();
+      effacerSurlignage();
+      bVider.classList.toggle("vu", champ.value.length > 0);
+      if(mot.length >= 2) surligner(mot);
+      bPrec.disabled = bSuiv.disabled = (marques.length === 0);
+      if(marques.length > 0) allerA(0); else majCompteur();
+    }
+    champ.addEventListener("input", function(){ clearTimeout(minuteur); minuteur = setTimeout(chercher, 150); });
+    champ.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(marques.length === 0){ clearTimeout(minuteur); chercher(); return; }
+      allerA(courant + (e.shiftKey ? -1 : 1));
+    });
+    bSuiv.addEventListener("click", function(){ allerA(courant + 1); });
+    bPrec.addEventListener("click", function(){ allerA(courant - 1); });
+    bVider.addEventListener("click", function(){ champ.value = ""; clearTimeout(minuteur); chercher(); champ.focus(); });
+  }
+
+  /* --------------------------------------------------------- animations */
+  /* Chaque animation déclare un état de départ, une suite d'images et une
+     fonction de rendu. Entre deux images, les nombres sont interpolés : le
+     sas se remplit sous les yeux au lieu de sauter d'un niveau à l'autre. */
+  var ANIMS = {};
+  window.kamAnim = function(id, def){
+    var fig = document.getElementById(id);
+    if(!fig) return;
+    var cap = fig.querySelector(".cap");
+    var cnt = fig.querySelector(".cnt");
+    var bLect = fig.querySelector("[data-lecture]");
+    var bEtape = fig.querySelector("[data-etape]");
+    var bRejouer = fig.querySelector("[data-rejouer]");
+    var etat = Object.assign({}, def.etat0);
+    var i = -1, enCours = false, tache = null;
+    /* Chaque transition porte un numéro. Deux appuis rapides sur « Étape »
+       lançaient deux boucles en même temps : l'ancienne continuait d'écrire
+       l'état et ramenait le feu au rouge ou le bateau en arrière. Une boucle
+       qui n'est plus la dernière s'arrête d'elle-même. */
+    var gen = 0;
+    /* Cible de la transition en cours. Appuyer sur « Étape » pendant qu'une
+       image se joue doit la TERMINER d'un coup, puis passer à la suivante —
+       sinon le mouvement se fige à mi-chemin : le feu reste entre rouge et
+       vert, et le bateau s'arrête au milieu du sas. */
+    var cibleEnCours = null;
+
+    function rendre(){ def.rendu(etat, fig); }
+    function majCnt(){ if(cnt) cnt.textContent = Math.max(0, i + 1) + " / " + def.images.length; }
+    function poser(n, immediat, apres){
+      var img = def.images[n];
+      var depart = Object.assign({}, etat);
+      var cible = Object.assign({}, etat, img.etat || {});
+      var duree = (immediat || reduit) ? 0 : (img.d || 700);
+      if(cap) cap.innerHTML = img.cap;
+      i = n; majCnt();
+      if(duree === 0){
+        gen++; cibleEnCours = null; etat = cible; rendre(); if(apres) apres();
+        return;
+      }
+      var t0 = performance.now();
+      cibleEnCours = cible;
+      var moi = ++gen;
+      cancelAnimationFrame(tache);
+      (function boucle(t){
+        if(moi !== gen) return;               /* une transition plus récente a pris la main */
+        var k = Math.min(1, (t - t0) / duree);
+        var doux = k < .5 ? 2*k*k : 1 - Math.pow(-2*k + 2, 2)/2;   /* ease-in-out */
+        var e = {};
+        Object.keys(cible).forEach(function(cle){
+          var a = depart[cle], b = cible[cle];
+          e[cle] = (typeof a === "number" && typeof b === "number") ? a + (b - a) * doux : b;
+        });
+        etat = e; rendre();
+        if(k < 1) tache = requestAnimationFrame(boucle);
+        else { cibleEnCours = null; if(apres) apres(); }
+      })(t0);
+    }
+    function terminerEnCours(){
+      if(!cibleEnCours) return;
+      gen++; cancelAnimationFrame(tache);
+      etat = cibleEnCours; cibleEnCours = null; rendre();
+    }
+    function suivante(){
+      terminerEnCours();
+      if(i + 1 >= def.images.length) return false;
+      poser(i + 1, false, null);
+      return true;
+    }
+    function lire(){
+      if(enCours){ enCours = false; couper(); if(bLect) bLect.textContent = "▶ Lecture"; return; }
+      enCours = true; if(bLect) bLect.textContent = "⏸ Pause";
+      var n = (i + 1 >= def.images.length) ? 0 : i + 1;
+      if(n === 0){ etat = Object.assign({}, def.etat0); rendre(); }
+      (function enchaine(k){
+        if(!enCours || k >= def.images.length){
+          enCours = false; if(bLect) bLect.textContent = "▶ Lecture"; return;
+        }
+        poser(k, false, function(){ setTimeout(function(){ enchaine(k + 1); }, reduit ? 0 : 450); });
+      })(n);
+    }
+    function couper(){ gen++; cibleEnCours = null; cancelAnimationFrame(tache); }
+    if(bLect) bLect.addEventListener("click", lire);
+    if(bEtape) bEtape.addEventListener("click", function(){
+      enCours = false; if(bLect) bLect.textContent = "▶ Lecture";
+      /* on ne coupe pas ici : poser() incrémente lui-même le numéro */
+      if(!suivante()){ etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+        if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture »."; }
+    });
+    if(bRejouer) bRejouer.addEventListener("click", function(){
+      enCours = false; couper();
+      if(bLect) bLect.textContent = "▶ Lecture";
+      etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+      if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    });
+    if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    rendre(); majCnt();
+    ANIMS[id] = { rendre: rendre };
+  };
+
+  /* ------------------------------------------- modules pas encore écrits */
+  document.querySelectorAll("[data-bientot]").forEach(function(b){
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", "bientot-" + b.dataset.bientot);
+    b.addEventListener("click", function(){
+      var note = document.getElementById("bientot-" + b.dataset.bientot);
+      if(!note) return;
+      var ouvert = !note.hidden;
+      note.hidden = ouvert;
+      b.setAttribute("aria-expanded", ouvert ? "false" : "true");
+    });
+  });
+
+  /* --------------------------------------------------------------- QCM */
+  /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
+     minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
+  var scores = {};
+  /* Les questions hors du programme officiel de l'examen (matière d'examen
+     du SPF Mobilité) restent pour la culture et la sécurité sur l'eau, mais
+     elles ne comptent ni dans le total ni dans la règle des 50 % : sinon le
+     score dirait « réussi » ou « raté » sur une matière qu'on ne te posera pas. */
+  var HORS = "Hors examen";
+  function majScore(){
+    var panneau = document.getElementById("score");
+    if(!panneau) return;
+    var tout = Object.keys(scores);
+    if(tout.length === 0){ panneau.hidden = true; return; }
+    panneau.hidden = false;
+    var hors = scores[HORS] || null;
+    var cats = tout.filter(function(c){ return c !== HORS; });
+    var justes = 0, total = 0;
+    cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
+    var pc = total ? Math.round(justes / total * 100) : 0;
+    var lignes = cats.sort().map(function(c){
+      var s = scores[c], p = Math.round(s.ok / s.n * 100);
+      return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
+           + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
+    }).join("");
+    if(hors) lignes += '<li class="hors"><b>·</b> ' + HORS + " — " + hors.ok + " / " + hors.n
+                     + " <i>(non compté : hors du programme de l'examen)</i></li>";
+    var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    if(total === 0){
+      panneau.innerHTML = '<div class="big">—</div><ul class="chapitres">' + lignes + "</ul>"
+        + '<p class="regle">Tu n\'as encore répondu qu\'à des questions hors examen : elles ne comptent pas.</p>';
+      return;
+    }
+    panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
+      + '<ul class="chapitres">' + lignes + "</ul>"
+      + '<p class="regle">' + (pc >= 60 && !sousBarre
+          ? "Au-dessus des deux barres : 60 % au total, et 50 % dans chaque catégorie."
+          : "Il faut <b>60 % au total</b> ET <b>50 % minimum dans chaque catégorie</b>. "
+            + (pc < 60 ? "Le total n'y est pas. " : "")
+            + (sousBarre ? "Une catégorie au moins est sous la barre." : "")) + "</p>";
+  }
+  document.querySelectorAll(".qcm").forEach(function(q){
+    var bonne = (q.dataset.bonne || "").toUpperCase();
+    var cat = q.hasAttribute("data-hors") ? HORS : (q.dataset.cat || "Général");
+    if(q.hasAttribute("data-hors")){
+      /* le badge est écrit dans la page, pas seulement en CSS : il se lit
+         aussi sans style, et la recherche le trouve */
+      var qn = q.querySelector(".qn");
+      if(qn && !qn.querySelector(".badge-hors")){
+        var bh = document.createElement("span");
+        bh.className = "badge-hors"; bh.textContent = "Hors examen";
+        qn.appendChild(document.createTextNode(" ")); qn.appendChild(bh);
+      }
+    }
+    var corr = q.querySelector(".corr");
+    var boutons = [].slice.call(q.querySelectorAll(".choix button"));
+    boutons.forEach(function(b){
+      b.addEventListener("click", function(){
+        if(q.dataset.repondu) return;
+        q.dataset.repondu = "1";
+        var choisi = (b.dataset.l || "").toUpperCase();
+        var juste = (choisi === bonne);
+        boutons.forEach(function(x){
+          x.disabled = true;
+          var l = (x.dataset.l || "").toUpperCase();
+          if(l === bonne) x.classList.add("juste");
+          else if(l === choisi) x.classList.add("faux");
+        });
+        if(corr){
+          corr.hidden = false;
+          var v = corr.querySelector(".verdict");
+          if(v){
+            v.className = "verdict " + (juste ? "ok" : "ko");
+            v.textContent = juste ? "Juste." : "Faux — la bonne réponse est " + bonne + ".";
+          }
+        }
+        if(!scores[cat]) scores[cat] = { ok:0, n:0 };
+        scores[cat].n++; if(juste) scores[cat].ok++;
+        majScore();
+      });
+    });
+  });
+  var raz = document.getElementById("qcm-raz");
+  if(raz) raz.addEventListener("click", function(){
+    scores = {};
+    document.querySelectorAll(".qcm").forEach(function(q){
+      delete q.dataset.repondu;
+      q.querySelectorAll(".choix button").forEach(function(b){
+        b.disabled = false; b.classList.remove("juste", "faux");
+      });
+      var c = q.querySelector(".corr"); if(c) c.hidden = true;
+    });
+    majScore();
+    var p = document.getElementById("score"); if(p) p.hidden = true;
+  });
+  majScore();
+})();
+
+</script>
+<script>
+/* ===== DESSINS DES QCM — balises, bouées, panneaux de rive, scènes =====
+   Tous les dessins sont faits ici, d'après le texte du règlement (appendice 8
+   du Règlement général de police, balisage SIGNI) : aucune image n'est
+   copiée d'un manuel. Chaque dessin a son propre fond clair, pour rester
+   lisible en thème sombre comme en thème clair.
+   Repère : 200 × 150 unités. */
+(function(){
+  "use strict";
+  var C = { rouge:"#d7263d", vert:"#1f8a4c", jaune:"#f2c230", noir:"#1d1d1f", blanc:"#ffffff",
+            eau:"#cfe6f5", ciel:"#eef6fb", terre:"#cfe3b0", trait:"#2a3d4f", gris:"#8a97a3" };
+
+  function cadre(inner, h){
+    h = h || 150;
+    return '<svg viewBox="0 0 200 ' + h + '" class="qz-svg" role="img" aria-hidden="false">'
+         + '<rect x="0" y="0" width="200" height="' + h + '" fill="' + C.ciel + '"/>'
+         + '<rect x="0" y="' + (h * 0.62) + '" width="200" height="' + (h * 0.38) + '" fill="' + C.eau + '"/>'
+         + inner + "</svg>";
+  }
+  function p(d, fill, stroke){ return '<path d="' + d + '" fill="' + fill + '" stroke="' + (stroke || C.trait) + '" stroke-width="1.6" stroke-linejoin="round"/>'; }
+  function rect(x, y, w, h, fill){ return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + C.trait + '" stroke-width="1.6"/>'; }
+  function txt(x, y, s, taille, coul){
+    return '<text x="' + x + '" y="' + y + '" font-size="' + (taille || 11) + '" text-anchor="middle" fill="' + (coul || C.trait)
+         + '" font-family="Source Sans 3, Arial, sans-serif" font-weight="700">' + s + "</text>";
+  }
+
+  /* ----------------------------------------------------------- voyants */
+  function voyant(type, x, y){
+    switch(type){
+      case "cyl-rouge":   return rect(x - 8, y - 16, 16, 16, C.rouge);
+      case "cone-vert":   return p("M" + (x - 10) + " " + y + " L" + x + " " + (y - 18) + " L" + (x + 10) + " " + y + " Z", C.vert);
+      case "cone-rouge-bas": return p("M" + (x - 10) + " " + (y - 18) + " L" + x + " " + y + " L" + (x + 10) + " " + (y - 18) + " Z", C.rouge);
+      case "sphere-rv":   return '<clipPath id="sph' + x + y + '"><circle cx="' + x + '" cy="' + (y - 9) + '" r="9"/></clipPath>'
+                              + '<g clip-path="url(#sph' + x + y + ')">' + rect(x - 9, y - 18, 18, 6, C.rouge) + rect(x - 9, y - 12, 18, 6, C.vert) + rect(x - 9, y - 6, 18, 6, C.rouge) + "</g>"
+                              + '<circle cx="' + x + '" cy="' + (y - 9) + '" r="9" fill="none" stroke="' + C.trait + '" stroke-width="1.6"/>';
+      case "croix-jaune": return '<path d="M' + (x - 9) + " " + (y - 18) + " L" + (x + 9) + " " + y + " M" + (x + 9) + " " + (y - 18) + " L" + (x - 9) + " " + y
+                              + '" stroke="' + C.jaune + '" stroke-width="5" stroke-linecap="round"/>';
+      default: return "";
+    }
+  }
+  /* un feu, avec son rythme écrit à côté */
+  function feu(couleur, rythme, x, y){
+    var f = { rouge:C.rouge, vert:C.vert, blanc:"#fffbe6", jaune:C.jaune }[couleur] || couleur;
+    return '<circle cx="' + x + '" cy="' + y + '" r="5.5" fill="' + f + '" stroke="' + C.trait + '" stroke-width="1.2"/>'
+         + '<circle cx="' + x + '" cy="' + y + '" r="10" fill="' + f + '" opacity=".25"/>'
+         + (rythme ? txt(x + 30, y + 4, rythme, 11) : "");
+  }
+
+  /* --------------------------------------------------------------- bouées
+     forme : "cyl" (cylindrique), "cone" (conique), "sphere", "espar"
+     couleurs : liste de bandes horizontales, du haut vers le bas */
+  function bouee(o){
+    var x = 100, base = 112, s = "";
+    var bandes = o.bandes || [o.couleur || "rouge"];
+    var hauteur = o.forme === "espar" ? 62 : 34, largeur = o.forme === "espar" ? 10 : 30;
+    var haut = base - hauteur;
+    var id = "b" + Math.random().toString(36).slice(2, 8);
+    var contour;
+    if(o.forme === "cone") contour = "M" + (x - 17) + " " + base + " L" + (x - 5) + " " + haut + " L" + (x + 5) + " " + haut + " L" + (x + 17) + " " + base + " Z";
+    else if(o.forme === "sphere") contour = "M" + (x - 18) + " " + base + " Q" + (x - 20) + " " + (haut - 4) + " " + x + " " + (haut - 4) + " Q" + (x + 20) + " " + (haut - 4) + " " + (x + 18) + " " + base + " Z";
+    else contour = "M" + (x - largeur / 2) + " " + base + " L" + (x - largeur / 2) + " " + haut + " L" + (x + largeur / 2) + " " + haut + " L" + (x + largeur / 2) + " " + base + " Z";
+    s += '<clipPath id="' + id + '"><path d="' + contour + '"/></clipPath><g clip-path="url(#' + id + ')">';
+    var hb = (base - haut + 6) / bandes.length;
+    bandes.forEach(function(c, i){ s += '<rect x="' + (x - 22) + '" y="' + (haut - 6 + i * hb) + '" width="44" height="' + (hb + 0.5) + '" fill="' + C[c] + '"/>'; });
+    s += "</g>" + p(contour, "none");
+    /* flotteur */
+    s += p("M" + (x - 24) + " " + base + " L" + (x + 24) + " " + base + " L" + (x + 18) + " " + (base + 9) + " L" + (x - 18) + " " + (base + 9) + " Z", C.gris);
+    var sommet = o.forme === "sphere" ? haut - 4 : haut;
+    if(o.voyant){ s += '<line x1="' + x + '" y1="' + sommet + '" x2="' + x + '" y2="' + (sommet - 8) + '" stroke="' + C.trait + '" stroke-width="2"/>'
+                     + voyant(o.voyant, x, sommet - 8); sommet -= 28; }
+    if(o.feu) s += feu(o.feu[0], o.feu[1], x, sommet - 4);
+    return cadre(s);
+  }
+
+  /* --------------------------------------------- balise fixe (poteau) */
+  function poteau(o){
+    var x = 100, s = rect(x - 3, 52, 6, 70, C.gris);
+    var y = 52;
+    (o.voyants || []).forEach(function(v){ s += voyant(v, x, y); y -= 22; });
+    if(o.feu) s += feu(o.feu[0], o.feu[1], x, y - 2);
+    return cadre(s);
+  }
+
+  /* ------------------------------------------- panneaux à terre (rive) */
+  function panneauRive(o){
+    var x = 100, s = rect(x - 3, 70, 6, 52, C.gris), y = 30;
+    switch(o.type){
+      case "rive-droite":   s += rect(x - 22, y, 44, 40, C.rouge) + rect(x - 22, y + 10, 44, 6, C.blanc) + rect(x - 22, y + 24, 44, 6, C.blanc); break;
+      case "rive-gauche":   s += p("M" + x + " " + (y - 6) + " L" + (x + 26) + " " + (y + 20) + " L" + (x - 26) + " " + (y + 20) + " Z", C.vert)
+                               + p("M" + (x - 26) + " " + (y + 20) + " L" + (x + 26) + " " + (y + 20) + " L" + x + " " + (y + 46) + " Z", C.blanc); break;
+      case "traversee-droite": s += rect(x - 22, y, 44, 40, C.jaune) + rect(x - 5, y, 10, 40, C.noir); break;
+      case "traversee-gauche": s += '<clipPath id="tg"><path d="M' + x + " " + (y - 6) + " L" + (x + 26) + " " + (y + 20) + " L" + x + " " + (y + 46) + " L" + (x - 26) + " " + (y + 20) + ' Z"/></clipPath>'
+                               + '<g clip-path="url(#tg)">' + rect(x - 26, y - 6, 52, 52, C.jaune) + rect(x - 5, y - 6, 10, 52, C.noir) + "</g>"
+                               + p("M" + x + " " + (y - 6) + " L" + (x + 26) + " " + (y + 20) + " L" + x + " " + (y + 46) + " L" + (x - 26) + " " + (y + 20) + " Z", "none"); break;
+      case "croix": s += '<path d="M' + (x - 22) + " " + (y - 4) + " L" + (x + 22) + " " + (y + 40) + " M" + (x + 22) + " " + (y - 4) + " L" + (x - 22) + " " + (y + 40)
+                         + '" stroke="' + C.jaune + '" stroke-width="9" stroke-linecap="round"/>'; break;
+    }
+    if(o.feu) s += feu(o.feu[0], o.feu[1], x + 40, 40);
+    /* la rive */
+    s = '<rect x="0" y="92" width="200" height="58" fill="' + C.terre + '"/>' + s;
+    return cadre(s);
+  }
+
+  /* ------------------------------------------------- scène de rivière
+     Vue de dessus. Le courant va de gauche à droite (vers l'aval).
+     o.bateau : "montant" (cap vers la gauche) ou "avalant" (cap vers la droite)
+     o.marques : [{x, y, c:"rouge"|"vert"|"rv"}] */
+  function riviere(o){
+    var s = '<svg viewBox="0 0 200 150" class="qz-svg" role="img">'
+          + '<rect x="0" y="0" width="200" height="150" fill="' + C.terre + '"/>'
+          + '<rect x="0" y="28" width="200" height="94" fill="' + C.eau + '"/>'
+          + txt(100, 18, o.haut || "rive gauche", 11) + txt(100, 140, o.bas || "rive droite", 11)
+          + '<path d="M18 44 L52 44" stroke="' + C.trait + '" stroke-width="2"/><path d="M58 44 L50 39 L50 49 Z" fill="' + C.trait + '"/>'
+          + txt(38, 60, "courant", 10);
+    (o.marques || []).forEach(function(m){
+      var f = m.c === "rouge" ? C.rouge : m.c === "vert" ? C.vert : null;
+      if(f) s += '<circle cx="' + m.x + '" cy="' + m.y + '" r="7" fill="' + f + '" stroke="' + C.trait + '" stroke-width="1.4"/>';
+      else s += '<circle cx="' + m.x + '" cy="' + m.y + '" r="7" fill="' + C.rouge + '" stroke="' + C.trait + '" stroke-width="1.4"/>'
+              + '<rect x="' + (m.x - 7) + '" y="' + (m.y - 2) + '" width="14" height="4" fill="' + C.vert + '"/>';
+      if(m.l) s += txt(m.x, m.y - 11, m.l, 10);
+    });
+    if(o.bateau){
+      var bx = o.bx || 100, by = o.by || 80, r = o.bateau === "montant" ? 180 : 0;
+      s += '<g transform="translate(' + bx + "," + by + ") rotate(" + r + ')">'
+         + '<path d="M-18 -7 L10 -7 L20 0 L10 7 L-18 7 Z" fill="#fff" stroke="' + C.trait + '" stroke-width="1.6"/></g>'
+         + txt(bx, by + 22, o.l || "toi", 10);
+    }
+    return s + "</svg>";
+  }
+
+  /* ----------------------------------------------- un feu seul, la nuit */
+  function nuit(o){
+    var s = '<svg viewBox="0 0 200 110" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="110" fill="#0e1a2b"/>';
+    (o.feux || []).forEach(function(f){
+      var c = { rouge:"#ff4d5e", vert:"#3ddc84", blanc:"#fffbe6", jaune:"#ffd23f" }[f.c];
+      s += '<circle cx="' + f.x + '" cy="' + f.y + '" r="12" fill="' + c + '" opacity=".25"/><circle cx="' + f.x + '" cy="' + f.y + '" r="6" fill="' + c + '"/>';
+    });
+    /* style en ligne : la feuille de style colore les textes des dessins en sombre */
+    if(o.legende) s += txt(100, 100, o.legende, 9, "#e8eef4").replace(/^<text/, '<text style="fill:#e8eef4"');
+    return s + "</svg>";
+  }
+
+  /* ---------------------------------------------------- l'aiguillage */
+  function dessiner(d){
+    if(!d) return "";
+    switch(d.t){
+      case "bouee":  return bouee(d);
+      case "poteau": return poteau(d);
+      case "rive":   return panneauRive(d);
+      case "riviere":return riviere(d);
+      case "nuit":   return nuit(d);
+      default: return "";
+    }
+  }
+  window.kamDessinQcm = dessiner;
+})();
+
+</script>
+<script>
+/* QCM FLUVIAL — brevet restreint. Bloc 1 : Navigation, 100 questions (N001-N100).
+   Sources : RGP 2006 appendice 8, Tome 1, manuel IBPT 2025. Bonne réponse = o[b]. */
+window.KAM_QCM = {
+"cours": "fluvial",
+"examen": {
+"total": 200,
+"parts": {
+"R": 80,
+"N": 67,
+"S": 53
+}
+},
+"questions": [
+{
+"id": "N001",
+"cat": "N",
+"res": false,
+"q": "Sur une voie navigable belge, cette bouée rouge et cylindrique marque :",
+"d": {
+"t": "bouee",
+"forme": "cyl",
+"couleur": "rouge",
+"voyant": "cyl-rouge"
+},
+"o": [
+{
+"t": "le côté droit du chenal",
+"e": "Rouge et cylindrique : c'est la marque du côté droit."
+},
+{
+"t": "le côté gauche du chenal",
+"e": "Le côté gauche est vert et conique."
+},
+{
+"t": "une bifurcation du chenal",
+"e": "La bifurcation porte des bandes rouges et vertes et un voyant sphérique."
+}
+],
+"b": 0,
+"ex": "Balisage SIGNI : côté droit du chenal = rouge, bouée cylindrique, voyant cylindre rouge. Côté droit / côté gauche : ceux d'un observateur tourné vers l'aval (sur un canal : vers le bief le plus bas).",
+"pg": "« Côté droit » ne veut pas dire « à ta droite » : c'est la droite d'un observateur tourné vers l'aval. En montant, cette bouée est à ta gauche.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1 · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "N002",
+"cat": "N",
+"res": false,
+"q": "Cette bouée verte et conique marque :",
+"d": {
+"t": "bouee",
+"forme": "cone",
+"couleur": "vert",
+"voyant": "cone-vert"
+},
+"o": [
+{
+"t": "le côté gauche du chenal",
+"e": "Vert et conique, cône vert pointe en haut : côté gauche."
+},
+{
+"t": "le côté droit du chenal",
+"e": "Le côté droit est rouge et cylindrique."
+},
+{
+"t": "un danger isolé",
+"e": "Le danger isolé est une marque de mer, noire à bandes rouges ; elle n'existe pas dans le balisage SIGNI."
+}
+],
+"b": 0,
+"ex": "Côté gauche du chenal = vert, bouée conique, voyant cône vert pointe vers le haut. Côté droit / côté gauche : ceux d'un observateur tourné vers l'aval (sur un canal : vers le bief le plus bas).",
+"pg": "Ne raisonne pas « vert = à droite » comme en entrant au port de nuit : sur la voie, c'est le côté GAUCHE pour qui regarde vers l'aval.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2 · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "N003",
+"cat": "N",
+"res": false,
+"q": "Pour nommer le côté droit et le côté gauche du chenal, on se place comme un observateur :",
+"d": null,
+"o": [
+{
+"t": "tourné vers l'aval",
+"e": "C'est la définition du règlement pour une voie navigable ou un chenal."
+},
+{
+"t": "tourné vers l'amont",
+"e": "C'est l'inverse : vers l'aval, dans le sens du courant."
+},
+{
+"t": "qui regarde la rive la plus proche",
+"e": "La rive la plus proche n'a rien à voir : la référence est le sens du courant."
+}
+],
+"b": 0,
+"ex": "Sur une voie navigable ou dans un chenal, droite et gauche sont ceux d'un observateur tourné vers l'aval.",
+"pg": "Le piège est de prendre la droite du BATEAU. Elle change quand tu fais demi-tour ; le côté du chenal, lui, ne change jamais.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.1 a) · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "N004",
+"cat": "N",
+"res": false,
+"q": "Sur un canal, sans courant, le côté droit est celui d'un observateur qui se dirige :",
+"d": null,
+"o": [
+{
+"t": "vers le bief situé plus bas",
+"e": "Exact : sur un canal, on remplace « vers l'aval » par « vers le bief le plus bas »."
+},
+{
+"t": "vers le bief situé plus haut",
+"e": "C'est l'inverse."
+},
+{
+"t": "vers le nord",
+"e": "Le règlement ne se réfère jamais aux points cardinaux pour cela."
+}
+],
+"b": 0,
+"ex": "Sur les canaux, en général, côté droit et côté gauche sont ceux d'un observateur qui se dirige vers un bief situé plus bas.",
+"pg": "Pas de courant ne veut pas dire pas de sens : c'est la pente des biefs qui donne l'aval.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.1 b)"
+},
+{
+"id": "N005",
+"cat": "N",
+"res": false,
+"q": "Sur un lac, le côté droit et le côté gauche du chenal sont :",
+"d": null,
+"o": [
+{
+"t": "ceux que définit l'autorité compétente",
+"e": "C'est ce que prévoit le règlement pour les lacs."
+},
+{
+"t": "ceux d'un observateur tourné vers la sortie du lac",
+"e": "Le règlement ne dit pas cela."
+},
+{
+"t": "ceux d'un observateur tourné vers le port le plus proche",
+"e": "Ce n'est pas la règle."
+}
+],
+"b": 0,
+"ex": "Dans les lacs, côté droit et côté gauche sont tels que définis par l'autorité.",
+"pg": "Un lac n'a ni amont ni aval évidents : la règle générale ne peut pas s'appliquer, c'est donc l'autorité qui décide.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.1 c)"
+},
+{
+"id": "N006",
+"cat": "N",
+"res": false,
+"q": "Tu descends le courant (avalant). Cette bouée rouge, tu la laisses :",
+"d": {
+"t": "riviere",
+"bateau": "avalant",
+"marques": [
+{
+"x": 150,
+"y": 104,
+"c": "rouge"
+}
+]
+},
+"o": [
+{
+"t": "à ta droite, à tribord",
+"e": "En descendant, le côté droit du chenal est à ta droite : la bouée rouge reste à tribord."
+},
+{
+"t": "à ta gauche, à bâbord",
+"e": "C'est ce que fait le montant, pas l'avalant."
+},
+{
+"t": "d'un côté ou de l'autre, au choix",
+"e": "Une marque latérale n'est pas une bifurcation : elle se laisse d'un seul côté."
+}
+],
+"b": 0,
+"ex": "L'avalant regarde vers l'aval : le côté droit du chenal — rouge — est à sa droite. Il garde donc les bouées rouges à tribord et reste à leur gauche, dans le chenal.",
+"pg": "En mer, on retient « rouge à bâbord en entrant au port ». C'est vrai aussi ici pour le MONTANT. L'avalant, lui, a le rouge à tribord.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.1 et II.1 · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "N007",
+"cat": "N",
+"res": false,
+"q": "Tu remontes le courant (montant). Cette bouée rouge, tu la laisses :",
+"d": {
+"t": "riviere",
+"bateau": "montant",
+"marques": [
+{
+"x": 50,
+"y": 104,
+"c": "rouge"
+}
+]
+},
+"o": [
+{
+"t": "à ta gauche, à bâbord",
+"e": "En montant, le côté droit du chenal est à ta gauche."
+},
+{
+"t": "à ta droite, à tribord",
+"e": "Ce serait le cas en descendant."
+},
+{
+"t": "d'un côté ou de l'autre, au choix",
+"e": "Une marque latérale se laisse d'un seul côté."
+}
+],
+"b": 0,
+"ex": "Le montant tourne le dos à l'aval : le côté droit du chenal se retrouve à sa gauche. La bouée rouge reste à bâbord.",
+"pg": "La bouée ne change pas de côté quand tu fais demi-tour : c'est toi qui as tourné.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1 · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "N008",
+"cat": "N",
+"res": false,
+"q": "Tu descends le courant. Cette bouée verte, tu la laisses :",
+"d": {
+"t": "riviere",
+"bateau": "avalant",
+"marques": [
+{
+"x": 150,
+"y": 50,
+"c": "vert"
+}
+]
+},
+"o": [
+{
+"t": "à ta gauche, à bâbord",
+"e": "Le côté gauche du chenal est à gauche de l'avalant."
+},
+{
+"t": "à ta droite, à tribord",
+"e": "Ce serait le cas en montant."
+},
+{
+"t": "tu passes au-dessus, c'est un haut-fond balisé des deux côtés",
+"e": "Non : une marque latérale borde le chenal, on ne la franchit pas."
+}
+],
+"b": 0,
+"ex": "Avalant : le vert (côté gauche) est à bâbord, le rouge (côté droit) à tribord. Tu navigues entre les deux.",
+"pg": "Ne confonds pas « tribord = vert » (le feu de côté d'un bateau) avec la couleur des bouées.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2"
+},
+{
+"id": "N009",
+"cat": "N",
+"res": false,
+"q": "Tu remontes le courant. Cette bouée verte, tu la laisses :",
+"d": {
+"t": "riviere",
+"bateau": "montant",
+"marques": [
+{
+"x": 88,
+"y": 56,
+"c": "vert"
+}
+]
+},
+"o": [
+{
+"t": "à ta droite, à tribord",
+"e": "En montant, le côté gauche du chenal est à ta droite."
+},
+{
+"t": "à ta gauche, à bâbord",
+"e": "C'est le cas de l'avalant."
+},
+{
+"t": "d'un côté ou de l'autre, au choix",
+"e": "Une marque latérale se laisse d'un seul côté."
+}
+],
+"b": 0,
+"ex": "Montant : vert à tribord, rouge à bâbord — comme en entrant dans un port en mer, région A.",
+"pg": "Si tu ne sais plus, rappelle-toi : en montant, c'est comme rentrer au port — rouge à bâbord, vert à tribord.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2 · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "N010",
+"cat": "N",
+"res": false,
+"q": "Le feu que peut porter une bouée du côté droit du chenal est :",
+"d": {
+"t": "bouee",
+"forme": "cyl",
+"couleur": "rouge",
+"voyant": "cyl-rouge",
+"feu": [
+"rouge",
+"Iso"
+]
+},
+"o": [
+{
+"t": "rouge, isophase ou à éclats réguliers",
+"e": "C'est le feu prévu pour le côté droit."
+},
+{
+"t": "vert, isophase",
+"e": "Le vert est réservé au côté gauche."
+},
+{
+"t": "blanc, isophase 2 s",
+"e": "Le blanc isophase est le feu de la bifurcation."
+}
+],
+"b": 0,
+"ex": "Côté droit : feu rouge isophase (Iso) ou à éclats réguliers (Fl). La couleur du feu est celle de la marque.",
+"pg": "Le feu blanc isophase n'est pas un « feu de prudence » : il signale une bifurcation.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1"
+},
+{
+"id": "N011",
+"cat": "N",
+"res": false,
+"q": "Une bouée du côté gauche peut porter :",
+"d": {
+"t": "bouee",
+"forme": "cone",
+"couleur": "vert",
+"voyant": "cone-vert",
+"feu": [
+"vert",
+"Fl"
+]
+},
+"o": [
+{
+"t": "un feu vert isophase ou à éclats réguliers",
+"e": "C'est le feu du côté gauche."
+},
+{
+"t": "un feu vert scintillant continu",
+"e": "Le vert scintillant continu (Q) est réservé à la marque de bifurcation surmontée d'un cône vert."
+},
+{
+"t": "un feu rouge à occultations",
+"e": "Les occultations rouges marquent le chenal proche de la rive droite, sur la berge."
+}
+],
+"b": 0,
+"ex": "Côté gauche : feu vert isophase ou à éclats réguliers.",
+"pg": "Vert ne suffit pas : le RYTHME compte. Scintillant continu = bifurcation, occultations = signal à terre.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2 et II.3"
+},
+{
+"id": "N012",
+"cat": "N",
+"res": false,
+"q": "La nuit, sur l'eau, tu vois un feu rouge isophase. C'est :",
+"d": {
+"t": "nuit",
+"feux": [
+{
+"x": 100,
+"y": 50,
+"c": "rouge"
+}
+],
+"legende": "feu rouge isophase, sur l'eau"
+},
+"o": [
+{
+"t": "une marque du côté droit du chenal",
+"e": "Rouge isophase sur l'eau = marque latérale du côté droit."
+},
+{
+"t": "une marque du côté gauche",
+"e": "Le côté gauche a un feu vert."
+},
+{
+"t": "une marque de bifurcation",
+"e": "La bifurcation a un feu blanc isophase."
+}
+],
+"b": 0,
+"ex": "La nuit, la couleur du feu redonne la couleur de la marque : rouge = côté droit.",
+"pg": "Un feu rouge sur l'eau peut aussi être le feu de côté bâbord d'un bateau : regarde s'il est fixe ou rythmé, et s'il bouge.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1"
+},
+{
+"id": "N013",
+"cat": "N",
+"res": false,
+"q": "La forme d'une marque du côté gauche du chenal est :",
+"d": null,
+"o": [
+{
+"t": "une bouée conique, une bouée à voyant ou un espar, avec un cône vert pointe en haut",
+"e": "C'est la description du règlement."
+},
+{
+"t": "une bouée cylindrique avec un cylindre vert",
+"e": "Cylindrique = côté droit."
+},
+{
+"t": "une bouée sphérique verte",
+"e": "Sphérique = bifurcation."
+}
+],
+"b": 0,
+"ex": "Côté gauche : vert ; bouée conique, bouée avec voyant ou espar ; voyant cône vert pointe vers le haut.",
+"pg": "La forme se lit même à contre-jour, quand on ne voit plus les couleurs : cône = gauche, cylindre = droite.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2"
+},
+{
+"id": "N014",
+"cat": "N",
+"res": false,
+"q": "La forme d'une marque du côté droit du chenal est :",
+"d": null,
+"o": [
+{
+"t": "une bouée cylindrique, une bouée à voyant ou un espar, avec un cylindre rouge",
+"e": "Exact."
+},
+{
+"t": "une bouée conique rouge",
+"e": "Conique = côté gauche."
+},
+{
+"t": "une bouée sphérique à bandes rouges",
+"e": "Sphérique à bandes = bifurcation."
+}
+],
+"b": 0,
+"ex": "Côté droit : rouge ; bouée cylindrique, bouée avec voyant ou espar ; voyant cylindre rouge.",
+"pg": "Couleur ET forme disent la même chose : si tu n'es sûr que de l'une, l'autre confirme.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1"
+},
+{
+"id": "N015",
+"cat": "N",
+"res": false,
+"q": "Le voyant d'une marque du côté gauche est :",
+"d": {
+"t": "bouee",
+"forme": "cone",
+"couleur": "vert",
+"voyant": "cone-vert"
+},
+"o": [
+{
+"t": "un cône vert, pointe vers le haut",
+"e": "Exact."
+},
+{
+"t": "un cône vert, pointe vers le bas",
+"e": "Pointe en bas, c'est le cône ROUGE des balises fixes du côté droit."
+},
+{
+"t": "deux cônes verts",
+"e": "Deux cônes n'existent pas pour les marques latérales."
+}
+],
+"b": 0,
+"ex": "Côté gauche : cône vert pointe en haut. Côté droit : cylindre rouge (bouées) ou cône rouge pointe en bas (balises fixes).",
+"pg": "Pointe en haut = vert = gauche. Pointe en bas = rouge = droite. Les deux pointes ne se confondent pas.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2 et IV.A"
+},
+{
+"id": "N016",
+"cat": "N",
+"res": false,
+"q": "Les bouées du balisage latéral portent en général :",
+"d": null,
+"o": [
+{
+"t": "un réflecteur radar",
+"e": "Le règlement le précise : « en général, avec réflecteur radar »."
+},
+{
+"t": "une cloche",
+"e": "Ce n'est pas prévu pour les marques latérales."
+},
+{
+"t": "un pavillon",
+"e": "Les marques ne portent pas de pavillon."
+}
+],
+"b": 0,
+"ex": "Les marques du côté droit, du côté gauche et de bifurcation sont en général munies d'un réflecteur radar.",
+"pg": "Le réflecteur ne change rien à la signification de la marque : il la rend seulement visible au radar.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1 à II.3"
+},
+{
+"id": "N017",
+"cat": "N",
+"res": false,
+"q": "Ce long espar rouge, surmonté d'un cylindre rouge, est :",
+"d": {
+"t": "bouee",
+"forme": "espar",
+"couleur": "rouge",
+"voyant": "cyl-rouge"
+},
+"o": [
+{
+"t": "une marque du côté droit du chenal",
+"e": "Le côté droit peut être une bouée, une bouée à voyant ou un espar."
+},
+{
+"t": "une marque spéciale",
+"e": "Les marques spéciales sont jaunes."
+},
+{
+"t": "un poteau d'amarrage",
+"e": "Le cylindre rouge en fait une marque de balisage."
+}
+],
+"b": 0,
+"ex": "La forme peut changer (bouée, bouée à voyant, espar) ; la couleur et le voyant disent le côté.",
+"pg": "Ne te fie pas à la silhouette générale : c'est le voyant et la couleur qui comptent.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1"
+},
+{
+"id": "N018",
+"cat": "N",
+"res": false,
+"q": "Tu quittes la voie pour entrer dans un port. Pour lire le balisage, tu es considéré comme :",
+"d": {
+"t": "riviere",
+"bateau": "montant",
+"marques": [
+{
+"x": 30,
+"y": 106,
+"c": "rouge"
+}
+],
+"l": "toi, tu entres au port"
+},
+"o": [
+{
+"t": "montant",
+"e": "Le règlement le dit : la navigation qui entre dans le port est considérée comme montante."
+},
+{
+"t": "avalant",
+"e": "C'est l'inverse."
+},
+{
+"t": "ni l'un ni l'autre",
+"e": "Le règlement tranche : montant."
+}
+],
+"b": 0,
+"ex": "En entrant au port, tu lis les marques comme un montant : rouge à bâbord, vert à tribord.",
+"pg": "L'intérieur du port joue le rôle de la source : on y entre comme on remonterait un fleuve.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.4 · Tome 1, p. 17"
+},
+{
+"id": "N019",
+"cat": "N",
+"res": false,
+"q": "Tu remontes le courant et tu vois une bouée verte sur ta GAUCHE. Que se passe-t-il ?",
+"d": {
+"t": "riviere",
+"bateau": "montant",
+"bx": 140,
+"by": 48,
+"marques": [
+{
+"x": 72,
+"y": 72,
+"c": "vert"
+}
+]
+},
+"o": [
+{
+"t": "tu es sans doute sorti du chenal, du côté gauche",
+"e": "En montant, le vert doit être à ta droite. S'il est à ta gauche, tu es entre la bouée et la rive."
+},
+{
+"t": "tout est normal",
+"e": "Non : en montant, le vert se laisse à tribord."
+},
+{
+"t": "c'est une bifurcation",
+"e": "Une bifurcation est rouge et verte, pas verte seule."
+}
+],
+"b": 0,
+"ex": "Montant : vert à tribord. Une bouée verte à bâbord signifie que tu es passé du mauvais côté — vers la rive gauche, hors du chenal.",
+"pg": "C'est la vérification à faire à chaque bouée : « est-elle du bon côté de MOI ? »",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2"
+},
+{
+"id": "N020",
+"cat": "N",
+"res": false,
+"q": "Le rouge marque le côté droit du chenal :",
+"d": null,
+"o": [
+{
+"t": "aussi bien sur un fleuve que sur un canal",
+"e": "La couleur ne change pas ; seule la façon de trouver « l'aval » change sur un canal."
+},
+{
+"t": "sur les fleuves seulement",
+"e": "Le canal suit la même règle, avec le bief le plus bas comme aval."
+},
+{
+"t": "seulement en Wallonie",
+"e": "Le balisage SIGNI est le même sur toutes les voies belges."
+}
+],
+"b": 0,
+"ex": "Côté droit = rouge, partout. Sur un canal, on se tourne vers le bief le plus bas pour savoir où est la droite.",
+"pg": "Ne crois pas qu'un canal sans courant n'a pas de balisage orienté.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.1 et II.1"
+},
+{
+"id": "N021",
+"cat": "N",
+"res": false,
+"q": "En montant une voie belge, tu as le rouge à bâbord. Est-ce cohérent avec le balisage en mer, région A, en entrant au port ?",
+"d": null,
+"o": [
+{
+"t": "oui : dans les deux cas, rouge à bâbord",
+"e": "Le montant et le bateau qui entre au port en région A ont tous deux le rouge à bâbord."
+},
+{
+"t": "non : c'est l'inverse en mer",
+"e": "C'est la même logique en région A."
+},
+{
+"t": "la question n'a pas de sens : la mer n'a pas de rouge",
+"e": "La région A utilise bien le rouge à bâbord en entrant."
+}
+],
+"b": 0,
+"ex": "Rentrer au port en mer (région A) et remonter un fleuve : rouge à bâbord, vert à tribord.",
+"pg": "En région B (Amériques), les couleurs sont inversées : ne le confonds pas avec les voies belges.",
+"ref": "Tome 1, ch. 2 Le balisage, p. 14-20 · Règlement général de police (AR 24/09/2006), appendice 8, II"
+},
+{
+"id": "N022",
+"cat": "N",
+"res": false,
+"q": "Une bouée verte montre un feu vert SCINTILLANT continu. Que faut-il en penser ?",
+"d": {
+"t": "bouee",
+"forme": "cone",
+"couleur": "vert",
+"voyant": "cone-vert",
+"feu": [
+"vert",
+"Q"
+]
+},
+"o": [
+{
+"t": "ce n'est pas un feu de marque latérale : le vert scintillant est réservé à la bifurcation surmontée d'un cône vert",
+"e": "Les marques latérales ont des feux isophases ou à éclats réguliers."
+},
+{
+"t": "c'est normal pour toute bouée verte",
+"e": "Non : le côté gauche porte un feu isophase ou à éclats réguliers."
+},
+{
+"t": "c'est un feu de détresse",
+"e": "Un feu de détresse n'est pas un feu de balisage."
+}
+],
+"b": 0,
+"ex": "Scintillant continu (Q) rouge ou vert : marque de bifurcation qui indique le côté préférable. Côté gauche simple : vert Iso ou Fl.",
+"pg": "Même couleur, autre rythme, autre sens : le rythme fait partie du message.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.2 et II.3"
+},
+{
+"id": "N023",
+"cat": "N",
+"res": false,
+"q": "Cette marque à bandes horizontales rouges et vertes, avec un voyant sphérique, signale :",
+"d": {
+"t": "bouee",
+"forme": "sphere",
+"bandes": [
+"rouge",
+"vert",
+"rouge",
+"vert"
+],
+"voyant": "sphere-rv"
+},
+"o": [
+{
+"t": "une bifurcation du chenal",
+"e": "C'est la marque de bifurcation."
+},
+{
+"t": "un danger isolé",
+"e": "Le danger isolé est une marque de mer noire et rouge."
+},
+{
+"t": "des eaux saines",
+"e": "Les eaux saines sont une marque de mer rouge et blanche."
+}
+],
+"b": 0,
+"ex": "Bifurcation : bandes horizontales rouges et vertes ; bouée sphérique, à voyant ou espar ; voyant sphère à bandes rouges et vertes.",
+"pg": "Ne cherche pas les marques de mer (danger isolé, eaux saines) sur une voie intérieure : le SIGNI ne les utilise pas.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3 · Tome 1, p. 17"
+},
+{
+"id": "N024",
+"cat": "N",
+"res": false,
+"q": "Le feu d'une marque de bifurcation est :",
+"d": {
+"t": "bouee",
+"forme": "sphere",
+"bandes": [
+"rouge",
+"vert",
+"rouge",
+"vert"
+],
+"voyant": "sphere-rv",
+"feu": [
+"blanc",
+"Iso 2s"
+]
+},
+"o": [
+{
+"t": "blanc isophase (2 s)",
+"e": "Exact."
+},
+{
+"t": "blanc scintillant",
+"e": "Ce n'est pas le rythme prévu."
+},
+{
+"t": "rouge et vert alternés",
+"e": "Ce rythme n'existe pas pour la bifurcation."
+}
+],
+"b": 0,
+"ex": "Bifurcation : feu blanc isophase, période de 2 secondes (1 s de lumière, 1 s d'obscurité).",
+"pg": "Blanc isophase la nuit au milieu de l'eau = bifurcation : tu peux passer des deux côtés.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3"
+},
+{
+"id": "N025",
+"cat": "N",
+"res": false,
+"q": "À une marque de bifurcation sans voyant supplémentaire, on passe :",
+"d": null,
+"o": [
+{
+"t": "d'un côté ou de l'autre",
+"e": "Le chenal se sépare en deux : les deux branches sont navigables."
+},
+{
+"t": "seulement à droite",
+"e": "Aucun côté n'est imposé."
+},
+{
+"t": "ni d'un côté ni de l'autre",
+"e": "Elle marque un partage du chenal, pas une interdiction."
+}
+],
+"b": 0,
+"ex": "La bifurcation marque l'endroit où le chenal se divise : on peut passer à droite ou à gauche.",
+"pg": "Si un cylindre rouge ou un cône vert surmonte la marque, il indique le côté préférable — le chenal principal.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3 · Tome 1, p. 17"
+},
+{
+"id": "N026",
+"cat": "N",
+"res": false,
+"q": "Une marque de bifurcation est surmontée d'un cône vert et porte un feu vert scintillant continu. Ce cône indique :",
+"d": {
+"t": "bouee",
+"forme": "sphere",
+"bandes": [
+"rouge",
+"vert",
+"rouge",
+"vert"
+],
+"voyant": "cone-vert",
+"feu": [
+"vert",
+"Q"
+]
+},
+"o": [
+{
+"t": "le côté où il est préférable de passer, vers le chenal principal",
+"e": "C'est le rôle du voyant ajouté."
+},
+{
+"t": "un danger : il ne faut pas passer",
+"e": "Ce n'est pas une interdiction."
+},
+{
+"t": "une épave",
+"e": "Une épave se signale autrement."
+}
+],
+"b": 0,
+"ex": "Un voyant cylindrique rouge ou conique vert au-dessus d'une marque de bifurcation indique de quel côté il est préférable de passer (chenal principal) ; la marque porte alors un feu scintillant continu rouge ou vert.",
+"pg": "La bifurcation « simple » laisse le choix ; avec un cylindre rouge ou un cône vert, elle se lit comme une marque latérale du chenal principal.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3"
+},
+{
+"id": "N027",
+"cat": "N",
+"res": false,
+"q": "Une marque de bifurcation à bandes rouges et NOIRES :",
+"d": null,
+"o": [
+{
+"t": "n'existe pas dans le balisage belge : les bandes sont rouges et vertes",
+"e": "Le règlement ne connaît que rouge et vert."
+},
+{
+"t": "est une variante autorisée de la bifurcation",
+"e": "C'est ce qu'écrit le manuel, mais le règlement ne le prévoit pas."
+},
+{
+"t": "signale une bifurcation dangereuse",
+"e": "Ce n'est prévu nulle part."
+}
+],
+"b": 0,
+"ex": "Bifurcation : bandes horizontales rouges et vertes, et uniquement celles-là.",
+"pg": "Le manuel ajoute « ou rouges et noires » : le règlement ne le dit pas. C'est un des écarts listés dans la page « Erreurs du manuel ».",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3 · Erreurs du manuel, point 1"
+},
+{
+"id": "N028",
+"cat": "N",
+"res": false,
+"q": "La forme d'une marque de bifurcation est :",
+"d": null,
+"o": [
+{
+"t": "une bouée sphérique, une bouée à voyant ou un espar",
+"e": "C'est la description du règlement."
+},
+{
+"t": "toujours un espar",
+"e": "L'espar n'est qu'une des formes possibles."
+},
+{
+"t": "une bouée conique",
+"e": "Conique = côté gauche."
+}
+],
+"b": 0,
+"ex": "Bifurcation : bouée sphérique, bouée avec voyant ou espar ; voyant sphère à bandes rouges et vertes.",
+"pg": "Sphère = bifurcation, cylindre = droite, cône = gauche.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3"
+},
+{
+"id": "N029",
+"cat": "N",
+"res": false,
+"q": "Ce panneau carré rouge à deux bandes blanches horizontales, sur la berge, signifie :",
+"d": {
+"t": "rive",
+"type": "rive-droite"
+},
+"o": [
+{
+"t": "le chenal est proche de la rive droite",
+"e": "C'est le signal à terre « chenal proche de la rive droite »."
+},
+{
+"t": "défense d'accoster",
+"e": "Ce n'est pas un panneau d'interdiction : il n'a ni bordure ni diagonale."
+},
+{
+"t": "le chenal traverse vers l'autre rive",
+"e": "La traversée est signalée en jaune et noir."
+}
+],
+"b": 0,
+"ex": "Balisage à terre : chenal proche de la rive droite = panneau carré (côtés horizontaux et verticaux) rouge à deux bandes blanches horizontales ; feu rouge à occultations régulières.",
+"pg": "Rouge reste la couleur du côté droit, même sur la berge.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A.1"
+},
+{
+"id": "N030",
+"cat": "N",
+"res": false,
+"q": "Ce panneau carré posé sur la pointe, moitié haute verte, moitié basse blanche, signifie :",
+"d": {
+"t": "rive",
+"type": "rive-gauche"
+},
+"o": [
+{
+"t": "le chenal est proche de la rive gauche",
+"e": "C'est le signal à terre du côté gauche."
+},
+{
+"t": "le chenal est proche de la rive droite",
+"e": "Celui-là est rouge à bandes blanches."
+},
+{
+"t": "début d'une zone autorisée",
+"e": "Les autorisations sont des panneaux bleus."
+}
+],
+"b": 0,
+"ex": "Chenal proche de la rive gauche : panneau carré placé sur la pointe, moitié supérieure verte, moitié inférieure blanche ; feu vert à occultations régulières.",
+"pg": "Vert = côté gauche, sur l'eau comme sur la berge.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A.2"
+},
+{
+"id": "N031",
+"cat": "N",
+"res": false,
+"q": "La nuit, le panneau « chenal proche de la rive droite » peut être accompagné :",
+"d": {
+"t": "rive",
+"type": "rive-droite",
+"feu": [
+"rouge",
+"Oc"
+]
+},
+"o": [
+{
+"t": "d'un feu rouge à occultations régulières",
+"e": "Exact."
+},
+{
+"t": "d'un feu vert isophase",
+"e": "Vert = côté gauche, et isophase = marque sur l'eau."
+},
+{
+"t": "d'un feu jaune",
+"e": "Le jaune signale une traversée."
+}
+],
+"b": 0,
+"ex": "Signaux à terre : feu rouge (rive droite) ou vert (rive gauche) à occultations régulières (Oc).",
+"pg": "Sur la berge, le rythme est l'occultation ; sur l'eau, les marques latérales sont isophases ou à éclats.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A.1"
+},
+{
+"id": "N032",
+"cat": "N",
+"res": false,
+"q": "Le feu du panneau « chenal proche de la rive gauche » est :",
+"d": {
+"t": "rive",
+"type": "rive-gauche",
+"feu": [
+"vert",
+"Oc"
+]
+},
+"o": [
+{
+"t": "vert, à occultations régulières",
+"e": "Exact."
+},
+{
+"t": "vert, scintillant continu",
+"e": "Le scintillant continu est réservé à la bifurcation."
+},
+{
+"t": "rouge, à occultations",
+"e": "Rouge = rive droite."
+}
+],
+"b": 0,
+"ex": "Chenal proche de la rive gauche : feu vert à occultations régulières.",
+"pg": "Même couleur que la marque, rythme « occultations » pour les signaux à terre.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A.2"
+},
+{
+"id": "N033",
+"cat": "N",
+"res": false,
+"q": "Ce panneau jaune à bande verticale noire, sur la rive, annonce :",
+"d": {
+"t": "rive",
+"type": "traversee-droite"
+},
+"o": [
+{
+"t": "une traversée : le chenal passe d'une rive à l'autre",
+"e": "Jaune et noir = traversée."
+},
+{
+"t": "une marque spéciale",
+"e": "Les marques spéciales sont des marques de mer, jaunes à croix."
+},
+{
+"t": "un danger isolé",
+"e": "Le danger isolé est noir et rouge."
+}
+],
+"b": 0,
+"ex": "Traversée : panneau jaune à bande verticale noire (rive droite : côtés horizontaux et verticaux ; rive gauche : posé sur la pointe, ou croix de Saint-André jaune) ; feu jaune à occultations régulières.",
+"pg": "Jaune et noir sur la berge ne veut pas dire « danger » : il dit que le chenal change de rive.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B"
+},
+{
+"id": "N034",
+"cat": "N",
+"res": false,
+"q": "Une latte jaune en forme de croix de Saint-André, sur la rive gauche, signale :",
+"d": {
+"t": "rive",
+"type": "croix"
+},
+"o": [
+{
+"t": "une traversée du chenal vers l'autre rive",
+"e": "C'est l'une des deux formes prévues pour la traversée sur la rive gauche."
+},
+{
+"t": "une marque spéciale (câble, zone d'exercice)",
+"e": "Le voyant en croix jaune des marques spéciales est une marque de MER, sur une bouée."
+},
+{
+"t": "l'interdiction de passer",
+"e": "L'interdiction est rouge."
+}
+],
+"b": 0,
+"ex": "Rive gauche : traversée = panneau jaune à bande noire posé sur la pointe, OU latte jaune en croix de Saint-André.",
+"pg": "La croix jaune existe en mer comme marque spéciale. Sur la berge d'une voie intérieure, c'est un signal de traversée.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.2"
+},
+{
+"id": "N035",
+"cat": "N",
+"res": false,
+"q": "La nuit, le signal de traversée montre :",
+"d": {
+"t": "rive",
+"type": "traversee-droite",
+"feu": [
+"jaune",
+"Oc"
+]
+},
+"o": [
+{
+"t": "un feu jaune à occultations régulières",
+"e": "Exact."
+},
+{
+"t": "un feu blanc isophase",
+"e": "C'est la bifurcation."
+},
+{
+"t": "deux feux rouges",
+"e": "Ce serait une interdiction."
+}
+],
+"b": 0,
+"ex": "Traversée : feu jaune à occultations régulières.",
+"pg": "Jaune sur la berge, la nuit : le chenal change de rive.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B"
+},
+{
+"id": "N036",
+"cat": "N",
+"res": false,
+"q": "Deux panneaux de traversée identiques, placés sur la même rive l'un derrière l'autre :",
+"d": null,
+"o": [
+{
+"t": "forment un alignement qui marque l'axe d'une longue traversée",
+"e": "C'est leur rôle."
+},
+{
+"t": "indiquent deux chenaux différents",
+"e": "Ils désignent un seul axe."
+},
+{
+"t": "doublent le signal en cas de panne",
+"e": "Ce n'est pas une redondance, c'est une géométrie."
+}
+],
+"b": 0,
+"ex": "Deux signaux identiques, l'un derrière l'autre sur la même rive, forment un alignement : tu restes dans l'axe tant que tu les vois l'un devant l'autre.",
+"pg": "Un alignement se tient en gardant les deux signaux superposés dans ton regard, pas en visant le premier.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.3.2"
+},
+{
+"id": "N037",
+"cat": "N",
+"res": false,
+"q": "Pour rester sur l'axe d'un alignement, tu gardes les deux signaux :",
+"d": null,
+"o": [
+{
+"t": "l'un exactement devant l'autre",
+"e": "Tant qu'ils sont superposés, tu es sur l'axe."
+},
+{
+"t": "bien écartés l'un de l'autre",
+"e": "S'ils s'écartent, tu as quitté l'axe."
+},
+{
+"t": "à ta gauche",
+"e": "La position latérale ne compte pas."
+}
+],
+"b": 0,
+"ex": "Deux marques alignées vues l'une derrière l'autre définissent une ligne : si elles se décalent, tu t'éloignes de l'axe.",
+"pg": "Si le signal avant glisse à gauche du signal arrière, tu es sorti de l'axe vers la gauche : corrige vers la gauche.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.3.2"
+},
+{
+"id": "N038",
+"cat": "N",
+"res": false,
+"q": "Les feux d'un alignement de traversée sont :",
+"d": null,
+"o": [
+{
+"t": "jaunes ; le feu arrière peut être fixe",
+"e": "Le règlement le précise."
+},
+{
+"t": "rouges",
+"e": "Le rouge est la couleur du côté droit."
+},
+{
+"t": "toujours blancs",
+"e": "Les signaux de traversée sont jaunes."
+}
+],
+"b": 0,
+"ex": "Feux d'alignement de traversée : jaunes ; l'avant et l'arrière ont généralement le même rythme, mais le feu arrière peut être fixe.",
+"pg": "Un feu jaune fixe en arrière d'un feu jaune rythmé : c'est un alignement, pas une erreur.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.3.2"
+},
+{
+"id": "N039",
+"cat": "N",
+"res": false,
+"q": "Les signaux à terre qui indiquent la position du chenal servent aussi :",
+"d": null,
+"o": [
+{
+"t": "de points de repère",
+"e": "Le règlement le dit."
+},
+{
+"t": "de limites de vitesse",
+"e": "Une vitesse est imposée par le panneau B.6."
+},
+{
+"t": "de postes d'amarrage",
+"e": "Ils ne servent pas à s'amarrer."
+}
+],
+"b": 0,
+"ex": "Ils indiquent la position du chenal par rapport à la rive et servent aussi de points de repère.",
+"pg": "Ne t'amarre pas à un poteau de balisage : c'est un signal, pas un équipement.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A"
+},
+{
+"id": "N040",
+"cat": "N",
+"res": false,
+"q": "Le panneau « chenal proche de la rive droite » est placé :",
+"d": null,
+"o": [
+{
+"t": "côtés horizontaux et verticaux, comme un carré posé à plat",
+"e": "Exact."
+},
+{
+"t": "sur la pointe, comme un losange",
+"e": "C'est le panneau de la rive gauche."
+},
+{
+"t": "à l'horizontale, au ras de l'eau",
+"e": "Il est sur un poteau."
+}
+],
+"b": 0,
+"ex": "Rive droite : carré « droit ». Rive gauche : carré posé sur la pointe.",
+"pg": "Le placement de la forme est un deuxième indice, utile de loin quand la couleur se distingue mal.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A"
+},
+{
+"id": "N041",
+"cat": "N",
+"res": false,
+"q": "Ce panneau jaune à bande verticale noire, posé sur la pointe, est placé :",
+"d": {
+"t": "rive",
+"type": "traversee-gauche"
+},
+"o": [
+{
+"t": "sur la rive gauche, pour signaler une traversée",
+"e": "Posé sur la pointe = rive gauche."
+},
+{
+"t": "sur la rive droite, pour signaler une traversée",
+"e": "Sur la rive droite, le carré est posé à plat."
+},
+{
+"t": "au milieu de l'eau, pour une bifurcation",
+"e": "La bifurcation est une bouée rouge et verte."
+}
+],
+"b": 0,
+"ex": "Traversée : rive droite = carré à plat ; rive gauche = carré sur la pointe, ou croix de Saint-André jaune.",
+"pg": "Même logique que pour le chenal : la forme posée sur la pointe est pour la rive gauche.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.2"
+},
+{
+"id": "N042",
+"cat": "N",
+"res": false,
+"q": "Cette balise fixe, sur un poteau, porte un cône rouge pointe en bas. Elle signale :",
+"d": {
+"t": "poteau",
+"voyants": [
+"cone-rouge-bas"
+]
+},
+"o": [
+{
+"t": "un point dangereux ou un obstacle du côté droit",
+"e": "Balise fixe côté droit : cône rouge pointe vers le bas."
+},
+{
+"t": "un obstacle du côté gauche",
+"e": "Le côté gauche est un cône vert pointe en haut."
+},
+{
+"t": "une interdiction de passer",
+"e": "L'interdiction est un panneau A.1, pas un cône."
+}
+],
+"b": 0,
+"ex": "Points dangereux et obstacles (épis, digues, bancs) : balises fixes ; côté droit = poteau à cône rouge pointe en bas, feu rouge Iso ou Fl.",
+"pg": "Sur les balises FIXES, le côté droit est un cône (pointe en bas), pas un cylindre.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.1 · Tome 1, p. 19"
+},
+{
+"id": "N043",
+"cat": "N",
+"res": false,
+"q": "Ce poteau surmonté d'un cône vert pointe en haut signale :",
+"d": {
+"t": "poteau",
+"voyants": [
+"cone-vert"
+]
+},
+"o": [
+{
+"t": "un point dangereux ou un obstacle du côté gauche",
+"e": "Exact."
+},
+{
+"t": "un point dangereux du côté droit",
+"e": "Le côté droit est rouge."
+},
+{
+"t": "un poste d'eau potable",
+"e": "Les services sont des panneaux bleus."
+}
+],
+"b": 0,
+"ex": "Côté gauche : poteau avec cône vert pointe vers le haut ; feu vert Iso ou Fl.",
+"pg": "Le cône vert pointe en haut se retrouve sur les bouées ET sur les balises fixes du côté gauche.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.2 · Tome 1, p. 19"
+},
+{
+"id": "N044",
+"cat": "N",
+"res": false,
+"q": "Ce poteau porte un cône rouge pointe en bas au-dessus d'un cône vert pointe en haut. Il signale :",
+"d": {
+"t": "poteau",
+"voyants": [
+"cone-vert",
+"cone-rouge-bas"
+]
+},
+"o": [
+{
+"t": "une bifurcation, par exemple un banc médian : on passe des deux côtés",
+"e": "C'est la balise fixe de bifurcation."
+},
+{
+"t": "un danger à ne contourner que par la droite",
+"e": "Les deux côtés sont possibles."
+},
+{
+"t": "une zone interdite",
+"e": "Ce n'est pas une interdiction."
+}
+],
+"b": 0,
+"ex": "Balise fixe de bifurcation : cône rouge pointe en bas AU-DESSUS d'un cône vert pointe en haut ; feu blanc Iso 2 s.",
+"pg": "L'ordre compte : rouge en haut, vert en bas.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.3 · Tome 1, p. 19"
+},
+{
+"id": "N045",
+"cat": "N",
+"res": false,
+"q": "Le feu de la balise fixe de bifurcation est :",
+"d": {
+"t": "poteau",
+"voyants": [
+"cone-vert",
+"cone-rouge-bas"
+],
+"feu": [
+"blanc",
+"Iso 2s"
+]
+},
+"o": [
+{
+"t": "blanc isophase 2 s",
+"e": "Comme la bouée de bifurcation."
+},
+{
+"t": "rouge au-dessus de vert",
+"e": "Ce sont les cônes qui sont rouge et vert, pas le feu."
+},
+{
+"t": "jaune à occultations",
+"e": "Le jaune est celui des traversées."
+}
+],
+"b": 0,
+"ex": "Bifurcation, fixe ou flottante : feu blanc isophase de 2 secondes.",
+"pg": "Ne transpose pas les couleurs des cônes au feu.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.3"
+},
+{
+"id": "N046",
+"cat": "N",
+"res": false,
+"q": "Les cônes des balises fixes peuvent être remplacés par :",
+"d": null,
+"o": [
+{
+"t": "des panneaux triangulaires à fond blanc, bordés de rouge ou de vert",
+"e": "Le règlement le permet."
+},
+{
+"t": "des pavillons",
+"e": "Ce n'est pas prévu."
+},
+{
+"t": "des bouées sphériques",
+"e": "Ce n'est pas prévu."
+}
+],
+"b": 0,
+"ex": "Les cônes des balises fixes peuvent être remplacés par des panneaux triangulaires à fond blanc et bordure rouge ou verte.",
+"pg": "Un triangle blanc bordé de rouge sur un poteau au bord de l'eau n'est pas un panneau de la route : c'est une balise du côté droit.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A"
+},
+{
+"id": "N047",
+"cat": "N",
+"res": false,
+"q": "Cet espar à bandes horizontales rouges et blanches, avec un cylindre rouge, est :",
+"d": {
+"t": "bouee",
+"forme": "espar",
+"bandes": [
+"rouge",
+"blanc",
+"rouge",
+"blanc",
+"rouge"
+],
+"voyant": "cyl-rouge"
+},
+"o": [
+{
+"t": "une balise flottante de point dangereux, du côté droit",
+"e": "Exact."
+},
+{
+"t": "une marque d'eaux saines",
+"e": "C'est une marque de mer, à bandes VERTICALES rouges et blanches."
+},
+{
+"t": "un signal de sortie de port",
+"e": "Le règlement ne prévoit pas de « balises de sortie rayées de blanc »."
+}
+],
+"b": 0,
+"ex": "Points dangereux, balises flottantes : côté droit = bandes horizontales rouges et blanches, voyant cylindre rouge ; côté gauche = bandes vertes et blanches, cône vert.",
+"pg": "Les bandes blanches n'ont rien à voir avec la sortie d'un port : c'est un écart du manuel.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.B.1 · Erreurs du manuel, point 2"
+},
+{
+"id": "N048",
+"cat": "N",
+"res": false,
+"q": "Cet espar à bandes vertes et blanches, avec un cône vert pointe en haut, est :",
+"d": {
+"t": "bouee",
+"forme": "espar",
+"bandes": [
+"vert",
+"blanc",
+"vert",
+"blanc",
+"vert"
+],
+"voyant": "cone-vert"
+},
+"o": [
+{
+"t": "une balise flottante de point dangereux, du côté gauche",
+"e": "Exact."
+},
+{
+"t": "une marque de bifurcation",
+"e": "La bifurcation est rouge ET verte."
+},
+{
+"t": "une marque du côté droit",
+"e": "Le côté droit est rouge."
+}
+],
+"b": 0,
+"ex": "Balise flottante, côté gauche : bandes horizontales vertes et blanches, voyant cône vert pointe en haut, feu vert Iso ou Fl.",
+"pg": "Le blanc s'ajoute à la couleur du côté, il ne la remplace pas.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.B.2"
+},
+{
+"id": "N049",
+"cat": "N",
+"res": false,
+"q": "Un épi est :",
+"d": null,
+"o": [
+{
+"t": "un ouvrage qui avance de la rive dans l'eau, signalé par des balises de point dangereux",
+"e": "C'est pour cela qu'on le balise."
+},
+{
+"t": "un haut-fond au milieu du fleuve",
+"e": "Ça, c'est un banc médian."
+},
+{
+"t": "une écluse sans porte",
+"e": "Ça n'existe pas."
+}
+],
+"b": 0,
+"ex": "Les épis, les digues et les bancs médians sont signalés par les marques de points dangereux.",
+"pg": "L'épi est souvent invisible à marée haute ou en crue : fie-toi à sa balise, pas à tes yeux.",
+"ref": "Tome 1, p. 19 · Règlement général de police (AR 24/09/2006), appendice 8, IV"
+},
+{
+"id": "N050",
+"cat": "N",
+"res": false,
+"q": "Aux entrées de port, les protections des berges peuvent être balisées :",
+"d": null,
+"o": [
+{
+"t": "des deux côtés, par les balises fixes des points dangereux",
+"e": "Le règlement le prévoit aux dérivations, embouchures et entrées de ports."
+},
+{
+"t": "par des bouées jaunes",
+"e": "Le jaune n'est pas prévu pour cela."
+},
+{
+"t": "seulement de nuit",
+"e": "Le balisage vaut de jour comme de nuit."
+}
+],
+"b": 0,
+"ex": "Aux dérivations, embouchures et entrées de ports, les protections des berges peuvent être signalées des deux côtés par les balises fixes rouges (cône pointe en bas) et vertes (cône pointe en haut).",
+"pg": "Le manuel parle de « balises rayées de blanc à la sortie du port » : le règlement ne le prévoit pas.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.4 · Erreurs du manuel, point 2"
+},
+{
+"id": "N051",
+"cat": "N",
+"res": false,
+"q": "Tu entres dans un port. À l'entrée, un poteau porte un cône vert pointe en haut. Tu le laisses :",
+"d": {
+"t": "poteau",
+"voyants": [
+"cone-vert"
+]
+},
+"o": [
+{
+"t": "à tribord",
+"e": "En entrant tu es montant : le vert (côté gauche) est à ta droite."
+},
+{
+"t": "à bâbord",
+"e": "Ce serait en sortant."
+},
+{
+"t": "d'un côté ou de l'autre",
+"e": "C'est une marque de côté, pas une bifurcation."
+}
+],
+"b": 0,
+"ex": "Entrer au port = montant : vert à tribord, rouge à bâbord.",
+"pg": "Le réflexe « vert à tribord en entrant » est le même qu'en mer région A.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.A.4"
+},
+{
+"id": "N052",
+"cat": "N",
+"res": false,
+"q": "Le manuel dit qu'« à la sortie du port, les balises sont rayées de blanc ». Le règlement :",
+"d": null,
+"o": [
+{
+"t": "ne prévoit rien de tel : les bandes blanches signalent des points dangereux",
+"e": "C'est un écart du manuel."
+},
+{
+"t": "dit exactement la même chose",
+"e": "Le règlement ne contient pas cette règle."
+},
+{
+"t": "l'impose seulement en Flandre",
+"e": "Le règlement est le même partout en Belgique."
+}
+],
+"b": 0,
+"ex": "Les balises flottantes à bandes rouges et blanches ou vertes et blanches sont des marques de points dangereux et d'obstacles.",
+"pg": "À l'examen, c'est le règlement qui fait foi.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, IV.B · Erreurs du manuel, point 2"
+},
+{
+"id": "N053",
+"cat": "N",
+"res": false,
+"q": "Un feu ISOPHASE (Iso) est un feu dont :",
+"d": null,
+"o": [
+{
+"t": "les périodes de lumière et d'obscurité ont la même durée",
+"e": "C'est la définition."
+},
+{
+"t": "la lumière ne s'éteint jamais",
+"e": "Ça, c'est un feu fixe."
+},
+{
+"t": "la lumière est plus courte que l'obscurité",
+"e": "Ça, c'est un feu à éclats."
+}
+],
+"b": 0,
+"ex": "Iso : lumière et obscurité de durées égales.",
+"pg": "« Iso » = égal. Retiens le mot, pas le dessin.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2"
+},
+{
+"id": "N054",
+"cat": "N",
+"res": false,
+"q": "Un feu à ÉCLATS (Fl) est un feu dont :",
+"d": null,
+"o": [
+{
+"t": "les périodes de lumière sont plus courtes que celles d'obscurité",
+"e": "C'est la définition."
+},
+{
+"t": "les périodes de lumière et d'obscurité sont égales",
+"e": "Ça, c'est l'isophase."
+},
+{
+"t": "la lumière clignote 100 fois par minute",
+"e": "Ça, c'est le scintillant rapide."
+}
+],
+"b": 0,
+"ex": "Fl (flash) : éclats brefs, séparés d'obscurités plus longues.",
+"pg": "Éclat = flash bref.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2"
+},
+{
+"id": "N055",
+"cat": "N",
+"res": false,
+"q": "Un feu SCINTILLANT continu (Q) donne :",
+"d": null,
+"o": [
+{
+"t": "50 à 60 éclats par minute",
+"e": "C'est la définition."
+},
+{
+"t": "100 à 120 éclats par minute",
+"e": "Ça, c'est le scintillant RAPIDE (VQ)."
+},
+{
+"t": "un éclat toutes les 10 secondes",
+"e": "Trop lent pour un scintillant."
+}
+],
+"b": 0,
+"ex": "Q (quick) : 50 à 60 éclats par minute. VQ (very quick) : 100 à 120.",
+"pg": "Q et VQ : le V de « very » double la cadence.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2"
+},
+{
+"id": "N056",
+"cat": "N",
+"res": false,
+"q": "Un feu scintillant RAPIDE continu (VQ) donne :",
+"d": null,
+"o": [
+{
+"t": "100 à 120 éclats par minute",
+"e": "Exact."
+},
+{
+"t": "50 à 60 éclats par minute",
+"e": "C'est le scintillant simple."
+},
+{
+"t": "une lumière continue",
+"e": "C'est le feu fixe."
+}
+],
+"b": 0,
+"ex": "VQ : 100 à 120 éclats par minute.",
+"pg": "Ne confonds pas Q et VQ.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2"
+},
+{
+"id": "N057",
+"cat": "N",
+"res": false,
+"q": "L'abréviation F désigne :",
+"d": null,
+"o": [
+{
+"t": "un feu fixe : lumière ininterrompue",
+"e": "Exact."
+},
+{
+"t": "un feu à éclats",
+"e": "Les éclats, c'est Fl."
+},
+{
+"t": "un feu de bifurcation",
+"e": "La bifurcation est Iso."
+}
+],
+"b": 0,
+"ex": "F = fixe ; Fl = éclats ; Oc = occultations ; Iso = isophase ; Q = scintillant ; VQ = scintillant rapide.",
+"pg": "F et Fl se ressemblent : le « l » de « flash » fait toute la différence.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2"
+},
+{
+"id": "N058",
+"cat": "N",
+"res": false,
+"q": "L'abréviation Oc désigne un feu :",
+"d": null,
+"o": [
+{
+"t": "à occultations",
+"e": "Exact : Oc = occultations."
+},
+{
+"t": "orange",
+"e": "Le balisage n'a pas de feu orange."
+},
+{
+"t": "à éclats groupés",
+"e": "Les éclats groupés s'écrivent Fl(…)."
+}
+],
+"b": 0,
+"ex": "Oc : feu à occultations — la lumière est interrompue par de courtes extinctions. C'est le rythme des signaux à terre.",
+"pg": "Occultation = la lumière s'éteint brièvement ; éclat = elle s'allume brièvement.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2 et III"
+},
+{
+"id": "N059",
+"cat": "N",
+"res": false,
+"q": "Fl(2+1) désigne :",
+"d": null,
+"o": [
+{
+"t": "un feu à éclats diversement groupés",
+"e": "Exact : un groupe de 2 éclats puis 1 éclat."
+},
+{
+"t": "un feu fixe et deux éclats",
+"e": "Ce n'est pas l'écriture."
+},
+{
+"t": "un feu à trois couleurs",
+"e": "Les chiffres comptent des éclats, pas des couleurs."
+}
+],
+"b": 0,
+"ex": "Fl(2+1) : éclats diversement groupés — deux éclats, puis un.",
+"pg": "Les chiffres entre parenthèses comptent les éclats d'un groupe.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2 et I.3"
+},
+{
+"id": "N060",
+"cat": "N",
+"res": false,
+"q": "« Iso 2s » signifie :",
+"d": null,
+"o": [
+{
+"t": "feu isophase de période 2 secondes",
+"e": "La période comprend la lumière et l'obscurité : 1 s + 1 s."
+},
+{
+"t": "deux feux isophases",
+"e": "Le chiffre est une durée, pas un nombre de feux."
+},
+{
+"t": "isophase allumé 2 secondes, éteint 4",
+"e": "Isophase : durées égales."
+}
+],
+"b": 0,
+"ex": "La période (2 s) est la durée d'un cycle complet : ici 1 s de lumière et 1 s d'obscurité.",
+"pg": "Le « s » est une durée en secondes.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.3"
+},
+{
+"id": "N061",
+"cat": "N",
+"res": false,
+"q": "« Q(3) 10s » signifie :",
+"d": null,
+"o": [
+{
+"t": "un groupe de 3 scintillements, répété toutes les 10 secondes",
+"e": "Exact."
+},
+{
+"t": "trois feux scintillants",
+"e": "Il n'y a qu'un feu."
+},
+{
+"t": "un scintillement toutes les 3 secondes pendant 10 secondes",
+"e": "Ce n'est pas l'écriture."
+}
+],
+"b": 0,
+"ex": "Q(3) : feu à scintillements groupés par 3 ; 10s : période du cycle.",
+"pg": "Le nombre entre parenthèses = taille du groupe ; le nombre avec « s » = période.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, I.2 et I.3"
+},
+{
+"id": "N062",
+"cat": "N",
+"res": false,
+"q": "La nuit, au milieu de l'eau, tu vois un feu blanc isophase. C'est :",
+"d": {
+"t": "nuit",
+"feux": [
+{
+"x": 100,
+"y": 50,
+"c": "blanc"
+}
+],
+"legende": "feu blanc isophase, au milieu de l'eau"
+},
+"o": [
+{
+"t": "une marque de bifurcation",
+"e": "Blanc isophase 2 s : bifurcation."
+},
+{
+"t": "un bateau au stationnement",
+"e": "Un bateau en stationnement montre un feu blanc FIXE, pas isophase."
+},
+{
+"t": "une marque du côté droit",
+"e": "Le côté droit a un feu rouge."
+}
+],
+"b": 0,
+"ex": "Feu blanc isophase sur l'eau = bifurcation : tu peux passer d'un côté ou de l'autre.",
+"pg": "Fixe = bateau ; isophase = balise. Le rythme distingue les deux.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3"
+},
+{
+"id": "N063",
+"cat": "N",
+"res": false,
+"q": "La nuit, sur la berge, un feu jaune à occultations régulières signale :",
+"d": {
+"t": "nuit",
+"feux": [
+{
+"x": 40,
+"y": 40,
+"c": "jaune"
+}
+],
+"legende": "feu jaune à occultations, sur la berge"
+},
+"o": [
+{
+"t": "une traversée : le chenal change de rive",
+"e": "Exact."
+},
+{
+"t": "un bateau rapide",
+"e": "Le bateau rapide montre deux feux jaunes scintillants, et il est sur l'eau."
+},
+{
+"t": "des travaux",
+"e": "Les travaux portent un feu jaune scintillant, sur le bateau."
+}
+],
+"b": 0,
+"ex": "Traversée : feux jaunes à occultations régulières sur la berge.",
+"pg": "Jaune scintillant = un bateau (rapide, travaux) ; jaune à occultations sur la berge = traversée.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B"
+},
+{
+"id": "N064",
+"cat": "N",
+"res": false,
+"q": "La nuit, sur la berge, un feu vert à occultations régulières signifie :",
+"d": {
+"t": "nuit",
+"feux": [
+{
+"x": 40,
+"y": 40,
+"c": "vert"
+}
+],
+"legende": "feu vert à occultations, sur la berge"
+},
+"o": [
+{
+"t": "le chenal est proche de la rive gauche",
+"e": "Exact."
+},
+{
+"t": "le chenal est proche de la rive droite",
+"e": "Ce serait rouge."
+},
+{
+"t": "passage autorisé (E.1)",
+"e": "Le feu E.1 est un feu vert FIXE aux ouvrages."
+}
+],
+"b": 0,
+"ex": "Signal à terre, vert à occultations : chenal proche de la rive gauche.",
+"pg": "Un feu vert fixe à un pont ou une écluse autorise le passage ; un feu vert à occultations sur la berge indique le chenal.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.A.2"
+},
+{
+"id": "N065",
+"cat": "N",
+"res": false,
+"q": "La rive droite d'un fleuve est celle qui se trouve :",
+"d": null,
+"o": [
+{
+"t": "à droite d'un observateur tourné vers l'aval",
+"e": "C'est la définition."
+},
+{
+"t": "à droite du bateau, quel que soit son sens",
+"e": "La rive ne dépend pas de ton cap."
+},
+{
+"t": "au nord",
+"e": "Les points cardinaux n'interviennent pas."
+}
+],
+"b": 0,
+"ex": "Dos à la source, face au courant qui s'en va : la rive droite est à ta droite.",
+"pg": "Un avalant a la rive droite à sa droite ; un montant l'a à sa gauche.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13 · Tome 1, p. 20"
+},
+{
+"id": "N066",
+"cat": "N",
+"res": false,
+"q": "Un bateau est dit MONTANT quand il :",
+"d": null,
+"o": [
+{
+"t": "remonte vers la source",
+"e": "Exact."
+},
+{
+"t": "descend vers l'embouchure",
+"e": "Ça, c'est l'avalant."
+},
+{
+"t": "monte dans une écluse",
+"e": "Le mot ne parle pas de l'écluse mais du sens de navigation."
+}
+],
+"b": 0,
+"ex": "Montant : vers la source, contre le courant. Avalant : vers l'embouchure, avec le courant.",
+"pg": "« Monter dans l'écluse » et « être montant » ne sont pas la même chose.",
+"ref": "Tome 1, p. 20"
+},
+{
+"id": "N067",
+"cat": "N",
+"res": false,
+"q": "Un bateau est dit AVALANT quand il :",
+"d": null,
+"o": [
+{
+"t": "descend vers l'embouchure",
+"e": "Exact."
+},
+{
+"t": "remonte vers la source",
+"e": "Ça, c'est le montant."
+},
+{
+"t": "est au mouillage",
+"e": "Un bateau à l'ancre n'est ni montant ni avalant."
+}
+],
+"b": 0,
+"ex": "Avalant : il navigue vers l'embouchure, dans le sens du courant.",
+"pg": "Avaler = descendre (« à val »).",
+"ref": "Tome 1, p. 20"
+},
+{
+"id": "N068",
+"cat": "N",
+"res": false,
+"q": "Tu es montant. La rive droite est :",
+"d": {
+"t": "riviere",
+"bateau": "montant"
+},
+"o": [
+{
+"t": "à ta gauche",
+"e": "En remontant, tu tournes le dos à l'aval : la rive droite passe à ta gauche."
+},
+{
+"t": "à ta droite",
+"e": "C'est le cas de l'avalant."
+},
+{
+"t": "devant toi",
+"e": "Les rives sont sur les côtés."
+}
+],
+"b": 0,
+"ex": "Les noms des rives ne changent jamais ; c'est ta position par rapport à elles qui change.",
+"pg": "« Rive droite » n'est pas « à ma droite ».",
+"ref": "Tome 1, p. 20"
+},
+{
+"id": "N069",
+"cat": "N",
+"res": false,
+"q": "Sur ce dessin, le courant va vers la droite. La rive du HAUT est :",
+"d": {
+"t": "riviere"
+},
+"o": [
+{
+"t": "la rive gauche",
+"e": "Face au courant qui s'en va (vers la droite), la rive du haut est à gauche."
+},
+{
+"t": "la rive droite",
+"e": "Tourne-toi dans le sens du courant : le haut du dessin est alors à ta gauche."
+},
+{
+"t": "on ne peut pas savoir",
+"e": "Le sens du courant suffit pour nommer les rives."
+}
+],
+"b": 0,
+"ex": "Pour nommer les rives sur un plan, oriente-toi dans le sens du courant.",
+"pg": "Sur une carte, on oublie souvent de se tourner vers l'aval avant de dire « droite » ou « gauche ».",
+"ref": "Tome 1, p. 20"
+},
+{
+"id": "N070",
+"cat": "N",
+"res": false,
+"q": "Les noms « rive droite » et « rive gauche » changent-ils quand tu fais demi-tour ?",
+"d": null,
+"o": [
+{
+"t": "non, ils sont fixés par le sens du courant",
+"e": "Exact."
+},
+{
+"t": "oui, ils suivent la droite du bateau",
+"e": "C'est la confusion classique."
+},
+{
+"t": "seulement la nuit",
+"e": "Rien ne change la nuit."
+}
+],
+"b": 0,
+"ex": "Rive droite et rive gauche appartiennent au cours d'eau, pas au bateau.",
+"pg": "Ta droite et la rive droite ne coïncident que si tu es avalant.",
+"ref": "Tome 1, p. 20"
+},
+{
+"id": "N071",
+"cat": "N",
+"res": false,
+"q": "Sur un fleuve, le courant va :",
+"d": null,
+"o": [
+{
+"t": "de la source vers l'embouchure",
+"e": "Exact."
+},
+{
+"t": "de l'embouchure vers la source",
+"e": "C'est l'inverse."
+},
+{
+"t": "dans les deux sens selon l'heure",
+"e": "Ce n'est vrai que là où la marée se fait sentir."
+}
+],
+"b": 0,
+"ex": "Le courant d'un fleuve descend de la source vers l'embouchure — c'est le sens « aval ».",
+"pg": "Près de la mer, la marée peut inverser le courant ; les noms des rives, eux, ne changent pas.",
+"ref": "Tome 1, p. 20"
+},
+{
+"id": "N072",
+"cat": "N",
+"res": false,
+"q": "Un canal :",
+"d": null,
+"o": [
+{
+"t": "n'a pas de courant naturel ; il passe d'un niveau à l'autre par des écluses",
+"e": "Exact."
+},
+{
+"t": "a toujours un courant vers la mer",
+"e": "Un canal n'a pas de courant naturel."
+},
+{
+"t": "n'a jamais d'écluse",
+"e": "Les écluses font justement passer d'un bief à l'autre."
+}
+],
+"b": 0,
+"ex": "Canal : voie creusée par l'homme, sans courant naturel, organisée en biefs séparés par des écluses.",
+"pg": "Pas de courant ne veut pas dire pas d'amont : le bief le plus haut est l'amont.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13"
+},
+{
+"id": "N073",
+"cat": "N",
+"res": false,
+"q": "Pour un port, l'intérieur du port joue le rôle :",
+"d": null,
+"o": [
+{
+"t": "de la source",
+"e": "On y entre comme on remonte un fleuve."
+},
+{
+"t": "de l'embouchure",
+"e": "C'est l'inverse."
+},
+{
+"t": "d'aucun des deux",
+"e": "Le règlement dit que la navigation qui entre est montante."
+}
+],
+"b": 0,
+"ex": "Entrer au port = remonter vers la source : on lit le balisage comme un montant.",
+"pg": "Ne raisonne pas « je descends vers le port ».",
+"ref": "Tome 1, p. 17 · Règlement général de police (AR 24/09/2006), appendice 8, IV.A.4"
+},
+{
+"id": "N074",
+"cat": "N",
+"res": false,
+"q": "Sur la carte des voies navigables, les distances sont exprimées en :",
+"d": null,
+"o": [
+{
+"t": "kilomètres",
+"e": "En eaux intérieures, on compte en km."
+},
+{
+"t": "milles marins",
+"e": "Les milles sont pour la mer."
+},
+{
+"t": "encablures",
+"e": "Unité marine, inutilisée ici."
+}
+],
+"b": 0,
+"ex": "Distances en kilomètres, indiquées entre deux bâtonnets ; vitesses en km/h.",
+"pg": "Les milles et les nœuds appartiennent à la navigation en mer (brevet général).",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 7"
+},
+{
+"id": "N075",
+"cat": "N",
+"res": false,
+"q": "En eaux intérieures, les vitesses s'expriment en :",
+"d": null,
+"o": [
+{
+"t": "km/h",
+"e": "Comme les panneaux B.6."
+},
+{
+"t": "nœuds",
+"e": "Les nœuds sont pour la mer."
+},
+{
+"t": "m/s",
+"e": "Unité non utilisée sur les voies."
+}
+],
+"b": 0,
+"ex": "Sur les voies navigables : distances en km, vitesses en km/h.",
+"pg": "Un panneau B.6 « 12 » veut dire 12 km/h, pas 12 nœuds.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13"
+},
+{
+"id": "N076",
+"cat": "N",
+"res": false,
+"q": "Sur une carte au 1/250 000, 1 cm représente :",
+"d": null,
+"o": [
+{
+"t": "2,5 km",
+"e": "250 000 cm = 2 500 m = 2,5 km."
+},
+{
+"t": "25 km",
+"e": "C'est dix fois trop."
+},
+{
+"t": "250 m",
+"e": "C'est dix fois trop peu."
+}
+],
+"b": 0,
+"ex": "1 cm sur la carte = 250 000 cm sur le terrain = 2,5 km.",
+"pg": "Convertis d'abord en mètres : 250 000 cm = 2 500 m.",
+"ref": "Matière d'examen SPF : carte IGN des voies navigables au 1/250 000, interprétation de l'échelle"
+},
+{
+"id": "N077",
+"cat": "N",
+"res": false,
+"q": "Sur la carte fluviale, la flèche du symbole d'écluse indique :",
+"d": null,
+"o": [
+{
+"t": "l'amont",
+"e": "C'est le sens que donne la flèche."
+},
+{
+"t": "l'aval",
+"e": "C'est l'inverse."
+},
+{
+"t": "l'entrée du garage",
+"e": "Ce n'est pas son rôle."
+}
+],
+"b": 0,
+"ex": "Le symbole d'écluse porte une flèche vers l'amont, ainsi que les dimensions et les coordonnées de contact.",
+"pg": "La flèche ne montre pas le sens du courant mais l'amont.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 7"
+},
+{
+"id": "N078",
+"cat": "N",
+"res": false,
+"q": "Le DNG (Deuxième Nivellement Général) est :",
+"d": null,
+"o": [
+{
+"t": "le niveau de référence belge des hauteurs, calé sur les basses mers à Ostende",
+"e": "Exact."
+},
+{
+"t": "la profondeur garantie du chenal",
+"e": "La profondeur est une autre donnée."
+},
+{
+"t": "la hauteur libre sous les ponts",
+"e": "Ce n'est pas la même chose."
+}
+],
+"b": 0,
+"ex": "Les hauteurs d'eau sur la carte sont rapportées au DNG, dont le zéro est lié au niveau des basses mers à Ostende.",
+"pg": "Le DNG ne dit pas combien il y a d'eau sous ta quille : il donne l'altitude du plan d'eau.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 7"
+},
+{
+"id": "N079",
+"cat": "N",
+"res": false,
+"q": "Sur la carte, une ligne pointillée au centre de la voie signifie :",
+"d": null,
+"o": [
+{
+"t": "la profondeur standard de la voie n'est pas garantie",
+"e": "Exact."
+},
+{
+"t": "la navigation y est interdite",
+"e": "Ce n'est pas une interdiction."
+},
+{
+"t": "une frontière",
+"e": "Ce n'est pas le sens de ce symbole."
+}
+],
+"b": 0,
+"ex": "Ligne pointillée au centre : profondeur standard non garantie — un avertissement.",
+"pg": "Avertissement ≠ interdiction.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 7"
+},
+{
+"id": "N080",
+"cat": "N",
+"res": false,
+"q": "La hauteur de chute d'une écluse est :",
+"d": null,
+"o": [
+{
+"t": "la différence de niveau entre le bief amont et le bief aval",
+"e": "Exact."
+},
+{
+"t": "la hauteur des portes",
+"e": "Ce n'est pas la définition."
+},
+{
+"t": "la profondeur du sas",
+"e": "Ce n'est pas la définition."
+}
+],
+"b": 0,
+"ex": "Hauteur de chute = niveau DNG amont − niveau DNG aval.",
+"pg": "Le bief amont a le niveau le plus ÉLEVÉ.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 9 et 13"
+},
+{
+"id": "N081",
+"cat": "N",
+"res": false,
+"q": "Le point A est au DNG 65 m, le point B au DNG 75 m. La dénivellation entre A et B est :",
+"d": null,
+"o": [
+{
+"t": "10 m",
+"e": "75 − 65 = 10 m."
+},
+{
+"t": "140 m",
+"e": "On soustrait, on n'additionne pas."
+},
+{
+"t": "7,5 m",
+"e": "Pas de division."
+}
+],
+"b": 0,
+"ex": "Hauteur de chute du trajet = différence des niveaux DNG.",
+"pg": "On soustrait les deux niveaux.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 13"
+},
+{
+"id": "N082",
+"cat": "N",
+"res": false,
+"q": "Le bief amont est celui dont le niveau DNG est :",
+"d": null,
+"o": [
+{
+"t": "le plus élevé",
+"e": "Exact."
+},
+{
+"t": "le plus bas",
+"e": "C'est le bief aval."
+},
+{
+"t": "égal à zéro",
+"e": "Le zéro est la référence, pas un bief."
+}
+],
+"b": 0,
+"ex": "Bief amont : niveau le plus haut. Bief aval : niveau le plus bas.",
+"pg": "Amont = en haut, aval = en bas.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 9"
+},
+{
+"id": "N083",
+"cat": "N",
+"res": false,
+"q": "Trajet de 25 km à 10 km/h, avec 4 écluses de 15 minutes chacune. Durée totale :",
+"d": null,
+"o": [
+{
+"t": "3 h 30",
+"e": "25/10 = 2 h 30 de route, + 4 × 15 min = 1 h d'éclusage."
+},
+{
+"t": "2 h 30",
+"e": "Tu as oublié les écluses."
+},
+{
+"t": "3 h 45",
+"e": "4 écluses × 15 min = 1 h, pas 1 h 15."
+}
+],
+"b": 0,
+"ex": "Temps = distance / vitesse + temps des écluses.",
+"pg": "Les écluses comptent autant qu'un long bief : ne les oublie jamais.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 13"
+},
+{
+"id": "N084",
+"cat": "N",
+"res": false,
+"q": "La carte annonce 11 m sous un pont. L'eau est montée de 40 cm. Avec la marge de 30 cm, la hauteur utilisable est :",
+"d": null,
+"o": [
+{
+"t": "10,30 m",
+"e": "11,00 − 0,40 − 0,30 = 10,30 m."
+},
+{
+"t": "10,60 m",
+"e": "Tu as oublié la marge de 30 cm."
+},
+{
+"t": "11,70 m",
+"e": "Quand l'eau monte, la hauteur libre DIMINUE."
+}
+],
+"b": 0,
+"ex": "Hauteur libre de la carte − montée de l'eau − marge de 0,30 m.",
+"pg": "L'eau qui monte diminue la hauteur libre.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 11 · AR 15/10/1935, art. 1 §3"
+},
+{
+"id": "N085",
+"cat": "N",
+"res": false,
+"q": "Ton tirant d'air est de 5,80 m. La carte annonce 6,50 m sous le pont ; l'eau est montée de 50 cm. Passes-tu ?",
+"d": null,
+"o": [
+{
+"t": "non : 6,50 − 0,50 − 0,30 = 5,70 m",
+"e": "5,70 m < 5,80 m."
+},
+{
+"t": "oui : 6,50 m > 5,80 m",
+"e": "Tu n'as tenu compte ni de la montée de l'eau ni de la marge."
+},
+{
+"t": "oui : 6,00 m > 5,80 m",
+"e": "Il faut encore retirer la marge de 0,30 m."
+}
+],
+"b": 0,
+"ex": "6,50 − 0,50 = 6,00 m ; − 0,30 m de marge = 5,70 m : c'est moins que 5,80 m.",
+"pg": "La marge réglementaire n'est pas optionnelle.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 11 · AR 15/10/1935, art. 1 §3"
+},
+{
+"id": "N086",
+"cat": "N",
+"res": false,
+"q": "Sur la carte fluviale, un numéro de canal VHF près d'une écluse indique :",
+"d": null,
+"o": [
+{
+"t": "le canal radio sur lequel appeler l'écluse",
+"e": "Exact."
+},
+{
+"t": "la profondeur de l'écluse",
+"e": "Ce n'est pas une profondeur."
+},
+{
+"t": "le numéro de l'écluse",
+"e": "C'est un canal radio."
+}
+],
+"b": 0,
+"ex": "On appelle l'écluse sur ce canal avant d'arriver.",
+"pg": "Appelle avant d'arriver, pas une fois devant les portes.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 7"
+},
+{
+"id": "N087",
+"cat": "N",
+"res": false,
+"q": "Le limnimètre est :",
+"d": null,
+"o": [
+{
+"t": "une échelle graduée verticale qui indique la hauteur d'eau",
+"e": "Exact."
+},
+{
+"t": "un appareil qui mesure la vitesse",
+"e": "Ça, c'est le loch."
+},
+{
+"t": "un appareil qui mesure la profondeur sous la coque",
+"e": "Ça, c'est le sondeur."
+}
+],
+"b": 0,
+"ex": "Le limnimètre se lit d'un coup d'œil : hauteur d'eau à cet endroit.",
+"pg": "Limnimètre (hauteur d'eau), sondeur (profondeur sous le bateau), loch (vitesse).",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 12"
+},
+{
+"id": "N088",
+"cat": "N",
+"res": false,
+"q": "Une écluse a un sas de 80,25 × 12,50 m. Ces chiffres donnent :",
+"d": null,
+"o": [
+{
+"t": "la longueur et la largeur utiles du sas",
+"e": "Ce sont ses dimensions."
+},
+{
+"t": "la hauteur de chute et la profondeur",
+"e": "Ce n'est pas ce que représentent ces deux nombres."
+},
+{
+"t": "la distance au prochain pont",
+"e": "Ce ne sont pas des distances."
+}
+],
+"b": 0,
+"ex": "La carte donne, près du symbole d'écluse, les dimensions utiles du sas.",
+"pg": "Au règlement, ton bateau doit être plus court et plus étroit que le sas, avec une marge.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 7"
+},
+{
+"id": "N089",
+"cat": "N",
+"res": false,
+"q": "Le sondeur mesure :",
+"d": null,
+"o": [
+{
+"t": "la profondeur d'eau sous le bateau, par l'écho d'un signal",
+"e": "Exact."
+},
+{
+"t": "la vitesse sur l'eau",
+"e": "Ça, c'est le loch."
+},
+{
+"t": "la hauteur d'eau sur la berge",
+"e": "Ça, c'est le limnimètre."
+}
+],
+"b": 0,
+"ex": "Le sondeur envoie un signal vers le fond et mesure le temps de retour de l'écho.",
+"pg": "La profondeur se mesure depuis la sonde, placée sous la coque.",
+"ref": "Matière d'examen SPF : notions de base du sondeur et du loch"
+},
+{
+"id": "N090",
+"cat": "N",
+"res": false,
+"q": "Le loch mesure :",
+"d": null,
+"o": [
+{
+"t": "la vitesse du bateau par rapport à l'eau",
+"e": "Exact."
+},
+{
+"t": "la vitesse par rapport au fond",
+"e": "Le loch ignore le courant."
+},
+{
+"t": "la profondeur",
+"e": "Ça, c'est le sondeur."
+}
+],
+"b": 0,
+"ex": "Le loch donne la vitesse surface. La vitesse fond tient compte du courant.",
+"pg": "Avec du courant, loch et vitesse réelle diffèrent.",
+"ref": "Matière d'examen SPF : notions de base du sondeur et du loch"
+},
+{
+"id": "N091",
+"cat": "N",
+"res": false,
+"q": "Tu remontes un courant de 3 km/h ; ton loch indique 12 km/h. Ta vitesse par rapport à la rive est :",
+"d": null,
+"o": [
+{
+"t": "9 km/h",
+"e": "Le courant de face te retire 3 km/h."
+},
+{
+"t": "15 km/h",
+"e": "Ce serait avec le courant dans le dos."
+},
+{
+"t": "12 km/h",
+"e": "Le loch ne voit pas le courant."
+}
+],
+"b": 0,
+"ex": "Vitesse fond = vitesse surface ± courant : contre le courant, on soustrait.",
+"pg": "Pour le temps de trajet, c'est la vitesse FOND qui compte.",
+"ref": "Matière d'examen SPF : notions de base du loch"
+},
+{
+"id": "N092",
+"cat": "N",
+"res": false,
+"q": "Tu descends un courant de 4 km/h ; ton loch indique 10 km/h. Ta vitesse par rapport au fond est :",
+"d": null,
+"o": [
+{
+"t": "14 km/h",
+"e": "Le courant dans le dos s'ajoute."
+},
+{
+"t": "6 km/h",
+"e": "Ce serait à contre-courant."
+},
+{
+"t": "10 km/h",
+"e": "Le loch ne voit pas le courant."
+}
+],
+"b": 0,
+"ex": "Avalant : vitesse fond = vitesse surface + courant.",
+"pg": "L'avalant va plus vite par rapport à la rive et s'arrête moins bien.",
+"ref": "Matière d'examen SPF : notions de base du loch"
+},
+{
+"id": "N093",
+"cat": "N",
+"res": false,
+"q": "Un avis à la batellerie, c'est :",
+"d": null,
+"o": [
+{
+"t": "la communication officielle du gestionnaire de la voie : avaries, restrictions, fermetures",
+"e": "Exact."
+},
+{
+"t": "une publicité pour les ports de plaisance",
+"e": "Ce n'est pas commercial."
+},
+{
+"t": "un message qu'un plaisancier envoie à l'éclusier",
+"e": "Le plaisancier ne peut pas en émettre."
+}
+],
+"b": 0,
+"ex": "Les avis à la batellerie sont émis par le gestionnaire des voies hydrauliques.",
+"pg": "On les consulte AVANT de partir.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 12"
+},
+{
+"id": "N094",
+"cat": "N",
+"res": false,
+"q": "Où consulter les avis à la batellerie ?",
+"d": null,
+"o": [
+{
+"t": "Wallonie : voies-hydrauliques.wallonie.be ; Flandre : visuris.be",
+"e": "Ce sont les deux sites des gestionnaires."
+},
+{
+"t": "uniquement à l'écluse, sur papier",
+"e": "Ils sont publiés en ligne."
+},
+{
+"t": "à la radio, canal 16",
+"e": "Le canal 16 est la veille en mer."
+}
+],
+"b": 0,
+"ex": "Avis à la batellerie : Wallonie et Flandre ont chacune leur site.",
+"pg": "Une voie peut traverser les deux régions : regarde les deux.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 12"
+},
+{
+"id": "N095",
+"cat": "N",
+"res": false,
+"q": "Un plaisancier peut-il émettre un avis à la batellerie ?",
+"d": null,
+"o": [
+{
+"t": "non, il peut seulement les consulter",
+"e": "Seul le gestionnaire en émet."
+},
+{
+"t": "oui, pour signaler un danger",
+"e": "On signale un danger autrement, pas par un avis."
+},
+{
+"t": "oui, après accord de l'éclusier",
+"e": "Ce n'est pas prévu."
+}
+],
+"b": 0,
+"ex": "Le plaisancier consulte les avis ; le gestionnaire les émet. Sur place, l'éclusier prime.",
+"pg": "En cas de contradiction sur place, c'est l'éclusier qui a raison.",
+"ref": "Tome 1, ch. 1 La navigation fluviale, p. 6-13, p. 12"
+},
+{
+"id": "N096",
+"cat": "N",
+"res": false,
+"q": "En navigation intérieure, le canal VHF des communications de bateau à bateau est :",
+"d": null,
+"o": [
+{
+"t": "le canal 10",
+"e": "C'est le réseau bateau-bateau des voies intérieures."
+},
+{
+"t": "le canal 16",
+"e": "Le 16 est la veille et la détresse en mer."
+},
+{
+"t": "le canal 70",
+"e": "Le 70 est réservé à l'appel sélectif numérique en mer."
+}
+],
+"b": 0,
+"ex": "Sur les voies intérieures, le réseau bateau-bateau utilise le canal 10.",
+"pg": "Ne transpose pas la mer aux voies intérieures.",
+"ref": "Manuel IBPT 2025, navigation intérieure · Matière d'examen SPF : notions de base de la VHF"
+},
+{
+"id": "N097",
+"cat": "N",
+"res": false,
+"q": "Sur les voies intérieures, la double veille (dual watch) est :",
+"d": null,
+"o": [
+{
+"t": "interdite",
+"e": "C'est pour cela que les grands bateaux ont deux mariphones."
+},
+{
+"t": "obligatoire",
+"e": "Elle est interdite."
+},
+{
+"t": "conseillée",
+"e": "Elle est interdite."
+}
+],
+"b": 0,
+"ex": "Sur les voies intérieures, la double veille est interdite ; un grand bateau doit avoir deux appareils pour écouter deux canaux.",
+"pg": "Ce qui marche en mer ne marche pas forcément sur la voie.",
+"ref": "Manuel IBPT 2025, navigation intérieure"
+},
+{
+"id": "N098",
+"cat": "N",
+"res": false,
+"q": "En navigation intérieure, sur les canaux bateau-bateau, la puissance d'émission doit être réduite à :",
+"d": null,
+"o": [
+{
+"t": "entre 0,5 et 1 watt",
+"e": "Exact."
+},
+{
+"t": "25 watts",
+"e": "C'est la puissance élevée."
+},
+{
+"t": "12,5 watts",
+"e": "C'est la limite de l'AIS."
+}
+],
+"b": 0,
+"ex": "Les appareils doivent pouvoir réduire la puissance entre 0,5 et 1 W pour les communications bateau-bateau, bateau-autorités portuaires et de bord.",
+"pg": "Sur une voie étroite, on parle aux bateaux voisins, pas à toute la région.",
+"ref": "Manuel IBPT 2025, réduction de puissance"
+},
+{
+"id": "N099",
+"cat": "N",
+"res": false,
+"q": "Sur les voies intérieures, l'ATIS (identification automatique de l'émetteur) est :",
+"d": null,
+"o": [
+{
+"t": "obligatoire",
+"e": "Le signal ATIS est émis automatiquement à la fin de chaque transmission."
+},
+{
+"t": "interdite",
+"e": "Elle est au contraire obligatoire."
+},
+{
+"t": "facultative",
+"e": "Elle est obligatoire en navigation intérieure."
+}
+],
+"b": 0,
+"ex": "L'ATIS identifie automatiquement le bateau qui vient de parler ; elle est obligatoire sur les voies intérieures.",
+"pg": "L'ATIS n'existe pas en mer : un appareil réglé « mer » ne l'envoie pas. Vérifie le mode avant d'entrer sur la voie.",
+"ref": "Manuel IBPT 2025, navigation intérieure, ATIS"
+},
+{
+"id": "N100",
+"cat": "N",
+"res": false,
+"q": "Tu descends le courant et tu vois cette bouée sur ta GAUCHE. Que se passe-t-il ?",
+"d": {
+"t": "bouee",
+"forme": "cyl",
+"couleur": "rouge",
+"voyant": "cyl-rouge"
+},
+"o": [
+{
+"t": "tu es sans doute sorti du chenal, du côté de la rive droite",
+"e": "En descendant, le rouge doit rester à ta droite : s'il est à gauche, tu es entre la bouée et la rive droite."
+},
+{
+"t": "tout est normal",
+"e": "Non : l'avalant laisse le rouge à tribord."
+},
+{
+"t": "c'est une bifurcation, tu peux passer des deux côtés",
+"e": "Une bifurcation est rouge ET verte, avec une sphère."
+}
+],
+"b": 0,
+"ex": "Avalant : rouge à tribord, vert à bâbord. Une bouée rouge à bâbord veut dire que tu as quitté le chenal.",
+"pg": "Le réflexe « rouge à bâbord » vaut pour le MONTANT. En descendant, c'est l'inverse : c'est le piège le plus fréquent de l'examen.",
+"ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1 · Tome 1, ch. 2 Le balisage, p. 14-20"
+}
+]
+};
+
+</script>
+<script>
+/* ===== MOTEUR DES QCM — entraînement par partie, examen blanc =====
+   Les questions sont dans window.KAM_QCM (un fichier par cours).
+   Chaque question : { id, cat:"R"|"N"|"S", res:true si réserve d'examen,
+     q, d (dessin), o:[{t, e}], b (index de la bonne), ex, pg (piège), ref }
+   Les réponses sont mélangées à chaque affichage : on apprend la règle,
+   pas la place de la bonne réponse. */
+(function(){
+  "use strict";
+  var Q = window.KAM_QCM;
+  var hote = document.getElementById("qz");
+  if(!Q || !hote) return;
+
+  var NOMS = { R:"Réglementation", N:"Navigation", S:"Sécurité et manœuvres" };
+  var CLE = "kam-qcm-" + Q.cours + "-v1";
+  var etat = charger();
+  var dessiner = window.kamDessinQcm || function(){ return ""; };
+
+  function charger(){
+    var e = null;
+    try{ e = JSON.parse(localStorage.getItem(CLE) || "null"); }catch(err){ e = null; }
+    e = e || {};
+    e.t = e.t || {};        /* résultat d'entraînement par question : 1 juste, 0 faux */
+    e.vus = e.vus || {};    /* questions déjà posées, entraînement ou examen */
+    return e;
+  }
+  function sauver(){ try{ localStorage.setItem(CLE, JSON.stringify(etat)); }catch(err){} }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+  function melanger(a){ a = a.slice(); for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+  function parId(id){ for(var i = 0; i < Q.questions.length; i++) if(Q.questions[i].id === id) return Q.questions[i]; return null; }
+  function pool(cat, avecReserve){ return Q.questions.filter(function(q){ return q.cat === cat && (avecReserve || !q.res); }); }
+
+  /* ============================================================ le menu */
+  var menu = document.getElementById("qz-menu");
+  var jeu = document.getElementById("qz-jeu");
+
+  function majMenu(){
+    var h = "";
+    ["R", "N", "S"].forEach(function(c){
+      var l = pool(c, false), n = l.length;
+      var faites = l.filter(function(q){ return etat.t[q.id] !== undefined; }).length;
+      var justes = l.filter(function(q){ return etat.t[q.id] === 1; }).length;
+      if(!n){
+        h += '<div class="menu-item avenir qz-cat"><span class="num">' + c + '</span><span class="txt"><span class="t">' + NOMS[c]
+           + '</span><span class="s">Questions en cours d\'écriture</span></span><span class="etat">À venir</span></div>';
+        return;
+      }
+      h += '<button type="button" class="menu-item pret qz-cat" data-cat="' + c + '"><span class="num">' + c + '</span><span class="txt"><span class="t">' + NOMS[c]
+         + '</span><span class="s">' + n + " questions · " + faites + " faites · " + justes + " justes</span>"
+         + '<span class="qz-mini"><span style="width:' + Math.round(100 * faites / n) + '%"></span></span></span>'
+         + '<span class="etat">' + (faites === n ? "Terminé" : faites ? "Reprendre" : "Commencer") + "</span></button>";
+    });
+    var ex = Q.examen, manque = [];
+    ["R", "N", "S"].forEach(function(c){ if(pool(c, true).length < ex.parts[c]) manque.push(NOMS[c]); });
+    var enCours = etat.exam && etat.exam.ids && etat.exam.fin !== true;
+    h += '<button type="button" class="menu-item ' + (manque.length ? "avenir" : "pret") + ' qz-cat" data-exam="1"' + (manque.length ? " disabled" : "") + '>'
+       + '<span class="num">★</span><span class="txt"><span class="t">Examen blanc — ' + ex.total + ' questions</span><span class="s">'
+       + (manque.length ? "Il s'ouvrira quand ces parties seront écrites : " + manque.join(", ") + "."
+                        : "Les trois parties mélangées, les questions jamais posées d'abord. Noté comme le vrai examen.")
+       + '</span></span><span class="etat">' + (manque.length ? "À venir" : enCours ? "Reprendre" : "Commencer") + "</span></button>";
+    menu.innerHTML = h;
+    menu.querySelectorAll("[data-cat]").forEach(function(b){ b.addEventListener("click", function(){ entrainer(b.dataset.cat, false); }); });
+    var be = menu.querySelector("[data-exam]");
+    if(be && !manque.length) be.addEventListener("click", examiner);
+  }
+
+  /* ================================================= une série en cours */
+  var serie = null;   /* { mode:"train"|"exam", cat, ids:[], i, ordres:{} } */
+
+  function entrainer(cat, erreursSeulement){
+    var l = pool(cat, false);
+    var restantes = l.filter(function(q){ return erreursSeulement ? etat.t[q.id] === 0 : etat.t[q.id] === undefined; });
+    if(!restantes.length && !erreursSeulement){ bilanEntrainement(cat); return; }
+    serie = { mode:"train", cat:cat, ids: melanger(restantes.map(function(q){ return q.id; })), i:0, ordres:{}, revision: !!erreursSeulement };
+    ouvrirJeu(); afficher();
+  }
+
+  function ouvrirJeu(){ menu.hidden = true; document.getElementById("qz-regle").hidden = true; jeu.hidden = false; window.scrollTo(0, hote.offsetTop - 10); }
+  function fermerJeu(){ jeu.hidden = true; menu.hidden = false; document.getElementById("qz-regle").hidden = false; serie = null; majMenu(); }
+
+  function compteurs(){
+    if(serie.mode === "exam"){
+      var n = serie.ids.length, faites = Object.keys(etat.exam.rep).length;
+      return { titre:"Examen blanc", pos: Math.min(serie.i + 1, n), total:n, fait:faites, ok:null, ko:null };
+    }
+    var l = pool(serie.cat, false), tot = l.length;
+    var faites = l.filter(function(q){ return etat.t[q.id] !== undefined; }).length;
+    var ok = l.filter(function(q){ return etat.t[q.id] === 1; }).length;
+    return { titre: NOMS[serie.cat] + (serie.revision ? " — mes erreurs" : ""), pos: faites + (serie.repondu ? 0 : 1), total: tot,
+             fait: faites, ok: ok, ko: faites - ok };
+  }
+
+  function afficher(){
+    var id = serie.ids[serie.i];
+    if(id === undefined){ serie.mode === "exam" ? bilanExamen() : bilanEntrainement(serie.cat); return; }
+    var q = parId(id);
+    serie.repondu = false;
+    if(!serie.ordres[id]) serie.ordres[id] = melanger(q.o.map(function(x, k){ return k; }));
+    var ordre = serie.ordres[id];
+    var c = compteurs();
+    var h = '<div class="qz-tete"><div class="qz-titre">' + esc(c.titre) + '</div>'
+          + '<div class="qz-compteur" id="qz-compteur">Question ' + c.pos + " / " + c.total
+          + (c.ok !== null ? ' · <span class="qz-ok">✔ ' + c.ok + '</span> · <span class="qz-ko">✘ ' + c.ko + "</span>" : "") + "</div>"
+          + '<div class="qz-barre" role="progressbar" aria-valuemin="0" aria-valuemax="' + c.total + '" aria-valuenow="' + c.fait + '">'
+          + '<span style="width:' + (100 * c.fait / c.total).toFixed(1) + '%"></span></div></div>'
+          + '<div class="qz-carte"><p class="qz-num">' + esc(NOMS[q.cat]) + " · n° " + esc(q.id) + "</p>"
+          + '<p class="qz-q">' + q.q + "</p>"
+          + (q.d ? '<div class="qz-dessin">' + dessiner(q.d) + "</div>" : "")
+          + '<div class="qz-choix">';
+    ordre.forEach(function(k, pos){
+      h += '<button type="button" class="qz-opt" data-k="' + k + '"><span class="l">' + "ABC"[pos] + '</span><span class="qz-t">' + q.o[k].t + "</span></button>";
+    });
+    h += '</div><div class="qz-retour" id="qz-retour" hidden></div></div>'
+       + '<div class="qz-actions"><button type="button" class="qz-btn" id="qz-stop">‹ Menu</button>'
+       + '<button type="button" class="qz-btn pri" id="qz-suiv" hidden>Question suivante ›</button></div>';
+    jeu.innerHTML = h;
+    jeu.querySelectorAll(".qz-opt").forEach(function(b){ b.addEventListener("click", function(){ repondre(q, Number(b.dataset.k)); }); });
+    document.getElementById("qz-stop").addEventListener("click", fermerJeu);
+    document.getElementById("qz-suiv").addEventListener("click", function(){ serie.i++; afficher(); window.scrollTo(0, hote.offsetTop - 10); });
+  }
+
+  function repondre(q, k){
+    if(serie.repondu) return;
+    serie.repondu = true;
+    var juste = (k === q.b);
+    etat.vus[q.id] = 1;
+    if(serie.mode === "exam"){
+      etat.exam.rep[q.id] = k; etat.exam.i = serie.i + 1; sauver();
+      /* à l'examen, pas de correction question par question : on passe */
+      serie.i++; afficher(); return;
+    }
+    etat.t[q.id] = juste ? 1 : 0; sauver();
+    jeu.querySelectorAll(".qz-opt").forEach(function(b){
+      var kk = Number(b.dataset.k);
+      b.disabled = true;
+      if(kk === q.b) b.classList.add("bonne");
+      if(kk === k && !juste) b.classList.add("fausse");
+      b.insertAdjacentHTML("beforeend", '<span class="qz-e">' + q.o[kk].e + "</span>");
+    });
+    var r = document.getElementById("qz-retour");
+    r.innerHTML = correction(q, juste);
+    r.hidden = false;
+    var c = compteurs();
+    document.getElementById("qz-compteur").innerHTML = "Question " + c.pos + " / " + c.total
+      + ' · <span class="qz-ok">✔ ' + c.ok + '</span> · <span class="qz-ko">✘ ' + c.ko + "</span>";
+    var barre = jeu.querySelector(".qz-barre span");
+    if(barre) barre.style.width = (100 * c.fait / c.total).toFixed(1) + "%";
+    document.getElementById("qz-suiv").hidden = false;
+  }
+
+  function correction(q, juste){
+    return '<p class="qz-verdict ' + (juste ? "ok" : "ko") + '">' + (juste ? "✔ Juste." : "✘ Faux. La bonne réponse : « " + q.o[q.b].t + " ».") + "</p>"
+         + '<p class="qz-ex">' + q.ex + "</p>"
+         + (!juste && q.pg ? '<div class="qz-piege"><b>⚠️ Le piège</b><p>' + q.pg + "</p></div>" : "")
+         + (q.ref ? '<p class="qz-ref">📖 ' + q.ref + "</p>" : "");
+  }
+
+  function bilanEntrainement(cat){
+    var l = pool(cat, false), ok = l.filter(function(q){ return etat.t[q.id] === 1; }).length;
+    var ko = l.filter(function(q){ return etat.t[q.id] === 0; }).length;
+    var pct = l.length ? Math.round(100 * ok / l.length) : 0;
+    jeu.innerHTML = '<div class="qz-carte"><p class="qz-num">' + esc(NOMS[cat]) + '</p><p class="qz-q">Série terminée : ' + ok + " / " + l.length + " (" + pct + " %)</p>"
+      + '<p class="qz-ex">' + (pct >= 50 ? "Au-dessus des 50 % exigés pour cette partie." : "Sous les 50 % exigés pour cette partie à l'examen : revois tes erreurs.") + "</p></div>"
+      + '<div class="qz-actions">' + (ko ? '<button type="button" class="qz-btn pri" id="qz-err">Refaire mes ' + ko + " erreur(s)</button>" : "")
+      + '<button type="button" class="qz-btn" id="qz-raz">Tout recommencer</button><button type="button" class="qz-btn" id="qz-stop">‹ Menu</button></div>';
+    menu.hidden = true; jeu.hidden = false;
+    var e = document.getElementById("qz-err"); if(e) e.addEventListener("click", function(){ entrainer(cat, true); });
+    document.getElementById("qz-raz").addEventListener("click", function(){
+      l.forEach(function(q){ delete etat.t[q.id]; }); sauver(); entrainer(cat, false); });
+    document.getElementById("qz-stop").addEventListener("click", fermerJeu);
+  }
+
+  /* =========================================================== l'examen */
+  function tirage(){
+    var ids = [];
+    ["R", "N", "S"].forEach(function(c){
+      /* d'abord les questions jamais posées (réserve comprise), puis les autres */
+      var l = melanger(pool(c, true));
+      l.sort(function(a, b){ return (etat.vus[a.id] ? 1 : 0) - (etat.vus[b.id] ? 1 : 0); });
+      ids = ids.concat(l.slice(0, Q.examen.parts[c]).map(function(q){ return q.id; }));
+    });
+    return melanger(ids);
+  }
+  function examiner(){
+    if(!etat.exam || !etat.exam.ids || etat.exam.fin === true){
+      etat.exam = { ids: tirage(), rep: {}, i: 0, fin: false }; sauver();
+    }
+    serie = { mode:"exam", ids: etat.exam.ids, i: etat.exam.i || 0, ordres:{} };
+    ouvrirJeu(); afficher();
+  }
+  function bilanExamen(){
+    var ex = etat.exam, parts = { R:[0, 0], N:[0, 0], S:[0, 0] }, tot = 0;
+    ex.ids.forEach(function(id){ var q = parId(id); parts[q.cat][1]++; if(ex.rep[id] === q.b){ parts[q.cat][0]++; tot++; } });
+    var pctT = Math.round(100 * tot / ex.ids.length), reussi = pctT >= 60;
+    var lignes = "";
+    ["R", "N", "S"].forEach(function(c){
+      var pc = parts[c][1] ? Math.round(100 * parts[c][0] / parts[c][1]) : 0;
+      if(pc < 50) reussi = false;
+      lignes += "<tr><td>" + NOMS[c] + "</td><td>" + parts[c][0] + " / " + parts[c][1] + "</td><td class=\"" + (pc >= 50 ? "qz-ok" : "qz-ko") + "\">" + pc + " %</td></tr>";
+    });
+    ex.fin = true; sauver();
+    var erreurs = ex.ids.filter(function(id){ return ex.rep[id] !== parId(id).b; });
+    var h = '<div class="qz-carte"><p class="qz-q qz-resultat ' + (reussi ? "ok" : "ko") + '">' + (reussi ? "✔ RÉUSSI" : "✘ RATÉ") + " — " + tot + " / " + ex.ids.length + " (" + pctT + " %)</p>"
+          + '<table class="pan-tab"><thead><tr><th>Partie</th><th>Score</th><th>Mini 50 %</th></tr></thead><tbody>' + lignes
+          + "<tr><td><b>Total</b></td><td>" + tot + " / " + ex.ids.length + '</td><td class="' + (pctT >= 60 ? "qz-ok" : "qz-ko") + '">' + pctT + " % (mini 60 %)</td></tr></tbody></table>"
+          + '<p class="qz-ex">' + (reussi ? "Les deux conditions sont remplies : 60 % au total et 50 % dans chaque partie."
+                                           : "Il faut à la fois 60 % au total et au moins 50 % dans chaque partie.") + "</p></div>"
+          + '<h3>Tes ' + erreurs.length + " erreur(s), corrigées</h3>";
+    erreurs.forEach(function(id){
+      var q = parId(id), k = ex.rep[id];
+      h += '<div class="qz-carte"><p class="qz-num">' + NOMS[q.cat] + " · n° " + esc(id) + '</p><p class="qz-q">' + q.q + "</p>"
+         + (q.d ? '<div class="qz-dessin">' + dessiner(q.d) + "</div>" : "")
+         + '<p class="qz-tarep">Ta réponse : « ' + (k === undefined ? "aucune" : q.o[k].t) + " »" + (k !== undefined ? " — " + q.o[k].e : "") + "</p>"
+         + correction(q, false) + "</div>";
+    });
+    h += '<div class="qz-actions"><button type="button" class="qz-btn pri" id="qz-nouv">Nouvel examen blanc</button><button type="button" class="qz-btn" id="qz-stop">‹ Menu</button></div>';
+    jeu.innerHTML = h;
+    document.getElementById("qz-nouv").addEventListener("click", function(){ etat.exam = null; sauver(); examiner(); });
+    document.getElementById("qz-stop").addEventListener("click", fermerJeu);
+  }
+
+  majMenu();
+  window.kamQcm = { etat: function(){ return etat; }, tirage: tirage };   /* pour le banc d'essai */
+})();
+
+</script>
+
+</body>
+</html>

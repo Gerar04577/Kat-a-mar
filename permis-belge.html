@@ -574,13 +574,55 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .od-etat:empty{ display:none; }
 .od-etat a{ color:var(--navy); font-weight:700; }
 
+/* ===================== moteur des QCM (pages QCM des cours) ===================== */
+.qz-mini{ display:block; height:5px; background:var(--sea); border-radius:3px; margin-top:6px; overflow:hidden; }
+.qz-mini span{ display:block; height:100%; background:var(--green); }
+.qz-tete{ position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0 10px; }
+.qz-titre{ font-family:var(--display); font-weight:700; font-size:1.1rem; }
+.qz-compteur{ font-family:var(--mono); font-size:.9rem; margin:4px 0 6px; }
+.qz-ok{ color:var(--green); font-weight:700; } .qz-ko{ color:var(--red); font-weight:700; }
+.qz-barre{ height:10px; background:var(--sea); border-radius:6px; overflow:hidden; }
+.qz-barre span{ display:block; height:100%; background:var(--navy); transition:width .3s; }
+.qz-carte{ background:var(--paper); border:2px solid var(--line); border-radius:14px; padding:14px 16px; margin:10px 0; display:flex; flex-direction:column; gap:10px; }
+.qz-num{ margin:0; font-family:var(--mono); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.qz-q{ margin:0; font-weight:700; font-size:1.08rem; max-width:none; }
+.qz-dessin{ display:flex; justify-content:center; }
+.qz-svg{ width:100%; max-width:340px; height:auto; border-radius:10px; border:1px solid var(--line); }
+.qz-choix{ display:flex; flex-direction:column; gap:8px; }
+.qz-opt{ box-sizing:border-box; width:100%; display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; text-align:left;
+  font:inherit; color:var(--ink); background:var(--bg); border:2px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer; }
+.qz-opt .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qz-opt .qz-t{ flex:1 1 0; min-width:0; }
+.qz-opt.bonne{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qz-opt.fausse{ border-color:var(--red); background:color-mix(in srgb, var(--red) 12%, var(--paper)); }
+.qz-opt:disabled{ cursor:default; opacity:1; color:var(--ink); }
+.qz-e{ flex:1 0 100%; font-size:.92rem; color:var(--muted); }
+.qz-verdict{ margin:0; font-weight:800; } .qz-verdict.ok{ color:var(--green); } .qz-verdict.ko{ color:var(--red); }
+.qz-ex{ margin:0; max-width:none; }
+.qz-piege{ border-left:4px solid var(--amber); background:color-mix(in srgb, var(--amber) 12%, var(--paper)); padding:10px 12px; border-radius:0 10px 10px 0; }
+.qz-piege p{ margin:4px 0 0; max-width:none; }
+.qz-ref{ margin:0; font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.qz-tarep{ margin:0; color:var(--red); max-width:none; }
+.qz-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 20px; }
+.qz-btn{ font:inherit; font-weight:700; padding:12px 16px; border-radius:12px; border:2px solid var(--line); background:var(--paper); color:var(--ink); cursor:pointer; }
+.qz-btn.pri{ background:var(--navy); color:var(--paper); border-color:var(--navy); flex:1 1 auto; }
+.qz-resultat.ok{ color:var(--green); font-size:1.3rem; } .qz-resultat.ko{ color:var(--red); font-size:1.3rem; }
+.menu-item.qz-cat[disabled]{ cursor:default; }
+/* QCM : tableau des parties (3 colonnes courtes) */
+main table.qz-regle-tab th:first-child, main table.qz-regle-tab td:first-child{ width:55%; overflow-wrap:normal; }
+main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:first-child){ text-align:center; }
+/* sommaire : nom du cours, puis ses entrées « Cours » et « QCM » en retrait */
+.cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
+.cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
+.menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v6 · cours officiels · cours amélioré : module 1, chapitres 1 à 6</div>
+  <div class="ver">SOMMAIRE · v8 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM navigation</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -670,47 +712,77 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
     <button type="button" class="menu-item pret groupe" data-groupe="ameliore">
       <span class="num">2</span>
       <span class="txt">
-        <span class="t">Cours amélioré</span>
-        <span class="s">Le cours réécrit et vérifié sur le règlement : animations, QCM, et les erreurs du manuel</span>
+        <span class="t">Cours améliorés et QCM</span>
+        <span class="s">Sous chaque cours : le cours réécrit et vérifié sur le règlement, puis son QCM avec l'examen blanc</span>
       </span>
       <span class="etat">Modules</span>
     </button>
     <div class="sousmenu" id="groupe-ameliore" hidden>
-      <a class="menu-item pret" href="./permis-belge-m1.html">
-        <span class="num">1</span>
+      <p class="cours-nom"><span class="num">1</span> Fluvial — brevet restreint</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-m1.html">
+        <span class="num">📖</span>
         <span class="txt">
-          <span class="t">Fluvial</span>
+          <span class="t">Cours</span>
           <span class="s">Navigation fluviale, balisage, signalisation, priorités, feux et marques, signaux sonores, sécurité, moteurs, RPNE</span>
         </span>
         <span class="etat">Chap. 1 à 6</span>
       </a>
-      <button type="button" class="menu-item avenir" data-bientot="2">
-        <span class="num">2</span>
+      <a class="menu-item pret cours-sous" href="./permis-belge-qcm-fluvial.html">
+        <span class="num">✔</span>
         <span class="txt">
-          <span class="t">Côtier</span>
-          <span class="s">Navigation, marées, météorologie, RIPAM, réglementation belge — complément au brevet général</span>
+          <span class="t">QCM</span>
+          <span class="s">Réglementation, Navigation, Sécurité et manœuvres · examen blanc de 200 questions</span>
+        </span>
+        <span class="etat">Navigation : 100</span>
+      </a>
+      <p class="cours-nom"><span class="num">2</span> Côtier — complément au brevet général</p>
+      <button type="button" class="menu-item avenir cours-sous" data-bientot="2">
+        <span class="num">📖</span>
+        <span class="txt">
+          <span class="t">Cours</span>
+          <span class="s">Navigation, marées, météorologie, RIPAM, réglementation belge</span>
         </span>
         <span class="etat">Pas encore écrit</span>
       </button>
-      <p class="bientot" id="bientot-2" hidden>Ce module n'est pas encore écrit. Il viendra après le module 1, et couvrira la navigation, les marées, la météorologie, le RIPAM et la réglementation belge — tout ce qui s'ajoute au brevet restreint pour obtenir le brevet général.</p>
-      <button type="button" class="menu-item avenir" data-bientot="3">
-        <span class="num">3</span>
+      <p class="bientot" id="bientot-2" hidden>Ce cours n'est pas encore réécrit. En attendant, le cours officiel est le Tome 2, dans le groupe 1 « Cours officiels ».</p>
+      <button type="button" class="menu-item avenir cours-sous" data-bientot="2q">
+        <span class="num">✔</span>
         <span class="txt">
-          <span class="t">Pratique</span>
+          <span class="t">QCM</span>
+          <span class="s">100 questions par partie et un examen blanc, tirés du Tome 2</span>
+        </span>
+        <span class="etat">Après le fluvial</span>
+      </button>
+      <p class="bientot" id="bientot-2q" hidden>Le QCM côtier viendra juste après celui du fluvial : 100 questions par partie (Réglementation, Navigation, Sécurité et manœuvres) et un examen blanc de 200 questions.</p>
+      <p class="cours-nom"><span class="num">3</span> Pratique</p>
+      <button type="button" class="menu-item avenir cours-sous" data-bientot="3">
+        <span class="num">📖</span>
+        <span class="txt">
+          <span class="t">Cours</span>
           <span class="s">Notions nautiques, effet du pas de l'hélice, amarrage, conduite, préparation de l'examen pratique</span>
         </span>
         <span class="etat">Pas encore écrit</span>
       </button>
-      <p class="bientot" id="bientot-3" hidden>Ce module n'est pas encore écrit. Il portera sur l'examen pratique : l'effet du pas de l'hélice, l'accostage par bâbord et par tribord, l'évolution dans un sas, et les fiches de manœuvre.</p>
-      <button type="button" class="menu-item avenir" data-bientot="R">
-        <span class="num">R</span>
+      <p class="bientot" id="bientot-3" hidden>Ce cours n'est pas encore réécrit. En attendant, le cours officiel est le Tome 3, dans le groupe 1. L'examen pratique se passe sur l'eau : il n'a pas de QCM.</p>
+      <p class="cours-nom"><span class="num">R</span> Radiotéléphonie — certificat restreint</p>
+      <button type="button" class="menu-item avenir cours-sous" data-bientot="R">
+        <span class="num">📖</span>
         <span class="txt">
-          <span class="t">Radiotéléphonie</span>
-          <span class="s">Licence restreinte : MAYDAY, PAN PAN, SÉCURITÉ, canaux, appel sélectif numérique</span>
+          <span class="t">Cours</span>
+          <span class="s">MAYDAY, PAN PAN, SÉCURITÉ, canaux, appel sélectif numérique</span>
         </span>
         <span class="etat">Pas encore écrit</span>
       </button>
-      <p class="bientot" id="bientot-R" hidden>Ce module n'est pas encore écrit, mais sa matière est prête : la gradation MAYDAY / PAN PAN / SÉCURITÉ, le message de détresse mot pour mot, le canal 16 et l'appel sélectif numérique sur le canal 70.</p>
+      <p class="bientot" id="bientot-R" hidden>Ce cours n'est pas encore réécrit. En attendant, le cours officiel est le manuel de l'IBPT, dans le groupe 1.</p>
+      <a class="menu-item pret cours-sous" href="./certificat-vhf.html">
+        <span class="num">✔</span>
+        <span class="txt">
+          <span class="t">QCM</span>
+          <span class="s">La fiche de révision VHF, son QCM et son examen blanc</span>
+        </span>
+        <span class="etat">Ouvrir</span>
+      </a>
+      <p class="cours-nom"><span class="num">!</span> Pour tous les cours</p>
       <a class="menu-item pret" href="./permis-belge-erreurs.html">
             <span class="num">!</span>
             <span class="txt">
