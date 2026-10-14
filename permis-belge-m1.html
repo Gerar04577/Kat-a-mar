@@ -519,15 +519,40 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .m-blanc{ fill:#ffffff; }
 .s-balance{ fill:none; stroke:#d7263d; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:4 3; }
 
+/* ---- habillage du chapitre 6 : les signaux sonores ---- */
+.sn-bar{ fill:#3a4a63; stroke:#8a9bb5; stroke-width:1; }
+.sn-bar.on{ fill:#ffd23f; stroke:#ffffff; }
+.s-tete{ stroke:#e8690b; stroke-width:2.5; stroke-linecap:round; }
+.f-brume{ fill:#b9c4d2; }
+/* dix-sept boutons de signaux : deux colonnes, texte qui s'enroule */
+#sn-btns button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; text-align:left; }
+
+/* ---- la page des erreurs du manuel ---- */
+.err{
+  border-left:4px solid var(--red); background:var(--paper); border-radius:0 12px 12px 0;
+  padding:14px 16px; display:flex; flex-direction:column; gap:7px;
+}
+.err.ok{ border-left-color:var(--green); }
+.err .ek{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--red); font-weight:700;
+}
+.err.ok .ek{ color:var(--green); }
+.err .em{ color:var(--muted); font-style:italic; max-width:none; }
+.err .er{ max-width:none; }
+.err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.err .ea a{ color:var(--navy); font-weight:700; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v5 · chapitres 1 à 5</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v6 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
+  <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
 </header>
 
 <div id="kam-chercher">
@@ -570,7 +595,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
     <li><span class="n">3</span><a href="#ch3">La signalisation fluviale</a></li>
     <li><span class="n">4</span><a href="#ch4">Les règles de priorité en eaux intérieures</a></li>
     <li><span class="n">5</span><a href="#ch5">Les feux et marques</a></li>
-    <li><span class="n">6</span><span class="avenir">Les signaux sonores — à venir</span></li>
+    <li><span class="n">6</span><a href="#ch6">Les signaux sonores</a></li>
     <li><span class="n">7</span><span class="avenir">Sécurité et premiers secours — à venir</span></li>
     <li><span class="n">8</span><span class="avenir">La technique des moteurs — à venir</span></li>
     <li><span class="n">9</span><span class="avenir">Le RPNE — à venir</span></li>
@@ -3895,6 +3920,642 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   </div>
 </section>
 
+<section id="ch6">
+  <p class="kicker">Chapitre 6</p>
+  <h2>Les signaux sonores</h2>
+  <p>Un coup de trompe n'est pas un klaxon de voiture : c'est une <b>phrase</b>, avec une grammaire courte. Deux durées, quelques combinaisons, et un principe qui commande tout : on ne sonne que quand le règlement le prévoit, et jamais pour dire bonjour.</p>
+
+  <h3>Deux durées, et c'est tout</h3>
+  <table class="pan-tab">
+    <thead><tr><th>Son</th><th>Durée</th></tr></thead>
+    <tbody>
+      <tr><td>Son très bref</td><td>environ <b>¼ de seconde</b> — on n'en émet que par <b>série</b>.</td></tr>
+      <tr><td>Son bref</td><td>environ <b>1 seconde</b>.</td></tr>
+      <tr><td>Son prolongé</td><td>environ <b>4 secondes</b>.</td></tr>
+      <tr><td>Entre deux sons</td><td>environ <b>1 seconde</b> de silence.</td></tr>
+    </tbody>
+  </table>
+  <div class="def">
+    <p class="term">Avec quoi, et quand</p>
+    <p>Avec une <b>trompe mécanique</b> — ou, à défaut, des coups de métal sur métal, ou une cloche. <b>Uniquement dans les cas prévus par le règlement</b>, et quand le bateau visé doit modifier sa route et qu'on craint qu'il n'ait pas compris l'intention. En dehors de ces cas, l'usage des signaux sonores est <b>interdit</b>.</p>
+    <p class="why">Un grand bateau motorisé qui émet un signal sonore doit en même temps montrer un <b>feu jaune clair</b> visible de tous les côtés — sauf pour les coups de cloche. Une menue embarcation en est dispensée.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>La VHF a presque remplacé la trompe pour annoncer les manœuvres. Mais à l'examen, la question porte sur le <b>signal sonore</b>, et sur l'eau un bateau sans radio doit pouvoir te comprendre. Les deux coexistent ; aucun ne dispense de l'autre.</p>
+  </div>
+
+  <figure class="anim live" id="outil-sons">
+    <p class="atitle">⚙ Outil : écoute et regarde chaque signal</p>
+    <p class="note">Touche un signal : il se joue au vrai rythme, en lumière — et en son si ton téléphone n'est pas en silencieux.</p>
+    <div class="opt" id="sn-btns"></div>
+    <svg viewBox="0 0 420 70" role="img" aria-label="Le signal sonore choisi, dessiné dans le temps">
+      <rect x="0" y="0" width="420" height="70" class="f-nuit"/>
+      <g id="sn-barres"></g>
+      <line id="sn-tete" x1="10" y1="12" x2="10" y2="58" class="s-tete"/>
+      <text x="8" y="66" class="t-nuit">0 s</text>
+      <text id="sn-fin" x="412" y="66" class="t-nuit" text-anchor="end"></text>
+    </svg>
+    <p class="cap" id="sn-cap">Choisis un signal.</p>
+  </figure>
+
+  <h3>Les signaux de manœuvre</h3>
+  <p>Ce sont les phrases de tous les jours. Le nombre de sons brefs donne la <b>direction</b>, et le manuel a un bon truc pour les retenir.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Signal</th><th>Sens</th></tr></thead>
+    <tbody>
+      <tr><td>— (un prolongé)</td><td><b>Attention.</b></td></tr>
+      <tr><td>· (un bref)</td><td><b>Je viens sur tribord.</b></td></tr>
+      <tr><td>· · (deux brefs)</td><td><b>Je viens sur bâbord.</b></td></tr>
+      <tr><td>· · · (trois brefs)</td><td><b>Je bats en arrière.</b></td></tr>
+      <tr><td>· · · · (quatre brefs)</td><td><b>Je suis incapable de manœuvrer.</b></td></tr>
+      <tr><td>Série de sons très brefs</td><td><b>Danger imminent d'abordage.</b></td></tr>
+    </tbody>
+  </table>
+  <div class="keep">
+    <p class="kt">Le truc du manuel</p>
+    <p><b>1</b> son pour tri<b>b</b>ord, qui a un seul « b ». <b>2</b> sons pour <b>b</b>â<b>b</b>ord, qui en a deux. <b>3</b> sons pour a<b>rr</b>iè<b>r</b>e, qui a trois « r ». Et <b>IN-CA-PA-BLE</b>, quatre syllabes, quatre sons.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Pour le danger d'abordage, le manuel dit « <b>6 sons brefs au moins</b> » : c'est un repère pour la mémoire (« DANGER », six lettres). Le texte, lui, dit <b>une série de sons très brefs</b> — une volée, sans nombre fixé. Retiens l'idée : on ne compte pas, on sonne jusqu'à ce que l'autre réagisse.</p>
+  </div>
+
+  <h3>Les signaux d'avertissement et de détresse</h3>
+  <table class="pan-tab">
+    <thead><tr><th>Signal</th><th>Sens</th></tr></thead>
+    <tbody>
+      <tr><td>— — — … (sons prolongés répétés) ou volées de cloche</td><td><b>Détresse.</b></td></tr>
+      <tr><td>· · · · — (quatre brefs, un prolongé)</td><td><b>Demande d'assistance médicale.</b></td></tr>
+      <tr><td>· — · — · — … pendant 15 minutes au moins</td><td><b>« Ne vous approchez pas »</b> — un son bref suivi d'un prolongé, répétés sans interruption, avec un signal lumineux. C'est le signal d'un bateau en difficulté avec des matières dangereuses.</td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Ne confonds pas le <b>danger d'abordage</b> (série de très brefs — « écarte-toi, maintenant ») et la <b>détresse</b> (sons prolongés répétés — « venez m'aider »). L'un chasse, l'autre appelle.</p>
+  </div>
+
+  <h3>Virer, partir, entrer, sortir, traverser</h3>
+  <figure class="anim" id="anim-manoeuvre">
+    <p class="atitle">▶ Animation : les manœuvres annoncées</p>
+    <svg viewBox="0 0 460 230" role="img" aria-label="Un bateau annonce ses manœuvres par signaux sonores : virage, départ, sortie d'un port">
+      <rect x="0" y="0" width="460" height="230" class="f-ciel"/>
+      <rect x="0" y="0" width="460" height="30" class="f-terre"/>
+      <rect x="0" y="30" width="460" height="130" class="f-eau"/>
+      <rect x="0" y="160" width="460" height="70" class="f-terre"/>
+      <!-- le port, en bas à droite : une darse ouverte sur le canal -->
+      <rect id="mv-darse" x="300" y="160" width="100" height="70" class="f-eau"/>
+      <text x="350" y="222" class="t-lab" text-anchor="middle">le port</text>
+      <g id="mv-bateau" transform="translate(80,100) rotate(0)">
+        <path d="M -26 -10 L 18 -10 L 31 0 L 18 10 L -26 10 Z" class="f-coque"/>
+        <rect x="-13" y="-7" width="16" height="14" class="f-cabine"/>
+      </g>
+      <text id="mv-son" x="230" y="22" class="t-cote" text-anchor="middle"></text>
+      <text id="mv-dire" x="230" y="150" class="t-lab" text-anchor="middle"></text>
+    </svg>
+    <p class="cap"></p>
+    <div class="ctl">
+      <button type="button" class="pri" data-lecture>▶ Lecture</button>
+      <button type="button" data-etape>Étape</button>
+      <button type="button" data-rejouer>Rejouer</button>
+      <span class="cnt"></span>
+    </div>
+  </figure>
+  <table class="pan-tab">
+    <thead><tr><th>Signal</th><th>Sens</th></tr></thead>
+    <tbody>
+      <tr><td>— · (un prolongé, un bref)</td><td><b>Je vais virer sur tribord.</b></td></tr>
+      <tr><td>— · · (un prolongé, deux brefs)</td><td><b>Je vais virer sur bâbord.</b></td></tr>
+      <tr><td>· ou · ·</td><td><b>Je quitte mon poste de stationnement</b> sans virer, vers tribord ou vers bâbord — le signal de manœuvre ordinaire.</td></tr>
+      <tr><td>— — — · (trois prolongés, un bref)</td><td><b>J'entre ou je sors vers tribord.</b></td></tr>
+      <tr><td>— — — · · (trois prolongés, deux brefs)</td><td><b>J'entre ou je sors vers bâbord.</b></td></tr>
+      <tr><td>— — — (trois prolongés)</td><td><b>Je traverse</b> la voie navigable.</td></tr>
+    </tbody>
+  </table>
+  <div class="def">
+    <p class="term">La logique</p>
+    <p>Le <b>nombre de prolongés</b> dit la manœuvre : un pour virer, trois pour entrer, sortir ou traverser. Les <b>brefs</b> qui suivent disent le côté : un pour tribord, deux pour bâbord. Et on n'annonce que si la manœuvre oblige un autre bateau à s'écarter.</p>
+    <p class="why">Un avalant qui doit virer vers l'amont pour entrer dans un port <b>cède la priorité</b> au montant qui veut entrer dans le même port. Les menues embarcations ne sont pas tenues à ces signaux, sauf entre elles.</p>
+  </div>
+
+  <h3>Rencontre et dépassement — rappel</h3>
+  <p>Vus au chapitre 4, repris ici parce qu'ils tombent dans cette catégorie à l'examen.</p>
+  <table class="pan-tab">
+    <thead><tr><th>Signal</th><th>Sens</th></tr></thead>
+    <tbody>
+      <tr><td>· (montant)</td><td>Le montant laisse passer l'avalant <b>à bâbord</b> et craint de n'être pas compris.</td></tr>
+      <tr><td>· · (montant)</td><td>Il le laisse passer <b>à tribord</b> — avec le panneau bleu. L'avalant <b>répète</b> le signal.</td></tr>
+      <tr><td>— — · · (rattrapant)</td><td><b>Je veux dépasser à bâbord.</b></td></tr>
+      <tr><td>— — · (rattrapant)</td><td><b>Je veux dépasser à tribord.</b></td></tr>
+      <tr><td>· ou · · (rattrapé)</td><td>Il s'écarte : vers tribord, vers bâbord.</td></tr>
+      <tr><td>· · · · · (rattrapé)</td><td><b>Dépassement impossible sans danger.</b></td></tr>
+    </tbody>
+  </table>
+  <div class="trap">
+    <div class="trap-h">Le piège</div>
+    <p>Le manuel dit que « le rattrapé reste silencieux s'il accepte ». Il <b>peut</b> rester silencieux ; mais il <b>peut</b> aussi annoncer qu'il s'écarte (un bref vers tribord, deux vers bâbord), et il <b>doit</b> répondre quand le dépassement n'est possible que de l'autre côté. Et le manuel a raison sur un point subtil : si tu demandes tribord et qu'il répond « un bref — je viens sur tribord », il vient vers le côté où tu voulais passer : <b>c'est un refus</b>.</p>
+  </div>
+
+  <h3>Par visibilité réduite</h3>
+  <figure class="anim live" id="outil-brume">
+    <p class="atitle">⚙ Outil : le signal de brume</p>
+    <div class="opt trois" id="br-btns">
+      <button type="button" data-br="route">Bateau faisant route</button>
+      <button type="button" data-br="station">Au stationnement</button>
+      <button type="button" data-br="radar">Avalant au radar</button>
+    </div>
+    <svg viewBox="0 0 420 110" role="img" aria-label="Un bateau dans la brume et le rythme de son signal">
+      <rect x="0" y="0" width="420" height="110" class="f-brume"/>
+      <g id="br-bateau" transform="translate(70,62)">
+        <path d="M -26 -10 L 18 -10 L 31 0 L 18 10 L -26 10 Z" class="f-coque"/>
+        <rect x="-13" y="-7" width="16" height="14" class="f-cabine"/>
+      </g>
+      <g id="br-barres"></g>
+      <text x="130" y="28" class="t-lab">le rythme, sur une minute :</text>
+      <text id="br-txt" x="130" y="96" class="t-cote"></text>
+    </svg>
+    <p class="cap" id="br-cap"></p>
+  </figure>
+  <table class="pan-tab">
+    <thead><tr><th>Situation</th><th>Signal de brume</th></tr></thead>
+    <tbody>
+      <tr><td>Bateau isolé faisant route</td><td><b>Un son prolongé</b>, répété à intervalles d'<b>une minute au plus</b>. Dans une formation, seul le bateau du conducteur l'émet.</td></tr>
+      <tr><td>Au stationnement</td><td>Une <b>volée de cloche</b>, répétée à intervalles d'une minute au plus, si le bateau stationne dans ou près de la passe.</td></tr>
+      <tr><td>Avalant naviguant au radar</td><td>Un <b>signal tritonal</b> — trois notes — répété sans interruption. C'est ce qu'enseigne le manuel ; je n'ai pas pu relire l'article belge correspondant.</td></tr>
+      <tr><td>Menue embarcation</td><td>Elle n'est <b>pas tenue</b> au signal de brume du bateau faisant route. Mais rien ne l'empêche de l'émettre, et c'est prudent.</td></tr>
+    </tbody>
+  </table>
+  <div class="regl">
+    <div class="rh">Ce que dit le règlement — et ce qui vient du RIPAM</div>
+    <p>Ton manuel donne, par temps de brume, « <i>navire à capacité de manœuvre restreinte, voilier, bateau de pêche, remorqueur : un son prolongé puis deux sons brefs</i> ». C'est la <b>règle 35 du RIPAM</b>, le règlement en mer — tu la reverras au module 2. En eaux intérieures, le bateau isolé faisant route émet <b>un son prolongé</b> toutes les minutes au plus, sans distinction de type.</p>
+    <p>Les durées, les signaux de manœuvre, le virage, le départ, l'entrée et la sortie, le signal de brume du bateau faisant route et celui du stationnement sont repris du texte belge de la Meuse mitoyenne, dont la structure est celle du règlement général. Le signal tritonal du radar et le signal « ne vous approchez pas » n'y figurent pas dans les pages que j'ai pu lire : je les donne tels que le manuel les enseigne.</p>
+    <p class="art">Règlement de la navigation sur la Meuse mitoyenne, art. 4.01, 4.02, 4.03, 3.46, 6.13, 6.14, 6.16, 6.31, 6.33 ; RIPAM, règle 35.</p>
+  </div>
+
+  <div class="keep">
+    <p class="kt">À retenir du chapitre 6</p>
+    <p><b>Bref 1 s, prolongé 4 s</b>, 1 s entre deux.<br>
+    <b>1 tribord, 2 bâbord, 3 arrière, 4 incapable</b> ; une volée de très brefs = danger d'abordage ; des prolongés répétés = détresse.<br>
+    <b>Virer</b> : un prolongé puis le côté. <b>Entrer, sortir</b> : trois prolongés puis le côté. <b>Traverser</b> : trois prolongés.<br>
+    <b>Dépasser</b> : deux prolongés puis le côté ; cinq brefs = non.<br>
+    <b>Brume</b> : un prolongé par minute en route, la cloche à l'arrêt.</p>
+  </div>
+</section>
+
+<section id="qcm-ch6">
+  <p class="kicker">Chapitre 6</p>
+  <h2>Les questions des signaux sonores</h2>
+  <p>Vingt-huit questions, en trois catégories : les signaux de manœuvre, la rencontre et le dépassement, la brume et les avertissements.</p>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="A">
+    <p class="qn">QCM 121</p>
+    <p class="qt">Un son bref dure environ :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>1 seconde</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>4 secondes</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un quart de seconde</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste.</li>
+      <li class="ko"><b>B</b> — c'est le son prolongé.</li>
+      <li class="ko"><b>C</b> — c'est le son très bref, qu'on n'émet qu'en série.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="C">
+    <p class="qn">QCM 122</p>
+    <p class="qt">Un son prolongé dure environ :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>2 secondes</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>10 secondes</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>4 secondes</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste, avec environ 1 seconde de silence entre deux sons.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="B">
+    <p class="qn">QCM 123</p>
+    <p class="qt">Deux sons brefs signifient :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>je viens sur tribord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je viens sur bâbord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>je bats en arrière</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est un seul bref : tribord n'a qu'un « b ».</li>
+      <li class="ok"><b>B</b> — juste : bâbord a deux « b ».</li>
+      <li class="ko"><b>C</b> — c'est trois brefs.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="B">
+    <p class="qn">QCM 124</p>
+    <p class="qt">Trois sons brefs signifient :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>je traverse</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je bats en arrière</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>attention</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — traverser, c'est trois sons <b>prolongés</b>.</li>
+      <li class="ok"><b>B</b> — juste : arrière, trois « r ».</li>
+      <li class="ko"><b>C</b> — attention, c'est un prolongé.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="A">
+    <p class="qn">QCM 125</p>
+    <p class="qt">Quatre sons brefs signifient :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>je suis incapable de manœuvrer</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>dépassement impossible</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>danger imminent d'abordage</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : IN-CA-PA-BLE, quatre syllabes.</li>
+      <li class="ko"><b>B</b> — c'est cinq brefs.</li>
+      <li class="ko"><b>C</b> — c'est une série de très brefs.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="C">
+    <p class="qn">QCM 126</p>
+    <p class="qt">Un seul son prolongé signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>détresse</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je viens sur tribord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>attention</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — la détresse, ce sont des prolongés <b>répétés</b>, ou des volées de cloche.</li>
+      <li class="ko"><b>B</b> — c'est un bref.</li>
+      <li class="ok"><b>C</b> — juste. C'est aussi le signal de brume du bateau faisant route.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="A">
+    <p class="qn">QCM 127</p>
+    <p class="qt">Peut-on utiliser la trompe pour saluer un ami sur la berge ?</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>non : les signaux sonores sont interdits en dehors des cas prévus par le règlement</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>oui, par un son bref</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>oui, hors des agglomérations</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Un son bref voudrait dire « je viens sur tribord » : tu induirais tout le monde en erreur.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="B">
+    <p class="qn">QCM 128</p>
+    <p class="qt">« Je vais virer sur bâbord » s'annonce par :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux sons brefs</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un son prolongé suivi de deux sons brefs</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>trois sons prolongés suivis de deux sons brefs</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est « je viens sur bâbord », sans virer.</li>
+      <li class="ok"><b>B</b> — juste : un prolongé pour le virage, deux brefs pour le côté.</li>
+      <li class="ko"><b>C</b> — c'est entrer ou sortir vers bâbord.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="C">
+    <p class="qn">QCM 129</p>
+    <p class="qt">Tu sors d'un port et tu vas te diriger vers tribord. Tu émets :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un son bref</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un son prolongé et un son bref</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>trois sons prolongés et un son bref</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est le simple changement de route.</li>
+      <li class="ko"><b>B</b> — c'est le virage.</li>
+      <li class="ok"><b>C</b> — juste : trois prolongés pour entrer ou sortir, un bref pour tribord.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="C">
+    <p class="qn">QCM 130</p>
+    <p class="qt">Trois sons prolongés, sans son bref :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>détresse</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je bats en arrière</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>je traverse la voie navigable</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — la détresse n'a pas de nombre fixé : des prolongés répétés.</li>
+      <li class="ko"><b>B</b> — c'est trois <b>brefs</b>.</li>
+      <li class="ok"><b>C</b> — juste.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="A">
+    <p class="qn">QCM 131</p>
+    <p class="qt">Un bateau quitte son poste de stationnement sans virer, vers tribord. Il émet :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un son bref</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un son prolongé et un son bref</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>trois sons prolongés</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : sans virage, c'est le signal de manœuvre ordinaire.</li>
+      <li class="ko"><b>B</b> — seulement s'il vire.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="B">
+    <p class="qn">QCM 132</p>
+    <p class="qt">Quand un grand bateau à moteur émet un signal sonore, il doit en même temps :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>réduire sa vitesse</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>montrer un feu jaune clair visible de tous les côtés</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>appeler sur le canal 10</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste — sauf pour les coups de cloche. Une menue embarcation en est dispensée.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : signaux de manœuvre</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 133</p>
+    <p class="qt">« Je veux dépasser à bâbord » s'annonce par :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>deux sons prolongés suivis de deux sons brefs</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>deux sons prolongés suivis d'un son bref</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>deux sons brefs</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste.</li>
+      <li class="ko"><b>B</b> — c'est à tribord.</li>
+      <li class="ko"><b>C</b> — c'est « je viens sur bâbord ».</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="C">
+    <p class="qn">QCM 134</p>
+    <p class="qt">Le rattrapé émet cinq sons brefs. Il dit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>dépasse-moi à tribord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je suis incapable de manœuvrer</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>le dépassement est impossible sans danger</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ko"><b>B</b> — c'est quatre brefs.</li>
+      <li class="ok"><b>C</b> — juste : un refus.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 135</p>
+    <p class="qt">Tu demandes à dépasser à tribord ; le rattrapé répond par un son bref. Tu :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>dépasses : il a compris</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>renonces : il vient sur tribord, vers le côté où tu voulais passer — c'est un refus</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>dépasses à bâbord sans rien dire</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux, et c'est le piège du manuel.</li>
+      <li class="ok"><b>B</b> — juste. Un bref = « je viens sur tribord » : il occupe ta route.</li>
+      <li class="ko"><b>C</b> — faux : il faudrait redemander, deux prolongés et deux brefs.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 136</p>
+    <p class="qt">Le rattrapé accepte le dépassement et n'a pas à changer de route. Il :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>peut rester silencieux</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>doit émettre cinq sons brefs</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>doit émettre un son prolongé</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. S'il s'écarte, il <b>peut</b> l'annoncer par un ou deux brefs.</li>
+      <li class="ko"><b>B</b> — ce serait un refus.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="C">
+    <p class="qn">QCM 137</p>
+    <p class="qt">Un montant laisse passer l'avalant à tribord et craint de n'être pas compris. Il émet :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un son prolongé</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un son bref</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>deux sons brefs</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ko"><b>B</b> — c'est pour un passage à bâbord.</li>
+      <li class="ok"><b>C</b> — juste, avec le panneau bleu. Et l'avalant répète.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 138</p>
+    <p class="qt">Face aux signaux du montant, l'avalant doit :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>se taire, puisqu'il est prioritaire</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>répéter les mêmes signaux pour accuser réception</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>émettre cinq sons brefs</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux.</li>
+      <li class="ok"><b>B</b> — juste, et il passe du côté laissé libre.</li>
+      <li class="ko"><b>C</b> — faux : cinq brefs, c'est le refus de dépassement.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="B">
+    <p class="qn">QCM 139</p>
+    <p class="qt">Deux sons prolongés suivis d'un son bref :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>je vais virer sur tribord</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je veux dépasser à tribord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>j'entre vers tribord</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — un seul prolongé.</li>
+      <li class="ok"><b>B</b> — juste : deux prolongés, c'est le dépassement.</li>
+      <li class="ko"><b>C</b> — trois prolongés.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Rencontre et dépassement" data-bonne="A">
+    <p class="qn">QCM 140</p>
+    <p class="qt">Le nombre de sons prolongés en tête d'un signal indique :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>la manœuvre : un pour virer, deux pour dépasser, trois pour entrer, sortir ou traverser</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>le côté : un pour tribord, deux pour bâbord</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>la taille du bateau</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Les brefs qui suivent donnent le côté.</li>
+      <li class="ko"><b>B</b> — c'est le rôle des sons brefs.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : rencontre et dépassement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="C">
+    <p class="qn">QCM 141</p>
+    <p class="qt">Par brume, un bateau isolé faisant route émet :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>un son prolongé suivi de deux brefs, toutes les deux minutes</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>trois sons brefs toutes les minutes</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un son prolongé, à intervalles d'une minute au plus</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est la règle 35 du RIPAM, en mer.</li>
+      <li class="ko"><b>B</b> — faux.</li>
+      <li class="ok"><b>C</b> — juste.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="A">
+    <p class="qn">QCM 142</p>
+    <p class="qt">Par brume, un bateau au stationnement dans la passe signale sa présence par :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>une volée de cloche toutes les minutes au plus</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un son prolongé toutes les minutes</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>rien : il est à l'arrêt</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste.</li>
+      <li class="ko"><b>B</b> — c'est le bateau faisant route.</li>
+      <li class="ko"><b>C</b> — faux : c'est justement lui qu'on risque de heurter.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="B">
+    <p class="qn">QCM 143</p>
+    <p class="qt">Le signal « un son prolongé puis deux sons brefs » pour un voilier ou un remorqueur par brume :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>est la règle en eaux intérieures belges</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>vient du RIPAM, le règlement en mer</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>n'existe nulle part</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — faux : en eaux intérieures, un prolongé par minute pour tout bateau isolé faisant route.</li>
+      <li class="ok"><b>B</b> — juste, règle 35. Tu le reverras au module 2.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="C">
+    <p class="qn">QCM 144</p>
+    <p class="qt">Le signal de détresse sonore, c'est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>quatre sons brefs</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>une série de sons très brefs</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>des sons prolongés répétés, ou des volées de cloche</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est « incapable de manœuvrer ».</li>
+      <li class="ko"><b>B</b> — c'est le danger d'abordage.</li>
+      <li class="ok"><b>C</b> — juste.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="A">
+    <p class="qn">QCM 145</p>
+    <p class="qt">Une série de sons très brefs signifie :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>danger imminent d'abordage</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>détresse</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>ne vous approchez pas</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste. Le manuel dit « six au moins » : le texte ne fixe pas de nombre.</li>
+      <li class="ko"><b>B</b> — la détresse, ce sont des prolongés.</li>
+      <li class="ko"><b>C</b> — c'est bref-prolongé répétés, un quart d'heure durant.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="C">
+    <p class="qn">QCM 146</p>
+    <p class="qt">Le signal « ne vous approchez pas », c'est :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>cinq sons brefs</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>un son prolongé toutes les minutes</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>un son bref suivi d'un son prolongé, répétés sans interruption pendant 15 minutes au moins, avec un signal lumineux</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est le refus de dépassement.</li>
+      <li class="ko"><b>B</b> — c'est le signal de brume.</li>
+      <li class="ok"><b>C</b> — juste : le signal d'un bateau en difficulté avec des matières dangereuses.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="B">
+    <p class="qn">QCM 147</p>
+    <p class="qt">Une menue embarcation, par brume en route :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>doit émettre un son prolongé toutes les minutes</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>n'y est pas tenue — mais le peut, et c'est prudent</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>doit émettre une volée de cloche</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ko"><b>A</b> — c'est l'obligation des grands bateaux.</li>
+      <li class="ok"><b>B</b> — juste.</li>
+      <li class="ko"><b>C</b> — c'est le stationnement.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+
+  <div class="qcm" data-cat="Brume et avertissement" data-bonne="A">
+    <p class="qn">QCM 148</p>
+    <p class="qt">Quatre sons brefs suivis d'un son prolongé :</p>
+    <div class="choix">
+      <button type="button" data-l="A"><span class="l">A</span><span>demande d'assistance médicale</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>je suis incapable de manœuvrer, attention</span></button>
+      <button type="button" data-l="C"><span class="l">C</span><span>je vais virer</span></button>
+    </div>
+    <div class="corr" hidden><p class="verdict"></p><ul>
+      <li class="ok"><b>A</b> — juste : c'est un signal à part, prévu avec la détresse.</li>
+      <li class="ko"><b>B</b> — faux, on ne les additionne pas.</li>
+      <li class="ko"><b>C</b> — faux.</li>
+    </ul></div>
+    <p class="cat">Catégorie : brume et avertissement</p>
+  </div>
+</section>
+
 <section id="bilan">
   <p class="kicker">Bilan</p>
   <h2>Ton score</h2>
@@ -3903,7 +4564,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   <div class="ctl" style="display:flex;gap:8px;flex-wrap:wrap;">
     <button type="button" id="qcm-raz" class="menu-item" style="width:auto;padding:10px 16px;">Recommencer les questions</button>
   </div>
-  <p class="note">120 questions pour les cinq premiers chapitres — l'objectif des cent est dépassé, et les six chapitres suivants en ajouteront encore.</p>
+  <p class="note">148 questions pour les six premiers chapitres — l'objectif des cent est dépassé, et les six chapitres suivants en ajouteront encore.</p>
 </section>
 </main>
 
@@ -5447,6 +6108,204 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
         cap.innerHTML = "<b>" + MARQUES[i].c + "</b> — " + MARQUES[i].n;
       });
     });
+  })();
+})();
+
+</script>
+<script>
+/* ===== ANIMATIONS DU CHAPITRE 6 — LES SIGNAUX SONORES ===== */
+(function(){
+  "use strict";
+
+  /* Un signal est une suite de sons : B = bref (1 s), P = prolongé (4 s),
+     T = très bref (¼ s). Entre deux sons, 1 s de silence — ¼ s entre deux
+     très brefs. Ces durées sont celles du texte, pas des arrondis. */
+  var DUREE = { B:1, P:4, T:0.25 };
+  function silence(apres){ return apres === "T" ? 0.25 : 1; }
+
+  var SIGNAUX = [
+    { k:"attention",  l:"— Attention",                 s:"P",     t:"<b>Attention.</b> Un son prolongé — c'est aussi le signal de brume du bateau faisant route." },
+    { k:"tribord",    l:"· Je viens sur tribord",      s:"B",     t:"<b>Je viens sur tribord.</b> Un seul bref : tri<b>b</b>ord n'a qu'un « b »." },
+    { k:"babord",     l:"· · Je viens sur bâbord",     s:"BB",    t:"<b>Je viens sur bâbord.</b> Deux brefs : <b>b</b>â<b>b</b>ord en a deux." },
+    { k:"arriere",    l:"· · · Je bats en arrière",    s:"BBB",   t:"<b>Je bats en arrière.</b> Trois brefs : a<b>rr</b>iè<b>r</b>e, trois « r »." },
+    { k:"incapable",  l:"· · · · Incapable de manœuvrer", s:"BBBB", t:"<b>Je suis incapable de manœuvrer.</b> IN-CA-PA-BLE, quatre syllabes. Une menue embarcation doit aussi l'émettre en cas de besoin." },
+    { k:"danger",     l:"Série de très brefs — danger", s:"TTTTTTTT", t:"<b>Danger imminent d'abordage.</b> Une série de sons très brefs, sans nombre fixé — on sonne jusqu'à ce que l'autre réagisse." },
+    { k:"virert",     l:"— · Je vire sur tribord",     s:"PB",    t:"<b>Je vais virer sur tribord.</b> Un prolongé pour le virage, un bref pour le côté." },
+    { k:"virerb",     l:"— · · Je vire sur bâbord",    s:"PBB",   t:"<b>Je vais virer sur bâbord.</b> Un prolongé, deux brefs." },
+    { k:"depb",       l:"— — · · Je dépasse à bâbord", s:"PPBB",  t:"<b>Je veux dépasser à bâbord.</b> Deux prolongés pour le dépassement, deux brefs pour bâbord." },
+    { k:"dept",       l:"— — · Je dépasse à tribord",  s:"PPB",   t:"<b>Je veux dépasser à tribord.</b> Deux prolongés, un bref." },
+    { k:"refus",      l:"· · · · · Dépassement impossible", s:"BBBBB", t:"<b>Le dépassement est impossible sans danger.</b> Cinq brefs : le refus du rattrapé." },
+    { k:"entret",     l:"— — — · J'entre / je sors vers tribord", s:"PPPB", t:"<b>J'entre ou je sors vers tribord.</b> Trois prolongés, un bref." },
+    { k:"entreb",     l:"— — — · · J'entre / je sors vers bâbord", s:"PPPBB", t:"<b>J'entre ou je sors vers bâbord.</b> Trois prolongés, deux brefs." },
+    { k:"traverse",   l:"— — — Je traverse",           s:"PPP",   t:"<b>Je traverse la voie navigable.</b> Trois prolongés, rien d'autre." },
+    { k:"detresse",   l:"— — — … Détresse",            s:"PPPP",  t:"<b>Détresse.</b> Des sons prolongés répétés, ou des volées de cloche. Ça ne s'arrête pas à quatre : on continue." },
+    { k:"medical",    l:"· · · · — Assistance médicale", s:"BBBBP", t:"<b>Demande d'assistance médicale.</b> Quatre brefs puis un prolongé — un signal à part, prévu avec la détresse." },
+    { k:"approche",   l:"· — · — Ne vous approchez pas", s:"BPBP", t:"<b>Ne vous approchez pas.</b> Un bref, un prolongé, répétés sans interruption pendant 15 minutes au moins, avec un signal lumineux." }
+  ];
+
+  /* ------------------------------------------------- l'outil d'écoute ---- */
+  (function(){
+    var fig = document.getElementById("outil-sons");
+    if(!fig) return;
+    var hote = document.getElementById("sn-btns");
+    var barres = fig.querySelector("#sn-barres");
+    var tete = fig.querySelector("#sn-tete");
+    var fin = fig.querySelector("#sn-fin");
+    var cap = document.getElementById("sn-cap");
+    var X0 = 10, LARG = 400;
+    var ctxAudio = null, tache = null, gen = 0;
+
+    hote.innerHTML = SIGNAUX.map(function(s){
+      return '<button type="button" data-sn="' + s.k + '">' + s.l + "</button>";
+    }).join("");
+
+    function plan(s){
+      /* liste de [debut, duree] en secondes, et la durée totale */
+      var t = 0, sons = [];
+      for(var i = 0; i < s.length; i++){
+        var d = DUREE[s.charAt(i)];
+        sons.push([t, d, s.charAt(i)]);
+        t += d + (i + 1 < s.length ? silence(s.charAt(i)) : 0);
+      }
+      return { sons: sons, total: Math.max(t, 1) };
+    }
+    function bip(debut, duree){
+      /* Un son, par WebAudio — seulement si le navigateur le permet. */
+      if(!ctxAudio) return;
+      try{
+        var o = ctxAudio.createOscillator(), g = ctxAudio.createGain();
+        o.type = "square"; o.frequency.value = 330;
+        g.gain.value = 0.0001;
+        o.connect(g); g.connect(ctxAudio.destination);
+        var t0 = ctxAudio.currentTime + debut;
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.02);
+        g.gain.setValueAtTime(0.25, t0 + duree - 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + duree);
+        o.start(t0); o.stop(t0 + duree + 0.05);
+      }catch(e){}
+    }
+    function jouer(sig){
+      var p = plan(sig.s);
+      var ech = LARG / p.total;
+      barres.innerHTML = p.sons.map(function(x, i){
+        return '<rect class="sn-bar" data-i="' + i + '" x="' + (X0 + x[0] * ech).toFixed(1) + '" y="18" width="'
+             + Math.max(2, x[1] * ech).toFixed(1) + '" height="34" rx="3"/>';
+      }).join("");
+      fin.textContent = p.total.toFixed(p.total % 1 ? 2 : 0).replace(".", ",") + " s";
+      cap.innerHTML = sig.t;
+      hote.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b.dataset.sn === sig.k); });
+      /* le son, si on peut */
+      try{
+        if(!ctxAudio && (window.AudioContext || window.webkitAudioContext))
+          ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+        if(ctxAudio && ctxAudio.state === "suspended") ctxAudio.resume();
+      }catch(e){ ctxAudio = null; }
+      p.sons.forEach(function(x){ bip(x[0], x[1]); });
+      /* la tête de lecture */
+      var moi = ++gen, t0 = performance.now();
+      cancelAnimationFrame(tache);
+      (function pasLecture(now){
+        if(moi !== gen) return;
+        var t = (now - t0) / 1000;
+        var x = X0 + Math.min(t, p.total) * ech;
+        tete.setAttribute("x1", x.toFixed(1)); tete.setAttribute("x2", x.toFixed(1));
+        barres.querySelectorAll(".sn-bar").forEach(function(r, i){
+          var s = p.sons[i];
+          r.classList.toggle("on", t >= s[0] && t < s[0] + s[1]);
+        });
+        if(t < p.total + 0.3) tache = requestAnimationFrame(pasLecture);
+      })(t0);
+    }
+    hote.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click", function(){
+        var sig = SIGNAUX.filter(function(s){ return s.k === b.dataset.sn; })[0];
+        if(sig) jouer(sig);
+      });
+    });
+    /* au chargement : le dessin du premier signal, sans le jouer */
+    (function(){
+      var p = plan(SIGNAUX[0].s), ech = LARG / p.total;
+      barres.innerHTML = '<rect class="sn-bar" x="' + X0 + '" y="18" width="' + (p.sons[0][1] * ech).toFixed(1) + '" height="34" rx="3"/>';
+      fin.textContent = p.total + " s";
+    })();
+  })();
+
+  /* ----------------------------------------- les manœuvres annoncées ---- */
+  window.kamAnim("anim-manoeuvre", {
+    etat0: { x: 80, y: 100, r: 0, son: "", dire: "" },
+    capDepart: "Tu es amarré rive gauche, en haut. Touche « Lecture ».",
+    images: [
+      { cap: "Tu quittes ton poste <b>sans virer</b>, en venant sur tribord : le signal de manœuvre ordinaire suffit — <b>un son bref</b>.",
+        d: 1300, etat: { x: 150, y: 100, son: "·", dire: "je quitte mon poste vers tribord" } },
+      { cap: "Un bateau vient en face et ta route va le gêner : tu annonces un <b>virage sur tribord</b> — <b>un prolongé, un bref</b>.",
+        d: 1400, etat: { x: 230, y: 118, r: 20, son: "— ·", dire: "je vais virer sur tribord" } },
+      { cap: "Le port s'ouvre à ta droite. Pour y entrer en tournant vers tribord : <b>trois prolongés, un bref</b>. Et si un montant veut entrer dans le même port, tu lui cèdes la priorité.",
+        d: 1700, etat: { x: 330, y: 150, r: 60, son: "— — — ·", dire: "j'entre vers tribord" } },
+      { cap: "Tu es dans le port.",
+        d: 900, etat: { x: 350, y: 195, r: 90, son: "", dire: "" } },
+      { cap: "Tu ressors en tournant vers bâbord, pour repartir d'où tu viens : <b>trois prolongés, deux brefs</b>.",
+        d: 1700, etat: { x: 330, y: 150, r: -100, son: "— — — · ·", dire: "je sors vers bâbord" } },
+      { cap: "Et si tu devais <b>traverser</b> la voie navigable en sortant, droit devant toi : <b>trois prolongés</b>, rien d'autre.",
+        d: 1300, etat: { x: 330, y: 60, r: -90, son: "— — —", dire: "je traverse" } },
+      { cap: "Retiens la grammaire : <b>les prolongés disent la manœuvre</b> (un : virer ; deux : dépasser ; trois : entrer, sortir, traverser), <b>les brefs disent le côté</b> (un : tribord ; deux : bâbord).",
+        d: 900, etat: { son: "", dire: "" } }
+    ],
+    rendu: function(e, fig){
+      fig.querySelector("#mv-bateau").setAttribute("transform",
+        "translate(" + e.x.toFixed(1) + "," + e.y.toFixed(1) + ") rotate(" + e.r.toFixed(1) + ")");
+      fig.querySelector("#mv-son").textContent = e.son;
+      fig.querySelector("#mv-dire").textContent = e.dire;
+    }
+  });
+
+  /* --------------------------------------------- le signal de brume ----- */
+  (function(){
+    var fig = document.getElementById("outil-brume");
+    if(!fig) return;
+    var barres = fig.querySelector("#br-barres");
+    var txt = fig.querySelector("#br-txt");
+    var cap = document.getElementById("br-cap");
+    var X0 = 130, LARG = 280, ECH = LARG / 60;   /* soixante secondes sur la ligne */
+    function barre(t, d, cls){
+      return '<rect class="' + (cls || "sn-bar on") + '" x="' + (X0 + t * ECH).toFixed(1) + '" y="40" width="'
+           + Math.max(2, d * ECH).toFixed(1) + '" height="26" rx="2"/>';
+    }
+    var CAS = {
+      route: {
+        svg: barre(0, 4) + barre(60, 4, "sn-bar") + '<line x1="' + X0 + '" y1="74" x2="' + (X0 + LARG) + '" y2="74" class="s-axe"/>',
+        txt: "un prolongé, silence… et ainsi de suite",
+        t: "<b>Bateau isolé faisant route.</b> <b>Un son prolongé</b>, répété à intervalles d'<b>une minute au plus</b>. Dans une formation, seul le bateau du conducteur l'émet. Une menue embarcation n'y est pas tenue."
+      },
+      station: {
+        svg: [0, 0.6, 1.2, 1.8, 2.4, 3.0].map(function(t){ return barre(t, 0.3); }).join("")
+           + [60, 60.6, 61.2].map(function(t){ return barre(t, 0.3, "sn-bar"); }).join("")
+           + '<line x1="' + X0 + '" y1="74" x2="' + (X0 + LARG) + '" y2="74" class="s-axe"/>',
+        txt: "cloche, silence… et ainsi de suite",
+        t: "<b>Au stationnement dans ou près de la passe.</b> Une <b>volée de cloche</b>, répétée à intervalles d'une minute au plus. Pas de trompe : la cloche dit « je ne bouge pas »."
+      },
+      radar: {
+        svg: (function(){
+          var s = "";
+          for(var t = 0; t < 60; t += 3){ s += barre(t, 0.7) + barre(t + 0.8, 0.7) + barre(t + 1.6, 0.7); }
+          return s + '<line x1="' + X0 + '" y1="74" x2="' + (X0 + LARG) + '" y2="74" class="s-axe"/>';
+        })(),
+        txt: "trois notes, sans interruption",
+        t: "<b>Avalant naviguant au radar.</b> Un <b>signal tritonal</b> — trois notes qui se suivent — répété <b>sans interruption</b>. C'est ce qu'enseigne ton manuel ; l'article belge correspondant n'a pas pu être relu."
+      }
+    };
+    function montrerBrume(k){
+      var c = CAS[k];
+      if(!c) return;
+      fig.querySelectorAll("[data-br]").forEach(function(b){ b.classList.toggle("on", b.dataset.br === k); });
+      barres.innerHTML = c.svg;
+      txt.textContent = c.txt;
+      cap.innerHTML = c.t;
+    }
+    fig.querySelectorAll("[data-br]").forEach(function(b){
+      b.addEventListener("click", function(){ montrerBrume(b.dataset.br); });
+    });
+    montrerBrume("route");
   })();
 })();
 

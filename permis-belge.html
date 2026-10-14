@@ -519,13 +519,37 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .m-blanc{ fill:#ffffff; }
 .s-balance{ fill:none; stroke:#d7263d; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:4 3; }
 
+/* ---- habillage du chapitre 6 : les signaux sonores ---- */
+.sn-bar{ fill:#3a4a63; stroke:#8a9bb5; stroke-width:1; }
+.sn-bar.on{ fill:#ffd23f; stroke:#ffffff; }
+.s-tete{ stroke:#e8690b; stroke-width:2.5; stroke-linecap:round; }
+.f-brume{ fill:#b9c4d2; }
+/* dix-sept boutons de signaux : deux colonnes, texte qui s'enroule */
+#sn-btns button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; text-align:left; }
+
+/* ---- la page des erreurs du manuel ---- */
+.err{
+  border-left:4px solid var(--red); background:var(--paper); border-radius:0 12px 12px 0;
+  padding:14px 16px; display:flex; flex-direction:column; gap:7px;
+}
+.err.ok{ border-left-color:var(--green); }
+.err .ek{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--red); font-weight:700;
+}
+.err.ok .ek{ color:var(--green); }
+.err .em{ color:var(--muted); font-style:italic; max-width:none; }
+.err .er{ max-width:none; }
+.err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.err .ea a{ color:var(--navy); font-weight:700; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v3 · module 1 : chapitres 1 à 5 disponibles</div>
+  <div class="ver">SOMMAIRE · v4 · module 1 : chapitres 1 à 6 disponibles</div>
   <h1>Brevet de conduite belge</h1>
   <p>Le cours des trois modules, écrit d'après les règlements officiels, avec les animations et les QCM. Chaque module se travaille séparément.</p>
 </header>
@@ -574,7 +598,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
         <span class="t">Fluvial</span>
         <span class="s">Navigation fluviale, balisage, signalisation, priorités, feux et marques, signaux sonores, sécurité, moteurs, RPNE</span>
       </span>
-      <span class="etat">Chap. 1 à 5</span>
+      <span class="etat">Chap. 1 à 6</span>
     </a>
     <button type="button" class="menu-item avenir" data-bientot="2">
       <span class="num">2</span>
@@ -603,6 +627,21 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
       <span class="etat">Pas encore écrit</span>
     </button>
     <p class="bientot" id="bientot-R" hidden>Ce module n'est pas encore écrit, mais sa matière est prête : la gradation MAYDAY / PAN PAN / SÉCURITÉ, le message de détresse mot pour mot, le canal 16 et l'appel sélectif numérique sur le canal 70.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Les erreurs du manuel</h2>
+  <p>Chaque chapitre du cours suit ton manuel. Quand le manuel dit autre chose que le règlement, l'écart est signalé sur place — et rassemblé ici, module par module, chapitre par chapitre.</p>
+  <div class="menus">
+    <a class="menu-item pret" href="./permis-belge-erreurs.html">
+      <span class="num">!</span>
+      <span class="txt">
+        <span class="t">Erreurs du manuel</span>
+        <span class="s">Ce que le manuel dit, ce que dit le règlement, l'article, et le lien vers le cours</span>
+      </span>
+      <span class="etat">Consulter</span>
+    </a>
   </div>
 </section>
 

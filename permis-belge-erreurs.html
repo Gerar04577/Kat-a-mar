@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Erreurs du manuel · Permis Belge</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+
+/* Layout: one airy column; each notion = definition, why, diagram, formula, worked examples, trap, exercise */
+:root{
+  --bg:#f2f5f6; --paper:#ffffff; --ink:#14263a; --muted:#566a7c; --line:#cfd9e0;
+  --sea:#e1eef6; --navy:#1d4e89; --red:#c0392b; --green:#1f7a3f; --amber:#a86400; --water:#9cc6ea; --land:#cfe3b0; --sun:#f6c453; --warm:#d1443a; --cold:#2f6fd0; --occl:#7a4fc2; --warmair:#f2b24a; --coldair:#7fb2e6; --cloud:#c9cdd1; --cloudd:#7c838a; --rain:#3b7ad8;
+  --display:"Zilla Slab",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.7;padding:0 16px}
+main{max-width:680px;margin:0 auto;padding-block:32px 72px;display:flex;flex-direction:column;gap:56px}
+header{display:flex;flex-direction:column;gap:10px}
+header h1{font-family:var(--display);font-size:2.1rem;line-height:1.15;margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+.ver{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+section{display:flex;flex-direction:column;gap:22px;min-width:0}
+.kicker{margin:0;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+h2{font-family:var(--display);font-size:1.6rem;line-height:1.2;margin:-14px 0 0;text-wrap:balance;border-bottom:2px solid var(--line);padding-bottom:10px}
+h3{font-family:var(--display);font-size:1.15rem;margin:8px 0 -8px;color:var(--navy)}
+p{margin:0;max-width:62ch}
+ul,ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+.def{background:var(--sea);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.def .term{font-weight:700;color:var(--navy);font-size:1.05rem}
+.why{color:var(--muted)}
+.why b{color:var(--ink)}
+.formula{font-family:var(--mono);font-size:1.15rem;text-align:center;background:var(--paper);border:2px solid var(--navy);border-radius:10px;padding:14px 12px;max-width:none;font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.ctitle{font-weight:700;font-size:1.05rem}
+.given-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px}
+.given{gap:4px}
+.steps{list-style:decimal;gap:8px}
+.steps li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.steps .what{min-width:0}
+.steps .res{font-family:var(--mono);font-weight:500;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.result{font-weight:700;color:var(--green);margin-top:4px}
+.trap{border-left:4px solid var(--red);padding:12px 16px;background:var(--paper);border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:4px}
+.trap-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);font-weight:700}
+details.ex{border:2px dashed var(--navy);border-radius:12px;padding:14px 18px;display:block}
+details.ex summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details.ex[open] summary{margin-bottom:10px}
+details.ex[open]{display:flex;flex-direction:column;gap:10px}
+.fig{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px}
+svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+.t-m{fill:var(--muted)} .t-n{fill:var(--navy)} .t-r{fill:var(--red)} .t-g{fill:var(--green)} .t-a{fill:var(--amber)}
+.s-ink{stroke:var(--ink)} .s-n{stroke:var(--navy)} .s-r{stroke:var(--red)} .s-g{stroke:var(--green)} .s-a{stroke:var(--amber)} .s-l{stroke:var(--line)}
+.f-sea{fill:var(--sea)} .f-paper{fill:var(--paper)} .f-n{fill:var(--navy)} .f-r{fill:var(--red)} .f-g{fill:var(--green)} .f-a{fill:var(--amber)} .f-ink{fill:var(--ink)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td:first-child{font-family:var(--mono);font-weight:500;color:var(--navy);white-space:nowrap}
+.plus{color:var(--green);font-weight:700} .minus{color:var(--red);font-weight:700}
+nav.toc ol{gap:6px}
+nav.toc a{color:var(--navy)}
+.memo{font-family:var(--mono);font-size:.95rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;white-space:pre;overflow-x:auto;line-height:1.9}
+
+.sym{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.sym p{max-width:none}
+.sym b{font-family:var(--mono);color:var(--navy);display:inline-block;min-width:3.2em}
+.note{font-size:.85rem;color:var(--muted)}
+td.hl{background:var(--amber);color:var(--paper);font-weight:700;border-radius:4px}
+
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px}
+.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+.anim.live .ctl label{display:flex;align-items:center;gap:8px;flex:1 1 100%;min-width:0;font-size:.9rem;color:var(--muted);font-weight:700}
+.anim.live .ctl label input{flex:1 1 0;width:0;min-width:60px;accent-color:var(--navy)}
+.anim.live .ctl label output{font-family:var(--mono);font-size:.8rem;color:var(--navy);flex:0 0 auto;text-align:right;white-space:nowrap}
+.anim.live .ctl button.on{background:var(--sea)}
+figure.anim{margin:0;min-width:0}
+.anim .ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--navy)}
+.anim .ctl .tm{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.opt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt button{font:inherit;font-weight:700;font-size:.92rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:7px 10px;cursor:pointer;min-width:0}
+.opt button.on{background:var(--sea)}
+.opt button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cards div{background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0}
+.cards .l{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.cards .v{font-size:.95rem;font-weight:700;line-height:1.35}
+.keep{border:2px solid var(--green);border-radius:10px;padding:12px 14px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.keep .kt{font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--green);font-weight:700;margin:0}
+.lead{color:var(--muted)}
+.ok{color:var(--green);font-weight:700} .ko{color:var(--red);font-weight:700}
+.mto-sub{display:flex;flex-direction:column;gap:18px;min-width:0}
+.mto-sub td:first-child,.cmp td:first-child,.symt td:first-child{font-family:var(--body);font-weight:700;white-space:normal}
+.mto .memo{font-size:.85rem}
+svg.sy{width:40px;height:30px;margin:0}
+.qcm .opts{list-style:none;padding-left:0}
+.qcm .rep{padding-left:1.1em}
+.qcm .rep li.ok>b:first-child{color:var(--green)} .qcm .rep li.ko>b:first-child{color:var(--red)}
+.qcm .rep li{color:var(--ink);font-weight:400}
+.tp{gap:8px}.tp .tpt{font-weight:700;font-size:1.05rem}
+.tpx{background:var(--sea);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.tpx p{max-width:none}.tko span,.tok span{display:inline-block;font-weight:700;margin-right:6px}
+.tko span{color:var(--red)}.tok span{color:var(--green)}.tpk{color:var(--navy)}
+@media (max-width:560px){.mto .tw table{font-size:.82rem}.mto .tw td,.mto .tw th{padding:7px 4px;-webkit-hyphens:auto;hyphens:auto}}
+
+
+.anim{background:var(--paper);border:2px solid var(--navy);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:10px}
+.anim .atitle{font-weight:700;color:var(--navy);font-size:.95rem}
+.anim svg{max-width:560px}
+.anim .cap{min-height:4.6em;background:var(--sea);border-radius:8px;padding:10px 12px;font-size:.98rem;line-height:1.5;max-width:none}
+.anim .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.anim .ctl button{font:inherit;font-weight:700;font-size:.95rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:8px 14px;cursor:pointer}
+.anim .ctl button.pri{background:var(--navy);color:var(--paper)}
+.anim .ctl button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.anim .ctl .cnt{margin-left:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.tool-prot path.body{fill:var(--paper);fill-opacity:.82;stroke:var(--ink);stroke-width:1.5}
+.tool-prot line{stroke:var(--ink)}
+.tool-prot text{font-size:9px;fill:var(--ink)}
+.tool-comp line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.tool-comp circle{fill:var(--amber)}
+
+
+.rappel{background:var(--paper);border:2px solid var(--amber);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.rappel .rt{font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.rappel p{font-family:var(--mono);font-size:.95rem;max-width:none;line-height:1.6}
+.etapes{display:flex;flex-direction:column;gap:14px}
+.etape{border-left:4px solid var(--navy);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.etape .et{font-weight:700;color:var(--navy)}
+.etape .ef{font-family:var(--mono);font-size:.92rem;color:var(--muted)}
+.etape .ec{font-family:var(--mono);font-size:1rem;font-weight:500}
+.etape .es{font-size:.95rem}
+
+</style>
+<style>
+/* ===== AJOUTS PROPRES AU PERMIS BELGE =====
+   Reprend les jetons du permis hauturier ; n'ajoute que ce qui lui manque :
+   les sous-menus, l'encadré « ce que dit le règlement », le QCM interactif,
+   la recherche à occurrences et le réglage de taille. */
+:root{
+  --ech:1;                 /* multiplicateur de taille, boutons A / A */
+  --h-kam:56px;            /* hauteur réelle de la barre « Retour », mesurée */
+  --surl:#ffe2a0; --surl-actif:#ffd0a3; --surl-trait:#e8690b;
+  font-size:calc(16px * var(--ech));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}}
+:root[data-theme="dark"]{ --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442; }
+body{ font-size:calc(18px * var(--ech)); }
+
+/* ---- sous-menus du sommaire ---- */
+.menus{ display:flex; flex-direction:column; gap:12px; }
+.menu-item{
+  /* sans box-sizing, width:100% + 18px de padding + 2px de bordure débordaient
+     de 40 px : la page du sommaire glissait latéralement sur l'iPhone. */
+  box-sizing:border-box;
+  display:flex; align-items:center; gap:14px; text-align:left;
+  background:var(--paper); border:2px solid var(--line); border-radius:14px;
+  padding:16px 18px; font:inherit; color:var(--ink); cursor:pointer;
+  text-decoration:none; width:100%;
+}
+.menu-item:active{ background:var(--sea); }
+.menu-item.pret{ border-color:var(--navy); }
+/* Un module pas encore écrit ne doit JAMAIS ressembler à un module prêt :
+   bordure en pointillé, teinte éteinte, et une étiquette qui le dit en toutes
+   lettres. Il répond quand même à l'appui, en expliquant ce qu'il contiendra —
+   une tuile muette se lit comme une panne. */
+.menu-item.avenir{
+  border-style:dashed; background:transparent; color:var(--muted);
+}
+.menu-item.avenir .t{ color:var(--muted); }
+.menu-item.avenir .num{ background:var(--bg); color:var(--muted); }
+.menu-item.avenir .etat{ color:var(--amber); font-weight:700; }
+.menu-item.avenir[aria-expanded="true"]{ border-style:solid; border-color:var(--amber); }
+.bientot{
+  margin:-6px 0 2px; padding:12px 16px; font-size:.95rem; color:var(--ink);
+  background:var(--sea); border-radius:12px; max-width:none;
+}
+.menu-item .num{
+  font-family:var(--mono); font-weight:700; font-size:1.3rem; color:var(--navy);
+  background:var(--sea); border-radius:11px; padding:10px 13px; flex:0 0 auto;
+}
+.menu-item .txt{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.menu-item .t{ font-family:var(--display); font-weight:700; font-size:1.2rem; }
+.menu-item .s{ color:var(--muted); font-size:.92rem; }
+.menu-item .etat{
+  margin-left:auto; flex:0 0 auto; font-family:var(--mono); font-size:.72rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.menu-item.pret .etat{ color:var(--green); }
+
+/* ---- sommaire interne d'un module ---- */
+.chapitres{ display:flex; flex-direction:column; gap:6px; list-style:none; padding-left:0; }
+.chapitres li{ display:flex; gap:10px; align-items:baseline; }
+.chapitres .n{ font-family:var(--mono); color:var(--navy); font-weight:700; flex:0 0 auto; }
+.chapitres a{ color:var(--ink); }
+.chapitres .avenir{ color:var(--muted); }
+
+/* ---- encadré « ce que dit le règlement » ---- */
+.regl{
+  border-left:4px solid var(--red); background:var(--paper);
+  border-radius:0 10px 10px 0; padding:14px 16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.regl .rh{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--red); font-weight:700;
+}
+.regl .art{ font-family:var(--mono); font-size:.85rem; color:var(--navy); }
+.regl p{ max-width:none; }
+
+/* ---- QCM interactif ---- */
+.qcm{
+  background:var(--paper); border:2px solid var(--navy); border-radius:12px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:12px;
+}
+.qcm .qn{
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--navy);
+}
+.qcm .qt{ font-weight:700; font-size:1.05rem; max-width:none; }
+.qcm .choix{ display:flex; flex-direction:column; gap:8px; }
+.qcm .choix button{
+  font:inherit; text-align:left; background:var(--bg); color:var(--ink);
+  border:1.5px solid var(--line); border-radius:10px; padding:11px 14px;
+  cursor:pointer; display:flex; gap:10px; align-items:flex-start;
+}
+.qcm .choix button .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qcm .choix button:active{ background:var(--sea); }
+.qcm .choix button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+.qcm .choix button.juste{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qcm .choix button.faux{ border-color:var(--red); background:color-mix(in srgb, var(--red) 10%, var(--paper)); }
+.qcm .choix button[disabled]{ cursor:default; }
+.qcm .corr{ display:flex; flex-direction:column; gap:8px; }
+.qcm .corr .verdict{ font-weight:700; }
+.qcm .corr .verdict.ok{ color:var(--green); }
+.qcm .corr .verdict.ko{ color:var(--red); }
+.qcm .corr ul{ list-style:none; padding-left:0; gap:7px; }
+.qcm .corr li{ font-size:.95rem; }
+.qcm .corr li b{ font-family:var(--mono); }
+.qcm .corr li.ok b{ color:var(--green); }
+.qcm .corr li.ko b{ color:var(--red); }
+.qcm .cat{
+  font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.score{
+  background:var(--sea); border-radius:12px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.score .big{ font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--navy); }
+.score .regle{ font-size:.88rem; color:var(--muted); }
+
+/* ---- barre de recherche (identique au permis hauturier) ---- */
+#kam-chercher{
+  position:sticky; top:var(--h-kam); z-index:40;
+  background:var(--bg); border-bottom:1.5px solid var(--line);
+  margin:-28px -16px 0; padding:12px 16px 10px;
+}
+#kam-chercher .ligne{ display:flex; gap:10px; align-items:stretch; max-width:680px; margin:0 auto; }
+#kam-chercher .boite{ position:relative; flex:1; min-width:0; }
+#kam-q{
+  width:100%; height:calc(56px * var(--ech));
+  font-family:var(--body); font-size:calc(19px * var(--ech)); font-weight:600;
+  color:var(--ink); background:var(--paper);
+  border:2px solid var(--line); border-radius:14px; padding:0 46px;
+}
+#kam-q::placeholder{ color:var(--muted); font-weight:400; }
+#kam-q:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px var(--sea); }
+#kam-chercher .loupe{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; pointer-events:none; color:var(--muted);
+}
+#kam-vider{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:var(--line); color:var(--ink); font-size:19px; line-height:1;
+  cursor:pointer; display:none;
+}
+#kam-vider.vu{ display:block; }
+#kam-chercher .fleches{ display:flex; gap:8px; }
+#kam-chercher .fleche{
+  width:calc(60px * var(--ech)); height:calc(56px * var(--ech));
+  border:2px solid var(--navy); border-radius:14px;
+  background:var(--paper); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; padding:0;
+}
+#kam-chercher .fleche svg{ width:28px; height:28px; }
+#kam-chercher .fleche:active{ background:var(--sea); }
+#kam-chercher .fleche:disabled{ opacity:.3; cursor:default; }
+#kam-chercher .fleche:focus-visible{ outline:3px solid var(--surl-trait); outline-offset:2px; }
+#kam-chercher .bas{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin:9px auto 0; min-height:26px; max-width:680px;
+}
+#kam-compteur{
+  font-family:var(--mono); font-weight:600; font-variant-numeric:tabular-nums;
+  font-size:calc(16px * var(--ech)); color:var(--muted); letter-spacing:.02em;
+}
+#kam-compteur b{ color:var(--surl-trait); font-size:calc(19px * var(--ech)); }
+#kam-compteur.rien{ color:var(--amber); }
+#kam-chercher .tailles{ display:flex; align-items:center; gap:6px; }
+#kam-chercher .tailles i{
+  font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-right:2px;
+}
+#kam-chercher .tbtn{
+  width:44px; height:38px; border:2px solid var(--line); border-radius:11px;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--body); font-weight:700; line-height:1; padding:0;
+}
+#kam-chercher .tbtn:active{ background:var(--sea); }
+#kam-chercher .tbtn:disabled{ opacity:.35; cursor:default; }
+#kam-chercher .tbtn.pt{ font-size:14px; }
+#kam-chercher .tbtn.gd{ font-size:21px; }
+mark.kam-occ{
+  background:var(--surl); color:inherit; border-radius:4px; padding:1px 2px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+@media (max-width:420px){ #kam-chercher .tailles i{ display:none; } }
+
+/* ---- habillage des schémas ---- */
+.f-ciel{ fill:var(--bg); }
+.f-terre{ fill:var(--land); }
+.f-eau{ fill:var(--water); }
+.f-mur{ fill:var(--cloudd); }
+.f-porte{ fill:var(--ink); }
+.f-coque{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; }
+.f-cabine{ fill:var(--sea); stroke:var(--ink); stroke-width:1.4; }
+.f-mat{ fill:var(--ink); }
+.s-cote{ stroke:var(--navy); stroke-width:1.6; }
+.s-amarre{ stroke:var(--red); stroke-width:2; stroke-linecap:round; }
+.t-lab{ font-family:var(--mono); font-size:10px; fill:var(--muted); }
+.cards .v{ font-weight:700; }
+.anim .cap .verdict-ok{ color:var(--green); font-weight:700; }
+.anim .cap .verdict-ko{ color:var(--red); font-weight:700; }
+
+
+/* ---- corrections d'affichage sur téléphone ----
+   Trouvées en regardant la page rendue, pas en lisant le code. */
+
+/* La pastille d'état passe sous le texte quand la largeur ne suffit plus. */
+@media (max-width:470px){
+  .menu-item{ flex-wrap:wrap; }
+  .menu-item .etat{ margin-left:0; width:100%; text-align:right; }
+}
+
+/* Les curseurs des animations : la valeur était coupée au bord du cadre.
+   Sur téléphone, le curseur passe sur sa propre ligne, pleine largeur. */
+@media (max-width:560px){
+  .anim.live .ctl label{ flex-wrap:wrap; }
+  .anim.live .ctl label input{ order:3; flex:1 1 100%; width:auto; min-width:0; }
+  .anim.live .ctl label output{ margin-left:auto; }
+}
+
+/* Deux flèches un peu moins larges : sans ça, « Chercher un mot… » était
+   tronqué dès 390 px de large. */
+@media (max-width:430px){
+  #kam-chercher .fleche{ width:calc(50px * var(--ech)); }
+  #kam-q{ padding-left:42px; padding-right:42px; }
+}
+
+/* La barre « Retour » et la barre de recherche sont collantes : sans marge de
+   défilement, tout ce qu'on rejoint par un lien ou par le score se retrouvait
+   caché dessous. */
+section[id], .score, .qcm, figure.anim, [id]{
+  scroll-margin-top: var(--h-collant, 170px);
+}
+
+/* Même précaution que sur le permis hauturier : au texte agrandi, un tableau
+   ne doit jamais entraîner toute la page de côté. */
+@media (max-width:620px){
+  main table{ display:block; width:max-content; max-width:100%; overflow-x:auto; }
+  main .steps .res, main .res{ white-space:normal; }
+}
+
+/* ---- habillage du chapitre 2 : balisage ---- */
+.f-rouge{ fill:var(--red); }
+.f-vert{ fill:var(--green); }
+.f-noir{ fill:#14263a; }
+.f-jaune{ fill:#f6c453; }
+.f-rose{ fill:var(--paper); stroke:var(--line); stroke-width:1.5; }
+.f-sain{ fill:var(--green); fill-opacity:.30; }
+.f-danger{ fill:var(--red); }
+.t-cote{ font-family:var(--mono); font-size:11px; font-weight:600; fill:var(--navy); }
+/* En thème sombre, le « noir » des bouées doit rester lisible sur fond sombre :
+   on l'éclaircit juste assez pour qu'il se détache, sans devenir gris. */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .f-noir{ fill:#5a6b80; }}
+:root[data-theme="dark"] .f-noir{ fill:#5a6b80; }
+
+/* ---- habillage du chapitre 3 : la signalisation ----
+   Un panneau garde ses VRAIES couleurs dans les deux thèmes : un panneau
+   blanc bordé de rouge reste blanc bordé de rouge, de jour comme de nuit.
+   On n'ajoute qu'un filet gris, pour qu'un panneau blanc ne disparaisse pas
+   sur fond sombre. Ces couleurs sont donc écrites en dur, volontairement. */
+.p-face{ fill:#ffffff; }
+.p-bleu{ fill:#1b5fae; }
+.p-vertf{ fill:#1b8a4b; }
+.p-rougef{ fill:#d7263d; }
+.p-jaunef{ fill:#f2c230; }
+.p-bord{ fill:none; stroke:#d7263d; stroke-width:6; }
+.p-filet{ fill:none; stroke:rgba(108,122,140,.65); stroke-width:1.4; }
+.p-barre{ stroke:#d7263d; stroke-width:7; stroke-linecap:round; }
+.p-pic{ fill:#14263a; }
+.p-picb{ fill:#ffffff; }
+.p-trait{ fill:none; stroke:#14263a; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-traitb{ fill:none; stroke:#ffffff; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-txt{ font-family:var(--mono); font-weight:700; fill:#14263a; }
+.p-txtb{ font-family:var(--mono); font-weight:700; fill:#ffffff; }
+
+/* la grille de l'explorateur de panneaux */
+/* « Recommandation » est un mot long : sous 140 px, il se faisait couper. */
+.opt.cinq{ grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); }
+.opt.cinq button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; }
+.panneaux{ display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:10px; }
+.panneaux button{
+  box-sizing:border-box; font:inherit; cursor:pointer; min-width:0;
+  background:var(--bg); border:2px solid var(--line); border-radius:11px;
+  padding:7px 6px 5px; display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.panneaux button.on{ border-color:var(--navy); background:var(--sea); }
+.panneaux button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+/* plus spécifique que « .anim svg », qui plafonne à 560 px */
+.panneaux button svg{ width:100%; max-width:66px; height:auto; display:block; }
+/* un nom long (« Pavillon rouge balancé ») doit s'enrouler dans sa case,
+   surtout au texte agrandi, au lieu d'en déborder. */
+.panneaux .code{
+  font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--navy);
+  max-width:100%; text-align:center; overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto;
+}
+
+/* les feux d'un ouvrage : des couleurs de lampe, pas des couleurs de thème */
+.f-eteint{ fill:#36404f; }
+.f-feurouge{ fill:#ff3b30; }
+.f-feuvert{ fill:#1fc45c; }
+.s-lampe{ stroke:#14263a; stroke-width:2; }
+
+/* Les tables de panneaux ont une colonne de texte long. Sans cette reprise,
+   la règle « main table { width:max-content } » les étirerait sur plusieurs
+   écrans de large au lieu de les laisser s'enrouler. */
+/* table-layout:fixed : la largeur est DONNÉE, donc le tableau ne peut plus
+   dépasser l'écran quoi qu'on mette dedans. Sans ça, la colonne des codes
+   (« E.5.4 à E.5.15 ») imposait une largeur minimale et entraînait toute la
+   page de côté, surtout au texte agrandi. */
+main table.pan-tab{ display:table; width:100%; table-layout:fixed; }
+main table.pan-tab th:first-child,
+main table.pan-tab td:first-child{ width:28%; white-space:normal; overflow-wrap:anywhere; }
+main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
+
+/* ---- habillage du chapitre 4 : les priorités ---- */
+/* l'étiquette au-dessus de chaque groupe de boutons de l'outil */
+.qlab{
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--muted); margin:2px 0 -4px;
+}
+/* « Courant : tu es montant » est long : les boutons doivent pouvoir
+   s'enrouler plutôt que se faire couper, comme au chapitre 3. */
+.opt.quatre{ grid-template-columns:repeat(auto-fit, minmax(152px, 1fr)); }
+.opt.trois{ grid-template-columns:repeat(auto-fit, minmax(132px, 1fr)); }
+.opt.deux{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.opt.quatre button, .opt.trois button, .opt.deux button{
+  overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+}
+/* la flèche orange de celui qui doit s'écarter */
+.s-ecart{ fill:none; stroke:#e8690b; stroke-width:3.5; stroke-linecap:round; }
+.f-ecart{ fill:#e8690b; }
+.t-ecart{ font-family:var(--mono); font-size:11px; font-weight:700; fill:#e8690b; }
+/* l'axe du chenal, et le feu blanc scintillant du panneau bleu */
+.s-axe{ stroke:var(--line); stroke-width:1.4; stroke-dasharray:7 7; }
+.f-feublanc{ fill:#ffffff; stroke:#8a6a10; stroke-width:1.5; }
+/* les voiliers de l'outil des amures */
+.f-voile{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; }
+.f-mat2{ stroke:var(--ink); stroke-width:2.4; }
+.s-vent{ stroke:var(--navy); stroke-width:2.2; stroke-linecap:round; }
+.f-vent{ fill:var(--navy); }
+
+/* ---- habillage du chapitre 5 : feux et marques ----
+   Les scènes de nuit gardent un fond sombre dans les DEUX thèmes : un feu
+   de navigation se lit sur du noir, pas sur du papier. */
+.f-nuit{ fill:#0e1a2b; }
+.f-eau-nuit{ fill:#13263d; }
+.f-coque-nuit{ fill:#2a3a52; stroke:#6b7f9c; stroke-width:1.4; }
+.f-cabine-nuit{ fill:#1f2e45; stroke:#6b7f9c; stroke-width:1.2; }
+.s-mat-nuit{ stroke:#8a9bb5; stroke-width:2.2; stroke-linecap:round; }
+.s-cote-nuit{ stroke:#8a9bb5; stroke-width:1.2; stroke-dasharray:4 3; }
+.s-cable{ stroke:#8a9bb5; stroke-width:1.6; stroke-dasharray:5 4; }
+.t-nuit{ font-family:var(--mono); font-size:10px; fill:#c7d2e3; }
+/* les lampes : couleur réelle et un halo, comme des feux dans la nuit */
+.l-blanc{ fill:#ffffff; stroke:rgba(255,255,255,.45); stroke-width:4; }
+.l-vert{ fill:#22e06a; stroke:rgba(34,224,106,.45); stroke-width:4; }
+.l-rouge{ fill:#ff4a3d; stroke:rgba(255,74,61,.45); stroke-width:4; }
+.l-jaune{ fill:#ffd23f; stroke:rgba(255,210,63,.45); stroke-width:4; }
+.l-bleu{ fill:#3b8bff; stroke:rgba(59,139,255,.5); stroke-width:4; }
+/* les secteurs de l'outil des angles */
+.sec-blanc{ fill:#ffffff; fill-opacity:.11; }
+.sec-vert{ fill:#22e06a; fill-opacity:.22; }
+.sec-rouge{ fill:#ff4a3d; fill-opacity:.22; }
+.s-orbite{ fill:none; stroke:#8a9bb5; stroke-width:1; stroke-dasharray:3 5; }
+.f-toi{ fill:#e8690b; stroke:#ffffff; stroke-width:1.5; }
+.t-toi{ font-family:var(--mono); font-size:9px; font-weight:700; fill:#ffffff; }
+/* les marques de jour, en couleurs réelles */
+.m-noir{ fill:#14263a; }
+.m-jaune{ fill:#f2c230; stroke:#8a6a10; stroke-width:1; }
+.m-bleu{ fill:#1b5fae; }
+.m-vert{ fill:#1b8a4b; }
+.m-rouge{ fill:#d7263d; }
+.m-blanc{ fill:#ffffff; }
+.s-balance{ fill:none; stroke:#d7263d; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:4 3; }
+
+/* ---- habillage du chapitre 6 : les signaux sonores ---- */
+.sn-bar{ fill:#3a4a63; stroke:#8a9bb5; stroke-width:1; }
+.sn-bar.on{ fill:#ffd23f; stroke:#ffffff; }
+.s-tete{ stroke:#e8690b; stroke-width:2.5; stroke-linecap:round; }
+.f-brume{ fill:#b9c4d2; }
+/* dix-sept boutons de signaux : deux colonnes, texte qui s'enroule */
+#sn-btns button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; text-align:left; }
+
+/* ---- la page des erreurs du manuel ---- */
+.err{
+  border-left:4px solid var(--red); background:var(--paper); border-radius:0 12px 12px 0;
+  padding:14px 16px; display:flex; flex-direction:column; gap:7px;
+}
+.err.ok{ border-left-color:var(--green); }
+.err .ek{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--red); font-weight:700;
+}
+.err.ok .ek{ color:var(--green); }
+.err .em{ color:var(--muted); font-style:italic; max-width:none; }
+.err .er{ max-width:none; }
+.err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.err .ea a{ color:var(--navy); font-weight:700; }
+
+</style>
+</head>
+<body>
+<div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Erreurs du manuel</span></div>
+<main>
+<header>
+  <div class="ver">ERREURS DU MANUEL · v1 · module 1, chapitres 1 à 6</div>
+  <h1>Ce que le manuel dit, et ce que dit le règlement</h1>
+  <p>Le cours suit ton manuel chapitre par chapitre. Chaque fois qu'une de ses affirmations ne correspond pas au <b>texte réglementaire</b>, l'écart est signalé à l'endroit même du cours — et repris ici, en une seule liste, pour que tu puisses le relire avant l'examen.</p>
+  <p class="why">Pour chaque point : ce que le manuel affirme, ce que le texte dit vraiment, l'article, et un lien vers le passage du cours. Quand je n'ai pas pu lire un article, c'est écrit tel quel.</p>
+</header>
+
+<section>
+  <h2>Comment lire cette liste</h2>
+  <div class="cards">
+    <div><div class="l">Erreur</div><div class="v">le manuel dit le contraire du texte</div></div>
+    <div><div class="l">Imprécision</div><div class="v">vrai en gros, faux dans le détail</div></div>
+    <div><div class="l">Hors programme</div><div class="v">règle du RIPAM (en mer), pas du règlement intérieur</div></div>
+    <div><div class="l">Non vérifié</div><div class="v">je n'ai pas pu lire le texte</div></div>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Pour l'examen</div>
+    <p>Quand une question reprend <b>telle quelle</b> une formule du manuel, c'est probablement la réponse du manuel qui est attendue. Quand elle est posée autrement, c'est le texte qui tranche. Cette liste te donne les deux, pour ne pas être pris de court.</p>
+  </div>
+</section>
+
+<section id="m1">
+  <h2>Module 1 — Fluvial</h2>
+
+  <h3 id="m1-ch1">Chapitre 1 · La navigation fluviale</h3>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « il est interdit de dépasser à l'approche d'une écluse ».</p>
+    <p class="er">Le texte ne contient pas cette interdiction. Il impose l'<b>arrêt complet</b> à <b>50 m</b> des écluses et des ponts routiers mobiles, et à <b>100 m</b> des ponts ferroviaires mobiles, sauf autorisation.</p>
+    <p class="ea">Arrêté royal du 15 octobre 1935, art. 24 §2. <a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « les bateaux professionnels sont prioritaires aux écluses ».</p>
+    <p class="er">Le passage se fait <b>dans l'ordre d'arrivée</b>. La priorité absolue est réservée aux bateaux de l'armée, de l'administration, des secours aux épaves et des services réguliers de voyageurs ; d'autres catégories passent en alternance. Un bateau déjà engagé dans l'ouvrage ne peut plus être trématé.</p>
+    <p class="ea">Arrêté royal du 15 octobre 1935, art. 28 §2 à §5 et §8. <a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : une marge de sécurité de 30 cm, appliquée indifféremment à la largeur, à la longueur, à la hauteur et au tirant d'eau.</p>
+    <p class="er">En <b>hauteur</b>, la marge est bien de 0,30 m sous la hauteur libre de la voie. Aux <b>écluses</b>, le bateau doit être plus court de <b>0,30 m</b> et plus étroit de <b>0,20 m</b> que le sas (tolérance 0,10 m pour les écluses de 5,20 m ou moins). Et le règlement général ne fixe <b>aucune</b> hauteur libre minimale sous les ponts : elle est donnée voie par voie.</p>
+    <p class="ea">Arrêté royal du 15 octobre 1935, art. 1 §1, §2, §3. <a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
+  </div>
+
+  <h3 id="m1-ch2">Chapitre 2 · Le balisage</h3>
+  <div class="err ok">
+    <p class="ek">Rien à signaler</p>
+    <p class="er">Le chapitre du manuel est conforme au système AISM région A et à la signalisation SIGNI des voies intérieures. Le cours ajoute seulement la distinction entre la bifurcation de chenal (eaux intérieures) et le chenal préféré (en mer).</p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch2">Voir dans le cours</a></p>
+  </div>
+
+  <h3 id="m1-ch3">Chapitre 3 · La signalisation fluviale</h3>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel présente trois panneaux « interdiction de passer » puis un « chenal hors service pour les bateaux à moteur, autorisé aux rames et aux voiles », sans les distinguer.</p>
+    <p class="er"><b>A.1</b> interdit le passage à tout le monde. Le panneau qui ferme un chenal aux seuls bateaux motorisés est <b>A.12</b>, une interdiction par catégorie. Le manuel ne donne aucun code officiel ; le cours les ajoute tous.</p>
+    <p class="ea">Règlement général de police pour la navigation sur les eaux intérieures, appendice 7. <a href="./permis-belge-m1.html#ch3">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « chenal éloigné de 30 m de la rive ».</p>
+    <p class="er">30 n'est qu'un exemple : le chiffre blanc du panneau <b>C.5</b> donne la distance minimale, variable d'un signal à l'autre, comptée <b>depuis le signal</b>.</p>
+    <p class="ea">Appendice 7, C.5. <a href="./permis-belge-m1.html#ch3">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « obligation de s'arrêter à 1000 M » présentée comme un panneau à part entière.</p>
+    <p class="er">C'est un panneau <b>B.5</b> (s'arrêter) avec un <b>cartouche de distance</b> : la prescription s'applique à 1000 m, pas ici. Le cartouche ne change jamais le sens du panneau, il le situe.</p>
+    <p class="ea">Appendice 7, panneaux additionnels. <a href="./permis-belge-m1.html#ch3">Voir dans le cours</a></p>
+  </div>
+
+  <h3 id="m1-ch4">Chapitre 4 · Les règles de priorité</h3>
+  <div class="err">
+    <p class="ek">Erreur</p>
+    <p class="em">Le manuel se contredit : page des règles, « la voile a priorité sur les rames » ; page des passages étroits, « le bateau à rames a priorité sur un bateau à voiles qui remonte au vent ».</p>
+    <p class="er">Le texte : « <i>l'embarcation motorisée s'écarte de la route de l'autre embarcation, et l'embarcation mue par la force musculaire s'écarte de la route de l'embarcation à voile</i> ». Donc <b>voile avant rames avant moteur</b>. Aucune règle de louvoyage trouvée dans les textes ; la planche officielle des passages étroits donne au contraire « priorité pour le voilier ».</p>
+    <p class="ea">Règlement de la navigation sur la Meuse mitoyenne, art. 6.03a al. 2 (6.03bis dans le règlement général). <a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel ne dit pas qui montre le panneau bleu, et laisse entendre que l'avalant, prioritaire, commande la rencontre.</p>
+    <p class="er">C'est le <b>montant</b> qui réserve la route à l'avalant, qui <b>choisit le côté</b>, et qui montre le <b>panneau bleu</b> et le feu blanc scintillant s'il laisse passer à tribord. L'avalant passe du côté laissé libre et <b>répète</b> les signaux. Rien de tout cela ne s'applique aux menues embarcations entre elles.</p>
+    <p class="ea">Meuse mitoyenne, art. 6.05 (6.05 aussi dans le règlement général ; 6.04 sur le Rhin). <a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Non vérifié</p>
+    <p class="em">Le manuel : la liste des passages étroits (« le voilier qui louvoie cède la priorité », « le voilier sous le vent de l'obstacle donne la priorité »).</p>
+    <p class="er">Le texte littéral de l'article 6.07 n'a pas pu être lu. La planche officielle du SPF Mobilité donne : avec courant, priorité à l'avalant ; sans courant, la menue s'écarte pour le grand, le voilier passe avant rames et moteur, et dans une courbe celui qui n'a pas d'obstacle à tribord passe en premier. Les deux formules citées du manuel n'y figurent pas.</p>
+    <p class="ea">SPF Mobilité, vademecum, planche de l'art. 6.07. <a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
+  </div>
+
+  <h3 id="m1-ch5">Chapitre 5 · Les feux et marques</h3>
+  <div class="err">
+    <p class="ek">Erreur</p>
+    <p class="em">Le manuel : « le ballon doit mesurer 0,80 m de diamètre minimum ».</p>
+    <p class="er">Le ballon fait <b>0,60 m</b> de diamètre.</p>
+    <p class="ea">Règlement général de police pour la navigation sur les eaux intérieures, art. 3.04 al. 3 b). <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Erreur</p>
+    <p class="em">Le manuel : « le cône et le cylindre doivent mesurer 0,80 m de hauteur et avoir une base de 0,50 m de diamètre ».</p>
+    <p class="er">Le <b>cône</b> fait <b>0,60 m</b> de haut sur <b>0,60 m</b> de base. Les valeurs 0,80 × 0,50 sont celles du <b>cylindre</b> et du <b>bicône</b>. Le manuel a glissé d'une ligne.</p>
+    <p class="ea">Art. 3.04 al. 3 a), c), d). <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « le ballon : de couleur verte ou noire ; le cône : bleu ou noir ; le cylindre : jaune ».</p>
+    <p class="er">Les articles sur les marques ne fixent <b>aucune couleur générale</b>. La couleur se lit article par article : ballon <b>jaune</b> (remorqué, assisté), ballon <b>vert</b> (bac), cylindre <b>jaune</b> à bandes (remorqueur), cône <b>noir</b> (voilier au moteur), cônes <b>bleus</b> (matières dangereuses), bicône <b>jaune</b> (passagers). Le « ballon noir » de mouillage que cite le manuel n'a pas pu être vérifié.</p>
+    <p class="ea">Art. 3.03, 3.04, 3.08, 3.09, 3.12, 3.14, 3.15, 3.16. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : une menue embarcation « de moins de 7 m, à moins de 13 km/h » ne montre qu'un feu blanc.</p>
+    <p class="er">Il manque la troisième condition : elle doit être <b>non pontée</b>. Et ce n'est pas une obligation, c'est une <b>option</b> (« peut porter »).</p>
+    <p class="ea">Art. 3.13 al. 2. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Non vérifié</p>
+    <p class="em">Le manuel : au mouillage, « si le navire fait moins de 20 mètres (Belgique), 50 mètres (France), il portera un seul feu blanc ».</p>
+    <p class="er">Le texte lu dit : un feu blanc visible de tous les côtés, du côté de la passe, à 3 m au moins ; une menue embarcation, un feu blanc à l'endroit le plus visible. Aucun seuil de 20 m ou 50 m n'a pu être vérifié.</p>
+    <p class="ea">Meuse mitoyenne, art. 3.20 ; art. 3.20 du règlement général non lu. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : matières dangereuses, « se tenir à une distance de 10 m / 50 m / 100 m ».</p>
+    <p class="er">Ces distances ne figurent pas dans l'article des cônes et feux bleus : ce sont des distances de <b>stationnement</b>, qui relèvent d'un autre chapitre du règlement. Les cônes eux-mêmes — 1 inflammable, 2 santé, 3 explosif — sont exacts.</p>
+    <p class="ea">Art. 3.14. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Hors programme</p>
+    <p class="em">Le manuel présente comme règles générales : navire non maître de sa manœuvre (deux boules, deux rouges), handicapé par son tirant d'eau (cylindre, trois rouges), capacité de manœuvre restreinte (boule-bicône-boule, rouge-blanc-rouge), navire échoué (trois boules), bateau de pêche (cônes réunis, vert ou rouge sur blanc), pilote (blanc sur rouge, pavillon H), chasseur de mines (trois boules, trois verts), plongée (pavillon A).</p>
+    <p class="er">Tout cela vient du <b>RIPAM</b>, le règlement en mer — programme du brevet général, module 2. Le règlement intérieur belge connaît un bateau « <b>incapable de manœuvrer</b> » (feu rouge <b>balancé</b> la nuit, pavillon rouge balancé le jour), les engins au travail (deux verts côté libre, un rouge côté fermé), et le feu bleu scintillant des services. Le cours garde les signaux RIPAM dans un tableau à part, avec les moyens mnémotechniques du manuel.</p>
+    <p class="ea">Meuse mitoyenne, art. 3.18, 3.27, 3.35, 3.45 ; RIPAM, règles 27 à 30. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Non vérifié</p>
+    <p class="em">Le manuel : flamme rouge du bateau prioritaire aux écluses ; feux du bateau de plongée.</p>
+    <p class="er">Les articles 3.17 et 3.36 n'ont pas pu être lus — les PDF officiels s'arrêtent avant. La planche officielle du SPF en confirme l'existence, sans en donner le texte.</p>
+    <p class="ea">Art. 3.17 et 3.36, non lus. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+
+  <h3 id="m1-ch6">Chapitre 6 · Les signaux sonores</h3>
+  <div class="err">
+    <p class="ek">Hors programme</p>
+    <p class="em">Le manuel : par temps de brume, « navire à capacité de manœuvre restreinte, voilier, bateau de pêche, remorqueur : 1 son prolongé puis 2 sons brefs ».</p>
+    <p class="er">C'est la <b>règle 35 du RIPAM</b>, en mer. En eaux intérieures, le signal de brume d'un bateau isolé faisant route est <b>un son prolongé</b>, répété à intervalles d'une minute au plus ; le règlement intérieur ne distingue pas voilier, pêcheur et remorqueur par un signal « 1 + 2 ».</p>
+    <p class="ea">Règlement intérieur, règles de navigation par visibilité réduite ; RIPAM, règle 35. <a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « danger imminent d'abordage : 6 sons brefs au moins ».</p>
+    <p class="er">Le signal est une <b>série de sons très brefs</b> — une volée, sans nombre fixé. « Au moins six » est un repère de mémoire, pas une règle. (Je n'ai pas pu relire l'appendice belge lui-même : point à confirmer sur le texte.)</p>
+    <p class="ea">Appendice des signaux sonores, signaux généraux. <a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">Imprécision</p>
+    <p class="em">Le manuel : « le rattrapé reste silencieux s'il accepte » le dépassement.</p>
+    <p class="er">Il <b>peut</b> rester silencieux ; mais quand il s'écarte pour laisser la place, il <b>peut</b> aussi l'annoncer — un son bref vers tribord, deux vers bâbord — et il <b>doit</b> répondre quand le dépassement n'est possible que de l'autre côté. Le silence n'est qu'un des cas.</p>
+    <p class="ea">Meuse mitoyenne, art. 6.10 al. 5 et 6. <a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+  </div>
+</section>
+
+<section id="m2">
+  <h2>Module 2 — Côtier</h2>
+  <p class="note">Pas encore écrit. Les écarts seront ajoutés ici chapitre par chapitre.</p>
+</section>
+<section id="m3">
+  <h2>Module 3 — Pratique</h2>
+  <p class="note">Pas encore écrit.</p>
+</section>
+<section id="mR">
+  <h2>Module R — Radiotéléphonie</h2>
+  <p class="note">Pas encore écrit.</p>
+</section>
+</main>
+
+<script>
+/* ===== SOCLE COMMUN DES PAGES DU PERMIS BELGE =====
+   Trois choses : la recherche à occurrences, le réglage de la taille du
+   texte, et le moteur d'animations. Plus le QCM, qui compte par catégorie
+   parce que l'examen belge se rate catégorie par catégorie. */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------- outils */
+  function aplatir(s){
+    return Array.from(String(s)).map(function(c){
+      var b = (c.normalize("NFD").charAt(0) || c).toLowerCase();
+      return b.charAt(0) || c;       /* toujours UN caractère */
+    }).join("");
+  }
+  var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------- taille du texte */
+  var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
+  var bPlus = document.getElementById("kam-plus");
+  var bMoins = document.getElementById("kam-moins");
+  function mesurerBarre(){
+    var b = document.querySelector(".kam-bar");
+    var h = b ? b.offsetHeight : 56;
+    if(b) document.documentElement.style.setProperty("--h-kam", h + "px");
+    /* Hauteur TOTALE de ce qui reste collé en haut : la barre « Retour » plus
+       la barre de recherche. C'est elle qui sert de marge de défilement —
+       calculée, jamais devinée, sinon un titre rejoint par un lien se cache
+       dessous. */
+    var c = document.getElementById("kam-chercher");
+    document.documentElement.style.setProperty("--h-collant",
+      (h + (c ? c.offsetHeight : 0) + 12) + "px");
+  }
+  function appliquerTaille(){
+    document.documentElement.style.setProperty("--ech", ECHELLES[iEch]);
+    if(bMoins) bMoins.disabled = (iEch === 0);
+    if(bPlus) bPlus.disabled = (iEch === ECHELLES.length - 1);
+    try{ localStorage.setItem("katamar-permis-taille", String(iEch)); }catch(e){}
+    mesurerBarre();
+  }
+  try{
+    var g = parseInt(localStorage.getItem("katamar-permis-taille"), 10);
+    if(g >= 0 && g < ECHELLES.length) iEch = g;
+  }catch(e){}
+  if(bPlus) bPlus.addEventListener("click", function(){ if(iEch < ECHELLES.length - 1){ iEch++; appliquerTaille(); } });
+  if(bMoins) bMoins.addEventListener("click", function(){ if(iEch > 0){ iEch--; appliquerTaille(); } });
+  mesurerBarre();
+  window.addEventListener("resize", mesurerBarre);
+  window.addEventListener("orientationchange", mesurerBarre);
+  appliquerTaille();
+
+  /* --------------------------------------------- recherche à occurrences */
+  var cours = document.querySelector("main");
+  var champ = document.getElementById("kam-q");
+  if(cours && champ){
+    var compteur = document.getElementById("kam-compteur");
+    var bPrec = document.getElementById("kam-prec");
+    var bSuiv = document.getElementById("kam-suiv");
+    var bVider = document.getElementById("kam-vider");
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var marques = [], courant = -1;
+
+    function aEviter(noeud){
+      var p = noeud.parentNode;
+      while(p && p !== cours){
+        if(p.nodeType === 1){
+          var n = p.nodeName.toUpperCase();
+          if(n === "SCRIPT" || n === "STYLE" || n === "NOSCRIPT" || n === "TEXTAREA") return true;
+          if(p.namespaceURI === SVG_NS) return true;   /* un <mark> casserait le schéma */
+          if(p.id === "kam-chercher") return true;
+          if(p.hidden) return true;                    /* corrections non révélées */
+        }
+        p = p.parentNode;
+      }
+      return false;
+    }
+    function effacerSurlignage(){
+      for(var i = 0; i < marques.length; i++){
+        var m = marques[i], p = m.parentNode;
+        if(!p) continue;
+        p.replaceChild(document.createTextNode(m.textContent), m);
+        p.normalize();
+      }
+      marques = []; courant = -1;
+    }
+    function surligner(mot){
+      var cible = aplatir(mot);
+      if(!cible) return;
+      var promeneur = document.createTreeWalker(cours, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(n){
+          if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+          return aEviter(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var noeuds = [], n;
+      while((n = promeneur.nextNode())) noeuds.push(n);
+      for(var i = 0; i < noeuds.length; i++){
+        var noeud = noeuds[i], texte = noeud.nodeValue, plat = aplatir(texte);
+        var pos = plat.indexOf(cible);
+        if(pos === -1) continue;
+        var frag = document.createDocumentFragment(), depart = 0;
+        while(pos !== -1){
+          if(pos > depart) frag.appendChild(document.createTextNode(texte.slice(depart, pos)));
+          var m = document.createElement("mark");
+          m.className = "kam-occ";
+          m.textContent = texte.slice(pos, pos + cible.length);
+          frag.appendChild(m); marques.push(m);
+          depart = pos + cible.length;
+          pos = plat.indexOf(cible, depart);
+        }
+        if(depart < texte.length) frag.appendChild(document.createTextNode(texte.slice(depart)));
+        noeud.parentNode.replaceChild(frag, noeud);
+      }
+    }
+    function majCompteur(){
+      var mot = champ.value.trim();
+      if(!mot){ compteur.textContent = "Cherche dans tout le module"; compteur.className = ""; return; }
+      if(mot.length < 2){ compteur.textContent = "Encore une lettre…"; compteur.className = ""; return; }
+      if(marques.length === 0){
+        compteur.textContent = "Aucune occurrence de « " + mot + " »";
+        compteur.className = "rien"; return;
+      }
+      compteur.innerHTML = "<b>" + (courant + 1) + "</b> / " + marques.length
+        + (marques.length > 1 ? " occurrences" : " occurrence");
+      compteur.className = "";
+    }
+    function ouvrirLesReplis(el){
+      var p = el.parentNode;
+      while(p && p !== cours){
+        if(p.nodeName === "DETAILS" && !p.open) p.open = true;
+        p = p.parentNode;
+      }
+    }
+    function allerA(i){
+      if(marques.length === 0) return;
+      if(courant >= 0 && marques[courant]) marques[courant].classList.remove("actif");
+      courant = (i + marques.length) % marques.length;
+      var m = marques[courant];
+      m.classList.add("actif");
+      ouvrirLesReplis(m);
+      m.scrollIntoView({ block:"center", behavior: reduit ? "auto" : "smooth" });
+      majCompteur();
+    }
+    var minuteur = null;
+    function chercher(){
+      var mot = champ.value.trim();
+      effacerSurlignage();
+      bVider.classList.toggle("vu", champ.value.length > 0);
+      if(mot.length >= 2) surligner(mot);
+      bPrec.disabled = bSuiv.disabled = (marques.length === 0);
+      if(marques.length > 0) allerA(0); else majCompteur();
+    }
+    champ.addEventListener("input", function(){ clearTimeout(minuteur); minuteur = setTimeout(chercher, 150); });
+    champ.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(marques.length === 0){ clearTimeout(minuteur); chercher(); return; }
+      allerA(courant + (e.shiftKey ? -1 : 1));
+    });
+    bSuiv.addEventListener("click", function(){ allerA(courant + 1); });
+    bPrec.addEventListener("click", function(){ allerA(courant - 1); });
+    bVider.addEventListener("click", function(){ champ.value = ""; clearTimeout(minuteur); chercher(); champ.focus(); });
+  }
+
+  /* --------------------------------------------------------- animations */
+  /* Chaque animation déclare un état de départ, une suite d'images et une
+     fonction de rendu. Entre deux images, les nombres sont interpolés : le
+     sas se remplit sous les yeux au lieu de sauter d'un niveau à l'autre. */
+  var ANIMS = {};
+  window.kamAnim = function(id, def){
+    var fig = document.getElementById(id);
+    if(!fig) return;
+    var cap = fig.querySelector(".cap");
+    var cnt = fig.querySelector(".cnt");
+    var bLect = fig.querySelector("[data-lecture]");
+    var bEtape = fig.querySelector("[data-etape]");
+    var bRejouer = fig.querySelector("[data-rejouer]");
+    var etat = Object.assign({}, def.etat0);
+    var i = -1, enCours = false, tache = null;
+    /* Chaque transition porte un numéro. Deux appuis rapides sur « Étape »
+       lançaient deux boucles en même temps : l'ancienne continuait d'écrire
+       l'état et ramenait le feu au rouge ou le bateau en arrière. Une boucle
+       qui n'est plus la dernière s'arrête d'elle-même. */
+    var gen = 0;
+    /* Cible de la transition en cours. Appuyer sur « Étape » pendant qu'une
+       image se joue doit la TERMINER d'un coup, puis passer à la suivante —
+       sinon le mouvement se fige à mi-chemin : le feu reste entre rouge et
+       vert, et le bateau s'arrête au milieu du sas. */
+    var cibleEnCours = null;
+
+    function rendre(){ def.rendu(etat, fig); }
+    function majCnt(){ if(cnt) cnt.textContent = Math.max(0, i + 1) + " / " + def.images.length; }
+    function poser(n, immediat, apres){
+      var img = def.images[n];
+      var depart = Object.assign({}, etat);
+      var cible = Object.assign({}, etat, img.etat || {});
+      var duree = (immediat || reduit) ? 0 : (img.d || 700);
+      if(cap) cap.innerHTML = img.cap;
+      i = n; majCnt();
+      if(duree === 0){
+        gen++; cibleEnCours = null; etat = cible; rendre(); if(apres) apres();
+        return;
+      }
+      var t0 = performance.now();
+      cibleEnCours = cible;
+      var moi = ++gen;
+      cancelAnimationFrame(tache);
+      (function boucle(t){
+        if(moi !== gen) return;               /* une transition plus récente a pris la main */
+        var k = Math.min(1, (t - t0) / duree);
+        var doux = k < .5 ? 2*k*k : 1 - Math.pow(-2*k + 2, 2)/2;   /* ease-in-out */
+        var e = {};
+        Object.keys(cible).forEach(function(cle){
+          var a = depart[cle], b = cible[cle];
+          e[cle] = (typeof a === "number" && typeof b === "number") ? a + (b - a) * doux : b;
+        });
+        etat = e; rendre();
+        if(k < 1) tache = requestAnimationFrame(boucle);
+        else { cibleEnCours = null; if(apres) apres(); }
+      })(t0);
+    }
+    function terminerEnCours(){
+      if(!cibleEnCours) return;
+      gen++; cancelAnimationFrame(tache);
+      etat = cibleEnCours; cibleEnCours = null; rendre();
+    }
+    function suivante(){
+      terminerEnCours();
+      if(i + 1 >= def.images.length) return false;
+      poser(i + 1, false, null);
+      return true;
+    }
+    function lire(){
+      if(enCours){ enCours = false; couper(); if(bLect) bLect.textContent = "▶ Lecture"; return; }
+      enCours = true; if(bLect) bLect.textContent = "⏸ Pause";
+      var n = (i + 1 >= def.images.length) ? 0 : i + 1;
+      if(n === 0){ etat = Object.assign({}, def.etat0); rendre(); }
+      (function enchaine(k){
+        if(!enCours || k >= def.images.length){
+          enCours = false; if(bLect) bLect.textContent = "▶ Lecture"; return;
+        }
+        poser(k, false, function(){ setTimeout(function(){ enchaine(k + 1); }, reduit ? 0 : 450); });
+      })(n);
+    }
+    function couper(){ gen++; cibleEnCours = null; cancelAnimationFrame(tache); }
+    if(bLect) bLect.addEventListener("click", lire);
+    if(bEtape) bEtape.addEventListener("click", function(){
+      enCours = false; if(bLect) bLect.textContent = "▶ Lecture";
+      /* on ne coupe pas ici : poser() incrémente lui-même le numéro */
+      if(!suivante()){ etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+        if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture »."; }
+    });
+    if(bRejouer) bRejouer.addEventListener("click", function(){
+      enCours = false; couper();
+      if(bLect) bLect.textContent = "▶ Lecture";
+      etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+      if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    });
+    if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    rendre(); majCnt();
+    ANIMS[id] = { rendre: rendre };
+  };
+
+  /* ------------------------------------------- modules pas encore écrits */
+  document.querySelectorAll("[data-bientot]").forEach(function(b){
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", "bientot-" + b.dataset.bientot);
+    b.addEventListener("click", function(){
+      var note = document.getElementById("bientot-" + b.dataset.bientot);
+      if(!note) return;
+      var ouvert = !note.hidden;
+      note.hidden = ouvert;
+      b.setAttribute("aria-expanded", ouvert ? "false" : "true");
+    });
+  });
+
+  /* --------------------------------------------------------------- QCM */
+  /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
+     minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
+  var scores = {};
+  function majScore(){
+    var panneau = document.getElementById("score");
+    if(!panneau) return;
+    var cats = Object.keys(scores);
+    if(cats.length === 0){ panneau.hidden = true; return; }
+    panneau.hidden = false;
+    var justes = 0, total = 0;
+    cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
+    var pc = total ? Math.round(justes / total * 100) : 0;
+    var lignes = cats.sort().map(function(c){
+      var s = scores[c], p = Math.round(s.ok / s.n * 100);
+      return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
+           + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
+    }).join("");
+    var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
+      + '<ul class="chapitres">' + lignes + "</ul>"
+      + '<p class="regle">' + (pc >= 60 && !sousBarre
+          ? "Au-dessus des deux barres : 60 % au total, et 50 % dans chaque catégorie."
+          : "Il faut <b>60 % au total</b> ET <b>50 % minimum dans chaque catégorie</b>. "
+            + (pc < 60 ? "Le total n'y est pas. " : "")
+            + (sousBarre ? "Une catégorie au moins est sous la barre." : "")) + "</p>";
+  }
+  document.querySelectorAll(".qcm").forEach(function(q){
+    var bonne = (q.dataset.bonne || "").toUpperCase();
+    var cat = q.dataset.cat || "Général";
+    var corr = q.querySelector(".corr");
+    var boutons = [].slice.call(q.querySelectorAll(".choix button"));
+    boutons.forEach(function(b){
+      b.addEventListener("click", function(){
+        if(q.dataset.repondu) return;
+        q.dataset.repondu = "1";
+        var choisi = (b.dataset.l || "").toUpperCase();
+        var juste = (choisi === bonne);
+        boutons.forEach(function(x){
+          x.disabled = true;
+          var l = (x.dataset.l || "").toUpperCase();
+          if(l === bonne) x.classList.add("juste");
+          else if(l === choisi) x.classList.add("faux");
+        });
+        if(corr){
+          corr.hidden = false;
+          var v = corr.querySelector(".verdict");
+          if(v){
+            v.className = "verdict " + (juste ? "ok" : "ko");
+            v.textContent = juste ? "Juste." : "Faux — la bonne réponse est " + bonne + ".";
+          }
+        }
+        if(!scores[cat]) scores[cat] = { ok:0, n:0 };
+        scores[cat].n++; if(juste) scores[cat].ok++;
+        majScore();
+      });
+    });
+  });
+  var raz = document.getElementById("qcm-raz");
+  if(raz) raz.addEventListener("click", function(){
+    scores = {};
+    document.querySelectorAll(".qcm").forEach(function(q){
+      delete q.dataset.repondu;
+      q.querySelectorAll(".choix button").forEach(function(b){
+        b.disabled = false; b.classList.remove("juste", "faux");
+      });
+      var c = q.querySelector(".corr"); if(c) c.hidden = true;
+    });
+    majScore();
+    var p = document.getElementById("score"); if(p) p.hidden = true;
+  });
+  majScore();
+})();
+
+</script>
+
+</body>
+</html>
