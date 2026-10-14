@@ -543,15 +543,46 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
 .err .ea a{ color:var(--navy); font-weight:700; }
 
+/* ---- questions hors du programme officiel de l'examen ---- */
+.qcm[data-hors]{ border-style:dashed; border-color:var(--muted); }
+.badge-hors{
+  display:inline-block; margin-left:6px; padding:1px 7px; border-radius:6px;
+  background:var(--amber); color:var(--paper); font-weight:700; letter-spacing:.06em;
+}
+.score li.hors{ color:var(--muted); }
+/* encadré de matière hors examen : même bordure pointillée que les questions hors examen */
+.def.hors-def{ background:transparent; border:2px dashed var(--muted); }
+/* étiquettes d'un écart du manuel : article, programme, lieu d'application */
+.err .tg{ display:flex; flex-wrap:wrap; gap:6px; max-width:none; }
+.err .tg span{
+  font-family:var(--mono); font-size:.74rem; padding:2px 8px; border-radius:6px;
+  background:var(--sea); color:var(--navy); overflow-wrap:anywhere;
+}
+.err .tg span.oui{ background:var(--green); color:var(--paper); font-weight:700; }
+.err .tg span.non{ background:var(--amber); color:var(--paper); font-weight:700; }
+/* ---- les deux groupes du sommaire : cours officiels, cours amélioré ---- */
+.menu-item.groupe .num{ background:var(--navy); color:var(--paper); }
+.menu-item.groupe[aria-expanded="true"]{ background:var(--sea); }
+.sousmenu{
+  display:flex; flex-direction:column; gap:10px;
+  margin:-2px 0 4px 10px; padding-left:12px; border-left:3px solid var(--sea);
+}
+.sousmenu[hidden]{ display:none; }
+.menu-item.tome[aria-disabled="true"]{ border-style:dashed; }
+.menu-item.tome[aria-disabled="true"] .etat{ color:var(--amber); }
+.od-etat{ margin:0; font-size:.92rem; color:var(--muted); max-width:none; }
+.od-etat:empty{ display:none; }
+.od-etat a{ color:var(--navy); font-weight:700; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v4 · module 1 : chapitres 1 à 6 disponibles</div>
+  <div class="ver">SOMMAIRE · v5 · cours officiels · cours amélioré : module 1, chapitres 1 à 6</div>
   <h1>Brevet de conduite belge</h1>
-  <p>Le cours des trois modules, écrit d'après les règlements officiels, avec les animations et les QCM. Chaque module se travaille séparément.</p>
+  <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
 
 <section>
@@ -590,70 +621,117 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 </section>
 
 <section>
-  <h2>Les modules</h2>
+  <h2>Les cours</h2>
   <div class="menus">
-    <a class="menu-item pret" href="./permis-belge-m1.html">
+    <button type="button" class="menu-item pret groupe" data-groupe="officiel">
       <span class="num">1</span>
       <span class="txt">
-        <span class="t">Fluvial</span>
-        <span class="s">Navigation fluviale, balisage, signalisation, priorités, feux et marques, signaux sonores, sécurité, moteurs, RPNE</span>
+        <span class="t">Cours officiels</span>
+        <span class="s">Les trois tomes du manuel, ouverts depuis ton OneDrive, et le manuel radio de l'IBPT</span>
       </span>
-      <span class="etat">Chap. 1 à 6</span>
-    </a>
-    <button type="button" class="menu-item avenir" data-bientot="2">
+      <span class="etat">4 documents</span>
+    </button>
+    <div class="sousmenu" id="groupe-officiel" hidden>
+      <a class="menu-item pret tome" data-tome="Permis bateau Tome 1.pdf" href="#" target="_blank" rel="noopener">
+        <span class="num">T1</span>
+        <span class="txt">
+          <span class="t">Tome 1 — Fluvial</span>
+          <span class="s">Brevet restreint · OneDrive</span>
+        </span>
+        <span class="etat">…</span>
+      </a>
+      <a class="menu-item pret tome" data-tome="Permis bateau Tome 2.pdf" href="#" target="_blank" rel="noopener">
+        <span class="num">T2</span>
+        <span class="txt">
+          <span class="t">Tome 2 — Côtier</span>
+          <span class="s">Complément brevet général · OneDrive · fichier lourd (76 Mo)</span>
+        </span>
+        <span class="etat">…</span>
+      </a>
+      <a class="menu-item pret tome" data-tome="Permis bateau Tome 3.pdf" href="#" target="_blank" rel="noopener">
+        <span class="num">T3</span>
+        <span class="txt">
+          <span class="t">Tome 3 — Pratique</span>
+          <span class="s">Préparation de l'examen pratique · OneDrive</span>
+        </span>
+        <span class="etat">…</span>
+      </a>
+      <a class="menu-item pret" href="./manuel-vhf-ibpt-2025.pdf" target="_blank" rel="noopener">
+        <span class="num">R</span>
+        <span class="txt">
+          <span class="t">Radiotéléphonie — IBPT</span>
+          <span class="s">Manuel officiel de préparation au certificat restreint de radiotéléphoniste, version 2025</span>
+        </span>
+        <span class="etat">PDF</span>
+      </a>
+      <p class="od-etat" id="od-etat" aria-live="polite"></p>
+    </div>
+
+    <button type="button" class="menu-item pret groupe" data-groupe="ameliore">
       <span class="num">2</span>
       <span class="txt">
-        <span class="t">Côtier</span>
-        <span class="s">Navigation, marées, météorologie, RIPAM, réglementation belge — complément au brevet général</span>
+        <span class="t">Cours amélioré</span>
+        <span class="s">Le cours réécrit et vérifié sur le règlement : animations, QCM, et les erreurs du manuel</span>
       </span>
-      <span class="etat">Pas encore écrit</span>
+      <span class="etat">Modules</span>
     </button>
-    <p class="bientot" id="bientot-2" hidden>Ce module n'est pas encore écrit. Il viendra après le module 1, et couvrira la navigation, les marées, la météorologie, le RIPAM et la réglementation belge — tout ce qui s'ajoute au brevet restreint pour obtenir le brevet général.</p>
-    <button type="button" class="menu-item avenir" data-bientot="3">
-      <span class="num">3</span>
-      <span class="txt">
-        <span class="t">Pratique</span>
-        <span class="s">Notions nautiques, effet du pas de l'hélice, amarrage, conduite, préparation de l'examen pratique</span>
-      </span>
-      <span class="etat">Pas encore écrit</span>
-    </button>
-    <p class="bientot" id="bientot-3" hidden>Ce module n'est pas encore écrit. Il portera sur l'examen pratique : l'effet du pas de l'hélice, l'accostage par bâbord et par tribord, l'évolution dans un sas, et les fiches de manœuvre.</p>
-    <button type="button" class="menu-item avenir" data-bientot="R">
-      <span class="num">R</span>
-      <span class="txt">
-        <span class="t">Radiotéléphonie</span>
-        <span class="s">Licence restreinte : MAYDAY, PAN PAN, SÉCURITÉ, canaux, appel sélectif numérique</span>
-      </span>
-      <span class="etat">Pas encore écrit</span>
-    </button>
-    <p class="bientot" id="bientot-R" hidden>Ce module n'est pas encore écrit, mais sa matière est prête : la gradation MAYDAY / PAN PAN / SÉCURITÉ, le message de détresse mot pour mot, le canal 16 et l'appel sélectif numérique sur le canal 70.</p>
-  </div>
-</section>
-
-<section>
-  <h2>Les erreurs du manuel</h2>
-  <p>Chaque chapitre du cours suit ton manuel. Quand le manuel dit autre chose que le règlement, l'écart est signalé sur place — et rassemblé ici, module par module, chapitre par chapitre.</p>
-  <div class="menus">
-    <a class="menu-item pret" href="./permis-belge-erreurs.html">
-      <span class="num">!</span>
-      <span class="txt">
-        <span class="t">Erreurs du manuel</span>
-        <span class="s">Ce que le manuel dit, ce que dit le règlement, l'article, et le lien vers le cours</span>
-      </span>
-      <span class="etat">Consulter</span>
-    </a>
+    <div class="sousmenu" id="groupe-ameliore" hidden>
+      <a class="menu-item pret" href="./permis-belge-m1.html">
+        <span class="num">1</span>
+        <span class="txt">
+          <span class="t">Fluvial</span>
+          <span class="s">Navigation fluviale, balisage, signalisation, priorités, feux et marques, signaux sonores, sécurité, moteurs, RPNE</span>
+        </span>
+        <span class="etat">Chap. 1 à 6</span>
+      </a>
+      <button type="button" class="menu-item avenir" data-bientot="2">
+        <span class="num">2</span>
+        <span class="txt">
+          <span class="t">Côtier</span>
+          <span class="s">Navigation, marées, météorologie, RIPAM, réglementation belge — complément au brevet général</span>
+        </span>
+        <span class="etat">Pas encore écrit</span>
+      </button>
+      <p class="bientot" id="bientot-2" hidden>Ce module n'est pas encore écrit. Il viendra après le module 1, et couvrira la navigation, les marées, la météorologie, le RIPAM et la réglementation belge — tout ce qui s'ajoute au brevet restreint pour obtenir le brevet général.</p>
+      <button type="button" class="menu-item avenir" data-bientot="3">
+        <span class="num">3</span>
+        <span class="txt">
+          <span class="t">Pratique</span>
+          <span class="s">Notions nautiques, effet du pas de l'hélice, amarrage, conduite, préparation de l'examen pratique</span>
+        </span>
+        <span class="etat">Pas encore écrit</span>
+      </button>
+      <p class="bientot" id="bientot-3" hidden>Ce module n'est pas encore écrit. Il portera sur l'examen pratique : l'effet du pas de l'hélice, l'accostage par bâbord et par tribord, l'évolution dans un sas, et les fiches de manœuvre.</p>
+      <button type="button" class="menu-item avenir" data-bientot="R">
+        <span class="num">R</span>
+        <span class="txt">
+          <span class="t">Radiotéléphonie</span>
+          <span class="s">Licence restreinte : MAYDAY, PAN PAN, SÉCURITÉ, canaux, appel sélectif numérique</span>
+        </span>
+        <span class="etat">Pas encore écrit</span>
+      </button>
+      <p class="bientot" id="bientot-R" hidden>Ce module n'est pas encore écrit, mais sa matière est prête : la gradation MAYDAY / PAN PAN / SÉCURITÉ, le message de détresse mot pour mot, le canal 16 et l'appel sélectif numérique sur le canal 70.</p>
+      <a class="menu-item pret" href="./permis-belge-erreurs.html">
+            <span class="num">!</span>
+            <span class="txt">
+              <span class="t">Erreurs du manuel</span>
+              <span class="s">16 points : ce que dit le manuel, ce que dit le règlement, l'article, au programme ou non, eaux intérieures ou mer</span>
+            </span>
+            <span class="etat">Consulter</span>
+          </a>
+    </div>
   </div>
 </section>
 
 <section>
   <h2>Comment ce cours est écrit</h2>
-  <p>Le cours suit le programme de l'examen. Chaque fois que le <b>texte réglementaire</b> dit autre chose que ce qu'on apprend habituellement, un encadré rouge le signale, avec l'article.</p>
+  <p>Le cours suit le programme de l'examen — la <b>matière officielle du SPF Mobilité</b> — et chaque règle est vérifiée sur le <b>texte réglementaire</b>. Un encadré « Ce que dit le règlement » donne l'article. Les questions qui portent sur une matière <b>hors examen</b> sont en pointillé et ne comptent pas dans le score.</p>
   <div class="regl">
     <div class="rh">Ce que dit le règlement</div>
-    <p>Voilà à quoi ressemble cet encadré. Tu coches la case attendue à l'examen, et tu sais ce qui s'applique vraiment quand tu es à l'écluse.</p>
+    <p>Voilà à quoi ressemble cet encadré. Il te dit d'où vient la règle, pour que tu puisses la vérifier toi-même.</p>
     <p class="art">Référence de l'article citée ici.</p>
   </div>
-  <p class="note">Textes de référence : arrêté royal du 15 octobre 1935 portant règlement général des voies navigables du Royaume, et ses règlements particuliers ; arrêté du Gouvernement wallon du 15 mai 2014 pour les voies hydrauliques wallonnes ; règlement de police pour la navigation sur les eaux intérieures.</p>
+  <p class="note">Texte de référence : Règlement général de police pour la navigation sur les eaux intérieures (arrêté royal du 24 septembre 2006). Au programme aussi, pour quelques articles : le Règlement général des voies navigables du Royaume (arrêté royal du 15 octobre 1935, art. 1 §2 et §3, art. 29), le Règlement de la navigation sur la Meuse mitoyenne (art. 6.33a, 6.33b et annexes II et III) et le Règlement du canal de Bruxelles au Rupel. Pour la mer : le RIPAM.</p>
 </section>
 </main>
 
@@ -937,12 +1015,19 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
      minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
   var scores = {};
+  /* Les questions hors du programme officiel de l'examen (matière d'examen
+     du SPF Mobilité) restent pour la culture et la sécurité sur l'eau, mais
+     elles ne comptent ni dans le total ni dans la règle des 50 % : sinon le
+     score dirait « réussi » ou « raté » sur une matière qu'on ne te posera pas. */
+  var HORS = "Hors examen";
   function majScore(){
     var panneau = document.getElementById("score");
     if(!panneau) return;
-    var cats = Object.keys(scores);
-    if(cats.length === 0){ panneau.hidden = true; return; }
+    var tout = Object.keys(scores);
+    if(tout.length === 0){ panneau.hidden = true; return; }
     panneau.hidden = false;
+    var hors = scores[HORS] || null;
+    var cats = tout.filter(function(c){ return c !== HORS; });
     var justes = 0, total = 0;
     cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
     var pc = total ? Math.round(justes / total * 100) : 0;
@@ -951,7 +1036,14 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
       return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
            + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
     }).join("");
+    if(hors) lignes += '<li class="hors"><b>·</b> ' + HORS + " — " + hors.ok + " / " + hors.n
+                     + " <i>(non compté : hors du programme de l'examen)</i></li>";
     var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    if(total === 0){
+      panneau.innerHTML = '<div class="big">—</div><ul class="chapitres">' + lignes + "</ul>"
+        + '<p class="regle">Tu n\'as encore répondu qu\'à des questions hors examen : elles ne comptent pas.</p>';
+      return;
+    }
     panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
       + '<ul class="chapitres">' + lignes + "</ul>"
       + '<p class="regle">' + (pc >= 60 && !sousBarre
@@ -962,7 +1054,17 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   }
   document.querySelectorAll(".qcm").forEach(function(q){
     var bonne = (q.dataset.bonne || "").toUpperCase();
-    var cat = q.dataset.cat || "Général";
+    var cat = q.hasAttribute("data-hors") ? HORS : (q.dataset.cat || "Général");
+    if(q.hasAttribute("data-hors")){
+      /* le badge est écrit dans la page, pas seulement en CSS : il se lit
+         aussi sans style, et la recherche le trouve */
+      var qn = q.querySelector(".qn");
+      if(qn && !qn.querySelector(".badge-hors")){
+        var bh = document.createElement("span");
+        bh.className = "badge-hors"; bh.textContent = "Hors examen";
+        qn.appendChild(document.createTextNode(" ")); qn.appendChild(bh);
+      }
+    }
     var corr = q.querySelector(".corr");
     var boutons = [].slice.call(q.querySelectorAll(".choix button"));
     boutons.forEach(function(b){
@@ -1005,6 +1107,198 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
     var p = document.getElementById("score"); if(p) p.hidden = true;
   });
   majScore();
+})();
+
+</script>
+<script>
+/* ===== SOMMAIRE — les deux groupes et les cours officiels sur OneDrive =====
+   Les trois tomes du manuel ne sont PAS dans le dépôt GitHub, qui est public :
+   ils restent dans le OneDrive, dossier KAT-A-MAR › Cours officiels. On les
+   ouvre avec la connexion OneDrive que l'accueil de Kat-a-Mar a déjà établie
+   (mêmes clés de stockage, même origine gerar04577.github.io) : aucune
+   adresse de fichier n'apparaît dans le code publié, et seuls les comptes
+   qui ont accès au dossier — Gérard et Gil — peuvent les ouvrir.
+   Graph renvoie pour chaque fichier une adresse de téléchargement signée,
+   valable environ une heure : elle est posée sur le lien à l'ouverture du
+   groupe, pour que le toucher ouvre le PDF sans passer par une fenêtre
+   ouverte après coup (que Safari bloquerait). */
+(function(){
+  "use strict";
+
+  /* ------------------------------------------------ ouvrir / fermer un groupe */
+  document.querySelectorAll("[data-groupe]").forEach(function(b){
+    var cible = document.getElementById("groupe-" + b.dataset.groupe);
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", "groupe-" + b.dataset.groupe);
+    b.addEventListener("click", function(){
+      if(!cible) return;
+      var ouvrir = cible.hidden;
+      cible.hidden = !ouvrir;
+      b.setAttribute("aria-expanded", ouvrir ? "true" : "false");
+      if(ouvrir && b.dataset.groupe === "officiel") odPreparer(false);
+    });
+  });
+
+  /* ------------------------------------------------ OneDrive (Microsoft Graph) */
+  var OD_API = "https://graph.microsoft.com/v1.0";
+  var OD_JETON = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
+  var OD_CLIENT = "3d96633c-5a64-486c-900d-f068e0fceb70";
+  var OD_SCOPES = "Files.ReadWrite User.Read offline_access";
+  /* les clés de l'accueil (index.html) — ne pas les renommer d'un seul côté */
+  var OD_CLE = { acces:"katamar-graph-acces", rafraichir:"katamar-graph-rafraichir",
+                 expire:"katamar-graph-expire" };
+  var OD_RACINE = "KAT-A-MAR";
+  var OD_DOSSIER = "COURS OFFICIELS";
+  var OD_VALIDITE = 50 * 60 * 1000;   /* une adresse signée vit ~1 h : on la renouvelle avant */
+
+  var etat = document.getElementById("od-etat");
+  var tomes = Array.prototype.slice.call(document.querySelectorAll("[data-tome]"));
+  var preparation = null, preparee = 0;
+
+  function odLire(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function odEcrire(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+  function odMessage(html){ if(etat) etat.innerHTML = html; }
+  function odConnecte(){ return !!(odLire(OD_CLE.rafraichir) || odLire(OD_CLE.acces)); }
+
+  function odBloquer(a, texte){
+    a.setAttribute("aria-disabled", "true");
+    a.setAttribute("href", "#");
+    a.querySelector(".etat").textContent = texte;
+  }
+  function odPret(a, url){
+    a.removeAttribute("aria-disabled");
+    a.setAttribute("href", url);
+    a.querySelector(".etat").textContent = "Ouvrir";
+  }
+
+  async function odRafraichir(){
+    var refresh = odLire(OD_CLE.rafraichir);
+    if(!refresh) throw new Error("connexion");
+    var corps = new URLSearchParams({ client_id: OD_CLIENT, grant_type: "refresh_token",
+                                      refresh_token: refresh, scope: OD_SCOPES });
+    var r = await fetch(OD_JETON, { method:"POST",
+      headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body: corps.toString() });
+    var j = await r.json();
+    if(!r.ok) throw new Error("connexion");
+    odEcrire(OD_CLE.acces, j.access_token || "");
+    /* Microsoft ne renvoie pas toujours un nouveau jeton de rafraîchissement :
+       ne jamais écraser l'ancien par du vide (même règle que l'accueil). */
+    if(j.refresh_token) odEcrire(OD_CLE.rafraichir, j.refresh_token);
+    odEcrire(OD_CLE.expire, String(Date.now() + ((Number(j.expires_in) || 3600) - 60) * 1000));
+    return j.access_token;
+  }
+  async function odJeton(){
+    var acces = odLire(OD_CLE.acces);
+    if(acces && Date.now() < Number(odLire(OD_CLE.expire) || 0)) return acces;
+    return await odRafraichir();
+  }
+  async function odGraph(chemin){
+    var jeton = await odJeton();
+    var r = await fetch(OD_API + chemin, { headers:{ Authorization: "Bearer " + jeton } });
+    if(r.status === 404) return null;
+    if(!r.ok) throw new Error("OneDrive a répondu " + r.status);
+    return await r.json();
+  }
+
+  /* Le dossier KAT-A-MAR est chez Gérard un dossier à lui, chez Gil un partage
+     (raccourci ou « partagé avec moi ») : on essaie chaque forme. */
+  async function odCandidats(){
+    var c = [];
+    var item = await odGraph("/me/drive/root:/" + OD_RACINE + "?$select=id,name,folder,remoteItem").catch(function(){ return null; });
+    if(item && item.remoteItem && item.remoteItem.parentReference)
+      c.push("/drives/" + item.remoteItem.parentReference.driveId + "/items/" + item.remoteItem.id);
+    else if(item && item.folder) c.push("/me/drive/items/" + item.id);
+    var p = await odGraph("/me/drive/sharedWithMe").catch(function(){ return null; });
+    ((p && p.value) || []).forEach(function(x){
+      var r = x.remoteItem;
+      if((x.name || "").toUpperCase() !== OD_RACINE || !r || !r.parentReference) return;
+      var pref = "/drives/" + r.parentReference.driveId + "/items/" + r.id;
+      if(c.indexOf(pref) === -1) c.push(pref);
+    });
+    return c;
+  }
+  function odDisque(pref){ var m = pref.match(/^(\/drives\/[^/]+|\/me\/drive)\//); return m ? m[1] : "/me/drive"; }
+
+  async function odFichiers(){
+    var cands = await odCandidats();
+    for(var i = 0; i < cands.length; i++){
+      var enf = await odGraph(cands[i] + "/children?$top=200").catch(function(){ return null; });
+      var dos = ((enf && enf.value) || []).find(function(x){
+        return x.folder && (x.name || "").toUpperCase() === OD_DOSSIER; });
+      if(!dos) continue;
+      var disque = odDisque(cands[i]);
+      var liste = await odGraph(disque + "/items/" + dos.id + "/children?$top=200");
+      return { disque: disque, fichiers: (liste && liste.value) || [] };
+    }
+    return null;
+  }
+
+  async function odPreparer(force){
+    if(!tomes.length) return;
+    if(!force && preparee && Date.now() - preparee < OD_VALIDITE) return;
+    if(preparation) return preparation;
+    if(!odConnecte()){
+      tomes.forEach(function(a){ odBloquer(a, "Connexion"); });
+      odMessage("Les tomes s'ouvrent depuis ton OneDrive. Connecte-toi d'abord une fois : "
+        + "<a href=\"./index.html#documents\">accueil › Documents › Se connecter</a>, puis reviens ici.");
+      return;
+    }
+    tomes.forEach(function(a){ odBloquer(a, "…"); });
+    odMessage("Recherche des tomes dans OneDrive › Kat-A-Mar › Cours officiels…");
+    preparation = (async function(){
+      try{
+        /* Le jeton d'abord, hors de toute recherche : une session expirée ne
+           doit pas se faire passer pour un dossier introuvable. */
+        await odJeton();
+        var r = await odFichiers();
+        if(!r){
+          tomes.forEach(function(a){ odBloquer(a, "Introuvable"); });
+          odMessage("Le dossier « Cours officiels » est introuvable dans Kat-A-Mar sur OneDrive.");
+          return;
+        }
+        var manquants = 0;
+        for(var i = 0; i < tomes.length; i++){
+          var a = tomes[i], nom = a.dataset.tome.toUpperCase();
+          var f = r.fichiers.find(function(x){ return x.file && (x.name || "").toUpperCase() === nom; });
+          if(!f){ odBloquer(a, "Introuvable"); manquants++; continue; }
+          var d = f["@microsoft.graph.downloadUrl"];
+          if(!d){
+            var det = await odGraph(r.disque + "/items/" + f.id);
+            d = det && det["@microsoft.graph.downloadUrl"];
+          }
+          if(d) odPret(a, d); else { odBloquer(a, "Introuvable"); manquants++; }
+        }
+        preparee = Date.now();
+        odMessage(manquants ? manquants + " tome(s) introuvable(s) dans OneDrive › Kat-A-Mar › Cours officiels." : "");
+      }catch(e){
+        var connexion = /connexion/.test(e.message);
+        tomes.forEach(function(a){ odBloquer(a, connexion ? "Connexion" : "Erreur"); });
+        odMessage(connexion
+          ? "La connexion OneDrive a expiré (Microsoft la limite à 24 heures). Reconnecte-toi : "
+            + "<a href=\"./index.html#documents\">accueil › Documents</a>, puis reviens ici."
+          : "OneDrive ne répond pas (" + e.message + "). Vérifie le réseau et rouvre le groupe.");
+      }finally{
+        preparation = null;
+      }
+    })();
+    return preparation;
+  }
+
+  /* Un toucher sur un tome pas encore prêt, ou dont l'adresse a vieilli,
+     relance la recherche au lieu d'ouvrir une page vide. */
+  tomes.forEach(function(a){
+    a.addEventListener("click", function(ev){
+      var vieux = !preparee || Date.now() - preparee >= OD_VALIDITE;
+      if(a.getAttribute("aria-disabled") === "true" || vieux){
+        ev.preventDefault();
+        odPreparer(true).then(function(){
+          if(a.getAttribute("aria-disabled") !== "true")
+            odMessage("Le lien est prêt : touche encore une fois le tome.");
+        });
+      }
+    });
+  });
+  window.kamOneDriveCours = { preparer: odPreparer };   /* pour le banc d'essai */
 })();
 
 </script>

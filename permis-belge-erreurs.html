@@ -543,171 +543,194 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
 .err .ea a{ color:var(--navy); font-weight:700; }
 
+/* ---- questions hors du programme officiel de l'examen ---- */
+.qcm[data-hors]{ border-style:dashed; border-color:var(--muted); }
+.badge-hors{
+  display:inline-block; margin-left:6px; padding:1px 7px; border-radius:6px;
+  background:var(--amber); color:var(--paper); font-weight:700; letter-spacing:.06em;
+}
+.score li.hors{ color:var(--muted); }
+/* encadré de matière hors examen : même bordure pointillée que les questions hors examen */
+.def.hors-def{ background:transparent; border:2px dashed var(--muted); }
+/* étiquettes d'un écart du manuel : article, programme, lieu d'application */
+.err .tg{ display:flex; flex-wrap:wrap; gap:6px; max-width:none; }
+.err .tg span{
+  font-family:var(--mono); font-size:.74rem; padding:2px 8px; border-radius:6px;
+  background:var(--sea); color:var(--navy); overflow-wrap:anywhere;
+}
+.err .tg span.oui{ background:var(--green); color:var(--paper); font-weight:700; }
+.err .tg span.non{ background:var(--amber); color:var(--paper); font-weight:700; }
+/* ---- les deux groupes du sommaire : cours officiels, cours amélioré ---- */
+.menu-item.groupe .num{ background:var(--navy); color:var(--paper); }
+.menu-item.groupe[aria-expanded="true"]{ background:var(--sea); }
+.sousmenu{
+  display:flex; flex-direction:column; gap:10px;
+  margin:-2px 0 4px 10px; padding-left:12px; border-left:3px solid var(--sea);
+}
+.sousmenu[hidden]{ display:none; }
+.menu-item.tome[aria-disabled="true"]{ border-style:dashed; }
+.menu-item.tome[aria-disabled="true"] .etat{ color:var(--amber); }
+.od-etat{ margin:0; font-size:.92rem; color:var(--muted); max-width:none; }
+.od-etat:empty{ display:none; }
+.od-etat a{ color:var(--navy); font-weight:700; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Erreurs du manuel</span></div>
 <main>
 <header>
-  <div class="ver">ERREURS DU MANUEL · v1 · module 1, chapitres 1 à 6</div>
+  <div class="ver">ERREURS DU MANUEL · v2 · module 1, chapitres 1 à 6</div>
   <h1>Ce que le manuel dit, et ce que dit le règlement</h1>
-  <p>Le cours suit ton manuel chapitre par chapitre. Chaque fois qu'une de ses affirmations ne correspond pas au <b>texte réglementaire</b>, l'écart est signalé à l'endroit même du cours — et repris ici, en une seule liste, pour que tu puisses le relire avant l'examen.</p>
-  <p class="why">Pour chaque point : ce que le manuel affirme, ce que le texte dit vraiment, l'article, et un lien vers le passage du cours. Quand je n'ai pas pu lire un article, c'est écrit tel quel.</p>
+  <p>Le cours suit ton manuel chapitre par chapitre, et il est vérifié sur le <b>texte officiel</b> : le <b>Règlement général de police pour la navigation sur les eaux intérieures</b> (arrêté royal du 24 septembre 2006), dans la version coordonnée que tu m'as fournie. Chaque fois que le manuel s'en écarte, l'écart est signalé dans le cours et repris ici.</p>
+  <p class="why">Pour chaque point : ce que le manuel affirme, ce que dit le texte, l'article, s'il est <b>au programme de l'examen</b> (matière officielle du SPF Mobilité pour le brevet restreint), et <b>où</b> la règle s'applique — eaux intérieures ou mer.</p>
 </header>
 
 <section>
   <h2>Comment lire cette liste</h2>
   <div class="cards">
-    <div><div class="l">Erreur</div><div class="v">le manuel dit le contraire du texte</div></div>
+    <div><div class="l">Erreur</div><div class="v">le manuel dit autre chose que le texte</div></div>
     <div><div class="l">Imprécision</div><div class="v">vrai en gros, faux dans le détail</div></div>
-    <div><div class="l">Hors programme</div><div class="v">règle du RIPAM (en mer), pas du règlement intérieur</div></div>
-    <div><div class="l">Non vérifié</div><div class="v">je n'ai pas pu lire le texte</div></div>
+    <div><div class="l">Règle de mer</div><div class="v">juste en mer (RIPAM), pas en eaux intérieures</div></div>
+    <div><div class="l">Au programme ?</div><div class="v">oui : peut tomber à l'examen ; non : hors matière</div></div>
   </div>
   <div class="trap">
     <div class="trap-h">Pour l'examen</div>
-    <p>Quand une question reprend <b>telle quelle</b> une formule du manuel, c'est probablement la réponse du manuel qui est attendue. Quand elle est posée autrement, c'est le texte qui tranche. Cette liste te donne les deux, pour ne pas être pris de court.</p>
+    <p>L'examen du brevet restreint porte sur le <b>règlement des eaux intérieures</b>. Quand le manuel et le texte divergent sur un point <b>au programme</b>, c'est le texte qui fait foi. Les points <b>hors programme</b> sont signalés pour que tu ne perdes pas de temps à les apprendre.</p>
   </div>
 </section>
 
 <section id="m1">
-  <h2>Module 1 — Fluvial</h2>
-
-  <h3 id="m1-ch1">Chapitre 1 · La navigation fluviale</h3>
-  <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « il est interdit de dépasser à l'approche d'une écluse ».</p>
-    <p class="er">Le texte ne contient pas cette interdiction. Il impose l'<b>arrêt complet</b> à <b>50 m</b> des écluses et des ponts routiers mobiles, et à <b>100 m</b> des ponts ferroviaires mobiles, sauf autorisation.</p>
-    <p class="ea">Arrêté royal du 15 octobre 1935, art. 24 §2. <a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
-  </div>
-  <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « les bateaux professionnels sont prioritaires aux écluses ».</p>
-    <p class="er">Le passage se fait <b>dans l'ordre d'arrivée</b>. La priorité absolue est réservée aux bateaux de l'armée, de l'administration, des secours aux épaves et des services réguliers de voyageurs ; d'autres catégories passent en alternance. Un bateau déjà engagé dans l'ouvrage ne peut plus être trématé.</p>
-    <p class="ea">Arrêté royal du 15 octobre 1935, art. 28 §2 à §5 et §8. <a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
-  </div>
-  <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : une marge de sécurité de 30 cm, appliquée indifféremment à la largeur, à la longueur, à la hauteur et au tirant d'eau.</p>
-    <p class="er">En <b>hauteur</b>, la marge est bien de 0,30 m sous la hauteur libre de la voie. Aux <b>écluses</b>, le bateau doit être plus court de <b>0,30 m</b> et plus étroit de <b>0,20 m</b> que le sas (tolérance 0,10 m pour les écluses de 5,20 m ou moins). Et le règlement général ne fixe <b>aucune</b> hauteur libre minimale sous les ponts : elle est donnée voie par voie.</p>
-    <p class="ea">Arrêté royal du 15 octobre 1935, art. 1 §1, §2, §3. <a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
-  </div>
+  <h2>Module 1 — Fluvial : 16 points</h2>
 
   <h3 id="m1-ch2">Chapitre 2 · Le balisage</h3>
-  <div class="err ok">
-    <p class="ek">Rien à signaler</p>
-    <p class="er">Le chapitre du manuel est conforme au système AISM région A et à la signalisation SIGNI des voies intérieures. Le cours ajoute seulement la distinction entre la bifurcation de chenal (eaux intérieures) et le chenal préféré (en mer).</p>
+  <div class="err">
+    <p class="ek">1 · Imprécision</p>
+    <p class="em">Le manuel : la marque de bifurcation porte des bandes horizontales « rouges et vertes ou rouges et noires ».</p>
+    <p class="er">Le texte ne connaît que des bandes <b>rouges et vertes</b>. Il ajoute que, sur les eaux intérieures aussi, un voyant cylindrique rouge ou conique vert peut surmonter la marque pour indiquer le côté du chenal principal.</p>
+    <p class="tg"><span>Appendice 8, II.3</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
     <p class="ea"><a href="./permis-belge-m1.html#ch2">Voir dans le cours</a></p>
   </div>
-
-  <h3 id="m1-ch3">Chapitre 3 · La signalisation fluviale</h3>
   <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel présente trois panneaux « interdiction de passer » puis un « chenal hors service pour les bateaux à moteur, autorisé aux rames et aux voiles », sans les distinguer.</p>
-    <p class="er"><b>A.1</b> interdit le passage à tout le monde. Le panneau qui ferme un chenal aux seuls bateaux motorisés est <b>A.12</b>, une interdiction par catégorie. Le manuel ne donne aucun code officiel ; le cours les ajoute tous.</p>
-    <p class="ea">Règlement général de police pour la navigation sur les eaux intérieures, appendice 7. <a href="./permis-belge-m1.html#ch3">Voir dans le cours</a></p>
-  </div>
-  <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « chenal éloigné de 30 m de la rive ».</p>
-    <p class="er">30 n'est qu'un exemple : le chiffre blanc du panneau <b>C.5</b> donne la distance minimale, variable d'un signal à l'autre, comptée <b>depuis le signal</b>.</p>
-    <p class="ea">Appendice 7, C.5. <a href="./permis-belge-m1.html#ch3">Voir dans le cours</a></p>
-  </div>
-  <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « obligation de s'arrêter à 1000 M » présentée comme un panneau à part entière.</p>
-    <p class="er">C'est un panneau <b>B.5</b> (s'arrêter) avec un <b>cartouche de distance</b> : la prescription s'applique à 1000 m, pas ici. Le cartouche ne change jamais le sens du panneau, il le situe.</p>
-    <p class="ea">Appendice 7, panneaux additionnels. <a href="./permis-belge-m1.html#ch3">Voir dans le cours</a></p>
+    <p class="ek">2 · Erreur</p>
+    <p class="em">Le manuel : « à la sortie du port, les balises sont rayées de blanc ».</p>
+    <p class="er">Le texte dit autre chose : la navigation qui <b>entre</b> dans le port est considérée comme <b>montante</b>, et les protections des berges aux entrées de port peuvent être balisées des deux côtés par les <b>cônes</b> des points dangereux — rouge pointe en bas, vert pointe en haut. Les balises à bandes blanches existent, mais pour les points dangereux, sans lien avec la sortie d'un port.</p>
+    <p class="tg"><span>Appendice 8, IV.A.4 et IV.B</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch2">Voir dans le cours</a></p>
   </div>
 
   <h3 id="m1-ch4">Chapitre 4 · Les règles de priorité</h3>
   <div class="err">
-    <p class="ek">Erreur</p>
-    <p class="em">Le manuel se contredit : page des règles, « la voile a priorité sur les rames » ; page des passages étroits, « le bateau à rames a priorité sur un bateau à voiles qui remonte au vent ».</p>
-    <p class="er">Le texte : « <i>l'embarcation motorisée s'écarte de la route de l'autre embarcation, et l'embarcation mue par la force musculaire s'écarte de la route de l'embarcation à voile</i> ». Donc <b>voile avant rames avant moteur</b>. Aucune règle de louvoyage trouvée dans les textes ; la planche officielle des passages étroits donne au contraire « priorité pour le voilier ».</p>
-    <p class="ea">Règlement de la navigation sur la Meuse mitoyenne, art. 6.03a al. 2 (6.03bis dans le règlement général). <a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
-  </div>
-  <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel ne dit pas qui montre le panneau bleu, et laisse entendre que l'avalant, prioritaire, commande la rencontre.</p>
-    <p class="er">C'est le <b>montant</b> qui réserve la route à l'avalant, qui <b>choisit le côté</b>, et qui montre le <b>panneau bleu</b> et le feu blanc scintillant s'il laisse passer à tribord. L'avalant passe du côté laissé libre et <b>répète</b> les signaux. Rien de tout cela ne s'applique aux menues embarcations entre elles.</p>
-    <p class="ea">Meuse mitoyenne, art. 6.05 (6.05 aussi dans le règlement général ; 6.04 sur le Rhin). <a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
-  </div>
-  <div class="err">
-    <p class="ek">Non vérifié</p>
-    <p class="em">Le manuel : la liste des passages étroits (« le voilier qui louvoie cède la priorité », « le voilier sous le vent de l'obstacle donne la priorité »).</p>
-    <p class="er">Le texte littéral de l'article 6.07 n'a pas pu être lu. La planche officielle du SPF Mobilité donne : avec courant, priorité à l'avalant ; sans courant, la menue s'écarte pour le grand, le voilier passe avant rames et moteur, et dans une courbe celui qui n'a pas d'obstacle à tribord passe en premier. Les deux formules citées du manuel n'y figurent pas.</p>
-    <p class="ea">SPF Mobilité, vademecum, planche de l'art. 6.07. <a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
+    <p class="ek">3 · Erreur</p>
+    <p class="em">Le manuel, page des passages étroits : « le bateau à rames a priorité sur un bateau à voiles qui remonte au vent ».</p>
+    <p class="er">C'est l'inverse. Dans un passage étroit sans courant, « <i>la menue embarcation à voile doit poursuivre sa route et l'autre embarcation doit laisser le passage</i> ». Ailleurs aussi, l'embarcation mue par la force musculaire s'écarte pour le voilier. Le manuel se contredit d'ailleurs lui-même : sa règle 4 est juste.</p>
+    <p class="tg"><span>Art. 6.07 al. 1 d ii ; 6.03/1 al. 3 ; 6.04 al. 8</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch4">Voir dans le cours</a></p>
   </div>
 
   <h3 id="m1-ch5">Chapitre 5 · Les feux et marques</h3>
   <div class="err">
-    <p class="ek">Erreur</p>
-    <p class="em">Le manuel : « le ballon doit mesurer 0,80 m de diamètre minimum ».</p>
-    <p class="er">Le ballon fait <b>0,60 m</b> de diamètre.</p>
-    <p class="ea">Règlement général de police pour la navigation sur les eaux intérieures, art. 3.04 al. 3 b). <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">4 · Erreur</p>
+    <p class="em">Le manuel : le ballon fait « 0,80 m de diamètre minimum ».</p>
+    <p class="er">Le texte : <b>0,60 m</b>. 0,80 m est la hauteur du cylindre et du bicône.</p>
+    <p class="tg"><span>Art. 3.04 al. 3</span><span class="non">Hors programme (dimensions)</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Erreur</p>
-    <p class="em">Le manuel : « le cône et le cylindre doivent mesurer 0,80 m de hauteur et avoir une base de 0,50 m de diamètre ».</p>
-    <p class="er">Le <b>cône</b> fait <b>0,60 m</b> de haut sur <b>0,60 m</b> de base. Les valeurs 0,80 × 0,50 sont celles du <b>cylindre</b> et du <b>bicône</b>. Le manuel a glissé d'une ligne.</p>
-    <p class="ea">Art. 3.04 al. 3 a), c), d). <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">5 · Erreur</p>
+    <p class="em">Le manuel : le cône fait « 0,80 m de hauteur et une base de 0,50 m ».</p>
+    <p class="er">Le texte : <b>0,60 m</b> de haut et <b>0,60 m</b> de base. 0,80 × 0,50, ce sont le cylindre et le bicône.</p>
+    <p class="tg"><span>Art. 3.04 al. 3</span><span class="non">Hors programme (dimensions)</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « le ballon : de couleur verte ou noire ; le cône : bleu ou noir ; le cylindre : jaune ».</p>
-    <p class="er">Les articles sur les marques ne fixent <b>aucune couleur générale</b>. La couleur se lit article par article : ballon <b>jaune</b> (remorqué, assisté), ballon <b>vert</b> (bac), cylindre <b>jaune</b> à bandes (remorqueur), cône <b>noir</b> (voilier au moteur), cônes <b>bleus</b> (matières dangereuses), bicône <b>jaune</b> (passagers). Le « ballon noir » de mouillage que cite le manuel n'a pas pu être vérifié.</p>
-    <p class="ea">Art. 3.03, 3.04, 3.08, 3.09, 3.12, 3.14, 3.15, 3.16. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">6 · Imprécision</p>
+    <p class="em">Le manuel : une menue embarcation « de moins de 7 m, à moins de 13 km/h, y compris bateaux à rames ou voilier » ne montre qu'un feu blanc visible de tous les côtés.</p>
+    <p class="er">Il manque une condition : la menue embarcation <b>motorisée</b> doit aussi être <b>non pontée</b>. Le voilier de moins de 7 m et le bateau à rames ont leurs propres règles : un feu blanc, et pour le voilier un second feu blanc en cas de risque d'abordage.</p>
+    <p class="tg"><span>Art. 3.13 al. 2, 5 et 6</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : une menue embarcation « de moins de 7 m, à moins de 13 km/h » ne montre qu'un feu blanc.</p>
-    <p class="er">Il manque la troisième condition : elle doit être <b>non pontée</b>. Et ce n'est pas une obligation, c'est une <b>option</b> (« peut porter »).</p>
-    <p class="ea">Art. 3.13 al. 2. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">7 · Règle de mer</p>
+    <p class="em">Le manuel : au mouillage, « si le navire fait moins de 20 mètres (Belgique), 50 mètres (France) », un seul feu blanc à l'avant.</p>
+    <p class="er">Le règlement belge ne fixe <b>aucun seuil de longueur</b> : un feu blanc visible de tous les côtés à 3 m au moins, ou deux feux blancs à la proue et à la poupe du côté du chenal ; de jour, un ballon noir seulement au large. Le seuil de 50 m est celui du RIPAM, en mer.</p>
+    <p class="tg"><span>Art. 3.20</span><span class="oui">Au programme</span><span>Le seuil : mer seulement</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Non vérifié</p>
-    <p class="em">Le manuel : au mouillage, « si le navire fait moins de 20 mètres (Belgique), 50 mètres (France), il portera un seul feu blanc ».</p>
-    <p class="er">Le texte lu dit : un feu blanc visible de tous les côtés, du côté de la passe, à 3 m au moins ; une menue embarcation, un feu blanc à l'endroit le plus visible. Aucun seuil de 20 m ou 50 m n'a pu être vérifié.</p>
-    <p class="ea">Meuse mitoyenne, art. 3.20 ; art. 3.20 du règlement général non lu. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">8 · Règle de mer</p>
+    <p class="em">Le manuel : le navire « handicapé par son tirant d'eau » — cylindre noir, trois feux rouges.</p>
+    <p class="er">Le règlement des eaux intérieures ne connaît pas ce navire. C'est un signal du RIPAM.</p>
+    <p class="tg"><span>RIPAM, règle 28</span><span class="non">Hors programme du restreint</span><span>Mer seulement</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : matières dangereuses, « se tenir à une distance de 10 m / 50 m / 100 m ».</p>
-    <p class="er">Ces distances ne figurent pas dans l'article des cônes et feux bleus : ce sont des distances de <b>stationnement</b>, qui relèvent d'un autre chapitre du règlement. Les cônes eux-mêmes — 1 inflammable, 2 santé, 3 explosif — sont exacts.</p>
-    <p class="ea">Art. 3.14. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">9 · Règle de mer</p>
+    <p class="em">Le manuel : le navire échoué montre « 3 boules noires » de jour, et de nuit « ses feux de mouillage + 2 feux rouges ».</p>
+    <p class="er">En eaux intérieures, un bateau échoué ou coulé montre, du côté où le passage est libre, un <b>feu rouge au-dessus d'un feu blanc</b> (de jour, un panneau rouge et blanc), et du côté entravé un <b>feu rouge</b> (de jour, un panneau rouge). Les trois boules sont un signal du RIPAM.</p>
+    <p class="tg"><span>Art. 3.25 al. 1 c, d et al. 5</span><span class="oui">Au programme</span><span>Les trois boules : mer seulement</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Hors programme</p>
-    <p class="em">Le manuel présente comme règles générales : navire non maître de sa manœuvre (deux boules, deux rouges), handicapé par son tirant d'eau (cylindre, trois rouges), capacité de manœuvre restreinte (boule-bicône-boule, rouge-blanc-rouge), navire échoué (trois boules), bateau de pêche (cônes réunis, vert ou rouge sur blanc), pilote (blanc sur rouge, pavillon H), chasseur de mines (trois boules, trois verts), plongée (pavillon A).</p>
-    <p class="er">Tout cela vient du <b>RIPAM</b>, le règlement en mer — programme du brevet général, module 2. Le règlement intérieur belge connaît un bateau « <b>incapable de manœuvrer</b> » (feu rouge <b>balancé</b> la nuit, pavillon rouge balancé le jour), les engins au travail (deux verts côté libre, un rouge côté fermé), et le feu bleu scintillant des services. Le cours garde les signaux RIPAM dans un tableau à part, avec les moyens mnémotechniques du manuel.</p>
-    <p class="ea">Meuse mitoyenne, art. 3.18, 3.27, 3.35, 3.45 ; RIPAM, règles 27 à 30. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">10 · Erreur</p>
+    <p class="em">Le manuel : le bateau pilote montre de jour le pavillon « hôtel », et de nuit blanc sur rouge en tête de mât.</p>
+    <p class="er">En eaux intérieures, le bateau du service de pilotage porte <b>blanc au-dessus de rouge</b>, visibles de tous les côtés, <b>de nuit comme de jour</b>. L'article ne prévoit pas de pavillon H.</p>
+    <p class="tg"><span>Art. 3.38</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Non vérifié</p>
-    <p class="em">Le manuel : flamme rouge du bateau prioritaire aux écluses ; feux du bateau de plongée.</p>
-    <p class="er">Les articles 3.17 et 3.36 n'ont pas pu être lus — les PDF officiels s'arrêtent avant. La planche officielle du SPF en confirme l'existence, sans en donner le texte.</p>
-    <p class="ea">Art. 3.17 et 3.36, non lus. <a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+    <p class="ek">11 · Imprécision</p>
+    <p class="em">Le manuel : ne pas s'approcher « à moins de 1 000 mètres » des dragueurs de mines.</p>
+    <p class="er">Le texte : à moins de 1 000 m <b>de l'arrière</b> d'un bateau qui porte les signaux du dragueur de mines (trois feux verts, trois ballons noirs).</p>
+    <p class="tg"><span>Art. 3.37 et 6.34 al. 3</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">12 · Erreur</p>
+    <p class="em">Le manuel : ne pas s'approcher « à moins de 100 mètres » d'un bateau de plongée.</p>
+    <p class="er">Le texte ne donne pas de chiffre : tout bateau doit se tenir à une « <i>distance suffisante</i> » d'un bateau qui porte la copie rigide du pavillon A, d'au moins 1 m de haut.</p>
+    <p class="tg"><span>Art. 3.36 et 6.37 al. 2</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch5">Voir dans le cours</a></p>
   </div>
 
   <h3 id="m1-ch6">Chapitre 6 · Les signaux sonores</h3>
   <div class="err">
-    <p class="ek">Hors programme</p>
-    <p class="em">Le manuel : par temps de brume, « navire à capacité de manœuvre restreinte, voilier, bateau de pêche, remorqueur : 1 son prolongé puis 2 sons brefs ».</p>
-    <p class="er">C'est la <b>règle 35 du RIPAM</b>, en mer. En eaux intérieures, le signal de brume d'un bateau isolé faisant route est <b>un son prolongé</b>, répété à intervalles d'une minute au plus ; le règlement intérieur ne distingue pas voilier, pêcheur et remorqueur par un signal « 1 + 2 ».</p>
-    <p class="ea">Règlement intérieur, règles de navigation par visibilité réduite ; RIPAM, règle 35. <a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+    <p class="ek">13 · Règle de mer</p>
+    <p class="em">Le manuel, par brume : « navire à capacité de manœuvre restreinte, voilier, bateau de pêche, remorqueur : 1 son prolongé puis 2 sons brefs ».</p>
+    <p class="er">Juste en mer. En eaux intérieures, tout bateau isolé qui fait route sans radar émet <b>un son prolongé</b>, à intervalles d'une minute au plus, sans distinction de type — et se rend au poste d'amarrage ou d'ancrage sûr le plus proche.</p>
+    <p class="tg"><span>Art. 6.33 al. 1 ; RIPAM règle 35</span><span class="oui">Au programme</span><span>Le 1 + 2 : mer seulement</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « danger imminent d'abordage : 6 sons brefs au moins ».</p>
-    <p class="er">Le signal est une <b>série de sons très brefs</b> — une volée, sans nombre fixé. « Au moins six » est un repère de mémoire, pas une règle. (Je n'ai pas pu relire l'appendice belge lui-même : point à confirmer sur le texte.)</p>
-    <p class="ea">Appendice des signaux sonores, signaux généraux. <a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+    <p class="ek">14 · Erreur</p>
+    <p class="em">Le manuel : « avalant naviguant au radar : signal tritonal répété sans interruption ».</p>
+    <p class="er">Le texte : l'avalant au radar qui ne peut pas établir le contact radio émet <b>un son prolongé</b>, répété autant que nécessaire, et réduit sa vitesse. Le mot « tritonal » n'apparaît que dans l'appendice des fréquences des avertisseurs.</p>
+    <p class="tg"><span>Art. 6.32 al. 4 ; appendice 6, F.1</span><span class="non">Hors programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
   </div>
   <div class="err">
-    <p class="ek">Imprécision</p>
-    <p class="em">Le manuel : « le rattrapé reste silencieux s'il accepte » le dépassement.</p>
-    <p class="er">Il <b>peut</b> rester silencieux ; mais quand il s'écarte pour laisser la place, il <b>peut</b> aussi l'annoncer — un son bref vers tribord, deux vers bâbord — et il <b>doit</b> répondre quand le dépassement n'est possible que de l'autre côté. Le silence n'est qu'un des cas.</p>
-    <p class="ea">Meuse mitoyenne, art. 6.10 al. 5 et 6. <a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+    <p class="ek">15 · Imprécision</p>
+    <p class="em">Le manuel : le rattrapé « reste silencieux s'il accepte la situation ».</p>
+    <p class="er">Il <b>peut</b> rester silencieux — le signal n'est pas obligatoire — mais il peut aussi répondre un bref (« dépassez à mon bâbord ») ou deux brefs (« à mon tribord »). S'il propose l'<b>autre</b> côté, il doit le signaler. Et ces signaux ne s'appliquent ni entre menues embarcations, ni entre une menue et un grand bateau.</p>
+    <p class="tg"><span>Art. 6.10 al. 3 à 6 ; appendice 6, C</span><span class="non">Hors programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
   </div>
+  <div class="err">
+    <p class="ek">16 · Imprécision</p>
+    <p class="em">Le manuel : « DANGER, 6 lettres = 6 sons brefs ».</p>
+    <p class="er">Le nombre est juste — <b>au moins six</b> — mais ce sont des sons <b>très brefs</b>, d'un quart de seconde, séparés par des silences de même durée. Un son bref dure une seconde.</p>
+    <p class="tg"><span>Appendice 6, III et A</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>Les sources</h2>
+  <ul>
+    <li><b>Règlement général de police pour la navigation sur les eaux intérieures</b>, arrêté royal du 24 septembre 2006, version coordonnée au 1<sup>er</sup> mai 2014 — la référence de l'examen. Les modifications de 2017 et 2022 ne touchent que l'AIS (art. 4.07).</li>
+    <li><b>Matière d'examen du brevet de conduite restreint</b>, SPF Mobilité et Transports — elle dit quels articles sont au programme.</li>
+    <li><b>RIPAM</b> (règlement international pour prévenir les abordages en mer), pour les règles de mer — programme du brevet général.</li>
+  </ul>
 </section>
 
 <section id="m2">
@@ -1004,12 +1027,19 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
      minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
   var scores = {};
+  /* Les questions hors du programme officiel de l'examen (matière d'examen
+     du SPF Mobilité) restent pour la culture et la sécurité sur l'eau, mais
+     elles ne comptent ni dans le total ni dans la règle des 50 % : sinon le
+     score dirait « réussi » ou « raté » sur une matière qu'on ne te posera pas. */
+  var HORS = "Hors examen";
   function majScore(){
     var panneau = document.getElementById("score");
     if(!panneau) return;
-    var cats = Object.keys(scores);
-    if(cats.length === 0){ panneau.hidden = true; return; }
+    var tout = Object.keys(scores);
+    if(tout.length === 0){ panneau.hidden = true; return; }
     panneau.hidden = false;
+    var hors = scores[HORS] || null;
+    var cats = tout.filter(function(c){ return c !== HORS; });
     var justes = 0, total = 0;
     cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
     var pc = total ? Math.round(justes / total * 100) : 0;
@@ -1018,7 +1048,14 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
       return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
            + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
     }).join("");
+    if(hors) lignes += '<li class="hors"><b>·</b> ' + HORS + " — " + hors.ok + " / " + hors.n
+                     + " <i>(non compté : hors du programme de l'examen)</i></li>";
     var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    if(total === 0){
+      panneau.innerHTML = '<div class="big">—</div><ul class="chapitres">' + lignes + "</ul>"
+        + '<p class="regle">Tu n\'as encore répondu qu\'à des questions hors examen : elles ne comptent pas.</p>';
+      return;
+    }
     panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
       + '<ul class="chapitres">' + lignes + "</ul>"
       + '<p class="regle">' + (pc >= 60 && !sousBarre
@@ -1029,7 +1066,17 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   }
   document.querySelectorAll(".qcm").forEach(function(q){
     var bonne = (q.dataset.bonne || "").toUpperCase();
-    var cat = q.dataset.cat || "Général";
+    var cat = q.hasAttribute("data-hors") ? HORS : (q.dataset.cat || "Général");
+    if(q.hasAttribute("data-hors")){
+      /* le badge est écrit dans la page, pas seulement en CSS : il se lit
+         aussi sans style, et la recherche le trouve */
+      var qn = q.querySelector(".qn");
+      if(qn && !qn.querySelector(".badge-hors")){
+        var bh = document.createElement("span");
+        bh.className = "badge-hors"; bh.textContent = "Hors examen";
+        qn.appendChild(document.createTextNode(" ")); qn.appendChild(bh);
+      }
+    }
     var corr = q.querySelector(".corr");
     var boutons = [].slice.call(q.querySelectorAll(".choix button"));
     boutons.forEach(function(b){
