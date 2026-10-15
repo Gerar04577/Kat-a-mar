@@ -629,7 +629,16 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 /* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
    l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
    de la question (défaut des v1 et v2 du QCM fluvial). */
-#qz [hidden], #qz-regle[hidden]{ display:none !important; }
+#qz [hidden], #qz-regle[hidden], #rappel[hidden]{ display:none !important; }
+/* QCM balises : rappel théorique */
+.rap{ border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin:10px 0; background:var(--paper); }
+.rap summary{ font-family:var(--display); font-weight:700; font-size:1.1rem; cursor:pointer; }
+.rap-grille{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; margin:10px 0; }
+.rap-grille.un{ grid-template-columns:1fr; }
+.rap-grille figure{ margin:0; }
+.rap-grille figcaption{ font-size:.9rem; margin-top:4px; }
+.rap-img .qz-svg{ max-width:100%; }
+.rap-img .qz-panfond{ padding:6px; }
 
 </style>
 </head>
@@ -637,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v5 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
+  <div class="ver">QCM FLUVIAL · v6 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -1173,10 +1182,12 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     if(o.canal){
       /* une écluse au milieu : bief plus haut à gauche, bief plus bas à droite */
       s += rect(96, 28, 8, 94, "#b9c3cc") + txt(48, 76, "bief plus haut", 10) + txt(152, 76, "bief plus bas", 10)
-         + '<path d="M124 90 L176 90" stroke="' + C.trait + '" stroke-width="2"/><path d="M182 90 L174 85 L174 95 Z" fill="' + C.trait + '"/>'
+         + (o.canal_fleche === false ? "" : '<path d="M124 90 L176 90" stroke="' + C.trait + '" stroke-width="2"/><path d="M182 90 L174 85 L174 95 Z" fill="' + C.trait + '"/>')
          + txt(100, 76, "écluse", 9).replace('text-anchor="middle"', 'text-anchor="middle" transform="rotate(-90 100 76)"');
     } else if(o.lac){
       s += txt(100, 50, "lac", 12);
+    } else if(o.courant === false){
+      /* rien : ni flèche de courant, ni amont / aval */
     } else {
       s += '<path d="M18 44 L52 44" stroke="' + C.trait + '" stroke-width="2"/><path d="M58 44 L50 39 L50 49 Z" fill="' + C.trait + '"/>'
          + txt(38, 60, "courant", 10) + txt(18, 80, "amont", 9) + txt(182, 80, "aval", 9);
@@ -1184,7 +1195,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     if(o.epi){
       /* un épi part de la rive droite ; sa balise est au bout */
       s += '<rect x="' + (o.epi - 5) + '" y="96" width="10" height="26" fill="#a39e93" stroke="' + C.trait + '" stroke-width="1.2"/>'
-         + p("M" + (o.epi - 7) + " 84 L" + o.epi + " 95 L" + (o.epi + 7) + " 84 Z", C.rouge) + txt(o.epi + 24, 106, "épi", 10);
+         + (o.epi_nu ? "" : p("M" + (o.epi - 7) + " 84 L" + o.epi + " 95 L" + (o.epi + 7) + " 84 Z", C.rouge)) + (o.epi_txt === false ? "" : txt(o.epi + 24, 106, "épi", 10));
     }
     if(o.observateur){
       s += '<circle cx="70" cy="80" r="6" fill="#fff" stroke="' + C.trait + '" stroke-width="1.6"/>'
@@ -1227,7 +1238,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
           + '<rect x="0" y="102" width="200" height="40" fill="' + C.eau + '"/>'
           + txt(100, 38, "le port", 11) + txt(170, 148, "la voie", 9)
           + '<path d="M18 128 L52 128" stroke="' + C.trait + '" stroke-width="2"/><path d="M58 128 L50 123 L50 133 Z" fill="' + C.trait + '"/>' + txt(36, 120, "courant", 9);
-    s += '<circle cx="80" cy="96" r="6" fill="' + C.rouge + '" stroke="' + C.trait + '" stroke-width="1.4"/>'
+    if(!o.sans_marques) s += '<circle cx="80" cy="96" r="6" fill="' + C.rouge + '" stroke="' + C.trait + '" stroke-width="1.4"/>'
        + '<circle cx="120" cy="96" r="6" fill="' + C.vert + '" stroke="' + C.trait + '" stroke-width="1.4"/>';
     if(o.bateau !== false) s += '<g transform="translate(100,118) rotate(-90)"><path d="M-14 -6 L8 -6 L16 0 L8 6 L-14 6 Z" fill="#fff" stroke="' + C.trait + '" stroke-width="1.6"/></g>'
        + txt(140, 120, o.l || "toi, tu entres", 9);
@@ -1242,16 +1253,17 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
           + '<rect x="0" y="96" width="200" height="54" fill="' + (nuitF ? "#16263a" : C.eau) + '"/>'
           + '<rect x="0" y="80" width="200" height="18" fill="' + (nuitF ? "#1d2b1d" : C.terre) + '"/>';
     if(nuitF){
-      s += '<circle cx="' + (100 + dx) + '" cy="22" r="9" fill="#ffd23f" opacity=".25"/><circle cx="' + (100 + dx) + '" cy="22" r="4.5" fill="#ffd23f"/>'
-         + '<circle cx="100" cy="58" r="11" fill="#ffd23f" opacity=".25"/><circle cx="100" cy="58" r="5.5" fill="#ffd23f"/>';
-      s += txt(100, 140, "deux feux jaunes", 9).replace(/^<text/, '<text style="fill:#e8eef4"');
+      var fc = o.gris ? "#c9d1d9" : "#ffd23f";
+      s += '<circle cx="' + (100 + dx) + '" cy="22" r="9" fill="' + fc + '" opacity=".25"/><circle cx="' + (100 + dx) + '" cy="22" r="4.5" fill="' + fc + '"/>'
+         + '<circle cx="100" cy="58" r="11" fill="' + fc + '" opacity=".25"/><circle cx="100" cy="58" r="5.5" fill="' + fc + '"/>';
+      if(!o.muet) s += txt(100, 140, "deux feux jaunes", 9).replace(/^<text/, '<text style="fill:#e8eef4"');
     } else {
       /* le signal arrière, plus loin donc plus petit, est plus haut */
       s += rect(100 + dx - 2, 30, 4, 54, C.gris) + rect(100 + dx - 11, 12, 22, 20, C.jaune) + rect(100 + dx - 3, 12, 6, 20, C.noir)
          + rect(98, 62, 4, 30, C.gris) + rect(84, 34, 32, 28, C.jaune) + rect(96, 34, 8, 28, C.noir);
       s += txt(42, 24, "signal arrière", 9) + txt(42, 52, "signal avant", 9)
-         + (o.decale ? "" : '<path d="M100 4 L100 146" stroke="' + C.trait + '" stroke-width="1" stroke-dasharray="3 3"/>');
-      s += txt(100, 140, o.decale ? "décalés" : "l'un exactement devant l'autre", 9);
+         + (o.decale || o.muet ? "" : '<path d="M100 4 L100 146" stroke="' + C.trait + '" stroke-width="1" stroke-dasharray="3 3"/>');
+      if(!o.muet) s += txt(100, 140, o.decale ? "décalés" : "l'un exactement devant l'autre", 9);
     }
     return s + "</svg>";
   }
@@ -1304,7 +1316,9 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
      signaux sonores, scènes de priorité. Mêmes classes CSS (p-…) que le
      cours, pour qu'un panneau ait partout le même dessin. Repère 100 × 100. */
   function ptxt(sx, taille, cls, y){
-    return '<text x="50" y="' + (y === undefined ? 50 + taille * 0.35 : y) + '" text-anchor="middle" class="' + cls + '" font-size="' + taille + '">' + sx + "</text>";
+    /* un texte trop long pour le panneau est resserré pour tenir dans le cadre */
+    var large = String(sx).length * taille * 0.62 > 74 ? ' textLength="74" lengthAdjust="spacingAndGlyphs"' : "";
+    return '<text x="50" y="' + (y === undefined ? 50 + taille * 0.35 : y) + '" text-anchor="middle" class="' + cls + '" font-size="' + taille + '"' + large + '>' + sx + "</text>";
   }
   function plos(x, y, r, cls){ return '<path d="M ' + x + " " + (y - r) + " L " + (x + r) + " " + y + " L " + x + " " + (y + r) + " L " + (x - r) + " " + y + ' Z" class="' + cls + '"/>'; }
   var PFIL = '<rect x="4" y="4" width="92" height="92" class="p-filet"/>';
@@ -5674,6 +5688,7 @@ window.KAM_QCM = {
 "d": {
 "t": "riviere",
 "canal": true,
+"canal_fleche": false,
 "marques": [
 {
 "x": 150,
@@ -6209,16 +6224,8 @@ window.KAM_QCM = {
 "res": false,
 "q": "Tu quittes la voie pour entrer dans un port. Pour lire le balisage, tu es considéré comme :",
 "d": {
-"t": "riviere",
-"bateau": "montant",
-"marques": [
-{
-"x": 30,
-"y": 106,
-"c": "rouge"
-}
-],
-"l": "toi, tu entres au port"
+"t": "port",
+"sans_marques": true
 },
 "o": [
 {
@@ -6863,7 +6870,8 @@ window.KAM_QCM = {
 "res": false,
 "q": "Deux panneaux de traversée identiques, placés sur la même rive l'un derrière l'autre :",
 "d": {
-"t": "alignement"
+"t": "alignement",
+"muet": true
 },
 "o": [
 {
@@ -6894,14 +6902,16 @@ window.KAM_QCM = {
 "items": [
 {
 "d": {
-"t": "alignement"
+"t": "alignement",
+"muet": true
 },
 "l": "1"
 },
 {
 "d": {
 "t": "alignement",
-"decale": true
+"decale": true,
+"muet": true
 },
 "l": "2"
 }
@@ -6923,7 +6933,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Deux marques alignées vues l'une derrière l'autre définissent une ligne : si elles se décalent, tu t'éloignes de l'axe.",
-"pg": "Si le signal avant glisse à gauche du signal arrière, tu es sorti de l'axe vers la gauche : corrige vers la gauche.",
+"pg": "Si le signal avant apparaît à droite du signal arrière, tu es à gauche de l'axe (et inversement) : corrige toujours en allant vers le signal avant.",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.3.2"
 },
 {
@@ -6933,7 +6943,9 @@ window.KAM_QCM = {
 "q": "Les feux d'un alignement de traversée sont :",
 "d": {
 "t": "alignement",
-"nuit": true
+"nuit": true,
+"muet": true,
+"gris": true
 },
 "o": [
 {
@@ -7185,26 +7197,9 @@ window.KAM_QCM = {
 "res": false,
 "q": "Les cônes des balises fixes peuvent être remplacés par :",
 "d": {
-"t": "planche",
-"items": [
-{
-"d": {
 "t": "poteau",
 "voyants": [
 "cone-rouge-bas"
-]
-},
-"l": "1"
-},
-{
-"d": {
-"t": "poteau",
-"voyants": [
-"tri-rouge-bas"
-]
-},
-"l": "2"
-}
 ]
 },
 "o": [
@@ -7305,7 +7300,9 @@ window.KAM_QCM = {
 "q": "Un épi est :",
 "d": {
 "t": "riviere",
-"epi": 130
+"epi": 130,
+"epi_nu": true,
+"epi_txt": false
 },
 "o": [
 {
@@ -7333,7 +7330,8 @@ window.KAM_QCM = {
 "q": "Aux entrées de port, les protections des berges peuvent être balisées :",
 "d": {
 "t": "port",
-"bateau": false
+"bateau": false,
+"sans_marques": true
 },
 "o": [
 {
@@ -7802,7 +7800,8 @@ window.KAM_QCM = {
 "q": "La rive droite d'un fleuve est celle qui se trouve :",
 "d": {
 "t": "riviere",
-"observateur": "tourné vers l'aval"
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -7830,8 +7829,9 @@ window.KAM_QCM = {
 "q": "Un bateau est dit MONTANT quand il :",
 "d": {
 "t": "riviere",
-"bateau": "montant",
-"l": "montant"
+"courant": false,
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -7859,8 +7859,9 @@ window.KAM_QCM = {
 "q": "Un bateau est dit AVALANT quand il :",
 "d": {
 "t": "riviere",
-"bateau": "avalant",
-"l": "avalant"
+"courant": false,
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -7888,7 +7889,9 @@ window.KAM_QCM = {
 "q": "Tu es montant. La rive droite est :",
 "d": {
 "t": "riviere",
-"bateau": "montant"
+"bateau": "montant",
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -7915,7 +7918,9 @@ window.KAM_QCM = {
 "res": false,
 "q": "Sur ce dessin, le courant va vers la droite. La rive du HAUT est :",
 "d": {
-"t": "riviere"
+"t": "riviere",
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -7947,14 +7952,18 @@ window.KAM_QCM = {
 {
 "d": {
 "t": "riviere",
-"bateau": "avalant"
+"bateau": "avalant",
+"haut": "?",
+"bas": "?"
 },
 "l": "1"
 },
 {
 "d": {
 "t": "riviere",
-"bateau": "montant"
+"bateau": "montant",
+"haut": "?",
+"bas": "?"
 },
 "l": "2"
 }
@@ -7985,7 +7994,10 @@ window.KAM_QCM = {
 "res": false,
 "q": "Sur un fleuve, le courant va :",
 "d": {
-"t": "riviere"
+"t": "riviere",
+"courant": false,
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -8013,7 +8025,9 @@ window.KAM_QCM = {
 "q": "Un canal :",
 "d": {
 "t": "riviere",
-"canal": true
+"courant": false,
+"haut": "rive du haut",
+"bas": "rive du bas"
 },
 "o": [
 {
@@ -8678,7 +8692,7 @@ window.KAM_QCM = {
 },
 {
 "t": "12,5 watts",
-"e": "C'est la limite de l'AIS."
+"e": "Ce n'est pas la valeur."
 }
 ],
 "b": 0,
@@ -14907,7 +14921,11 @@ window.KAM_QCM = {
   var hote = document.getElementById("qz");
   if(!Q || !hote) return;
 
-  var NOMS = { R:"Réglementation", N:"Navigation", S:"Sécurité et manœuvres" };
+  /* Les parties viennent du fichier de questions (Q.noms) ; par défaut, les trois
+     parties de l'examen. Un QCM sans examen blanc (Q.examen absent) n'affiche
+     que l'entraînement. */
+  var NOMS = Q.noms || { R:"Réglementation", N:"Navigation", S:"Sécurité et manœuvres" };
+  var CATS = Object.keys(NOMS);
   var CLE = "kam-qcm-" + Q.cours + "-v1";
   var etat = charger();
   var dessiner = window.kamDessinQcm || function(){ return ""; };
@@ -14932,7 +14950,7 @@ window.KAM_QCM = {
 
   function majMenu(){
     var h = "";
-    ["R", "N", "S"].forEach(function(c){
+    CATS.forEach(function(c){
       var l = pool(c, false), n = l.length;
       var faites = l.filter(function(q){ return etat.t[q.id] !== undefined; }).length;
       var justes = l.filter(function(q){ return etat.t[q.id] === 1; }).length;
@@ -14946,14 +14964,16 @@ window.KAM_QCM = {
          + '<span class="qz-mini"><span style="width:' + Math.round(100 * faites / n) + '%"></span></span></span>'
          + '<span class="etat">' + (faites === n ? "Terminé" : faites ? "Reprendre" : "Commencer") + "</span></button>";
     });
+    if(Q.examen){
     var ex = Q.examen, manque = [];
-    ["R", "N", "S"].forEach(function(c){ if(pool(c, true).length < ex.parts[c]) manque.push(NOMS[c]); });
-    var enCours = etat.exam && etat.exam.ids && etat.exam.fin !== true;
-    h += '<button type="button" class="menu-item ' + (manque.length ? "avenir" : "pret") + ' qz-cat" data-exam="1"' + (manque.length ? " disabled" : "") + '>'
-       + '<span class="num">★</span><span class="txt"><span class="t">Examen blanc — ' + ex.total + ' questions</span><span class="s">'
-       + (manque.length ? "Il s'ouvrira quand ces parties seront écrites : " + manque.join(", ") + "."
-                        : "Les trois parties mélangées, les questions jamais posées d'abord. Noté comme le vrai examen.")
-       + '</span></span><span class="etat">' + (manque.length ? "À venir" : enCours ? "Reprendre" : "Commencer") + "</span></button>";
+      CATS.forEach(function(c){ if(pool(c, true).length < ex.parts[c]) manque.push(NOMS[c]); });
+      var enCours = etat.exam && etat.exam.ids && etat.exam.fin !== true;
+      h += '<button type="button" class="menu-item ' + (manque.length ? "avenir" : "pret") + ' qz-cat" data-exam="1"' + (manque.length ? " disabled" : "") + '>'
+         + '<span class="num">★</span><span class="txt"><span class="t">Examen blanc — ' + ex.total + ' questions</span><span class="s">'
+         + (manque.length ? "Il s'ouvrira quand ces parties seront écrites : " + manque.join(", ") + "."
+                          : "Les trois parties mélangées, les questions jamais posées d'abord. Noté comme le vrai examen.")
+         + '</span></span><span class="etat">' + (manque.length ? "À venir" : enCours ? "Reprendre" : "Commencer") + "</span></button>";
+    }
     menu.innerHTML = h;
     menu.querySelectorAll("[data-cat]").forEach(function(b){ b.addEventListener("click", function(){ entrainer(b.dataset.cat, false); }); });
     var be = menu.querySelector("[data-exam]");
@@ -15003,8 +15023,10 @@ window.KAM_QCM = {
     ouvrirJeu(); afficher(bandeau);
   }
 
-  function ouvrirJeu(){ menu.hidden = true; document.getElementById("qz-regle").hidden = true; jeu.hidden = false; window.scrollTo(0, hote.offsetTop - 10); }
-  function fermerJeu(){ garderSerie(); jeu.hidden = true; menu.hidden = false; document.getElementById("qz-regle").hidden = false; serie = null; majMenu(); }
+  /* le bloc d'introduction (règle de l'examen, ou rappel théorique) se cache pendant une série */
+  function intro(cacher){ ["qz-regle", "rappel"].forEach(function(id){ var e = document.getElementById(id); if(e) e.hidden = cacher; }); }
+  function ouvrirJeu(){ menu.hidden = true; intro(true); jeu.hidden = false; window.scrollTo(0, hote.offsetTop - 10); }
+  function fermerJeu(){ garderSerie(); jeu.hidden = true; menu.hidden = false; intro(false); serie = null; majMenu(); }
 
   function compteurs(){
     if(serie.mode === "exam"){
@@ -15123,7 +15145,7 @@ window.KAM_QCM = {
   /* =========================================================== l'examen */
   function tirage(){
     var ids = [];
-    ["R", "N", "S"].forEach(function(c){
+    CATS.forEach(function(c){
       /* d'abord les questions jamais posées (réserve comprise), puis les autres */
       var l = melanger(pool(c, true));
       l.sort(function(a, b){ return (etat.vus[a.id] ? 1 : 0) - (etat.vus[b.id] ? 1 : 0); });
@@ -15146,7 +15168,7 @@ window.KAM_QCM = {
     ex.ids.forEach(function(id){ var q = parId(id); parts[q.cat][1]++; if(ex.rep[id] === q.b){ parts[q.cat][0]++; tot++; } });
     var pctT = Math.round(100 * tot / ex.ids.length), reussi = pctT >= 60;
     var lignes = "";
-    ["R", "N", "S"].forEach(function(c){
+    CATS.forEach(function(c){
       var pc = parts[c][1] ? Math.round(100 * parts[c][0] / parts[c][1]) : 0;
       if(pc < 50) reussi = false;
       lignes += "<tr><td>" + NOMS[c] + "</td><td>" + parts[c][0] + " / " + parts[c][1] + "</td><td class=\"" + (pc >= 50 ? "qz-ok" : "qz-ko") + "\">" + pc + " %</td></tr>";

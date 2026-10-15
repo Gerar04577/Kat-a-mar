@@ -629,7 +629,16 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 /* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
    l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
    de la question (défaut des v1 et v2 du QCM fluvial). */
-#qz [hidden], #qz-regle[hidden]{ display:none !important; }
+#qz [hidden], #qz-regle[hidden], #rappel[hidden]{ display:none !important; }
+/* QCM balises : rappel théorique */
+.rap{ border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin:10px 0; background:var(--paper); }
+.rap summary{ font-family:var(--display); font-weight:700; font-size:1.1rem; cursor:pointer; }
+.rap-grille{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; margin:10px 0; }
+.rap-grille.un{ grid-template-columns:1fr; }
+.rap-grille figure{ margin:0; }
+.rap-grille figcaption{ font-size:.9rem; margin-top:4px; }
+.rap-img .qz-svg{ max-width:100%; }
+.rap-img .qz-panfond{ padding:6px; }
 
 </style>
 </head>
@@ -637,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v11 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc</div>
+  <div class="ver">SOMMAIRE · v12 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -749,6 +758,14 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
           <span class="s">Réglementation, Navigation, Sécurité et manœuvres · examen blanc de 200 questions</span>
         </span>
         <span class="etat">R · N · S · examen</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-qcm-balises.html">
+        <span class="num">⚑</span>
+        <span class="txt">
+          <span class="t">QCM spécial balises et panneaux</span>
+          <span class="s">100 questions illustrées, avec un rappel théorique en tête</span>
+        </span>
+        <span class="etat">B · P</span>
       </a>
       <p class="cours-nom"><span class="num">2</span> Côtier — complément au brevet général</p>
       <button type="button" class="menu-item avenir cours-sous" data-bientot="2">
