@@ -637,7 +637,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v3 · brevet restreint · Réglementation 100 · Navigation 100</div>
+  <div class="ver">QCM FLUVIAL · v4 · brevet restreint · Réglementation 100 · Navigation 100 · Sécurité et manœuvres 100 · examen blanc 200</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -1471,6 +1471,119 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     return s + "</svg>";
   }
 
+
+  /* ======================= SÉCURITÉ ET MANŒUVRES ======================= */
+  function fond(h){ return '<svg viewBox="0 0 200 ' + (h || 150) + '" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="' + (h || 150) + '" fill="#fff"/>'; }
+  function fleche(x1, y1, x2, y2, c, w){
+    var a = Math.atan2(y2 - y1, x2 - x1), L = 8;
+    return '<path d="M' + x1 + " " + y1 + " L" + x2 + " " + y2 + '" stroke="' + (c || C.trait) + '" stroke-width="' + (w || 2.4) + '"/>'
+         + '<path d="M' + x2 + " " + y2 + " L" + (x2 - L * Math.cos(a - .45)).toFixed(1) + " " + (y2 - L * Math.sin(a - .45)).toFixed(1) + " L" + (x2 - L * Math.cos(a + .45)).toFixed(1) + " " + (y2 - L * Math.sin(a + .45)).toFixed(1) + ' Z" fill="' + (c || C.trait) + '"/>';
+  }
+  /* coque vue de dessus, étrave vers le haut */
+  function coqueHaut(cx, cy, k){
+    k = k || 1;
+    return '<path d="M' + cx + " " + (cy - 46 * k) + " C" + (cx + 22 * k) + " " + (cy - 24 * k) + " " + (cx + 20 * k) + " " + (cy + 30 * k) + " " + (cx + 16 * k) + " " + (cy + 40 * k)
+         + " L" + (cx - 16 * k) + " " + (cy + 40 * k) + " C" + (cx - 20 * k) + " " + (cy + 30 * k) + " " + (cx - 22 * k) + " " + (cy - 24 * k) + " " + cx + " " + (cy - 46 * k) + ' Z" fill="#f4f1ea" stroke="' + C.trait + '" stroke-width="1.8"/>';
+  }
+  /* -------- l'hélice : sens de rotation vu de l'arrière, et effet sur la poupe -------- */
+  function helice(o){
+    var s = fond(170) + coqueHaut(100, 64);
+    s += txt(42, 64, "bâbord", 10) + txt(158, 64, "tribord", 10) + txt(100, 12, "avant", 9);
+    s += '<line x1="100" y1="104" x2="100" y2="122" stroke="' + C.trait + '" stroke-width="2"/><circle cx="100" cy="128" r="7" fill="#cfd6dd" stroke="' + C.trait + '" stroke-width="1.6"/>';
+    var horaire = (o.pas === "droit") === (o.mode !== "ar");
+    if(o.cache){ s += txt(100, 164, (o.pas ? "pas " + o.pas : "") + (o.mode ? " · " + (o.mode === "ar" ? "marche arrière" : "marche avant") : ""), 10); return s + "</svg>"; }
+    /* sens de rotation, vu de l'arrière : un arc sous l'hélice, flèche au bout */
+    s += horaire ? '<path d="M80 128 A20 20 0 0 0 120 128" fill="none" stroke="' + C.rouge + '" stroke-width="2.6"/><path d="M80 128 L76 138 L86 135 Z" fill="' + C.rouge + '"/>'
+                 : '<path d="M120 128 A20 20 0 0 1 80 128" fill="none" stroke="' + C.rouge + '" stroke-width="2.6"/><path d="M120 128 L124 138 L114 135 Z" fill="' + C.rouge + '"/>';
+    s += txt(160, 132, horaire ? "sens horaire" : "sens anti-horaire", 8);
+    if(o.effet) s += o.effet === "babord" ? fleche(86, 96, 54, 96, C.vert) : fleche(114, 96, 146, 96, C.vert);
+    s += txt(100, 164, (o.pas ? "pas " + o.pas : "") + (o.mode ? " · " + (o.mode === "ar" ? "marche arrière" : "marche avant") : ""), 10);
+    return s + "</svg>";
+  }
+  /* -------- les amarres le long d'un ponton -------- */
+  function amarres(o){
+    var s = fond(140) + '<rect x="0" y="108" width="200" height="32" fill="#c9b48a"/>' + txt(100, 132, "ponton", 9)
+          + '<path d="M40 70 L140 70 L168 82 L140 94 L40 94 Z" fill="#f4f1ea" stroke="' + C.trait + '" stroke-width="1.8"/>' + txt(100, 86, "avant →", 9);
+    var L = { "pointe-avant":[160, 90, 192, 110], "garde-avant":[150, 92, 112, 110], "garde-arriere":[52, 92, 92, 110], "pointe-arriere":[44, 90, 10, 110] };
+    Object.keys(L).forEach(function(k){
+      if(o.seule && o.seule !== k) return;
+      var l = L[k], on = !o.hl || o.hl === k;
+      s += '<path d="M' + l[0] + " " + l[1] + " L" + l[2] + " " + l[3] + '" stroke="' + (on ? C.rouge : "#9aa6b2") + '" stroke-width="' + (on ? 3.2 : 1.8) + '"/>';
+    });
+    if(o.legende) s += txt(100, 24, o.legende, 10);
+    return s + "</svg>";
+  }
+  /* -------- pictogrammes des classes de feu (dessin propre) -------- */
+  function classeFeu(o){
+    var l = o.classes || ["A", "B", "C", "D"], W = 200, s = '<svg viewBox="0 0 ' + W + ' 70" class="qz-svg" role="img"><rect x="0" y="0" width="' + W + '" height="70" fill="#fff"/>';
+    var icone = { A:'<rect x="-11" y="4" width="22" height="6" fill="#fff"/><rect x="-9" y="-2" width="18" height="6" fill="#fff"/>',
+                  B:'<path d="M0 -10 C6 -2 8 2 8 6 A8 8 0 0 1 -8 6 C-8 2 -6 -2 0 -10 Z" fill="#fff"/>',
+                  C:'<rect x="-6" y="-8" width="12" height="18" rx="5" fill="#fff"/><rect x="-2" y="-12" width="4" height="5" fill="#fff"/>',
+                  D:'<circle cx="0" cy="2" r="9" fill="none" stroke="#fff" stroke-width="4"/><circle cx="0" cy="2" r="3" fill="#fff"/>' };
+    l.forEach(function(c, i){
+      var x = 26 + i * 48, hl = o.hl === c;
+      s += '<rect x="' + (x - 20) + '" y="8" width="40" height="52" rx="4" fill="' + C.rouge + '" stroke="' + (hl ? C.trait : C.rouge) + '" stroke-width="' + (hl ? 4 : 1) + '"/>'
+         + '<g transform="translate(' + x + ',44)">' + icone[c] + "</g>"
+         + '<text x="' + x + '" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" style="fill:#fff" font-family="Arial, sans-serif">' + c + "</text>";
+    });
+    return s + "</svg>";
+  }
+  /* -------- fumée à l'échappement -------- */
+  function fumee(o){
+    var c = { noir:"#222", bleu:"#6f8fc9", blanc:"#e9eef3" }[o.c] || "#aaa";
+    var s = '<svg viewBox="0 0 200 130" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="130" fill="' + C.ciel + '"/><rect x="0" y="88" width="200" height="42" fill="' + C.eau + '"/>'
+          + p("M70 70 L180 70 L170 94 L80 94 Z", "#f4f1ea") + rect(120, 54, 40, 16, "#f4f1ea") + rect(62, 74, 14, 8, "#7d8a96");
+    [[52, 70, 9], [38, 62, 12], [22, 52, 15]].forEach(function(b){ s += '<circle cx="' + b[0] + '" cy="' + b[1] + '" r="' + b[2] + '" fill="' + c + '" stroke="#8a97a3" stroke-width="1" opacity=".95"/>'; });
+    return s + txt(100, 124, o.legende || "fumée à l'échappement", 9) + "</svg>";
+  }
+  /* -------- gilet de sauvetage -------- */
+  function gilet(o){
+    var s = fond(130) + '<path d="M70 20 L90 20 L100 34 L110 20 L130 20 L142 46 L136 112 L64 112 L58 46 Z" fill="#f28c28" stroke="' + C.trait + '" stroke-width="2"/>'
+          + rect(64, 70, 72, 8, "#d9dee3") + '<text x="100" y="58" text-anchor="middle" font-size="18" font-weight="700" fill="#14263a" font-family="Arial, sans-serif">' + (o.n || "? N") + "</text>";
+    return s + (o.legende ? txt(100, 126, o.legende, 9) : "") + "</svg>";
+  }
+  /* -------- extincteur -------- */
+  function extincteur(o){
+    var s = fond(130) + rect(84, 34, 32, 84, C.rouge) + '<path d="M92 34 L92 22 L118 22 L126 16" fill="none" stroke="' + C.trait + '" stroke-width="3"/>'
+          + rect(88, 60, 24, 26, "#fff") + '<text x="100" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#14263a" font-family="Arial, sans-serif">' + (o.texte || "") + "</text>";
+    return s + (o.legende ? txt(100, 128, o.legende, 9) : "") + "</svg>";
+  }
+  /* -------- remorquage : à couple ou en ligne -------- */
+  function remorque(o){
+    var s = '<svg viewBox="0 0 200 130" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="130" fill="' + C.eau + '"/>';
+    function b(x, y, l){ return '<path d="M' + (x - 22) + " " + (y - 7) + " L" + (x + 14) + " " + (y - 7) + " L" + (x + 24) + " " + y + " L" + (x + 14) + " " + (y + 7) + " L" + (x - 22) + " " + (y + 7) + ' Z" fill="#fff" stroke="' + C.trait + '" stroke-width="1.6"/>' + txt(x, y + 20, l, 9); }
+    if(o.mode === "couple") s += b(100, 52, "") + b(100, 68, "") + txt(100, 98, "côte à côte", 10);
+    else {
+      if(o.vagues) s += '<path d="M0 70 Q25 40 50 70 T100 70 T150 70 T200 70" fill="none" stroke="#7fa7c7" stroke-width="2"/>';
+      s += b(150, o.vagues ? 50 : 64, "remorqueur") + b(50, o.vagues ? 50 : 64, "remorqué") + '<path d="M74 ' + (o.vagues ? 50 : 64) + " L126 " + (o.vagues ? 50 : 64) + '" stroke="' + C.trait + '" stroke-width="1.6" stroke-dasharray="4 2"/>';
+    }
+    return s + (o.legende ? txt(100, 122, o.legende, 9) : "") + "</svg>";
+  }
+  /* -------- homme à la mer -------- */
+  function hom(o){
+    var s = '<svg viewBox="0 0 200 140" class="qz-svg" role="img"><rect x="0" y="0" width="200" height="140" fill="' + C.eau + '"/>'
+          + '<g transform="translate(120,70) rotate(-90)"><path d="M-20 -8 L12 -8 L24 0 L12 8 L-20 8 Z" fill="#fff" stroke="' + C.trait + '" stroke-width="1.6"/></g>'
+          + '<circle cx="70" cy="96" r="5" fill="#f2c9a0" stroke="' + C.trait + '"/>' + '<path d="M62 104 Q70 98 78 104" fill="none" stroke="#5b87b0" stroke-width="2"/>';
+    if(o.bouee) s += '<path d="M84 106 A9 9 0 1 1 96 106" fill="none" stroke="#f28c28" stroke-width="5"/><circle cx="98" cy="96" r="2.5" fill="#ffd23f"/>';
+    if(o.vent) s += fleche(30, 20, 30, 50, "#555") + txt(30, 14, "vent", 9);
+    return s + txt(100, 132, o.legende || "un équipier vient de tomber à l'eau", 9) + "</svg>";
+  }
+  /* -------- la VHF -------- */
+  function vhf(o){
+    var s = fond(120) + rect(46, 26, 108, 70, "#2b3a4d") + rect(58, 36, 84, 34, "#b9e3c6")
+          + '<text x="100" y="62" text-anchor="middle" font-size="22" font-weight="700" fill="#14263a" font-family="monospace">' + (o.canal || "16") + "</text>"
+          + '<circle cx="66" cy="84" r="5" fill="#d9dee3"/><circle cx="134" cy="84" r="5" fill="#d9dee3"/>';
+    return s + (o.legende ? txt(100, 114, o.legende, 10) : "") + "</svg>";
+  }
+  /* -------- le triangle du feu -------- */
+  function triangleFeu(o){
+    var s = fond(140) + '<path d="M100 18 L172 122 L28 122 Z" fill="none" stroke="' + C.rouge + '" stroke-width="5"/>'
+          + '<path d="M100 72 C112 86 112 100 100 108 C88 100 88 86 100 72 Z" fill="#f28c28"/>';
+    var l = o.labels || ["?", "?", "?"];
+    s += txt(48, 70, l[0], 10) + txt(152, 70, l[1], 10) + txt(100, 136, l[2], 10);
+    return s + "</svg>";
+  }
+
   /* ---------------------------------------------------- l'aiguillage */
   function dessiner(d){
     if(!d) return "";
@@ -1491,6 +1604,16 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       case "son":    return son(d);
       case "scene":  return scene(d);
       case "secteurs":return secteurs(d);
+      case "helice": return helice(d);
+      case "amarres":return amarres(d);
+      case "classefeu":return classeFeu(d);
+      case "fumee":  return fumee(d);
+      case "gilet":  return gilet(d);
+      case "extincteur":return extincteur(d);
+      case "remorque":return remorque(d);
+      case "hom":    return hom(d);
+      case "vhf":    return vhf(d);
+      case "trianglefeu":return triangleFeu(d);
       default: return "";
     }
   }
@@ -1499,9 +1622,9 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 
 </script>
 <script>
-/* QCM FLUVIAL — brevet restreint. Réglementation R001-R100, Navigation N001-N100.
+/* QCM FLUVIAL — brevet restreint. Réglementation R001-R100, Navigation N001-N100, Sécurité et manœuvres S001-S100.
    Sources : Règlement général de police (AR 24/09/2006) et ses appendices, AR 15/10/1935,
-   Tome 1, manuel IBPT 2025. Bonne réponse = o[b]. Toute question de balisage ou de signalisation a son dessin. */
+   Tome 1, Tome 3, manuel IBPT 2025. Bonne réponse = o[b]. Toute question de balisage ou de signalisation a son dessin. */
 window.KAM_QCM = {
 "cours": "fluvial",
 "examen": {
@@ -8310,6 +8433,2925 @@ window.KAM_QCM = {
 "ex": "Avalant : rouge à tribord, vert à bâbord. Une bouée rouge à bâbord veut dire que tu as quitté le chenal.",
 "pg": "Le réflexe « rouge à bâbord » vaut pour le MONTANT. En descendant, c'est l'inverse : c'est le piège le plus fréquent de l'examen.",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.1 · Tome 1, ch. 2 Le balisage, p. 14-20"
+},
+{
+"id": "S001",
+"cat": "S",
+"res": false,
+"q": "La proue (ou l'étrave) d'un bateau, c'est :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": -90,
+"l": ""
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "l'avant du bateau",
+"e": "La proue, l'étrave : le devant."
+},
+{
+"t": "l'arrière du bateau",
+"e": "L'arrière, c'est la poupe."
+},
+{
+"t": "le côté gauche du bateau",
+"e": "Le côté gauche, c'est bâbord."
+}
+],
+"b": 0,
+"ex": "Proue (étrave) = avant ; poupe = arrière ; bâbord = gauche ; tribord = droite, en regardant vers l'avant.",
+"pg": "Proue et poupe se ressemblent : retiens « PROue = PROche de là où l'on va ».",
+"ref": "Tome 3, p. 4"
+},
+{
+"id": "S002",
+"cat": "S",
+"res": false,
+"q": "En regardant vers l'avant du bateau, bâbord est :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": -90
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "le côté gauche",
+"e": "Bâbord = gauche."
+},
+{
+"t": "le côté droit",
+"e": "Le côté droit, c'est tribord."
+},
+{
+"t": "l'arrière",
+"e": "L'arrière, c'est la poupe."
+}
+],
+"b": 0,
+"ex": "Moyen mnémotechnique du manuel : BATTERIE — BAT-bord (gauche), TRIE-bord (droite).",
+"pg": "Bâbord et tribord ne changent jamais avec ton orientation : ils sont liés au bateau, vu de l'arrière vers l'avant.",
+"ref": "Tome 3, p. 4"
+},
+{
+"id": "S003",
+"cat": "S",
+"res": false,
+"q": "En marche avant, un bateau à moteur pivote autour d'un axe situé environ :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": -90,
+"l": "axe de rotation ?",
+"ly": 50
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "au tiers de la longueur, côté étrave",
+"e": "En marche avant, l'axe de rotation est vers le 1/3 avant."
+},
+{
+"t": "exactement au milieu du bateau",
+"e": "Au milieu, c'est le bateau à l'arrêt."
+},
+{
+"t": "tout à l'arrière, sur l'hélice",
+"e": "L'hélice pousse ; l'axe est vers l'avant."
+}
+],
+"b": 0,
+"ex": "Arrêt : axe au milieu ; marche avant : vers 1/3 de l'étrave ; marche arrière : vers 2/3. C'est pour cela qu'en avançant, c'est la poupe qui balaie.",
+"pg": "Le bateau ne tourne pas comme une voiture par les roues avant : c'est l'arrière qui se déplace.",
+"ref": "Tome 3, p. 4 et 12"
+},
+{
+"id": "S004",
+"cat": "S",
+"res": false,
+"q": "En eau peu profonde, ton bateau répond mal au gouvernail. Il est recommandé :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"l": "eau peu profonde"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "de diminuer la vitesse",
+"e": "On gagne en manœuvrabilité en ralentissant."
+},
+{
+"t": "d'augmenter la vitesse",
+"e": "Trop vite, le bateau manœuvre encore moins bien."
+},
+{
+"t": "de naviguer en zigzag",
+"e": "Les zigzags aggravent le problème."
+}
+],
+"b": 0,
+"ex": "En eau peu profonde : réduis la vitesse. Les bateaux à gouvernail qui vont trop vite ont du mal à manœuvrer.",
+"pg": "Le réflexe « remettre des gaz pour que ça réponde » est le mauvais : c'est l'inverse ici.",
+"ref": "Tome 3, p. 5 (question E1)"
+},
+{
+"id": "S005",
+"cat": "S",
+"res": false,
+"q": "Le fardage d'un bateau, c'est :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 80,
+"cap": 0
+}
+],
+"large": true,
+"vent": [
+100,
+20,
+100,
+55
+]
+},
+"o": [
+{
+"t": "sa prise au vent",
+"e": "Le vent pousse sur la coque et les superstructures."
+},
+{
+"t": "son poids total chargé",
+"e": "Ce n'est pas le fardage."
+},
+{
+"t": "sa profondeur sous l'eau",
+"e": "C'est le tirant d'eau."
+}
+],
+"b": 0,
+"ex": "Le bateau dérive sous l'effet du fardage : la surface exposée au vent. Le vent et le courant peuvent faire dévier le bateau de sa route.",
+"pg": "Un bateau haut sur l'eau (cabine, flybridge) a beaucoup de fardage : anticipe la dérive à l'accostage.",
+"ref": "Tome 3, p. 4 et 29"
+},
+{
+"id": "S006",
+"cat": "S",
+"res": false,
+"q": "Pour bien barrer un bateau à moteur, le manuel conseille :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "de petits mouvements de barre, et d'anticiper",
+"e": "Petits mouvements, petits problèmes."
+},
+{
+"t": "de grands coups de barre pour corriger vite",
+"e": "Grands mouvements, grands problèmes."
+},
+{
+"t": "de zigzaguer pour garder le cap",
+"e": "Seuls les voiliers louvoient."
+}
+],
+"b": 0,
+"ex": "Anticipe la manœuvre, évite les zigzags, laisse le bateau naviguer : donne un petit angle de barre, attends qu'il réagisse, puis remets la barre au centre.",
+"pg": "Le bateau réagit avec retard (inertie) : si tu corriges encore avant qu'il ait répondu, tu « surpilotes ».",
+"ref": "Tome 3, p. 4 et 22"
+},
+{
+"id": "S007",
+"cat": "S",
+"res": false,
+"q": "Pour passer de la marche avant à la marche arrière, tu :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "passes toujours par le point mort",
+"e": "Ne jamais inverser directement."
+},
+{
+"t": "inverses directement, c'est plus rapide",
+"e": "Le manuel demande de toujours passer par le point mort."
+},
+{
+"t": "coupes d'abord le moteur",
+"e": "Tu perdrais tout contrôle."
+}
+],
+"b": 0,
+"ex": "Anticipe la marche avant et la marche arrière en passant toujours par le point mort.",
+"pg": "Passer par le point mort, c'est garder le contrôle du bateau.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S008",
+"cat": "S",
+"res": false,
+"q": "Une hélice à PAS DROIT, en marche avant, tourne (vue de l'arrière) :",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "av",
+"cache": true
+},
+"o": [
+{
+"t": "dans le sens des aiguilles d'une montre",
+"e": "Pas droit = sens horaire en marche avant."
+},
+{
+"t": "dans le sens inverse des aiguilles",
+"e": "C'est le pas gauche."
+},
+{
+"t": "dans un sens qui dépend de la vitesse",
+"e": "Le sens ne change pas avec la vitesse."
+}
+],
+"b": 0,
+"ex": "Pas droit : sens horaire en marche avant. Pas gauche : sens inverse. En marche arrière, chaque hélice tourne dans l'autre sens.",
+"pg": "Le sens se juge en regardant l'hélice depuis l'arrière du bateau.",
+"ref": "Tome 3, p. 6"
+},
+{
+"id": "S009",
+"cat": "S",
+"res": false,
+"q": "L'effet du pas de l'hélice se fait surtout sentir :",
+"d": {
+"t": "helice",
+"pas": "droit"
+},
+"o": [
+{
+"t": "en marche arrière",
+"e": "Il est quasiment négligeable en marche avant."
+},
+{
+"t": "en marche avant",
+"e": "Il y est presque négligeable."
+},
+{
+"t": "autant dans les deux sens",
+"e": "Non : surtout en marche arrière."
+}
+],
+"b": 0,
+"ex": "L'effet du pas de l'hélice est maximal en marche arrière.",
+"pg": "C'est en marche arrière, à l'accostage, qu'il te surprend.",
+"ref": "Tome 3, p. 6 et 10 (question N6)"
+},
+{
+"id": "S010",
+"cat": "S",
+"res": false,
+"q": "En marche arrière, avec une hélice à pas droit, la poupe se déplace :",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "ar"
+},
+"o": [
+{
+"t": "vers bâbord",
+"e": "Pas droit en arrière : la poupe part à bâbord."
+},
+{
+"t": "vers tribord",
+"e": "C'est ce que fait le pas gauche en arrière."
+},
+{
+"t": "tout droit, sans dévier",
+"e": "L'effet de pas la fait dévier."
+}
+],
+"b": 0,
+"ex": "Marche arrière, pas droit : poupe vers bâbord. Cela facilite l'accostage par bâbord.",
+"pg": "Retiens : pas DROIT en arrière → poupe à GAUCHE (bâbord).",
+"ref": "Tome 3, p. 6-8"
+},
+{
+"id": "S011",
+"cat": "S",
+"res": false,
+"q": "En marche avant, avec une hélice à pas droit, la poupe a tendance à aller :",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "av"
+},
+"o": [
+{
+"t": "vers tribord : on préfère virer par bâbord",
+"e": "La proue part donc vers bâbord."
+},
+{
+"t": "vers bâbord : on préfère virer par tribord",
+"e": "C'est en marche arrière que la poupe va à bâbord."
+},
+{
+"t": "nulle part : l'hélice n'a aucun effet",
+"e": "L'effet est faible en avant, mais il existe."
+}
+],
+"b": 0,
+"ex": "Marche avant, pas droit : poupe vers tribord, donc virages plus courts par bâbord.",
+"pg": "En avant et en arrière, l'effet est inversé : avant → poupe tribord ; arrière → poupe bâbord.",
+"ref": "Tome 3, p. 8"
+},
+{
+"id": "S012",
+"cat": "S",
+"res": false,
+"q": "Hélice à pas droit, tu navigues lentement en avant sans courant et tu lâches la barre. Le bateau :",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "av"
+},
+"o": [
+{
+"t": "a tendance à virer à bâbord",
+"e": "La poupe part à tribord, la proue à bâbord."
+},
+{
+"t": "a tendance à virer à tribord",
+"e": "C'est l'inverse."
+},
+{
+"t": "vire au hasard d'un côté ou de l'autre",
+"e": "L'effet de pas est toujours du même côté."
+}
+],
+"b": 0,
+"ex": "Pas droit en avant : la poupe chasse vers tribord, donc le bateau tourne vers bâbord.",
+"pg": "La poupe va d'un côté, la proue de l'autre : ne confonds pas les deux.",
+"ref": "Tome 3, p. 9 (question N1)"
+},
+{
+"id": "S013",
+"cat": "S",
+"res": false,
+"q": "Hélice à pas droit, par temps calme, tu veux reculer en ligne droite. Tu dois :",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "ar"
+},
+"o": [
+{
+"t": "donner de la barre à tribord",
+"e": "Tu compenses la poupe qui part à bâbord."
+},
+{
+"t": "donner de la barre à bâbord",
+"e": "Tu aggraverais l'effet."
+},
+{
+"t": "tenir la barre au milieu",
+"e": "La poupe partirait à bâbord."
+}
+],
+"b": 0,
+"ex": "En marche arrière, pas droit, la poupe part à bâbord : compense avec de la barre à tribord.",
+"pg": "Barre au milieu ne veut pas dire « tout droit » en marche arrière.",
+"ref": "Tome 3, p. 8-10 (question N5)"
+},
+{
+"id": "S014",
+"cat": "S",
+"res": false,
+"q": "Hélice à pas droit, par temps calme, tu fais un cercle complet en marche avant, d'abord sur bâbord puis sur tribord. Le cercle le plus court est :",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "av"
+},
+"o": [
+{
+"t": "celui sur bâbord",
+"e": "La poupe qui chasse à tribord aide à virer à bâbord."
+},
+{
+"t": "celui sur tribord",
+"e": "C'est celui qui est freiné par l'effet de pas."
+},
+{
+"t": "aucun : les deux cercles sont égaux",
+"e": "L'effet de pas les rend inégaux."
+}
+],
+"b": 0,
+"ex": "Pas droit en avant : on privilégie les virages par bâbord.",
+"pg": "Avec un pas gauche, tout s'inverse : le cercle court est sur tribord.",
+"ref": "Tome 3, p. 8-9 (question N3)"
+},
+{
+"id": "S015",
+"cat": "S",
+"res": false,
+"q": "Hélice à pas droit : tu dois faire demi-tour dans une voie trop étroite pour le faire en une fois. Pour commencer, tu te places :",
+"d": {
+"t": "helice",
+"pas": "droit"
+},
+"o": [
+{
+"t": "du côté bâbord de la voie, la rive à bâbord",
+"e": "Puis tu tournes vers tribord."
+},
+{
+"t": "au milieu de la voie navigable",
+"e": "Tu n'aurais pas la place de gagner un côté."
+},
+{
+"t": "du côté tribord de la voie",
+"e": "C'est la position pour un pas gauche."
+}
+],
+"b": 0,
+"ex": "Pas droit : « on tourne à droite » ; on commence le demi-tour avec la rive à bâbord. Pas gauche : l'inverse.",
+"pg": "Le premier virage se fait du côté où l'hélice aide en marche arrière ensuite.",
+"ref": "Tome 3, p. 8-9 (question N2)"
+},
+{
+"id": "S016",
+"cat": "S",
+"res": false,
+"q": "Hélice à pas GAUCHE, passe très étroite, demi-tour avec une marche arrière, sans vent ni courant. Tu commences à virer par :",
+"d": {
+"t": "helice",
+"pas": "gauche"
+},
+"o": [
+{
+"t": "bâbord",
+"e": "Avec un pas gauche, « on tourne à gauche »."
+},
+{
+"t": "tribord",
+"e": "C'est le cas du pas droit."
+},
+{
+"t": "n'importe quel côté",
+"e": "Le pas de l'hélice décide du meilleur côté."
+}
+],
+"b": 0,
+"ex": "Pas gauche : on commence le demi-tour en tournant à gauche (bâbord).",
+"pg": "Ne transpose pas la réponse du pas droit : tout est inversé avec un pas gauche.",
+"ref": "Tome 3, p. 8-9 (question N4)"
+},
+{
+"id": "S017",
+"cat": "S",
+"res": false,
+"q": "Avec une hélice à pas gauche, de quel côté accostes-tu le plus facilement ?",
+"d": {
+"t": "helice",
+"pas": "gauche",
+"mode": "ar"
+},
+"o": [
+{
+"t": "tribord",
+"e": "En arrière, la poupe d'un pas gauche part à tribord, vers le quai."
+},
+{
+"t": "bâbord",
+"e": "C'est le côté facile pour un pas droit."
+},
+{
+"t": "ça n'a pas d'importance",
+"e": "L'effet de pas rend un côté plus facile."
+}
+],
+"b": 0,
+"ex": "Pas droit : accoster par bâbord. Pas gauche : accoster par tribord. La marche arrière finale rapproche la poupe du quai.",
+"pg": "Choisis le côté vers lequel la poupe part en marche arrière.",
+"ref": "Tome 3, p. 7 et 10 (question N7)"
+},
+{
+"id": "S018",
+"cat": "S",
+"res": false,
+"q": "Avec une hélice à pas gauche, en marche avant, tu vires au plus court vers :",
+"d": {
+"t": "helice",
+"pas": "gauche",
+"mode": "av"
+},
+"o": [
+{
+"t": "tribord",
+"e": "Le pas gauche fait l'inverse du pas droit."
+},
+{
+"t": "bâbord",
+"e": "C'est le pas droit qui vire court par bâbord."
+},
+{
+"t": "les deux côtés de la même manière",
+"e": "L'effet de pas crée une différence."
+}
+],
+"b": 0,
+"ex": "Pas droit : virage court par bâbord. Pas gauche : virage court par tribord.",
+"pg": "Toujours la symétrie : pas gauche = miroir du pas droit.",
+"ref": "Tome 3, p. 10 (question N8)"
+},
+{
+"id": "S019",
+"cat": "S",
+"res": false,
+"q": "Un bateau à deux moteurs a souvent une hélice à pas droit et une à pas gauche. Pourquoi ?",
+"d": {
+"t": "planche",
+"items": [
+{
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "av"
+},
+"l": "1"
+},
+{
+"d": {
+"t": "helice",
+"pas": "gauche",
+"mode": "av"
+},
+"l": "2"
+}
+]
+},
+"o": [
+{
+"t": "pour annuler l'effet de couple des hélices",
+"e": "Les deux effets se compensent."
+},
+{
+"t": "pour aller deux fois plus vite",
+"e": "Ce n'est pas le but."
+},
+{
+"t": "pour pouvoir naviguer sans gouvernail",
+"e": "Le gouvernail reste nécessaire."
+}
+],
+"b": 0,
+"ex": "Double motorisation ou hélices contrarotatives : une hélice tourne à droite, l'autre à gauche, l'effet de couple s'annule.",
+"pg": "L'effet de couple n'a rien à voir avec la vitesse : c'est un effet de côté.",
+"ref": "Tome 3, p. 6-7"
+},
+{
+"id": "S020",
+"cat": "S",
+"res": false,
+"q": "Pourquoi l'effet du pas d'une hélice à pas droit FACILITE-t-il l'accostage par bâbord ?",
+"d": {
+"t": "helice",
+"pas": "droit",
+"mode": "ar",
+"effet": "babord"
+},
+"o": [
+{
+"t": "la marche arrière finale rapproche la poupe du quai",
+"e": "La poupe part à bâbord, vers le quai."
+},
+{
+"t": "la marche avant pousse la proue vers le quai",
+"e": "L'effet est faible en avant."
+},
+{
+"t": "il n'a aucun effet à l'accostage",
+"e": "Il est justement maximal à ce moment."
+}
+],
+"b": 0,
+"ex": "En marche arrière avec une hélice à pas droit, la poupe se déplace vers bâbord, ce qui facilite la manœuvre d'accostage à bâbord.",
+"pg": "Tu stoppes le bateau en marche arrière : profites-en pour coller la poupe.",
+"ref": "Tome 3, p. 7"
+},
+{
+"id": "S021",
+"cat": "S",
+"res": false,
+"q": "L'amarre en rouge, qui part de l'avant vers le ponton devant le bateau, s'appelle :",
+"d": {
+"t": "amarres",
+"hl": "pointe-avant"
+},
+"o": [
+{
+"t": "la pointe avant",
+"e": "Elle empêche le bateau de s'écarter du ponton."
+},
+{
+"t": "la garde avant",
+"e": "La garde avant part de l'avant vers l'arrière."
+},
+{
+"t": "la pointe arrière",
+"e": "Elle part de l'arrière."
+}
+],
+"b": 0,
+"ex": "Pointe avant : de l'avant vers le ponton, devant. Elle empêche le bateau de s'écarter.",
+"pg": "Pointes = vers l'extérieur ; gardes = croisées vers le milieu.",
+"ref": "Tome 3, p. 12"
+},
+{
+"id": "S022",
+"cat": "S",
+"res": false,
+"q": "L'amarre en rouge part de l'avant et va vers l'arrière sur le ponton. C'est la garde avant (ou montante). Elle empêche le bateau :",
+"d": {
+"t": "amarres",
+"hl": "garde-avant"
+},
+"o": [
+{
+"t": "d'avancer",
+"e": "Elle retient le bateau vers l'arrière."
+},
+{
+"t": "de reculer",
+"e": "C'est la garde arrière (descendante)."
+},
+{
+"t": "de s'écarter du ponton",
+"e": "C'est le rôle des pointes."
+}
+],
+"b": 0,
+"ex": "Garde montante (avant) : empêche d'avancer. Garde descendante (arrière) : empêche de culer.",
+"pg": "Le nom dit où elle est fixée à bord, pas le mouvement qu'elle bloque.",
+"ref": "Tome 3, p. 12"
+},
+{
+"id": "S023",
+"cat": "S",
+"res": false,
+"q": "La garde arrière (ou descendante) empêche le bateau :",
+"d": {
+"t": "amarres",
+"hl": "garde-arriere"
+},
+"o": [
+{
+"t": "de culer (reculer)",
+"e": "Elle part de l'arrière vers l'avant."
+},
+{
+"t": "d'avancer",
+"e": "C'est la garde avant."
+},
+{
+"t": "de s'écarter du ponton",
+"e": "C'est le rôle des pointes."
+}
+],
+"b": 0,
+"ex": "Garde descendante (arrière) : empêche de culer.",
+"pg": "Culer = reculer.",
+"ref": "Tome 3, p. 12"
+},
+{
+"id": "S024",
+"cat": "S",
+"res": false,
+"q": "Accostage avec la garde avant : la garde est frappée sur le ponton. Tu tournes la barre à l'opposé du ponton et tu mets la marche avant. Que se passe-t-il ?",
+"d": {
+"t": "amarres",
+"hl": "garde-avant",
+"legende": "accoster avec la garde avant"
+},
+"o": [
+{
+"t": "la poupe vient vers le ponton",
+"e": "Effet de levier sur la garde."
+},
+{
+"t": "la poupe s'écarte du ponton",
+"e": "C'est l'appareillage, barre vers le ponton."
+},
+{
+"t": "le bateau avance le long du ponton",
+"e": "La garde l'en empêche."
+}
+],
+"b": 0,
+"ex": "Accoster sur garde avant : barre à l'opposé du ponton, marche avant ; par effet de levier la poupe se dirige vers le ponton.",
+"pg": "Barre opposée au ponton = la poupe va vers le ponton. Barre vers le ponton = la poupe s'écarte.",
+"ref": "Tome 3, p. 13"
+},
+{
+"id": "S025",
+"cat": "S",
+"res": false,
+"q": "Pour appareiller sur la garde avant, tu tournes la barre vers le ponton et tu mets la marche avant. Ensuite :",
+"d": {
+"t": "amarres",
+"hl": "garde-avant",
+"legende": "appareiller avec la garde avant"
+},
+"o": [
+{
+"t": "la poupe s'écarte ; au neutre, tu largues la garde",
+"e": "Puis petite marche arrière."
+},
+{
+"t": "la proue s'écarte, la poupe reste au ponton",
+"e": "C'est la poupe qui s'écarte."
+},
+{
+"t": "le bateau part immédiatement en avant",
+"e": "La garde le retient."
+}
+],
+"b": 0,
+"ex": "Appareiller sur garde avant : barre vers le ponton, marche avant, la poupe s'écarte ; une fois la poupe éloignée, point mort, on enlève la garde par une petite marche arrière.",
+"pg": "On ne largue la garde qu'au point mort.",
+"ref": "Tome 3, p. 13"
+},
+{
+"id": "S026",
+"cat": "S",
+"res": false,
+"q": "Ton emplacement est très réduit. Le manuel conseille d'accoster et d'appareiller :",
+"d": {
+"t": "amarres",
+"hl": "pointe-avant",
+"legende": "peu de place"
+},
+"o": [
+{
+"t": "sur la pointe avant",
+"e": "Moins de risque d'abîmer le bateau."
+},
+{
+"t": "sur la garde avant",
+"e": "Plus risqué pour la coque dans un espace réduit."
+},
+{
+"t": "sans amarre, au moteur seul",
+"e": "Tu perdrais le contrôle."
+}
+],
+"b": 0,
+"ex": "Espace réduit : accoste et appareille avec une pointe avant ; le risque d'abîmer le bateau est réduit par rapport à la garde avant.",
+"pg": "La garde avant fait pivoter le bateau contre le ponton.",
+"ref": "Tome 3, p. 13"
+},
+{
+"id": "S027",
+"cat": "S",
+"res": false,
+"q": "Le vent et le courant viennent de la même direction. Pour t'amarrer, tu te présentes :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 180,
+"l": "toi"
+}
+],
+"courant": true
+},
+"o": [
+{
+"t": "face au vent et au courant",
+"e": "Ils te freinent et tu contrôles mieux."
+},
+{
+"t": "dos au vent et au courant",
+"e": "Ils t'emporteraient contre le ponton."
+},
+{
+"t": "en travers, perpendiculaire au quai",
+"e": "Tu serais drossé."
+}
+],
+"b": 0,
+"ex": "Vent et courant dans le même sens : accoste face à eux. En sens opposés : face à la force la plus puissante.",
+"pg": "On accoste toujours « en remontant » la force la plus forte.",
+"ref": "Tome 3, p. 11"
+},
+{
+"id": "S028",
+"cat": "S",
+"res": false,
+"q": "Le vent et le courant viennent de directions opposées. Tu t'amarres :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 180,
+"l": "toi"
+}
+]
+},
+"o": [
+{
+"t": "face à la force la plus puissante",
+"e": "C'est la règle du manuel."
+},
+{
+"t": "toujours face au vent",
+"e": "Pas si le courant est plus fort."
+},
+{
+"t": "toujours face au courant",
+"e": "Pas si le vent est plus fort."
+}
+],
+"b": 0,
+"ex": "Face à la force la plus puissante : c'est elle qui te freine et te stabilise.",
+"pg": "Sur une voie à fort courant, c'est souvent le courant qui l'emporte.",
+"ref": "Tome 3, p. 11"
+},
+{
+"id": "S029",
+"cat": "S",
+"res": false,
+"q": "Un trop grand angle de barre près d'une rive ou d'un obstacle provoque :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 80,
+"cap": -30
+}
+]
+},
+"o": [
+{
+"t": "le balayage de la poupe vers l'extérieur",
+"e": "La poupe part dans l'autre sens."
+},
+{
+"t": "un arrêt immédiat et complet du bateau",
+"e": "Non."
+},
+{
+"t": "un blocage du moteur par surchauffe",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Attention au balayage : un grand angle de barre fait partir la poupe vers l'extérieur du virage.",
+"pg": "Le bateau pivote : quand l'avant s'écarte d'un obstacle, l'arrière s'en rapproche.",
+"ref": "Tome 3, p. 14"
+},
+{
+"id": "S030",
+"cat": "S",
+"res": false,
+"q": "En navigation intérieure, l'« angle mort » d'une péniche, c'est :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 70,
+"y": 75,
+"cap": 0,
+"grand": true,
+"l": "péniche"
+},
+{
+"x": 130,
+"y": 75,
+"cap": 0,
+"l": "toi"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "l'espace devant la proue que le barreur ne voit pas",
+"e": "Le barreur est loin derrière, sur la passerelle."
+},
+{
+"t": "l'espace dans son cercle de giration",
+"e": "Ce n'est pas l'angle mort."
+},
+{
+"t": "un chenal secondaire invisible de la passerelle",
+"e": "Ce n'est pas la définition."
+}
+],
+"b": 0,
+"ex": "L'angle mort : la zone devant la proue d'un grand bateau, invisible depuis la passerelle. Il se peut qu'il ne te voie pas.",
+"pg": "Ne reste jamais juste devant l'étrave d'une péniche : elle ne te voit pas et ne peut pas s'arrêter.",
+"ref": "Tome 3, p. 14-15 (question N10)"
+},
+{
+"id": "S031",
+"cat": "S",
+"res": false,
+"q": "Tu veux entrer dans un port alors qu'il y a du courant. Tu dois :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 60,
+"y": 100,
+"cap": -45,
+"l": "toi"
+}
+],
+"courant": true
+},
+"o": [
+{
+"t": "corriger ton cap en visant en amont du port",
+"e": "Le courant te fait dériver."
+},
+{
+"t": "viser droit sur l'entrée du port",
+"e": "Le courant te ferait manquer l'entrée."
+},
+{
+"t": "couper le moteur et te laisser porter",
+"e": "Interdit et dangereux."
+}
+],
+"b": 0,
+"ex": "Avec du courant, corrige le cap pour rester sur ta route : vise un point décalé vers l'amont.",
+"pg": "Le courant ajoute un déplacement latéral : il faut le compenser en avance.",
+"ref": "Tome 3, p. 14"
+},
+{
+"id": "S032",
+"cat": "S",
+"res": false,
+"q": "Tu dois remorquer un bateau en eau calme. La solution conseillée est :",
+"d": {
+"t": "remorque",
+"mode": "couple"
+},
+"o": [
+{
+"t": "les deux bateaux côte à côte",
+"e": "C'est la solution du manuel en eau calme."
+},
+{
+"t": "une longue remorque d'au moins 100 m",
+"e": "Ce n'est pas la solution conseillée."
+},
+{
+"t": "pousser le bateau avec l'étrave",
+"e": "Tu l'abîmerais."
+}
+],
+"b": 0,
+"ex": "Remorquage : côte à côte. En eaux agitées, on passe au remorquage en ligne pour ne pas abîmer les bateaux.",
+"pg": "En ligne n'est pas « mieux » : c'est la solution des eaux agitées.",
+"ref": "Tome 3, p. 14"
+},
+{
+"id": "S033",
+"cat": "S",
+"res": false,
+"q": "Tu remorques un bateau en ligne sur des eaux agitées. La longueur de la remorque doit être telle que :",
+"d": {
+"t": "remorque",
+"mode": "ligne",
+"vagues": true
+},
+"o": [
+{
+"t": "les deux bateaux soient sur une crête en même temps",
+"e": "Pour limiter les chocs."
+},
+{
+"t": "le remorqueur soit sur une crête et le remorqué dans un creux",
+"e": "La remorque se tendrait brutalement."
+},
+{
+"t": "le remorqueur soit dans un creux et le remorqué sur une crête",
+"e": "La remorque se tendrait brutalement à chaque vague."
+}
+],
+"b": 0,
+"ex": "Remorquage en ligne : les deux bateaux sur une crête de vague en même temps, pour réduire les chocs.",
+"pg": "Une remorque qui se tend et se détend à chaque vague finit par casser.",
+"ref": "Tome 3, p. 14-15 (question N14)"
+},
+{
+"id": "S034",
+"cat": "S",
+"res": false,
+"q": "Tu remorques un bateau sur une longue remorque. Dans les courbes, le bateau remorqué gouverne :",
+"d": {
+"t": "remorque",
+"mode": "ligne"
+},
+"o": [
+{
+"t": "vers l'extérieur des courbes",
+"e": "Les deux prennent les virages au plus large."
+},
+{
+"t": "vers l'intérieur des courbes",
+"e": "Il couperait la courbe et tirerait de travers."
+},
+{
+"t": "dans l'axe de ton bateau",
+"e": "Ce n'est pas ce que conseille le manuel."
+}
+],
+"b": 0,
+"ex": "En ligne, les deux bateaux prennent les virages le plus à l'extérieur possible.",
+"pg": "Le remorqué qui coupe à l'intérieur du virage met la remorque en travers.",
+"ref": "Tome 3, p. 14-15 (question N12)"
+},
+{
+"id": "S035",
+"cat": "S",
+"res": false,
+"q": "Un grand bateau navigue derrière toi. Le manuel te conseille :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 70,
+"y": 75,
+"cap": 0,
+"grand": true,
+"l": "péniche"
+},
+{
+"x": 150,
+"y": 60,
+"cap": 0,
+"l": "toi"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "de regarder aussi derrière : il peut ne pas te voir",
+"e": "Angle mort des grands bateaux."
+},
+{
+"t": "de ralentir brusquement pour qu'il te double",
+"e": "Tu risques l'abordage par l'arrière."
+},
+{
+"t": "de ne rien faire : il doit t'éviter",
+"e": "Il peut ne pas te voir."
+}
+],
+"b": 0,
+"ex": "Regarde régulièrement derrière toi : le grand bateau derrière toi ne te voit peut-être pas.",
+"pg": "Être dans son droit ne sert à rien si l'autre ne te voit pas.",
+"ref": "Tome 3, p. 14"
+},
+{
+"id": "S036",
+"cat": "S",
+"res": false,
+"q": "Au port, la fiche pratique conseille de ne pas dépasser :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"l": "au port"
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "3 nœuds, sans créer de vagues",
+"e": "Petite vitesse, petits soucis."
+},
+{
+"t": "10 nœuds en ligne droite",
+"e": "Beaucoup trop vite au port."
+},
+{
+"t": "la vitesse de croisière",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Règles de bonne conduite : ne pas dépasser 3 nœuds au port, ne pas créer de vagues, adapter sa vitesse pour rester manœuvrant.",
+"pg": "Les vagues que tu crées font cogner les bateaux amarrés.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S037",
+"cat": "S",
+"res": false,
+"q": "Dans l'écluse, ton bateau est amarré aux bollards. L'amarre sur le taquet du bateau :",
+"d": {
+"t": "riviere",
+"canal": true
+},
+"o": [
+{
+"t": "est enroulée sans nœud, et tu la laisses filer",
+"e": "Le bateau va monter ou descendre."
+},
+{
+"t": "est bloquée par un nœud de taquet",
+"e": "Le bateau resterait pendu à son amarre."
+},
+{
+"t": "est inutile : le moteur maintient le bateau",
+"e": "Ce sont les amarres, tenues fermement, qui maintiennent le bateau."
+}
+],
+"b": 0,
+"ex": "Dans l'écluse, ne fais jamais de nœud sur le taquet : enroule l'amarre et laisse-la filer en la tenant fermement.",
+"pg": "Avec un nœud bloqué, le bateau qui descend reste pendu à son amarre.",
+"ref": "Tome 3, p. 26 · Tome 1, p. 8-10"
+},
+{
+"id": "S038",
+"cat": "S",
+"res": false,
+"q": "Tu es seul dans une écluse. La meilleure place est :",
+"d": {
+"t": "riviere",
+"canal": true,
+"bateau": "avalant",
+"bx": 150,
+"by": 80,
+"l": "seul"
+},
+"o": [
+{
+"t": "au milieu du sas",
+"e": "Moins de remous qu'aux portes."
+},
+{
+"t": "tout près des portes amont",
+"e": "Les remous y sont les plus forts."
+},
+{
+"t": "le plus loin possible, contre la porte aval",
+"e": "Ce conseil vaut quand d'autres bateaux suivent."
+}
+],
+"b": 0,
+"ex": "Si tu es le premier, va le plus loin possible pour laisser la place ; si tu es seul, la meilleure place est au milieu.",
+"pg": "Près des portes, le remplissage et la vidange créent de forts remous.",
+"ref": "Tome 3, p. 26"
+},
+{
+"id": "S039",
+"cat": "S",
+"res": false,
+"q": "Les portes de l'écluse commencent à s'ouvrir. Tu :",
+"d": {
+"t": "riviere",
+"canal": true
+},
+"o": [
+{
+"t": "attends qu'elles soient complètement ouvertes",
+"e": "Turbulences et risque de bloquer l'écluse."
+},
+{
+"t": "sors tout de suite pour gagner du temps",
+"e": "Ce n'est pas le moment de se précipiter."
+},
+{
+"t": "sors dès qu'il y a la largeur de ton bateau",
+"e": "Attends l'ouverture complète."
+}
+],
+"b": 0,
+"ex": "Attends que les portes soient complètement ouvertes pour sortir.",
+"pg": "« Tu n'es plus à deux minutes près. »",
+"ref": "Tome 3, p. 26 · Tome 1, p. 8-10"
+},
+{
+"id": "S040",
+"cat": "S",
+"res": false,
+"q": "Dans l'écluse, le bateau s'approche du mur. Pour le repousser, tu utilises :",
+"d": {
+"t": "riviere",
+"canal": true
+},
+"o": [
+{
+"t": "une gaffe, jamais les mains ni les pieds",
+"e": "Les pare-battages, eux, protègent la coque."
+},
+{
+"t": "tes pieds, c'est plus fort que les mains",
+"e": "Danger d'écrasement."
+},
+{
+"t": "tes mains, en te penchant par-dessus bord",
+"e": "Danger d'écrasement et de chute."
+}
+],
+"b": 0,
+"ex": "Ne mets ni les mains ni les pieds entre le bateau et le mur : utilise la gaffe ; les pare-battages protègent la coque.",
+"pg": "Ta sécurité passe avant la peinture du bateau.",
+"ref": "Tome 3, p. 26"
+},
+{
+"id": "S041",
+"cat": "S",
+"res": false,
+"q": "En approchant d'une écluse, avec des enfants à bord, tu :",
+"d": {
+"t": "riviere",
+"canal": true
+},
+"o": [
+{
+"t": "leur fais mettre le gilet ou rentrer à l'intérieur",
+"e": "Tu dois être concentré sur la manœuvre."
+},
+{
+"t": "les laisses aider sans gilet, c'est rapide",
+"e": "Le risque de chute est réel."
+},
+{
+"t": "les places à l'avant pour qu'ils voient",
+"e": "Pas pendant la manœuvre."
+}
+],
+"b": 0,
+"ex": "À l'approche d'une écluse : prépare l'équipage, gilets mis ou enfants à l'intérieur, rôles attribués (barre, amarres, guides).",
+"pg": "La manœuvre d'écluse est le moment où les chutes à l'eau arrivent.",
+"ref": "Tome 3, p. 25"
+},
+{
+"id": "S042",
+"cat": "S",
+"res": false,
+"q": "Pendant que l'écluse se remplit ou se vide, l'eau :",
+"d": {
+"t": "riviere",
+"canal": true
+},
+"o": [
+{
+"t": "fait des remous importants, surtout près des portes",
+"e": "Sois vigilant."
+},
+{
+"t": "reste parfaitement calme",
+"e": "Non."
+},
+{
+"t": "s'écoule sans aucun effet sur les bateaux",
+"e": "Les remous déplacent les bateaux."
+}
+],
+"b": 0,
+"ex": "Remplissage et vidange créent des remous importants, surtout à proximité des portes : ce n'est pas le moment de tomber à l'eau.",
+"pg": "Tiens fermement tes deux amarres pendant tout l'éclusage.",
+"ref": "Tome 3, p. 26"
+},
+{
+"id": "S043",
+"cat": "S",
+"res": false,
+"q": "Avant de démarrer un moteur inbord, tu dois notamment :",
+"d": null,
+"o": [
+{
+"t": "ventiler la cale moteur",
+"e": "Les vapeurs d'essence peuvent exploser."
+},
+{
+"t": "mettre directement les gaz",
+"e": "La manette doit être au point mort."
+},
+{
+"t": "enlever le coupe-circuit",
+"e": "Il faut au contraire l'enclencher."
+}
+],
+"b": 0,
+"ex": "Procédure : coupe-circuit de contact enclenché, cale moteur ventilée (inbord), vérification du moteur, rien dans l'eau près de l'hélice, manette au point mort, contact, démarrage.",
+"pg": "Ventiler AVANT de démarrer : l'étincelle du démarreur peut enflammer les vapeurs.",
+"ref": "Tome 3, p. 21"
+},
+{
+"id": "S044",
+"cat": "S",
+"res": false,
+"q": "Juste avant de démarrer le moteur, la manette des gaz doit être :",
+"d": null,
+"o": [
+{
+"t": "au point mort",
+"e": "Le bateau ne doit pas partir au démarrage."
+},
+{
+"t": "en marche avant, au ralenti",
+"e": "Le bateau partirait d'un coup."
+},
+{
+"t": "en marche arrière",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Manette des gaz au point mort, et vérifier qu'il n'y a rien ni personne dans l'eau près de l'hélice.",
+"pg": "Ne va jamais à l'eau quand l'hélice tourne.",
+"ref": "Tome 3, p. 21 et 18"
+},
+{
+"id": "S045",
+"cat": "S",
+"res": false,
+"q": "Le moteur vient de démarrer. Pour vérifier le refroidissement, tu contrôles que :",
+"d": null,
+"o": [
+{
+"t": "l'échappement crache de l'eau",
+"e": "L'eau de refroidissement est évacuée."
+},
+{
+"t": "le moteur fume beaucoup",
+"e": "Une fumée abondante est anormale."
+},
+{
+"t": "la cale reste sèche, c'est tout",
+"e": "Ça ne prouve rien pour le refroidissement."
+}
+],
+"b": 0,
+"ex": "À chaque démarrage : pression d'huile, voltage batterie, eau de refroidissement qui sort à l'échappement, gaz d'échappement incolores.",
+"pg": "Pas d'eau à l'échappement = impeller ou prise d'eau en cause : arrête le moteur.",
+"ref": "Tome 3, p. 21 · Tome 1, p. 70"
+},
+{
+"id": "S046",
+"cat": "S",
+"res": false,
+"q": "En navigation, le cordon du coupe-circuit :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "est attaché au poignet ou à la cuisse",
+"e": "S'il tombe, le moteur s'arrête."
+},
+{
+"t": "reste rangé dans le coffre de bord",
+"e": "Il ne servirait à rien."
+},
+{
+"t": "ne sert qu'à l'arrêt, une fois au port",
+"e": "Il sert justement en navigation."
+}
+],
+"b": 0,
+"ex": "Toujours porter le coupe-circuit en navigation, cordon au poignet ou à la cuisse.",
+"pg": "Un bateau sans pilote qui continue à tourner est un danger mortel pour celui qui est tombé.",
+"ref": "Tome 3, p. 18 et 21 · Tome 1, p. 73"
+},
+{
+"id": "S047",
+"cat": "S",
+"res": false,
+"q": "Avant de partir, la quantité de carburant prévue doit être :",
+"d": null,
+"o": [
+{
+"t": "au moins 30 % de plus que nécessaire",
+"e": "Marge pour le courant, le vent, l'imprévu."
+},
+{
+"t": "exactement ce qu'il faut pour le trajet",
+"e": "Aucune marge : dangereux."
+},
+{
+"t": "10 % de plus que nécessaire",
+"e": "Le manuel dit 30 %."
+}
+],
+"b": 0,
+"ex": "Contrôler le volume de carburant et prévoir au moins 30 % de plus que nécessaire.",
+"pg": "Le courant contraire augmente ta consommation.",
+"ref": "Tome 3, p. 18"
+},
+{
+"id": "S048",
+"cat": "S",
+"res": false,
+"q": "Un moteur diesel, avant de démarrer :",
+"d": null,
+"o": [
+{
+"t": "demande un préchauffage",
+"e": "Un moteur essence n'en a pas."
+},
+{
+"t": "démarre comme un moteur essence",
+"e": "Le diesel attend le préchauffage."
+},
+{
+"t": "doit tourner 30 minutes avant de partir",
+"e": "Le manuel parle de 3 à 10 minutes de chauffe."
+}
+],
+"b": 0,
+"ex": "Moteur diesel : attendre le préchauffage. Moteur essence : pas de préchauffage. Temps de chauffe : 3 à 10 minutes selon le moteur.",
+"pg": "Préchauffage (avant le démarrage) ≠ temps de chauffe (après).",
+"ref": "Tome 3, p. 21"
+},
+{
+"id": "S049",
+"cat": "S",
+"res": false,
+"q": "Pour un arrêt d'urgence en marche avant, tu :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "point mort, puis marche arrière franche",
+"e": "Puis point mort une fois arrêté."
+},
+{
+"t": "couper le contact du moteur aussitôt",
+"e": "Tu n'aurais plus aucun moyen de freiner."
+},
+{
+"t": "tourner la barre à fond d'un côté",
+"e": "Tu vires, tu ne t'arrêtes pas."
+}
+],
+"b": 0,
+"ex": "Arrêt d'urgence : point mort, marche arrière avec assez de gaz — plus le bateau va vite, plus il en faut — puis point mort quand il est arrêté.",
+"pg": "Un bateau n'a pas de frein : c'est la marche arrière qui freine.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S050",
+"cat": "S",
+"res": false,
+"q": "La technique du « coup de fouet » sert à :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": -60
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "tourner plus vite, barre à fond",
+"e": "Le flux de l'hélice pousse la poupe."
+},
+{
+"t": "s'arrêter plus vite en marche arrière",
+"e": "Ce n'est pas le coup de fouet."
+},
+{
+"t": "relancer un moteur qui a calé",
+"e": "Rien à voir."
+}
+],
+"b": 0,
+"ex": "Coup de fouet : barre à fond et un coup de marche avant court de quelques secondes : le bateau tourne plus rapidement.",
+"pg": "Court : quelques secondes, sinon tu prends de la vitesse.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S051",
+"cat": "S",
+"res": false,
+"q": "Au démarrage, ton bateau « lève le nez ». Tu corriges avec :",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0
+}
+],
+"large": true
+},
+"o": [
+{
+"t": "du trim négatif, puis neutre une fois déjaugé",
+"e": "Fermer l'angle moteur / eau."
+},
+{
+"t": "du trim positif dès le départ",
+"e": "Le trim positif sert à la vitesse maximale."
+},
+{
+"t": "plus de barre",
+"e": "La barre ne corrige pas l'assiette."
+}
+],
+"b": 0,
+"ex": "Au démarrage : trim négatif ; au déjaugeage, le nez retombe : trim au neutre ; vitesse maximale : un peu de trim positif.",
+"pg": "Le trim corrige l'assiette (le nez), la barre corrige la direction.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S052",
+"cat": "S",
+"res": false,
+"q": "Tu suis un cap au compas. Si tu tournes à droite, les valeurs du cap :",
+"d": null,
+"o": [
+{
+"t": "augmentent",
+"e": "Le compas est gradué dans le sens horaire."
+},
+{
+"t": "diminuent",
+"e": "C'est en tournant à gauche."
+},
+{
+"t": "ne changent pas",
+"e": "Le cap change quand tu tournes."
+}
+],
+"b": 0,
+"ex": "Le compas est gradué dans le sens des aiguilles d'une montre : à droite les valeurs augmentent, à gauche elles diminuent.",
+"pg": "N = 0°, E = 90°, S = 180°, O = 270°.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S053",
+"cat": "S",
+"res": false,
+"q": "Pour suivre une trajectoire droite, la fiche pratique conseille :",
+"d": {
+"t": "alignement"
+},
+"o": [
+{
+"t": "de viser un point fixe en l'alignant avec une pièce du bateau",
+"e": "Par exemple le balcon avant."
+},
+{
+"t": "de regarder le sillage derrière toi",
+"e": "Le sillage montre d'où tu viens, pas où tu vas."
+},
+{
+"t": "de corriger sans arrêt par grands coups de barre",
+"e": "C'est surpiloter."
+}
+],
+"b": 0,
+"ex": "Superpose une pièce du bateau située dans ton axe avec un point de référence (bouée, maison, amer) ; anticipe le temps de réaction de la barre.",
+"pg": "Deux points alignés (une pièce du bateau et un repère) donnent une droite fixe.",
+"ref": "Tome 3, p. 22"
+},
+{
+"id": "S054",
+"cat": "S",
+"res": false,
+"q": "Pour accrocher les pare-battages, on utilise le nœud :",
+"d": null,
+"o": [
+{
+"t": "de cabestan",
+"e": "Deux tours morts, le second dans la boucle du premier."
+},
+{
+"t": "de chaise",
+"e": "Le nœud de chaise sert à faire une boucle fixe."
+},
+{
+"t": "de taquet",
+"e": "Il sert à l'amarrage au taquet."
+}
+],
+"b": 0,
+"ex": "Nœud de cabestan : pour les pare-battages. Nœud de taquet : amarrage le long des quais. Nœud de chaise : boucle fixe, amarrage ou voiles.",
+"pg": "Le cabestan se règle facilement en hauteur : idéal pour les pare-battages.",
+"ref": "Tome 3, p. 20"
+},
+{
+"id": "S055",
+"cat": "S",
+"res": false,
+"q": "Pour faire un nœud de taquet, la première action, capitale, est :",
+"d": null,
+"o": [
+{
+"t": "un tour mort autour du taquet",
+"e": "Il permet de bloquer le bateau en tirant."
+},
+{
+"t": "une boucle de chaise",
+"e": "Ce n'est pas le nœud de taquet."
+},
+{
+"t": "un nœud plat au bout de l'amarre",
+"e": "Ce n'est pas la méthode."
+}
+],
+"b": 0,
+"ex": "Nœud de taquet : un tour mort autour du taquet (capital), un huit, puis une boucle retournée parallèle à celle du dessous ; serrer.",
+"pg": "Sans le tour mort de départ, tu ne tiens pas le bateau pendant que tu fais le nœud.",
+"ref": "Tome 3, p. 20"
+},
+{
+"id": "S056",
+"cat": "S",
+"res": false,
+"q": "Pour ranger une amarre, on la love :",
+"d": null,
+"o": [
+{
+"t": "en ganses égales, sans le bras",
+"e": "Pas « autour du bras »."
+},
+{
+"t": "en l'enroulant autour du coude",
+"e": "La méthode du bras est à éviter."
+},
+{
+"t": "en vrac au fond du coffre",
+"e": "Elle s'emmêlerait."
+}
+],
+"b": 0,
+"ex": "Lover un bout : des ganses de tailles identiques, un petit quart de tour de main à chaque ganse, puis quelques tours pour fermer.",
+"pg": "Une amarre bien lovée se déploie sans nœud quand tu en as besoin vite.",
+"ref": "Tome 3, p. 20"
+},
+{
+"id": "S057",
+"cat": "S",
+"res": false,
+"q": "Un équipier tombe à l'eau. Ton premier réflexe à la barre :",
+"d": {
+"t": "hom"
+},
+"o": [
+{
+"t": "tourner la barre du côté de la chute, puis point mort",
+"e": "Pour écarter l'hélice de la personne."
+},
+{
+"t": "accélérer pour faire demi-tour vite",
+"e": "L'hélice serait un danger."
+},
+{
+"t": "couper le moteur et attendre",
+"e": "Tu perdrais la maîtrise du bateau."
+}
+],
+"b": 0,
+"ex": "Homme à la mer : barre rapidement du côté où il est tombé, point mort, l'équipier lance la bouée fer à cheval et le feu à retournement.",
+"pg": "Tourner du côté de la chute écarte la poupe — et l'hélice — de la personne.",
+"ref": "Tome 3, p. 23"
+},
+{
+"id": "S058",
+"cat": "S",
+"res": false,
+"q": "Que lance-t-on à un homme à la mer pour baliser la zone ?",
+"d": {
+"t": "hom"
+},
+"o": [
+{
+"t": "la bouée fer à cheval et le feu à retournement",
+"e": "Le feu s'allume en se retournant dans l'eau."
+},
+{
+"t": "la gaffe",
+"e": "Elle sert à la récupération, à bord."
+},
+{
+"t": "l'ancre, pour marquer l'endroit",
+"e": "Non !"
+}
+],
+"b": 0,
+"ex": "On envoie la bouée fer à cheval ainsi que le feu à retournement pour baliser la zone.",
+"pg": "Le feu à retournement est relié à la bouée : vérifie-le avant de partir.",
+"ref": "Tome 3, p. 23 et 19"
+},
+{
+"id": "S059",
+"cat": "S",
+"res": false,
+"q": "Pendant toute la manœuvre de récupération, un équipier :",
+"d": {
+"t": "hom"
+},
+"o": [
+{
+"t": "garde l'homme à la mer en vue et le montre du bras",
+"e": "Il aide le barreur."
+},
+{
+"t": "prépare le repas pour le réchauffer",
+"e": "Ce n'est pas la priorité."
+},
+{
+"t": "lance un appel sur le canal 10",
+"e": "En cas réel : MAYDAY sur le canal 16."
+}
+],
+"b": 0,
+"ex": "Un équipier garde la personne en vue jusqu'à la fin et la pointe du bras ; en cas réel, MAYDAY sur le canal 16.",
+"pg": "Une tête dans les vagues se perd de vue en quelques secondes.",
+"ref": "Tome 3, p. 23"
+},
+{
+"id": "S060",
+"cat": "S",
+"res": false,
+"q": "Pour récupérer l'homme à la mer, tu t'approches lentement et tu te places :",
+"d": {
+"t": "hom",
+"vent": true
+},
+"o": [
+{
+"t": "au vent de lui, pour dériver vers lui au point mort",
+"e": "Le bateau vient à lui sans hélice."
+},
+{
+"t": "sous le vent de lui, moteur embrayé",
+"e": "Le bateau s'éloignerait et l'hélice tourne."
+},
+{
+"t": "droit sur lui à vitesse de croisière",
+"e": "Danger de le percuter."
+}
+],
+"b": 0,
+"ex": "Approche lente, au vent de la personne, point mort pour dériver vers elle ; récupération à la gaffe, en cas réel un long bout sous les bras.",
+"pg": "Moteur embrayé près d'une personne dans l'eau : jamais.",
+"ref": "Tome 3, p. 23"
+},
+{
+"id": "S061",
+"cat": "S",
+"res": false,
+"q": "Dans une eau entre 4 et 10 °C, un adulte peut s'épuiser en :",
+"d": {
+"t": "hom"
+},
+"o": [
+{
+"t": "30 à 60 minutes",
+"e": "Survie prévue : 1 à 3 heures."
+},
+{
+"t": "2 à 7 heures",
+"e": "C'est pour une eau de 16 à 21 °C."
+},
+{
+"t": "moins de 15 minutes",
+"e": "C'est vers 0 °C (évanouissement)."
+}
+],
+"b": 0,
+"ex": "Tableau du manuel : 0,3 à 4 °C épuisement 15-30 min ; 4 à 10 °C épuisement 30-60 min (survie 1-3 h) ; 16 à 21 °C épuisement 2-7 h.",
+"pg": "Même en été, l'eau d'un canal refroidit vite : chaque minute compte.",
+"ref": "Tome 3, p. 24"
+},
+{
+"id": "S062",
+"cat": "S",
+"res": false,
+"q": "En détresse, en Belgique ou à l'étranger, sur quel canal VHF appelles-tu les secours ?",
+"d": {
+"t": "vhf",
+"canal": "?"
+},
+"o": [
+{
+"t": "le canal 16",
+"e": "Canal de détresse et de sécurité."
+},
+{
+"t": "le canal 10",
+"e": "Le canal de détresse est le 16."
+},
+{
+"t": "le canal 70",
+"e": "Le canal de détresse est le 16."
+}
+],
+"b": 0,
+"ex": "Détresse : VHF canal 16, ou le 112 au téléphone portable.",
+"pg": "En détresse : canal 16, ou le 112 au téléphone.",
+"ref": "Tome 1, p. 63 · Tome 3, p. 27"
+},
+{
+"id": "S063",
+"cat": "S",
+"res": false,
+"q": "« MAYDAY, MAYDAY, MAYDAY » s'emploie pour :",
+"d": {
+"t": "vhf",
+"canal": "16",
+"legende": "MAYDAY MAYDAY MAYDAY"
+},
+"o": [
+{
+"t": "un danger grave et imminent : détresse",
+"e": "Homme à la mer, incendie, voie d'eau…"
+},
+{
+"t": "une avarie de moteur sans danger immédiat",
+"e": "C'est un message d'urgence : PAN PAN."
+},
+{
+"t": "signaler un tronc d'arbre à la dérive",
+"e": "C'est un message de sécurité : SÉCURITÉ."
+}
+],
+"b": 0,
+"ex": "MAYDAY = détresse (homme à la mer, incendie, voie d'eau, abordage, naufrage). PAN PAN = urgence (avarie, demande d'avis médical). SÉCURITÉ = danger pour la navigation.",
+"pg": "Gradation : MAYDAY (vie en danger) > PAN PAN (urgence) > SÉCURITÉ (avertissement).",
+"ref": "Tome 3, p. 27-28"
+},
+{
+"id": "S064",
+"cat": "S",
+"res": false,
+"q": "Ton moteur tombe en panne, sans danger immédiat. Ton message VHF commence par :",
+"d": {
+"t": "vhf",
+"canal": "16",
+"legende": "PAN PAN"
+},
+"o": [
+{
+"t": "PAN PAN, PAN PAN, PAN PAN",
+"e": "Message d'urgence."
+},
+{
+"t": "MAYDAY, MAYDAY, MAYDAY",
+"e": "Réservé à la détresse."
+},
+{
+"t": "SÉCURITÉ, SÉCURITÉ, SÉCURITÉ",
+"e": "Pour un danger à la navigation."
+}
+],
+"b": 0,
+"ex": "Avarie de propulsion, de barre, hélice engagée, demande d'avis médical : PAN PAN.",
+"pg": "Une panne n'est pas une détresse… tant que tu ne dérives pas vers un danger.",
+"ref": "Tome 3, p. 27"
+},
+{
+"id": "S065",
+"cat": "S",
+"res": false,
+"q": "Un conteneur dérive dans le chenal. Tu le signales par un message :",
+"d": {
+"t": "vhf",
+"canal": "16",
+"legende": "SÉCURITÉ"
+},
+"o": [
+{
+"t": "SÉCURITÉ, répété trois fois",
+"e": "Danger pour la navigation."
+},
+{
+"t": "MAYDAY, répété trois fois",
+"e": "Personne n'est en détresse."
+},
+{
+"t": "PAN PAN, répété trois fois",
+"e": "Tu n'as pas d'urgence à bord."
+}
+],
+"b": 0,
+"ex": "Objets à la dérive, phénomène météo soudain : message SÉCURITÉ.",
+"pg": "Le message de sécurité protège les AUTRES, pas toi.",
+"ref": "Tome 3, p. 28"
+},
+{
+"id": "S066",
+"cat": "S",
+"res": false,
+"q": "Dans un message de détresse, quelle information donne-t-on en priorité aux secours ?",
+"d": {
+"t": "vhf",
+"canal": "16"
+},
+"o": [
+{
+"t": "la position de l'embarcation",
+"e": "C'est la première de la liste."
+},
+{
+"t": "la couleur du bateau",
+"e": "Utile, mais pas en premier."
+},
+{
+"t": "le nom du propriétaire",
+"e": "Pas nécessaire."
+}
+],
+"b": 0,
+"ex": "Informations à donner : 1. position ; 2. nature du sinistre ; 3. nombre de personnes à bord ; 4. type d'embarcation ; 5. nom.",
+"pg": "Sans position, les secours ne peuvent pas venir.",
+"ref": "Tome 3, p. 27"
+},
+{
+"id": "S067",
+"cat": "S",
+"res": false,
+"q": "Pour qu'un feu démarre, il faut trois éléments :",
+"d": {
+"t": "trianglefeu"
+},
+"o": [
+{
+"t": "chaleur, combustible et oxygène (comburant)",
+"e": "Le triangle du feu."
+},
+{
+"t": "chaleur, eau et vent",
+"e": "L'eau éteint."
+},
+{
+"t": "essence, gaz et électricité",
+"e": "Ce sont des combustibles et une source possible."
+}
+],
+"b": 0,
+"ex": "Triangle du feu : une source de chaleur, un combustible, de l'oxygène. Supprime un côté et le feu s'éteint.",
+"pg": "Fermer une cale en feu prive le feu d'oxygène : d'où la règle de ne pas l'ouvrir.",
+"ref": "Tome 1, p. 60"
+},
+{
+"id": "S068",
+"cat": "S",
+"res": false,
+"q": "Les feux de CLASSE A sont les feux de :",
+"d": {
+"t": "classefeu",
+"hl": "A"
+},
+"o": [
+{
+"t": "matériaux ordinaires (braises)",
+"e": "Bois, tissu, papier…"
+},
+{
+"t": "liquides inflammables (essence)",
+"e": "Classe B."
+},
+{
+"t": "métaux (aluminium, magnésium)",
+"e": "Classe D."
+}
+],
+"b": 0,
+"ex": "Selon le manuel : A matériaux ordinaires (feux braisants) ; B gaz ou liquides inflammables ; C gaz (butane, propane…) ; D métaux.",
+"pg": "L'eau ne peut éteindre que les feux de classe A.",
+"ref": "Tome 1, p. 60"
+},
+{
+"id": "S069",
+"cat": "S",
+"res": false,
+"q": "Un feu d'essence dans la cale est un feu de classe :",
+"d": {
+"t": "classefeu",
+"hl": "B"
+},
+"o": [
+{
+"t": "B",
+"e": "Liquides inflammables."
+},
+{
+"t": "A",
+"e": "Matériaux ordinaires."
+},
+{
+"t": "D",
+"e": "Métaux."
+}
+],
+"b": 0,
+"ex": "Classe B : feux de gaz ou de liquides inflammables, comme l'essence.",
+"pg": "Jamais d'eau sur un feu d'essence : elle étale le feu.",
+"ref": "Tome 1, p. 60"
+},
+{
+"id": "S070",
+"cat": "S",
+"res": false,
+"q": "Un feu de propane ou de butane est un feu de classe :",
+"d": {
+"t": "classefeu",
+"hl": "C"
+},
+"o": [
+{
+"t": "C",
+"e": "Feux de gaz."
+},
+{
+"t": "D",
+"e": "Métaux."
+},
+{
+"t": "A",
+"e": "Matériaux ordinaires."
+}
+],
+"b": 0,
+"ex": "Classe C : feux de gaz (gaz naturel, gaz de pétrole liquéfiés comme le butane ou le propane).",
+"pg": "Pour un feu de gaz, coupe d'abord l'alimentation.",
+"ref": "Tome 1, p. 60-61"
+},
+{
+"id": "S071",
+"cat": "S",
+"res": false,
+"q": "L'eau peut servir à éteindre :",
+"d": {
+"t": "extincteur",
+"texte": "2 kg",
+"legende": "extincteur à poudre"
+},
+"o": [
+{
+"t": "seulement les feux de classe A",
+"e": "Matériaux ordinaires."
+},
+{
+"t": "tous les types de feu",
+"e": "Dangereux sur l'essence ou l'électricité."
+},
+{
+"t": "seulement les feux de gaz",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "L'eau ne peut servir qu'à éteindre des feux de type A.",
+"pg": "Sur un feu d'huile ou d'essence, l'eau projette et étale le feu.",
+"ref": "Tome 1, p. 60"
+},
+{
+"id": "S072",
+"cat": "S",
+"res": false,
+"q": "Les extincteurs du bord doivent être contrôlés généralement :",
+"d": {
+"t": "extincteur",
+"texte": "",
+"legende": "contrôle"
+},
+"o": [
+{
+"t": "tous les 2 ans",
+"e": "C'est l'indication du manuel."
+},
+{
+"t": "tous les 10 ans",
+"e": "Beaucoup trop rare."
+},
+{
+"t": "jamais s'ils n'ont pas servi",
+"e": "Un extincteur vieillit même inutilisé."
+}
+],
+"b": 0,
+"ex": "Obligatoire : un extincteur à poudre d'au moins 2 kg ; contrôle généralement tous les 2 ans.",
+"pg": "Un extincteur non contrôlé peut ne rien cracher le jour où il faut.",
+"ref": "Tome 1, p. 60"
+},
+{
+"id": "S073",
+"cat": "S",
+"res": false,
+"q": "Un feu se déclare dans la cale moteur. Le manuel dit :",
+"d": {
+"t": "fumee",
+"c": "noir",
+"legende": "feu dans la cale moteur"
+},
+"o": [
+{
+"t": "ne pas ouvrir la cale, identifier la source, évacuer",
+"e": "Ouvrir apporte de l'oxygène."
+},
+{
+"t": "ouvrir la cale pour voir le feu",
+"e": "Tu l'alimenterais en oxygène."
+},
+{
+"t": "jeter des seaux d'eau dans la cale",
+"e": "Feu d'essence ou d'huile : pas d'eau."
+}
+],
+"b": 0,
+"ex": "Feu en cale moteur (fuite d'huile ou d'essence, surchauffe) : ne pas ouvrir la cale, identifier la source de chaleur, évacuer. Prévention : bonne ventilation.",
+"pg": "Ouvrir la cale = donner de l'air au feu.",
+"ref": "Tome 1, p. 61"
+},
+{
+"id": "S074",
+"cat": "S",
+"res": false,
+"q": "Le propane, plus lourd que l'air, a tendance à :",
+"d": null,
+"o": [
+{
+"t": "s'accumuler dans le bas de la coque",
+"e": "D'où des coffres ventilés par le bas."
+},
+{
+"t": "s'échapper vers le haut",
+"e": "C'est l'inverse."
+},
+{
+"t": "se dissoudre dans l'eau de cale",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Le propane se loge dans le bas de la coque : coffres à gaz avec trous de ventilation en partie basse ; flexibles à remplacer généralement tous les 3 ans.",
+"pg": "Une fuite de gaz en fond de cale + une étincelle = explosion.",
+"ref": "Tome 1, p. 61"
+},
+{
+"id": "S075",
+"cat": "S",
+"res": false,
+"q": "Le gilet de sauvetage adapté aux eaux intérieures est le :",
+"d": {
+"t": "gilet",
+"n": "? N"
+},
+"o": [
+{
+"t": "100 N",
+"e": "Gilet de sauvetage pour eaux intérieures."
+},
+{
+"t": "50 N",
+"e": "Aide à la flottabilité, pas un gilet de sauvetage."
+},
+{
+"t": "275 N",
+"e": "Usage professionnel."
+}
+],
+"b": 0,
+"ex": "50 N : aide à la flottabilité ; 100 N : eaux intérieures ; 150 N : côtier et hauturier ; 275 N : professionnel.",
+"pg": "Le 50 N n'est PAS un gilet de sauvetage : c'est une aide à la flottabilité.",
+"ref": "Tome 1, p. 62"
+},
+{
+"id": "S076",
+"cat": "S",
+"res": false,
+"q": "Un gilet de 50 N est :",
+"d": {
+"t": "gilet",
+"n": "50 N"
+},
+"o": [
+{
+"t": "une simple aide à la flottabilité",
+"e": "Il ne convient pas comme gilet de sauvetage."
+},
+{
+"t": "le gilet prévu pour les eaux intérieures",
+"e": "C'est le 100 N."
+},
+{
+"t": "le gilet prévu pour la navigation côtière",
+"e": "C'est le 150 N."
+}
+],
+"b": 0,
+"ex": "50 N : aide à la flottabilité, ne convient pas comme gilet de sauvetage.",
+"pg": "Plus le chiffre est grand, plus le gilet porte.",
+"ref": "Tome 1, p. 62"
+},
+{
+"id": "S077",
+"cat": "S",
+"res": false,
+"q": "Le gilet de 150 N est prévu pour :",
+"d": {
+"t": "gilet",
+"n": "150 N"
+},
+"o": [
+{
+"t": "la navigation côtière et hauturière",
+"e": "En mer."
+},
+{
+"t": "les eaux intérieures seulement",
+"e": "Le 100 N suffit sur les voies."
+},
+{
+"t": "les enfants de moins de 30 kg",
+"e": "Ce n'est pas la classification du manuel."
+}
+],
+"b": 0,
+"ex": "150 N : gilet de sauvetage pour la navigation côtière et hauturière.",
+"pg": "Pour le Kat-a-Mar en mer : 150 N.",
+"ref": "Tome 1, p. 62"
+},
+{
+"id": "S078",
+"cat": "S",
+"res": false,
+"q": "À bord, il faut au minimum :",
+"d": null,
+"o": [
+{
+"t": "un gilet de sauvetage par personne embarquée",
+"e": "Et facilement accessible."
+},
+{
+"t": "un gilet pour deux personnes",
+"e": "Non."
+},
+{
+"t": "un gilet pour le pilote seulement",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Un gilet de sauvetage par personne embarquée, un extincteur d'au moins 2 kg, une bouée de sauvetage.",
+"pg": "Un gilet rangé sous trois sacs ne sert à rien : il doit être accessible.",
+"ref": "Tome 1, p. 59 et 62"
+},
+{
+"id": "S079",
+"cat": "S",
+"res": false,
+"q": "Le MRCC belge, centre de coordination du sauvetage en mer, est implanté à :",
+"d": null,
+"o": [
+{
+"t": "Ostende",
+"e": "Maritime Rescue Coordination Centre."
+},
+{
+"t": "Anvers",
+"e": "Non."
+},
+{
+"t": "Bruxelles",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Le MRCC (Maritime Rescue Coordination Centre) est à Ostende ; il reçoit les alertes et coordonne les recherches et le sauvetage.",
+"pg": "Les CROSS sont les centres français équivalents.",
+"ref": "Tome 1, p. 63"
+},
+{
+"id": "S080",
+"cat": "S",
+"res": false,
+"q": "L'hydrocution (choc thermique) se prévient en :",
+"d": {
+"t": "hom",
+"legende": "un baigneur plonge dans l'eau froide"
+},
+"o": [
+{
+"t": "entrant progressivement dans l'eau",
+"e": "Le choc vient d'un changement brusque de température."
+},
+{
+"t": "plongeant d'un coup pour s'habituer",
+"e": "C'est exactement ce qui la provoque."
+},
+{
+"t": "buvant un alcool fort avant",
+"e": "Jamais."
+}
+],
+"b": 0,
+"ex": "Hydrocution : changement brusque de température ; vertiges, frissons, malaise, perte de connaissance, risque de noyade. Prévention : entrer progressivement.",
+"pg": "Plus la différence de température est grande, plus le risque est élevé.",
+"ref": "Tome 1, p. 64"
+},
+{
+"id": "S081",
+"cat": "S",
+"res": false,
+"q": "Une personne en hypothermie doit être :",
+"d": {
+"t": "hom",
+"legende": "une personne repêchée, transie"
+},
+"o": [
+{
+"t": "réchauffée progressivement, vêtements mouillés retirés",
+"e": "Couvertures, boisson chaude sans alcool."
+},
+{
+"t": "réchauffée très vite contre une source brûlante",
+"e": "Pas de chaleur directe sur la peau."
+},
+{
+"t": "frictionnée à l'alcool",
+"e": "Jamais d'alcool."
+}
+],
+"b": 0,
+"ex": "Hypothermie : endroit chaud, retirer les vêtements mouillés, couvertures, chaleur externe sans contact direct, boissons chaudes non alcoolisées, consulter.",
+"pg": "L'alcool donne une sensation de chaleur mais fait perdre de la chaleur.",
+"ref": "Tome 1, p. 64"
+},
+{
+"id": "S082",
+"cat": "S",
+"res": false,
+"q": "Une personne retirée de l'eau ne respire pas. Tu :",
+"d": {
+"t": "hom",
+"legende": "une personne qui ne respire pas"
+},
+"o": [
+{
+"t": "appelles les secours et commences la RCP",
+"e": "30 compressions thoraciques."
+},
+{
+"t": "la mets en position latérale de sécurité",
+"e": "La PLS est pour une personne qui respire."
+},
+{
+"t": "attends qu'elle se réveille",
+"e": "Chaque minute compte."
+}
+],
+"b": 0,
+"ex": "Noyade : sortir la personne en sécurité, appeler les secours, vérifier la respiration, RCP si elle ne respire pas (30 compressions).",
+"pg": "PLS = elle respire ; RCP = elle ne respire pas.",
+"ref": "Tome 1, p. 64"
+},
+{
+"id": "S083",
+"cat": "S",
+"res": false,
+"q": "Le bouche-à-bouche reste recommandé dans trois cas. Lesquels ?",
+"d": null,
+"o": [
+{
+"t": "noyade, électrocution, et lorsqu'il s'agit d'un enfant",
+"e": "Sinon, massage cardiaque seul."
+},
+{
+"t": "crise cardiaque, malaise, fracture",
+"e": "Non."
+},
+{
+"t": "tous les cas, sans exception",
+"e": "Le manuel recommande sinon le massage seul."
+}
+],
+"b": 0,
+"ex": "On se contente du massage cardiaque, sauf en cas de noyade, d'électrocution, ou pour un enfant.",
+"pg": "La noyade est justement un manque d'oxygène : l'insufflation y garde tout son sens.",
+"ref": "Tome 1, p. 64"
+},
+{
+"id": "S084",
+"cat": "S",
+"res": false,
+"q": "Une personne s'étouffe et ne peut plus tousser. Après les tapes dans le dos, tu fais :",
+"d": null,
+"o": [
+{
+"t": "la manœuvre de Heimlich",
+"e": "Compressions abdominales."
+},
+{
+"t": "boire un grand verre d'eau",
+"e": "Elle ne peut pas avaler."
+},
+{
+"t": "allonger la personne sur le dos",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Étouffement : encourager la toux ; sinon tapes dans le dos, penché en avant ; si ça échoue, manœuvre de Heimlich ; répéter.",
+"pg": "Tant qu'elle tousse, encourage la toux : n'interviens pas.",
+"ref": "Tome 1, p. 65"
+},
+{
+"id": "S085",
+"cat": "S",
+"res": false,
+"q": "En cas d'insolation, tu :",
+"d": null,
+"o": [
+{
+"t": "mets la personne à l'ombre et l'hydrates avec de l'eau fraîche",
+"e": "Pas de boissons très froides."
+},
+{
+"t": "lui fais boire de l'eau glacée",
+"e": "Le manuel dit : pas de boissons très froides."
+},
+{
+"t": "la laisses au soleil pour qu'elle transpire",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Insolation : à l'ombre, enlever les vêtements en trop, eau fraîche (pas très froide), compresses fraîches, surveiller.",
+"pg": "Fraîche, pas glacée.",
+"ref": "Tome 1, p. 65"
+},
+{
+"id": "S086",
+"cat": "S",
+"res": false,
+"q": "En cas d'hémorragie, tu :",
+"d": null,
+"o": [
+{
+"t": "appuies directement sur la plaie avec un tissu propre",
+"e": "Et tu surélèves si possible."
+},
+{
+"t": "retires l'objet enfoncé dans la plaie",
+"e": "Ne jamais le retirer : le stabiliser."
+},
+{
+"t": "laisses saigner pour nettoyer",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Hémorragie : pression directe, surélever au-dessus du cœur si possible, ne pas retirer les objets enfoncés, garrot si nécessaire en notant l'heure.",
+"pg": "L'objet enfoncé bouche souvent la plaie : le retirer aggrave le saignement.",
+"ref": "Tome 1, p. 65"
+},
+{
+"id": "S087",
+"cat": "S",
+"res": false,
+"q": "Dans un moteur diesel, le carburant s'enflamme :",
+"d": null,
+"o": [
+{
+"t": "tout seul, dans l'air comprimé et chaud",
+"e": "Pas de bougie."
+},
+{
+"t": "grâce à une bougie d'allumage",
+"e": "C'est le moteur essence."
+},
+{
+"t": "grâce à une petite flamme pilote",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Diesel : l'air comprimé à très haute pression devient chaud ; le gasoil injecté s'enflamme tout seul. Essence : une bougie fait l'étincelle.",
+"pg": "Diesel = injecteur ; essence = bougie.",
+"ref": "Tome 1, p. 67"
+},
+{
+"id": "S088",
+"cat": "S",
+"res": false,
+"q": "Le moteur à essence se distingue du diesel parce qu'il :",
+"d": null,
+"o": [
+{
+"t": "a besoin d'électricité pour les bougies d'allumage",
+"e": "L'étincelle enflamme le mélange."
+},
+{
+"t": "n'a pas besoin d'électricité une fois démarré",
+"e": "C'est le diesel."
+},
+{
+"t": "fonctionne sans aucun allumage",
+"e": "C'est le diesel (auto-inflammation)."
+}
+],
+"b": 0,
+"ex": "Le moteur essence a besoin d'électricité pour ses bougies. Le diesel n'a plus besoin d'électricité dès qu'il a démarré.",
+"pg": "Le diesel n'a plus besoin d'électricité dès qu'il a démarré ; l'essence en a besoin pour ses bougies.",
+"ref": "Tome 1, p. 67"
+},
+{
+"id": "S089",
+"cat": "S",
+"res": false,
+"q": "Le refroidissement d'un moteur inbord comprend :",
+"d": null,
+"o": [
+{
+"t": "deux circuits : liquide de refroidissement et eau de mer",
+"e": "Reliés par un échangeur."
+},
+{
+"t": "un seul circuit d'eau de mer dans le moteur",
+"e": "Le moteur est refroidi par son liquide."
+},
+{
+"t": "de l'air seulement",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Le moteur est refroidi par le liquide de refroidissement (circuit fermé), lui-même refroidi par l'eau de mer à travers un échangeur.",
+"pg": "L'eau de mer ne touche pas le moteur : elle refroidit le liquide puis l'échappement.",
+"ref": "Tome 1, p. 68-69"
+},
+{
+"id": "S090",
+"cat": "S",
+"res": false,
+"q": "Le moteur chauffe anormalement. Cause possible selon le manuel :",
+"d": null,
+"o": [
+{
+"t": "la pompe à eau (impeller) est usée",
+"e": "Elle n'aspire plus assez d'eau."
+},
+{
+"t": "la batterie est à plat",
+"e": "Elle empêche de démarrer, pas de chauffer."
+},
+{
+"t": "le réservoir est trop plein",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Moteur qui chauffe : impeller usé. Voyant de pression d'huile : pression trop basse. Cliquetis et pas de démarrage : batterie à plat.",
+"pg": "Vérifie toujours l'eau à l'échappement : c'est le premier signe d'un impeller fatigué.",
+"ref": "Tome 1, p. 70"
+},
+{
+"id": "S091",
+"cat": "S",
+"res": false,
+"q": "Une fumée NOIRE à l'échappement indique :",
+"d": {
+"t": "fumee",
+"c": "noir"
+},
+"o": [
+{
+"t": "un problème de combustion",
+"e": "Mélange mal brûlé."
+},
+{
+"t": "une fuite d'huile",
+"e": "C'est la fumée bleue."
+},
+{
+"t": "un moteur froid",
+"e": "C'est la fumée blanche."
+}
+],
+"b": 0,
+"ex": "Fumée noire : combustion ; bleue : huile ; blanche : moteur froid ou vapeur d'eau.",
+"pg": "Noir = carburant mal brûlé ; bleu = huile ; blanc = eau.",
+"ref": "Tome 1, p. 70"
+},
+{
+"id": "S092",
+"cat": "S",
+"res": false,
+"q": "Une fumée BLEUE à l'échappement indique :",
+"d": {
+"t": "fumee",
+"c": "bleu"
+},
+"o": [
+{
+"t": "une fuite d'huile",
+"e": "L'huile brûle dans le moteur."
+},
+{
+"t": "un problème de combustion",
+"e": "C'est la fumée noire."
+},
+{
+"t": "de la vapeur d'eau",
+"e": "C'est la fumée blanche."
+}
+],
+"b": 0,
+"ex": "Fumée bleue : fuite d'huile.",
+"pg": "Bleu = huile. Contrôle le niveau d'huile.",
+"ref": "Tome 1, p. 70"
+},
+{
+"id": "S093",
+"cat": "S",
+"res": false,
+"q": "En navigation, la température normale du moteur est comprise entre :",
+"d": null,
+"o": [
+{
+"t": "80 et 90 °C",
+"e": "Plage du manuel."
+},
+{
+"t": "40 et 50 °C",
+"e": "Moteur trop froid."
+},
+{
+"t": "110 et 130 °C",
+"e": "Surchauffe."
+}
+],
+"b": 0,
+"ex": "En navigation : surveiller la charge de la batterie et la température du moteur, entre 80 et 90 °C.",
+"pg": "Au-delà, pense à l'impeller et à la prise d'eau.",
+"ref": "Tome 1, p. 69-70"
+},
+{
+"id": "S094",
+"cat": "S",
+"res": false,
+"q": "La courroie du moteur ne doit pouvoir se détendre que de :",
+"d": null,
+"o": [
+{
+"t": "1 cm environ",
+"e": "Indication du manuel."
+},
+{
+"t": "10 cm",
+"e": "Beaucoup trop lâche."
+},
+{
+"t": "aucun jeu du tout",
+"e": "Trop tendue, elle use les roulements."
+}
+],
+"b": 0,
+"ex": "La courroie entraîne pompe et alternateur ; elle ne peut se détendre que de 1 cm. Vérifier sa tension au départ.",
+"pg": "Courroie lâche = pompe à eau mal entraînée = surchauffe.",
+"ref": "Tome 1, p. 69-70"
+},
+{
+"id": "S095",
+"cat": "S",
+"res": false,
+"q": "Dans le circuit de refroidissement, l'eau de mer est aspirée par :",
+"d": null,
+"o": [
+{
+"t": "une pompe à turbine (impeller) entraînée par le moteur",
+"e": "Par un passe-coque, en bout d'arbre à cames ou par courroie."
+},
+{
+"t": "la seule pression de l'eau sous la coque",
+"e": "Il faut une pompe."
+},
+{
+"t": "la pompe de cale du bateau",
+"e": "Elle évacue l'eau des fonds."
+}
+],
+"b": 0,
+"ex": "L'eau de mer est aspirée par un passe-coque par une pompe volumétrique (impeller) entraînée par le moteur, passe dans l'échangeur puis est rejetée dans l'échappement.",
+"pg": "Impeller usé = moteur qui chauffe : c'est la cause n° 1 du tableau des pannes.",
+"ref": "Tome 1, p. 69-70"
+},
+{
+"id": "S096",
+"cat": "S",
+"res": false,
+"q": "Les documents du bateau doivent se trouver à bord :",
+"d": null,
+"o": [
+{
+"t": "en original",
+"e": "Et il faut assister les agents en cas de contrôle."
+},
+{
+"t": "en photocopie suffit",
+"e": "Le manuel dit : les originaux."
+},
+{
+"t": "ils peuvent rester à la maison",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Les documents originaux du bateau doivent se trouver à bord ; en cas de contrôle, assistance aux fonctionnaires.",
+"pg": "Les règlements applicables peuvent être sous forme numérique s'ils sont consultables immédiatement.",
+"ref": "Tome 1, p. 73"
+},
+{
+"id": "S097",
+"cat": "S",
+"res": false,
+"q": "Un bateau peut-il se laisser porter par le courant sans moyen de propulsion ?",
+"d": {
+"t": "scene",
+"bateaux": [
+{
+"x": 100,
+"y": 75,
+"cap": 0,
+"l": "sans moteur ?"
+}
+]
+},
+"o": [
+{
+"t": "non",
+"e": "C'est interdit."
+},
+{
+"t": "oui, s'il est petit",
+"e": "Non."
+},
+{
+"t": "oui, de jour seulement",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Un bateau ne peut pas se laisser entraîner par le courant sans moyen de propulsion ; il doit avoir un moyen de propulsion de réserve.",
+"pg": "Prévois une pagaie ou un moteur de secours.",
+"ref": "Tome 1, p. 72-73"
+},
+{
+"id": "S098",
+"cat": "S",
+"res": false,
+"q": "Les règles sur l'alcool et la drogue à la barre d'un bateau sont :",
+"d": null,
+"o": [
+{
+"t": "les mêmes que sur la voie publique",
+"e": "Elles s'appliquent sur toutes les voies intérieures."
+},
+{
+"t": "plus souples que sur la route",
+"e": "Non."
+},
+{
+"t": "inexistantes pour la plaisance",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Les règles relatives à l'alcool et aux drogues sur l'eau sont les mêmes que celles de la voie publique.",
+"pg": "Le soleil et le vent augmentent l'effet de l'alcool.",
+"ref": "Tome 1, p. 74"
+},
+{
+"id": "S099",
+"cat": "S",
+"res": false,
+"q": "Avant de partir, tu contrôles les pompes de cale. Elles servent à :",
+"d": null,
+"o": [
+{
+"t": "évacuer l'eau qui entre dans la coque",
+"e": "Électriques et manuelles : les deux doivent fonctionner."
+},
+{
+"t": "refroidir le moteur",
+"e": "C'est la pompe à eau (impeller)."
+},
+{
+"t": "remplir le réservoir d'eau douce",
+"e": "Non."
+}
+],
+"b": 0,
+"ex": "Préparation du bateau : fonds secs, pompes de cale fonctionnelles (électriques ET manuelles), pinoches présentes pour boucher une voie d'eau.",
+"pg": "Une pompe électrique ne sert à rien batterie à plat : la pompe manuelle est le secours.",
+"ref": "Tome 3, p. 19"
+},
+{
+"id": "S100",
+"cat": "S",
+"res": false,
+"q": "En plus d'un gilet par personne, quel équipement le manuel cite-t-il pour récupérer un homme à la mer ?",
+"d": {
+"t": "hom",
+"legende": "à bord"
+},
+"o": [
+{
+"t": "une bouée de sauvetage",
+"e": "Avec le feu à retournement."
+},
+{
+"t": "une ancre flottante",
+"e": "Ce n'est pas cité."
+},
+{
+"t": "un canot pneumatique",
+"e": "Ce n'est pas cité."
+}
+],
+"b": 0,
+"ex": "Équipements : un gilet par personne, un extincteur d'au moins 2 kg, une bouée de sauvetage pour la récupération d'un homme à la mer.",
+"pg": "La bouée doit être accessible en quelques secondes, pas rangée dans un coffre.",
+"ref": "Tome 1, p. 62"
 }
 ]
 };
