@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v7 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
+  <div class="ver">QCM FLUVIAL · v8 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -1365,14 +1365,14 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     nage: function(t, f){ return '<circle cx="30" cy="44" r="7" class="' + f + '"/><path d="M38 52 L72 46" class="' + t + '"/><path d="M14 70 C26 60 38 80 50 70 C62 60 74 80 86 70" class="' + t + '"/>'; },
     miseaeau: function(t, f){ return '<path d="M14 30 L86 80" class="' + t + '"/><path d="M38 34 L64 52 L58 60 L32 42 Z" class="' + f + '"/><path d="M14 84 L86 84" class="' + t + '"/>'; },
     fleche: function(t, f){ return '<path d="M50 86 L50 42" class="' + t + '"/><path d="M50 16 L74 50 L26 50 Z" class="' + f + '"/>'; },
-    exclam: function(t, f, tx){ return ptxt("!", 60, tx); },
+    exclam: function(t, f){ return '<rect x="44" y="18" width="12" height="64" rx="3" class="' + f + '"/>'; },
     radio: function(t, f, tx, o){ return '<path d="M50 26 L50 40" class="' + t + '"/><path d="M38 30 L50 18 L62 30" class="' + t + '"/>' + ptxt(o.texte || "10", 34, tx, 76); },
     eau: function(t, f){ return '<path d="M30 30 L62 30 L62 42" class="' + t + '"/><path d="M62 52 C54 64 54 70 62 74 C70 70 70 64 62 52 Z" class="' + f + '"/>'; },
     tel: function(t, f){ return '<path d="M30 30 C26 50 50 74 70 70 L74 60 L62 54 L56 60 C48 56 44 52 40 44 L46 38 L40 26 Z" class="' + f + '"/>'; },
     eclair: function(t, f){ return '<path d="M58 14 L32 54 L48 54 L40 86 L68 44 L52 44 Z" class="' + f + '"/>'; },
     bif: function(t, f){ return '<path d="M50 86 L50 50 L24 20 M50 50 L76 20" class="' + t + '"/>'; },
     affl: function(t, f){ return '<path d="M30 86 L30 14 M30 56 L76 30" class="' + t + '"/>'; },
-    son: function(t, f, tx){ return ptxt("P", 50, tx); },
+    son: function(t, f, tx){ return '<circle cx="50" cy="50" r="17" class="' + f + '"/>'; },
     amarrage: function(t, f){ return '<rect x="40" y="46" width="20" height="36" class="' + f + '"/><rect x="32" y="36" width="36" height="12" class="' + f + '"/><path d="M14 64 C30 50 46 74 60 62" class="' + t + '"/>'; }
   };
   function panneau(o){
@@ -1393,10 +1393,15 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       else if(o.texte) s += ptxt(o.texte, o.taille || (o.texte.length > 3 ? 28 : 40), tx, o.unite ? 54 : undefined) + (o.unite ? ptxt(o.unite, 14, tx, 84) : "");
       if(f === "A") s += PBARRE;
     }
-    var h = o.sous ? 128 : 100;
-    var out = '<svg viewBox="0 0 100 ' + h + '" class="qz-svg qz-pan" role="img">' + s;
+    /* cartouche : au-dessus = distance (F.1) ; au-dessous = explication (F.4), ex. le trait du B.7 */
+    var haut = o.dessus ? 28 : 0;
+    var h = 100 + haut + ((o.sous || o.pic === "son") ? 28 : 0);
+    var out = '<svg viewBox="0 0 100 ' + h + '" class="qz-svg qz-pan" role="img">';
+    if(o.dessus) out += '<rect x="10" y="2" width="80" height="22" class="p-face" stroke="#2a3d4f" stroke-width="1.4"/>' + ptxt(o.dessus, 14, "p-txt", 18);
+    out += '<g transform="translate(0,' + haut + ')">' + s;
     if(o.sous) out += '<rect x="10" y="102" width="80" height="22" class="p-face" stroke="#2a3d4f" stroke-width="1.4"/>' + ptxt(o.sous, 14, "p-txt", 118);
-    return '<div class="qz-panfond">' + out + "</svg></div>";
+    else if(o.pic === "son") out += '<rect x="10" y="102" width="80" height="22" class="p-face" stroke="#2a3d4f" stroke-width="1.4"/><line x1="26" y1="113" x2="74" y2="113" stroke="#14263a" stroke-width="4"/>';
+    return '<div class="qz-panfond">' + out + "</g></svg></div>";
   }
 
   /* -------- feux d'un ouvrage (écluse, pont) : la nuit, sur le mur -------- */
@@ -1953,7 +1958,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "A.2 : défense de tout dépassement. A.3 : seulement entre convois. A.4 : croiser et dépasser.",
+"ex": "A.2 : défense de tout dépassement. A.3 : seulement entre convois. A.4 : rencontre et dépassement.",
 "pg": "La diagonale rouge veut toujours dire « non ».",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.2 · Cours amélioré, module 1, chap. 3"
 },
@@ -1999,7 +2004,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "défense de croiser et de dépasser",
+"t": "défense de rencontre et de dépassement",
 "e": "A.4 : ni rencontre, ni dépassement."
 },
 {
@@ -2012,8 +2017,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "A.4 : défense de croiser et de dépasser. Sous ce panneau, on applique la règle des passages étroits (art. 6.07).",
-"pg": "Deux bateaux en sens opposés dessinés = croisement. Deux bateaux dans le même sens = dépassement.",
+"ex": "A.4 : défense de rencontre (face à face) et de dépassement. Sous ce panneau, on applique la règle des passages étroits (art. 6.07).",
+"pg": "Deux flèches en sens opposés = rencontre. Deux bateaux dans le même sens = dépassement.",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 7, A.4 · Cours amélioré, module 1, chap. 3 et 4"
 },
 {
@@ -2350,13 +2355,13 @@ window.KAM_QCM = {
 "id": "R021",
 "cat": "R",
 "res": false,
-"q": "Sous un panneau B.5 figure un cartouche « 1000 m ». Cela veut dire :",
+"q": "Au-dessus d'un panneau B.5 figure un cartouche « 1000 m ». Cela veut dire :",
 "d": {
 "t": "panneau",
 "fam": "B",
 "texte": "B.5",
 "taille": 30,
-"sous": "1000 m"
+"dessus": "1000 m"
 },
 "o": [
 {
@@ -2374,14 +2379,14 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "B.5 : obligation de s'arrêter. Le cartouche « 1000 m » annonce que l'arrêt est à 1000 m.",
-"pg": "Un chiffre SOUS un panneau (cartouche) n'est pas un chiffre SUR un panneau : regarde où il est écrit.",
+"pg": "Un chiffre dans un cartouche AU-DESSUS du panneau donne la distance ; un chiffre SUR le panneau en fait partie : regarde où il est écrit.",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.5 · Cours amélioré, module 1, chap. 3"
 },
 {
 "id": "R022",
 "cat": "R",
 "res": false,
-"q": "Ce panneau (avec un « P ») t'impose :",
+"q": "Ce panneau (avec un trait dans le cartouche du dessous) t'impose :",
 "d": {
 "t": "panneau",
 "fam": "B",
@@ -2390,7 +2395,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "d'émettre un son prolongé",
-"e": "B.7 : émettre un signal sonore ; le cartouche ou la lettre précise lequel."
+"e": "B.7 : émettre un signal sonore ; le cartouche précise lequel."
 },
 {
 "t": "de stationner à cet endroit",
@@ -2402,8 +2407,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "B.7 : obligation d'émettre un signal sonore. « P » = un son prolongé.",
-"pg": "Le même « P » change de sens selon le panneau : bleu = stationnement autorisé, barré = interdit, blanc bordé de rouge sans barre = son prolongé.",
+"ex": "B.7 : obligation d'émettre un signal sonore. Le cartouche précise lequel : un trait = un son prolongé.",
+"pg": "B.7 porte un point noir, pas un « P ». Le « P » est le stationnement : bleu = autorisé (E.5), barré = interdit (A.5).",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 7, B.7 · Cours amélioré, module 1, chap. 3"
 },
 {
@@ -2944,7 +2949,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "E.5 : stationnement autorisé — ancrage ou amarrage. E.5.1 : sur une largeur ; E.5.2 : entre deux distances ; E.5.3 : nombre de bateaux bord à bord.",
-"pg": "Même « P », trois sens : bleu = autorisé (E.5), barré = interdit (A.5), sans barre = son prolongé (B.7).",
+"pg": "Même « P », deux sens : bleu = autorisé (E.5), barré = interdit (A.5). Le panneau du son (B.7) porte un point noir.",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 7, E.5 · Cours amélioré, module 1, chap. 3"
 },
 {
@@ -6467,7 +6472,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Bifurcation : bandes horizontales rouges et vertes ; bouée sphérique, à voyant ou espar ; voyant sphère à bandes rouges et vertes.",
-"pg": "Ne cherche pas les marques de mer (danger isolé, eaux saines) sur une voie intérieure : le SIGNI ne les utilise pas.",
+"pg": "Sur une rivière ou un canal, ce sont les marques latérales et de bifurcation. Danger isolé et eaux saines existent aussi en eaux intérieures, mais sur les lacs et les voies de grande largeur (appendice 8, VI).",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 8, II.3 · Tome 1, p. 17"
 },
 {
@@ -6851,7 +6856,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Rive gauche : traversée = panneau jaune à bande noire posé sur la pointe, OU latte jaune en croix de Saint-André.",
-"pg": "La croix jaune existe en mer comme marque spéciale. Sur la berge d'une voie intérieure, c'est un signal de traversée.",
+"pg": "Sur l'eau, une croix jaune est le voyant du balisage particulier. Sur la berge d'une voie intérieure, c'est un signal de traversée.",
 "ref": "Règlement général de police (AR 24/09/2006), appendice 8, III.B.2"
 },
 {
@@ -10951,7 +10956,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Obligatoire : un extincteur à poudre d'au moins 2 kg ; contrôle généralement tous les 2 ans.",
+"ex": "Le règlement exige un extincteur à poudre agréé « d'une capacité suffisante » (le manuel dit au moins 2 kg) ; contrôle généralement tous les 2 ans.",
 "pg": "Un extincteur non contrôlé peut ne rien cracher le jour où il faut.",
 "ref": "Tome 1, p. 60"
 },
@@ -11114,7 +11119,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Un gilet de sauvetage par personne embarquée, un extincteur d'au moins 2 kg, une bouée de sauvetage.",
+"ex": "Règlement : une ceinture, un coussin ou un gilet de sauvetage par personne. Le manuel ajoute un extincteur d'au moins 2 kg (le règlement dit « capacité suffisante ») et une bouée de sauvetage.",
 "pg": "Un gilet rangé sous trois sacs ne sert à rien : il doit être accessible.",
 "ref": "Tome 1, p. 59 et 62"
 },

@@ -1,0 +1,236 @@
+<title>Descente balisée</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout : une seule colonne (téléphone d'abord) — la rivière en haut, la fiche de la balise en dessous, les commandes en bas. */
+:root{
+  --bg:#EEF2EF; --fg:#17221C; --muted:#56635B; --panel:#FFFFFF; --line:#C9D3CC;
+  --accent:#0F5C8C; --accent-fg:#FFFFFF; --warn:#B8860B; --ok:#2F7A2F;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101814; --fg:#E6EEE8; --muted:#9DAFA3; --panel:#18231D; --line:#2C3A32;
+  --accent:#5FB0E3; --accent-fg:#0B1A24; --warn:#E3B341; --ok:#7CC67C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101814; --fg:#E6EEE8; --muted:#9DAFA3; --panel:#18231D; --line:#2C3A32;
+  --accent:#5FB0E3; --accent-fg:#0B1A24; --warn:#E3B341; --ok:#7CC67C; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:560px;margin:0 auto;padding-block:12px 20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:10px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+h1{font-family:var(--display);font-weight:700;font-size:28px;letter-spacing:.02em;margin:0;text-wrap:balance}
+.ver{font-size:12px;color:var(--muted);white-space:nowrap}
+.stage{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#9CC8E6}
+#river{display:block;width:100%;height:min(54vh,520px)}
+.hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;padding:6px 10px;
+  font-family:var(--display);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#1E3A20;pointer-events:none}
+.hud span{background:rgba(255,255,255,.75);padding:1px 6px;border-radius:4px}
+.flow{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-size:13px;background:rgba(255,255,255,.8);
+  color:#123;padding:1px 8px;border-radius:4px;pointer-events:none}
+.compass{position:absolute;right:10px;bottom:6px;width:34px;height:34px;pointer-events:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-height:150px}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card h2{font-family:var(--display);font-weight:700;font-size:23px;margin:0;letter-spacing:.01em;text-wrap:balance}
+.card p{margin:0}
+.ref{font-size:13px;color:var(--accent)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--warn)}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+button{font:600 15px var(--body);padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.mark{opacity:0;transition:opacity .8s ease}
+.mark.on{opacity:1}
+.ring{fill:none;stroke:#FFD23F;stroke-width:3;opacity:0}
+.mark.cur .ring{opacity:1;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{stroke-width:2;opacity:.6}50%{stroke-width:5;opacity:1}}
+@media (prefers-reduced-motion: reduce){.mark{transition:none}.mark.cur .ring{animation:none}}
+[hidden]{display:none!important}
+.lamp{position:absolute;left:10px;top:38px;max-width:calc(100% - 20px);display:flex;align-items:center;gap:8px;background:rgba(5,15,25,.82);color:#fff;padding:6px 10px;border-radius:8px;font-size:13px;pointer-events:none}
+.lamp i{width:18px;height:18px;border-radius:50%;background:#333;box-shadow:none;transition:background .05s}
+.trap{background:#FFF4D6;color:#6A4A00;border-left:4px solid #E0B43A;padding:6px 9px;margin:0;font-size:15px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .trap{background:#3A2E0C;color:#F3D27A}}
+:root[data-theme="dark"] .trap{background:#3A2E0C;color:#F3D27A}
+.kind{font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+</style>
+
+<div class="wrap">
+  <header><h1>Descente balisée</h1><span class="ver">version 3.1 · permis fluvial belge</span></header>
+  <div class="stage">
+    <svg id="river" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rivière puis lac vus de dessus ; un bateau descend et rencontre les balises">
+      <g id="world"></g>
+    </svg>
+    <div class="hud"><span id="hudL">Rive gauche</span><span id="hudR">Rive droite</span></div>
+    <div class="flow" id="flow">↑ sens du courant · vous descendez (avalant)</div>
+    <div class="lamp" id="lamp" hidden><i id="lampDot"></i><span id="lampTxt"></span></div>
+    <svg class="compass" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="15" fill="rgba(255,255,255,.85)" stroke="#123"/><polygon points="17,4 21,17 13,17" fill="#B22"/><polygon points="17,30 21,17 13,17" fill="#678"/><text x="17" y="12" font-size="7" text-anchor="middle" fill="#fff" font-family="Arial">N</text></svg>
+  </div>
+  <section class="card" aria-live="polite">
+    <div class="meta"><span id="step" class="kind">Départ</span><span id="count"></span></div>
+    <h2 id="ttl"></h2>
+    <p id="txt"></p>
+    <p class="trap" id="trap" hidden></p>
+    <span class="ref" id="ref"></span>
+    <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+  </section>
+  <div class="controls">
+    <button id="bPlay" class="primary">Pause</button>
+    <button id="bPrev">Arrêt précédent</button>
+    <button id="bNext">Arrêt suivant</button>
+    <button id="bRestart">Recommencer</button>
+  </div>
+</div>
+
+<script>
+(function(){
+const READ=10, SPEED=140, BOAT_SCREEN_Y=420;
+const R='#D93A33', G='#2E9A3A', W='#FFFFFF', K='#1D1D1B', Y='#F2CE2E', B='#1F5FBF', GR='#7C7C74';
+const ring=(x,y,r)=>`<circle class="ring" cx="${x}" cy="${y}" r="${r}"/>`;
+const ripple=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="16" ry="4" fill="rgba(255,255,255,.55)"/>`;
+const pole=(x,y1,y2)=>`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="#6B6B63" stroke-width="3"/>`;
+const coneUp=(x,y,c,s=7)=>`<polygon points="${x-s},${y} ${x+s},${y} ${x},${y-2*s}" fill="${c}"/>`;
+const coneDn=(x,y,c,s=7)=>`<polygon points="${x-s},${y-2*s} ${x+s},${y-2*s} ${x},${y}" fill="${c}"/>`;
+const bands=(x,y,cols,w=14,h=36)=>cols.map((c,i)=>`<rect x="${x-w/2}" y="${y-h+i*h/cols.length}" width="${w}" height="${h/cols.length+.3}" fill="${c}"/>`).join('')+`<rect x="${x-w/2}" y="${y-h}" width="${w}" height="${h}" fill="none" stroke="${K}" stroke-width=".8"/>`;
+const vbands=(x,y,cols,w=14,h=36)=>cols.map((c,i)=>`<rect x="${x-w/2+i*w/cols.length}" y="${y-h}" width="${w/cols.length+.3}" height="${h}" fill="${c}"/>`).join('')+`<rect x="${x-w/2}" y="${y-h}" width="${w}" height="${h}" fill="none" stroke="${K}" stroke-width=".8"/>`;
+let cpN=0; const sphere=(x,y,r,cols,vert)=>{ const id='c'+(cpN++); const n=cols.length;
+  return `<clipPath id="${id}"><circle cx="${x}" cy="${y}" r="${r}"/></clipPath><g clip-path="url(#${id})">`+cols.map((c,i)=>vert?`<rect x="${x-r+i*2*r/n}" y="${y-r}" width="${2*r/n+.3}" height="${2*r}" fill="${c}"/>`:`<rect x="${x-r}" y="${y-r+i*2*r/n}" width="${2*r}" height="${2*r/n+.3}" fill="${c}"/>`).join('')+`</g><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${K}"/>`; };
+const D={
+ rouge:(x,y)=>ripple(x,y)+`<rect x="${x-9}" y="${y-26}" width="18" height="26" rx="2" fill="${R}" stroke="#7A1F1B"/>`+ring(x,y-12,26),
+ verte:(x,y)=>ripple(x,y)+`<polygon points="${x-12},${y} ${x+12},${y} ${x},${y-30}" fill="${G}" stroke="#165A1E"/>`+ring(x,y-12,26),
+ esparR:(x,y)=>ripple(x,y)+bands(x,y,[R],8,34)+pole(x,y-34,y-38)+`<rect x="${x-6}" y="${y-50}" width="12" height="12" fill="${R}"/>`+ring(x,y-24,30),
+ losVB:(x,y)=>pole(x,y,y-26)+`<polygon points="${x},${y-50} ${x+13},${y-37} ${x},${y-24} ${x-13},${y-37}" fill="${W}" stroke="${K}"/><polygon points="${x},${y-50} ${x+13},${y-37} ${x-13},${y-37}" fill="${G}"/>`+ring(x,y-30,28),
+ carRB:(x,y)=>pole(x,y,y-24)+`<rect x="${x-12}" y="${y-48}" width="24" height="24" fill="${W}" stroke="${K}"/><rect x="${x-12}" y="${y-43}" width="24" height="14" fill="${R}"/>`+ring(x,y-30,28),
+ losJ:(x,y)=>pole(x,y,y-26)+`<polygon points="${x},${y-50} ${x+13},${y-37} ${x},${y-24} ${x-13},${y-37}" fill="${Y}" stroke="${K}"/><polygon points="${x-4},${y-46} ${x},${y-50} ${x+4},${y-46} ${x+4},${y-28} ${x},${y-24} ${x-4},${y-28}" fill="${K}"/>`+ring(x,y-30,28),
+ carJ:(x,y)=>pole(x,y,y-24)+`<rect x="${x-12}" y="${y-48}" width="24" height="24" fill="${Y}" stroke="${K}"/><rect x="${x-4}" y="${y-48}" width="8" height="24" fill="${K}"/>`+ring(x,y-30,28),
+ obsVB:(x,y)=>ripple(x,y)+bands(x,y,[G,W,G,W,G],8,38)+coneUp(x,y-41,G)+ring(x,y-24,30),
+ obsRB:(x,y)=>ripple(x,y)+bands(x,y,[R,W,R,W,R],8,38)+`<rect x="${x-6}" y="${y-53}" width="12" height="11" fill="${R}"/>`+ring(x,y-24,30),
+ epiG:(x,y)=>`<rect x="56" y="${y-9}" width="${x-56}" height="18" rx="3" fill="${GR}" stroke="#55554F"/>`+pole(x-4,y,y-22)+coneUp(x-4,y-22,G,9)+ring(x-4,y-24,28),
+ epiD:(x,y)=>`<rect x="${x}" y="${y-9}" width="${344-x}" height="18" rx="3" fill="${GR}" stroke="#55554F"/>`+pole(x+4,y,y-26)+coneDn(x+4,y-26,R,9)+ring(x+4,y-28,28),
+ bif:(x,y)=>ripple(x,y)+sphere(x,y-14,14,[R,G,R,G,R])+ring(x,y-14,26),
+ bifCyl:(x,y)=>ripple(x,y)+sphere(x,y-14,14,[R,G,R,G,R])+pole(x,y-28,y-32)+`<rect x="${x-7}" y="${y-46}" width="14" height="14" fill="${R}"/>`+ring(x,y-22,30),
+ bifFixe:(x,y)=>pole(x,y,y-22)+coneUp(x,y-22,G,9)+coneDn(x,y-42,R,9)+ring(x,y-32,30),
+ pref:(x,y)=>ripple(x,y)+bands(x,y,[R,G,R],16,36)+pole(x,y-36,y-40)+`<rect x="${x-7}" y="${y-54}" width="14" height="14" fill="${R}"/>`+ring(x,y-26,32),
+ cardN:(x,y)=>ripple(x,y)+bands(x,y,[K,Y])+pole(x,y-36,y-40)+coneUp(x,y-40,K)+coneUp(x,y-55,K)+ring(x,y-32,34),
+ cardS:(x,y)=>ripple(x,y)+bands(x,y,[Y,K])+pole(x,y-36,y-40)+coneDn(x,y-40,K)+coneDn(x,y-55,K)+ring(x,y-32,34),
+ cardE:(x,y)=>ripple(x,y)+bands(x,y,[K,Y,K])+pole(x,y-36,y-40)+coneDn(x,y-40,K)+coneUp(x,y-54,K)+ring(x,y-32,34),
+ cardW:(x,y)=>ripple(x,y)+bands(x,y,[Y,K,Y])+pole(x,y-36,y-40)+coneUp(x,y-40,K)+coneDn(x,y-54,K)+ring(x,y-32,34),
+ danger:(x,y)=>ripple(x,y)+bands(x,y,[K,R,K])+pole(x,y-36,y-40)+`<circle cx="${x}" cy="${y-45}" r="5" fill="${K}"/><circle cx="${x}" cy="${y-56}" r="5" fill="${K}"/>`+ring(x,y-30,34),
+ saines:(x,y)=>ripple(x,y)+sphere(x,y-14,14,[R,W,R,W,R],true)+pole(x,y-28,y-32)+`<circle cx="${x}" cy="${y-37}" r="5" fill="${R}"/>`+ring(x,y-20,30),
+ speciale:(x,y)=>ripple(x,y)+bands(x,y,[Y],14,30)+pole(x,y-30,y-34)+`<path d="M${x-6} ${y-46} L${x+6} ${y-34} M${x+6} ${y-46} L${x-6} ${y-34}" stroke="${Y}" stroke-width="3.5"/>`+ring(x,y-24,30),
+ epave:(x,y)=>ripple(x,y)+vbands(x,y,[B,Y,B,Y],16,32)+pole(x,y-32,y-36)+`<path d="M${x} ${y-50} L${x} ${y-36} M${x-7} ${y-43} L${x+7} ${y-43}" stroke="${Y}" stroke-width="3.5"/>`+ring(x,y-26,32),
+};
+const rock=(x,y)=>`<polygon points="${x-22},${y+6} ${x-12},${y-12} ${x+6},${y-14} ${x+20},${y-2} ${x+14},${y+12} ${x-8},${y+14}" fill="#5B5B55" stroke="#3B3B37"/>`;
+
+/* rythmes de feux : [durée, couleur|null] … */
+const rep=(n,a,b,c)=>Array.from({length:n},()=>[[a,c],[b,null]]).flat();
+const RH={
+ FlR:{l:'feu rouge à éclats réguliers (Fl R)',s:[[1,'#ff3b30'],[4,null]]},
+ IsoG:{l:'feu vert isophase (Iso G)',s:[[2,'#34c759'],[2,null]]},
+ IsoR:{l:'feu rouge isophase (Iso R)',s:[[2,'#ff3b30'],[2,null]]},
+ Fl:{l:'Fl : éclat d’environ 1 s, obscurité plus longue',s:[[1,'#fff'],[4,null]]},
+ Iso:{l:'Iso : lumière et obscurité de même durée',s:[[2,'#fff'],[2,null]]},
+ Oc:{l:'Oc : lumière plus longue, brève extinction',s:[[3,'#fff'],[1,null]]},
+ Q:{l:'Q : scintillant continu',s:[[.45,'#fff'],[.55,null]]},
+ VQ:{l:'VQ : scintillant rapide continu',s:[[.22,'#fff'],[.28,null]]},
+ OcG:{l:'feu vert à occultations régulières (Oc G)',s:[[3,'#34c759'],[1,null]]},
+ OcR:{l:'feu rouge à occultations régulières (Oc R)',s:[[3,'#ff3b30'],[1,null]]},
+ OcY:{l:'feu jaune à occultations régulières',s:[[3,'#ffcc00'],[1,null]]},
+ IsoW2:{l:'feu blanc isophase 2 s (Iso 2s)',s:[[1,'#fff'],[1,null]]},
+ QR:{l:'feu rouge scintillant continu (Q R)',s:[[.45,'#ff3b30'],[.55,null]]},
+ FlR21:{l:'Fl(2+1) R : 2 éclats + 1 éclat',s:[[.5,'#ff3b30'],[.7,null],[.5,'#ff3b30'],[1.7,null],[.5,'#ff3b30'],[6.1,null]]},
+ N:{l:'Nord : scintillant continu Q (ou VQ)',s:[[.45,'#fff'],[.55,null]]},
+ E:{l:'Est : Q(3) toutes les 10 s',s:[...rep(3,.45,.55,'#fff'),[7,null]]},
+ S:{l:'Sud : Q(6) + éclat long, toutes les 15 s',s:[...rep(6,.45,.55,'#fff'),[2,'#fff'],[7,null]]},
+ Wst:{l:'Ouest : Q(9) toutes les 15 s',s:[...rep(9,.45,.55,'#fff'),[6,null]]},
+ Fl2:{l:'feu blanc à 2 éclats Fl(2)',s:[[.5,'#fff'],[1,null],[.5,'#fff'],[3,null]]},
+ LFl:{l:'éclat long toutes les 10 s (LFl 10s)',s:[[2,'#fff'],[8,null]]},
+ FlY:{l:'feu jaune à éclats (Fl Y)',s:[[1,'#ffcc00'],[4,null]]},
+ Al:{l:'feu alternatif bleu / jaune',s:[[1,'#3d7bff'],[.5,null],[1,'#ffcc00'],[.5,null]]},
+ Fl3R:{l:'Fl(3) R 20s : 3 éclats rouges toutes les 20 s',s:[[1,'#ff3b30'],[1,null],[1,'#ff3b30'],[1,null],[1,'#ff3b30'],[15,null]]},
+};
+
+/* parcours : fleuve (berges x 58 et 342) jusqu'à y=-6300, puis mer */
+const PATH=[[200,60],[200,-1850],[140,-2100],[150,-2650],[140,-2950],[265,-3350],[260,-3700],[250,-4050],[258,-4350],[230,-4600],[284,-4800],[286,-5200],[232,-5450],[232,-5580],[150,-5800],[128,-6150],[220,-6600],[232,-7000],[250,-7350],[300,-7500],[262,-7700],[280,-7900],[330,-8300],[330,-8600],[230,-8800],[220,-9000],[280,-9300],[230,-9650],[260,-10000],[240,-10400],[230,-10750]];
+const S=[
+ {th:1,y:-120,t:'Avalant, montant, rives',d:"Avalant = vers l'aval, dans le sens du courant. Montant = vers la source. Les rives se nomment en regardant vers l'aval : rive gauche à gauche, rive droite à droite.",p:"Le nom des rives ne change jamais, même quand vous remontez.",r:'Cours p. 15-20'},
+ {k:'rouge',x:292,y:-450,lamp:'IsoR',t:'Bouée rouge : côté droit du chenal',d:"Rouge, cylindrique (ou voyant cylindre). En descendant, laissez-la à tribord (votre droite).",p:"En remontant, elle est à bâbord : la couleur suit la RIVE, pas votre bord.",r:'Règl. app. 8, II.1'},
+ {k:'verte',x:108,y:-750,lamp:'IsoG',t:'Bouée verte : côté gauche du chenal',d:"Verte, conique (voyant cône pointe en haut). En descendant, laissez-la à bâbord. Naviguez entre le vert et le rouge.",p:"Feu vert isophase ou à éclats réguliers la nuit.",r:'Règl. app. 8, II.2'},
+ {k:'esparR',x:300,y:-1050,lamp:'FlR',t:'Espar rouge : même sens que la bouée rouge',d:"Une marque latérale peut être une bouée, une bouée avec voyant ou un espar : c'est la COULEUR et le voyant qui donnent le sens.",p:"Un espar uni rouge = limite droite ; un espar à bandes rouges et blanches = obstacle (plus loin).",r:'Règl. app. 8, II.1'},
+ {th:1,y:-1250,lamp:'Fl',t:'Rythme des feux : Fl (éclats)',d:"La lumière est plus courte que l'obscurité. Exemple : Fl.5s = un éclat toutes les 5 secondes.",p:"Les marques de côté droit ou gauche portent un feu isophase ou à éclats réguliers, de la couleur de la marque. Attention : le cours écrit « F » pour l'éclat ; l'abréviation officielle est Fl (F = feu fixe).",r:'Règl. app. 8, I et II · cours p. 26'},
+ {th:1,y:-1400,lamp:'Iso',t:'Rythme des feux : Iso (isophase)',d:"Durée de lumière = durée d'obscurité. Exemple : Iso.2s = 1 s allumé, 1 s éteint.",p:"Iso est le rythme des bifurcations (feu blanc Iso 2 s).",r:'Règl. app. 8, I'},
+ {th:1,y:-1550,lamp:'Oc',t:'Rythme des feux : Oc (occultations)',d:"La lumière est allumée la plupart du temps et s'éteint brièvement.",p:"Oc = l'inverse de Fl. Les panneaux de chenal et de traversée utilisent des feux à occultations.",r:'Règl. app. 8, I et III'},
+ {th:1,y:-1700,lamp:'Q',t:'Rythme des feux : Q (scintillant)',d:"Des éclats courts qui se suivent sans arrêt. En rivière : feu des marques de bifurcation surmontées d'un voyant (chenal principal).",p:"Le nombre d'éclats par minute n'est pas demandé à l'examen (« fréquence des feux » exclue) : retenez seulement la différence entre scintillant, isophase, éclats et occultations.",r:'Règl. app. 8, I et II.3 · matière d’examen'},
+ {th:1,y:-1850,lamp:'VQ',t:'Rythme des feux : VQ (scintillant rapide)',d:"Comme Q, mais plus rapide.",p:"Le cours ajoute « clignote vite = danger, lentement = endroit sûr » : ce n'est pas dans le règlement.",r:'Règl. app. 8, I'},
+ {k:'losVB',x:32,y:-2050,lamp:'OcG',t:'Panneau losange vert et blanc (rive gauche)',d:"Le chenal se rapproche de la rive gauche : longez ce côté.",p:"Losange = rive GAUCHE ; carré = rive DROITE. La couleur dit ce que fait le chenal.",r:'Règl. app. 8, III.A.2'},
+ {k:'obsVB',x:96,y:-2380,lamp:'IsoG',t:'Balise à bandes vertes et blanches',d:"Balise flottante de point dangereux ou d'obstacle, côté gauche (voyant cône vert).",p:"Bandes blanches = OBSTACLE. Passez côté chenal, jamais entre la balise et la rive.",r:'Règl. app. 8, IV.B.2'},
+ {k:'epiG',x:112,y:-2700,lamp:'IsoG',t:'Épi sur la rive gauche',d:"Digue de pierres qui avance dans l'eau, signalée au bout par un cône vert pointe en haut (feu vert éventuel).",p:"La partie immergée de l'épi est dangereuse : passez au large.",r:'Règl. app. 8, IV.A.2'},
+ {k:'losJ',x:32,y:-2950,lamp:'OcY',t:'Losange jaune à bande noire (rive gauche)',d:"Le chenal traverse ici : traversez la rivière en diagonale vers la rive droite.",p:"Sur la rive gauche, le losange peut être remplacé par une latte jaune en croix de Saint-André. De nuit : feu jaune à occultations régulières.",r:'Règl. app. 8, III.B.2'},
+ {k:'carJ',x:368,y:-3350,lamp:'OcY',t:'Carré jaune à bande noire (rive droite)',d:"Arrivée de la traversée. Deux panneaux l'un derrière l'autre forment un alignement qui donne l'axe.",p:"Visez l'alignement : quand les deux panneaux se superposent, vous êtes sur l'axe. Feux d'alignement jaunes (le feu arrière peut être fixe).",r:'Règl. app. 8, III.B.1 et 3.2'},
+ {k:'carRB',x:368,y:-3700,lamp:'OcR',t:'Carré rouge et blanc (rive droite)',d:"Le chenal longe maintenant la rive droite.",p:"Officiel : panneau carré rouge avec deux bandes horizontales blanches ; feu rouge à occultations.",r:'Règl. app. 8, III.A.1'},
+ {k:'epiD',x:290,y:-4050,lamp:'IsoR',t:'Épi sur la rive droite',d:"Signalé au bout par un cône rouge pointe en bas (feu rouge éventuel).",p:"Les cônes peuvent être remplacés par des panneaux triangulaires blancs bordés de rouge ou de vert.",r:'Règl. app. 8, IV.A.1'},
+ {k:'obsRB',x:306,y:-4350,lamp:'FlR',t:'Balise à bandes rouges et blanches',d:"Balise flottante d'obstacle, côté droit, voyant cylindre rouge.",p:"Ne confondez pas avec la limite de chenal (rouge uni).",r:'Règl. app. 8, IV.B.1'},
+ {k:'bif',x:194,y:-4640,lamp:'IsoW2',t:'Bifurcation du chenal',d:"Bouée à bandes horizontales rouges et vertes : le chenal se divise. Sans voyant supplémentaire, les deux branches sont possibles.",p:"Feu blanc isophase 2 s.",r:'Règl. app. 8, II.3'},
+ {k:'bifFixe',x:200,y:-4790,lamp:'IsoW2',t:'Balise fixe de bifurcation',d:"Sur la pointe du banc : cône rouge pointe en bas AU-DESSUS d'un cône vert pointe en haut.",p:"Choisissez une branche et suivez ses limites ; ne coupez jamais par-dessus le banc.",r:'Règl. app. 8, IV.A.3'},
+ {th:1,y:-5300,t:'Entrée de port',d:"Aux abords des entrées de ports, embouchures et dérivations, les protections de berges peuvent être signalées des deux côtés par les balises fixes (cônes).",p:"La navigation qui ENTRE dans le port est considérée comme MONTANTE.",r:'Règl. app. 8, IV.A.4'},
+ {k:'bifCyl',x:200,y:-5560,lamp:'QR',t:'Bifurcation avec voyant cylindre rouge',d:"Le voyant indique le côté où il est préférable de passer (chenal principal). Lisez-la comme une marque de côté DROIT : en descendant, laissez-la à tribord, donc passez à sa gauche.",p:"Avec voyant, le feu devient scintillant continu, rouge (cylindre) ou vert (cône).",r:'Règl. app. 8, II.3'},
+ {th:1,y:-6420,sea:1,t:'Vous débouchez sur un lac',d:"Sur les lacs et les voies navigables de grande largeur, le règlement prévoit un balisage supplémentaire : marques cardinales, danger isolé, eaux saines, et balisage particulier jaune.",p:"Ces marques sont dans le règlement des eaux intérieures (appendice 8, VI et VII) : elles sont au programme. Les régions A et B, l'épave et le « chenal préféré » de mer ne le sont pas.",r:'Règl. app. 8, VI et VII'},
+ {th:1,y:-7150,sea:1,t:'Lire une cardinale',d:"Le nom indique le quadrant où passer par rapport à la marque. Imaginez les cônes comme la pointe d'un crayon : la mine montre où est le NOIR.",p:"Ouest : cônes en « W » (pointe à pointe). Est : en « E »/losange (base à base). Il faut connaître le nord réel (compas).",r:'Règl. app. 8, VI.A.1 · cours p. 22-24'},
+ {k:'cardN',x:140,y:-7420,lamp:'N',sea:1,t:'Cardinale NORD',d:"Cônes pointes en haut, noir sur jaune. Le danger est au sud : passez au NORD.",p:"Le cours écrit « Nord : 12 scintillements » ; le règlement dit : scintillant CONTINU. Le 12 h n'est qu'un repère d'horloge.",r:'Règl. app. 8, VI.A.1'},
+ {k:'cardE',x:212,y:-7900,lamp:'E',sea:1,t:'Cardinale EST',d:"Cônes opposés par la base, noir / jaune / noir. Le danger est à l'ouest : passez à l'EST.",p:"Scintillements groupés par 3 = 3 h sur l'horloge.",r:'Règl. app. 8, VI.A.1'},
+ {k:'cardS',x:236,y:-8380,lamp:'S',sea:1,t:'Cardinale SUD',d:"Cônes pointes en bas, jaune sur noir. Le danger est au nord : passez au SUD.",p:"6 scintillements + un éclat long (au moins 2 s) : l'éclat long évite la confusion avec l'Est et l'Ouest.",r:'Règl. app. 8, VI.A.1'},
+ {k:'cardW',x:300,y:-8860,lamp:'Wst',sea:1,t:'Cardinale OUEST',d:"Cônes opposés par la pointe, jaune / noir / jaune. Le danger est à l'est : passez à l'OUEST.",p:"Piège du cours (p. 25) : cap au sud, cônes pointe à pointe devant vous. L'ouest est à votre DROITE : passez à droite de la marque, donc laissez-la à BÂBORD. Le cours dit « à tribord » : c'est faux, vous iriez du côté du danger.",r:'Règl. app. 8, VI.A.1 · cours p. 25'},
+ {k:'danger',x:130,y:-9260,lamp:'Fl2',sea:1,t:'Danger isolé',d:"Noir à bande(s) rouge(s), deux sphères noires. Posée sur un petit danger entouré d'eau saine.",p:"Passez au large, d'un côté ou de l'autre. Feu blanc à 2 éclats.",r:'Règl. app. 8, VI.A.2'},
+ {k:'speciale',x:300,y:-9620,lamp:'FlY',sea:1,t:'Balisage particulier (jaune)',d:"Jaune, voyant en croix de Saint-André jaune. Signale une zone : navigation interdite, dragage, ancrage, ski nautique, grande vitesse, câbles…",p:"Passez-la du MÊME CÔTÉ qu'un balisage normal. Feu jaune à éclats (jamais groupés par 2).",r:'Règl. app. 8, VII · cours p. 22'},
+ {k:'saines',x:200,y:-10380,lamp:'LFl',sea:1,t:'Eaux saines',d:"Bandes verticales rouges et blanches, une sphère rouge. Axe ou milieu de chenal : l'eau est saine tout autour.",p:"Feu blanc : isophase, occultations, un éclat long toutes les 10 s, ou « A » en morse.",r:'Règl. app. 8, VI.B'},
+];
+const INTRO={t:'Descente de la rivière jusqu’au lac',d:"Vous êtes un bateau avalant. Le bateau s'arrête 10 secondes à chaque balise et à chaque rappel théorique. Le petit voyant en haut à gauche montre le feu de la balise la nuit.",p:'',r:''};
+const END={t:'Fin du parcours',d:"Vous avez vu le balisage des eaux intérieures : marques de chenal, panneaux de rive, traversées, obstacles, bifurcations, puis le balisage des lacs (cardinales, danger isolé, balisage particulier, eaux saines).",p:"En remontant (montant), la rivière se lit à l'envers : vert à tribord, rouge à bâbord.",r:''};
+
+/* monde */
+const world=document.getElementById('world'); let h='';
+h+=`<rect x="-60" y="-11200" width="520" height="11500" fill="#8FC1E3"/><rect x="-60" y="-11200" width="520" height="4900" fill="#6FA6D2"/>`;
+h+=`<path d="M0 300 L0 -6300 L58 -6300 L58 300 Z" fill="#9CC46A"/><path d="M342 300 L342 -6300 L400 -6300 L400 300 Z" fill="#9CC46A"/>`;
+h+=`<path d="M0 -6300 L58 -6300 Q40 -6420 0 -6480 Z" fill="#9CC46A"/><path d="M400 -6300 L342 -6300 Q360 -6420 400 -6480 Z" fill="#9CC46A"/>`;
+h+=`<line x1="58" y1="300" x2="58" y2="-6300" stroke="#6E9A45" stroke-width="2"/><line x1="342" y1="300" x2="342" y2="-6300" stroke="#6E9A45" stroke-width="2"/>`;
+for(let y=200;y>-11000;y-=170){h+=`<path d="M${110+((-y/170)%4)*45} ${y} q12 -6 24 0" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>`;}
+h+=`<ellipse cx="200" cy="-4990" rx="46" ry="200" fill="#B9C98A" stroke="#8A9A5A"/><text x="200" y="-4990" text-anchor="middle" font-family="Arial" font-size="12" fill="#4A5A2A">banc</text>`;
+h+=`<ellipse cx="226" cy="-5930" rx="40" ry="190" fill="#B9C98A" stroke="#8A9A5A"/><text x="226" y="-5930" text-anchor="middle" font-family="Arial" font-size="12" fill="#4A5A2A">banc</text>`;
+h+=rock(140,-7330)+rock(150,-7900)+rock(236,-8470)+rock(360,-8860)+`<circle cx="130" cy="-9256" r="12" fill="#5B5B55" opacity=".5"/>`;
+S.forEach((s,i)=>{ if(!s.k) return; const sc=/^epi/.test(s.k)?1:1.55; h+=`<g class="mark" id="m${i}"><g transform="translate(${s.x} ${s.y}) scale(${sc}) translate(${-s.x} ${-s.y})">${D[s.k](s.x,s.y)}</g></g>`; });
+h+=`<g id="boat"><path d="M0 -20 C7 -12 9 -2 8 14 L-8 14 C-9 -2 -7 -12 0 -20 Z" fill="#F08A24" stroke="#7A3E06" stroke-width="1.5"/><rect x="-4" y="-2" width="8" height="8" rx="1.5" fill="#FFF6E8"/></g>`;
+world.innerHTML=h; const boat=document.getElementById('boat');
+
+const segs=[]; let total=0;
+for(let i=0;i<PATH.length-1;i++){const [x1,y1]=PATH[i],[x2,y2]=PATH[i+1];const L=Math.hypot(x2-x1,y2-y1);segs.push({x1,y1,x2,y2,L,s:total});total+=L;}
+function at(s){s=Math.max(0,Math.min(total,s));for(const g of segs){if(s<=g.s+g.L){const f=(s-g.s)/g.L;return {x:g.x1+(g.x2-g.x1)*f,y:g.y1+(g.y2-g.y1)*f,a:Math.atan2(g.x2-g.x1,-(g.y2-g.y1))*180/Math.PI};}}const g=segs[segs.length-1];return {x:g.x2,y:g.y2,a:0};}
+function sAtY(yt){for(let s=0;s<=total;s+=2){if(at(s).y<=yt) return s;}return total;}
+S.forEach(st=>st.s=sAtY(st.k?st.y+130:st.y));
+
+const $=id=>document.getElementById(id);
+let s=0, mode='intro', timer=READ, idx=-1, paused=false, last=null, lampKey=null, lampT=0;
+function setLamp(k){ lampKey=k||null; lampT=0; $('lamp').hidden=!lampKey; if(lampKey) $('lampTxt').textContent='Nuit : '+RH[lampKey].l; }
+function lampTick(dt){ if(!lampKey) return; const seq=RH[lampKey].s; const per=seq.reduce((a,b)=>a+b[0],0); lampT=(lampT+dt)%per; let t=lampT, col=null; for(const [d,c] of seq){ if(t<d){col=c;break;} t-=d; }
+  const dot=$('lampDot'); dot.style.background=col||'#2a2f36'; dot.style.boxShadow=col?`0 0 12px ${col}`:'none'; }
+function render(){ const p=at(s); boat.setAttribute('transform',`translate(${p.x} ${p.y}) rotate(${p.a})`); world.setAttribute('transform',`translate(0 ${BOAT_SCREEN_Y-p.y})`);
+  const sea=p.y<-6350; $('hudL').textContent=sea?'Lac':'Rive gauche'; $('hudR').textContent=sea?'Lac':'Rive droite'; $('flow').textContent=sea?'↑ vous traversez le lac':'↑ sens du courant · vous descendez (avalant)';
+  S.forEach((st,i)=>{ if(!st.k) return; const el=$('m'+i); el.classList.toggle('on',p.y-st.y<520); el.classList.toggle('cur',i===idx&&mode==='read'); }); }
+function show(c,label){ $('step').textContent=label; $('ttl').textContent=c.t; $('txt').textContent=c.d; $('trap').hidden=!c.p; $('trap').textContent=c.p?('À retenir : '+c.p):''; $('ref').textContent=c.r||''; }
+function startRead(i){ idx=i; mode='read'; timer=READ; const st=S[i]; const nb=S.filter(x=>x.k).length; const kn=S.slice(0,i+1).filter(x=>x.k).length;
+  show(st, st.k?`Balise ${kn} / ${nb}`:'Rappel théorique'); setLamp(st.lamp); }
+function nextIdx(){ return S.findIndex(st=>st.s>s+0.5); }
+function tick(t){ if(last===null) last=t; const dt=Math.min(.1,(t-last)/1000); last=t;
+  if(!paused){ if(mode==='intro'||mode==='read'){ timer-=dt; if(timer<=0){ mode='move'; } }
+    else if(mode==='move'){ const n=nextIdx(); const target=n>=0?S[n].s:total; s=Math.min(target,s+SPEED*dt); if(s>=target-.01){ if(n>=0) startRead(n); else { mode='end'; show(END,'Fin'); setLamp(null); } } } }
+  lampTick(dt);
+  const sh=(mode==='intro'||mode==='read'); $('count').textContent=sh?`${Math.max(0,Math.ceil(timer))} s`:(mode==='end'?'':'en route');
+  $('prog').style.width=sh?`${(1-Math.max(0,timer)/READ)*100}%`:(mode==='end'?'100%':'0%'); render(); requestAnimationFrame(tick); }
+$('bPlay').onclick=()=>{ paused=!paused; $('bPlay').textContent=paused?'Reprendre':'Pause'; };
+$('bNext').onclick=()=>{ if(mode==='intro'||mode==='read') timer=0; else if(mode==='move'){ const n=nextIdx(); if(n>=0){ s=S[n].s; startRead(n); } } };
+$('bPrev').onclick=()=>{ const cur=(mode==='read')?idx:(mode==='end'?S.length:nextIdx()); const p=Math.max(0,(cur<0?S.length:cur)-1); s=S[p].s; startRead(p); };
+$('bRestart').onclick=()=>{ s=0; idx=-1; mode='intro'; timer=READ; show(INTRO,'Départ'); setLamp(null); };
+show(INTRO,'Départ'); render(); requestAnimationFrame(tick);
+})();
+</script>
