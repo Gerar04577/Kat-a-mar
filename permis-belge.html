@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v12 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc</div>
+  <div class="ver">SOMMAIRE · v13 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -855,6 +855,28 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     }).join("");
   }
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------ bouton « Retour »
+     Un lien ordinaire rechargeait la page précédente comme une page neuve :
+     le sommaire revenait tout fermé, et la recherche OneDrive repartait.
+     Quand on vient justement de la page visée, on fait un vrai retour
+     arrière : le navigateur réaffiche souvent la page telle qu'on l'a
+     laissée. Sinon, le lien fonctionne comme avant. */
+  (function(){
+    var retour = document.querySelector(".kam-bar a[href]");
+    if(!retour) return;
+    retour.addEventListener("click", function(ev){
+      try{
+        if(!document.referrer || history.length < 2) return;
+        var cible = new URL(retour.getAttribute("href"), location.href);
+        var venu = new URL(document.referrer);
+        if(venu.origin === cible.origin && venu.pathname === cible.pathname){
+          ev.preventDefault();
+          history.back();
+        }
+      }catch(e){}
+    });
+  })();
 
   /* ------------------------------------------------------- taille du texte */
   var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
@@ -1230,18 +1252,31 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   "use strict";
 
   /* ------------------------------------------------ ouvrir / fermer un groupe */
-  document.querySelectorAll("[data-groupe]").forEach(function(b){
+  /* Le sommaire se souvient, pour la session, des groupes ouverts et de la
+     position dans la page : au retour d'un cours ou d'un QCM, on le retrouve
+     tel qu'on l'a laissé. */
+  var MEM = "kam-sommaire-etat";
+  function memLire(){ try{ return JSON.parse(sessionStorage.getItem(MEM) || "null") || {}; }catch(e){ return {}; } }
+  function memEcrire(m){ try{ sessionStorage.setItem(MEM, JSON.stringify(m)); }catch(e){} }
+  function ouvrirGroupe(b, cible, ouvrir){
+    cible.hidden = !ouvrir;
+    b.setAttribute("aria-expanded", ouvrir ? "true" : "false");
+    if(ouvrir && b.dataset.groupe === "officiel"){ locPreparer(); odPreparer(false); }
+  }
+  var boutonsGroupe = Array.prototype.slice.call(document.querySelectorAll("[data-groupe]"));
+  boutonsGroupe.forEach(function(b){
     var cible = document.getElementById("groupe-" + b.dataset.groupe);
     b.setAttribute("aria-expanded", "false");
     b.setAttribute("aria-controls", "groupe-" + b.dataset.groupe);
     b.addEventListener("click", function(){
       if(!cible) return;
-      var ouvrir = cible.hidden;
-      cible.hidden = !ouvrir;
-      b.setAttribute("aria-expanded", ouvrir ? "true" : "false");
-      if(ouvrir && b.dataset.groupe === "officiel"){ locPreparer(); odPreparer(false); }
+      ouvrirGroupe(b, cible, cible.hidden);
+      var m = memLire(); m.ouverts = boutonsGroupe.filter(function(x){
+        var c = document.getElementById("groupe-" + x.dataset.groupe); return c && !c.hidden; }).map(function(x){ return x.dataset.groupe; });
+      memEcrire(m);
     });
   });
+  window.addEventListener("pagehide", function(){ var m = memLire(); m.y = window.scrollY; memEcrire(m); });
 
   /* ------------------------------------------------ OneDrive (Microsoft Graph) */
   var OD_API = "https://graph.microsoft.com/v1.0";
@@ -1337,9 +1372,27 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     return null;
   }
 
+  /* Les adresses signées des tomes sont gardées pour la session, le temps de
+     leur validité : rouvrir le groupe ne relance pas la recherche OneDrive. */
+  var OD_MEM = "kam-od-liens";
+  function odMemLire(){
+    try{
+      var m = JSON.parse(sessionStorage.getItem(OD_MEM) || "null");
+      return (m && m.t && Date.now() - m.t < OD_VALIDITE && m.liens) ? m : null;
+    }catch(e){ return null; }
+  }
+  function odMemEcrire(liens){ try{ sessionStorage.setItem(OD_MEM, JSON.stringify({ t: Date.now(), liens: liens })); }catch(e){} }
+
   async function odPreparer(force){
     if(!tomes.length) return;
     if(!force && preparee && Date.now() - preparee < OD_VALIDITE) return;
+    var memo = !force && odMemLire();
+    if(memo && tomes.every(function(a){ return memo.liens[a.dataset.tome]; })){
+      tomes.forEach(function(a){ odPret(a, memo.liens[a.dataset.tome]); });
+      preparee = memo.t;
+      odMessage("");
+      return;
+    }
     if(preparation) return preparation;
     if(!odConnecte()){
       tomes.forEach(function(a){ odBloquer(a, "Connexion"); });
@@ -1360,7 +1413,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
           odMessage("Le dossier « Cours officiels » est introuvable dans Kat-A-Mar sur OneDrive.");
           return;
         }
-        var manquants = 0;
+        var manquants = 0, liens = {};
         for(var i = 0; i < tomes.length; i++){
           var a = tomes[i], nom = a.dataset.tome.toUpperCase();
           var f = r.fichiers.find(function(x){ return x.file && (x.name || "").toUpperCase() === nom; });
@@ -1370,9 +1423,10 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
             var det = await odGraph(r.disque + "/items/" + f.id);
             d = det && det["@microsoft.graph.downloadUrl"];
           }
-          if(d) odPret(a, d); else { odBloquer(a, "Introuvable"); manquants++; }
+          if(d){ odPret(a, d); liens[a.dataset.tome] = d; } else { odBloquer(a, "Introuvable"); manquants++; }
         }
         preparee = Date.now();
+        if(!manquants) odMemEcrire(liens);
         odMessage(manquants ? manquants + " tome(s) introuvable(s) dans OneDrive › Kat-A-Mar › Cours officiels." : "");
       }catch(e){
         var connexion = /connexion/.test(e.message);
@@ -1449,6 +1503,16 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       });
     });
   });
+
+  /* au chargement : rouvrir les groupes et revenir à la même place */
+  (function(){
+    var m = memLire();
+    (m.ouverts || []).forEach(function(g){
+      var b = document.querySelector('[data-groupe="' + g + '"]'), c = document.getElementById("groupe-" + g);
+      if(b && c) ouvrirGroupe(b, c, true);
+    });
+    if(m.y) requestAnimationFrame(function(){ window.scrollTo(0, m.y); });
+  })();
 
   window.kamOneDriveCours = { preparer: odPreparer, local: locPreparer };   /* pour le banc d'essai */
 })();

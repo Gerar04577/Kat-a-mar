@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v6 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
+  <div class="ver">QCM FLUVIAL · v7 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -698,6 +698,28 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     }).join("");
   }
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------ bouton « Retour »
+     Un lien ordinaire rechargeait la page précédente comme une page neuve :
+     le sommaire revenait tout fermé, et la recherche OneDrive repartait.
+     Quand on vient justement de la page visée, on fait un vrai retour
+     arrière : le navigateur réaffiche souvent la page telle qu'on l'a
+     laissée. Sinon, le lien fonctionne comme avant. */
+  (function(){
+    var retour = document.querySelector(".kam-bar a[href]");
+    if(!retour) return;
+    retour.addEventListener("click", function(ev){
+      try{
+        if(!document.referrer || history.length < 2) return;
+        var cible = new URL(retour.getAttribute("href"), location.href);
+        var venu = new URL(document.referrer);
+        if(venu.origin === cible.origin && venu.pathname === cible.pathname){
+          ev.preventDefault();
+          history.back();
+        }
+      }catch(e){}
+    });
+  })();
 
   /* ------------------------------------------------------- taille du texte */
   var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;

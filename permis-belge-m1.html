@@ -574,13 +574,79 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .od-etat:empty{ display:none; }
 .od-etat a{ color:var(--navy); font-weight:700; }
 
+/* ===================== moteur des QCM (pages QCM des cours) ===================== */
+.qz-mini{ display:block; height:5px; background:var(--sea); border-radius:3px; margin-top:6px; overflow:hidden; }
+.qz-mini span{ display:block; height:100%; background:var(--green); }
+.qz-tete{ position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0 10px; }
+.qz-titre{ font-family:var(--display); font-weight:700; font-size:1.1rem; }
+.qz-compteur{ font-family:var(--mono); font-size:.9rem; margin:4px 0 6px; }
+.qz-ok{ color:var(--green); font-weight:700; } .qz-ko{ color:var(--red); font-weight:700; }
+.qz-barre{ height:10px; background:var(--sea); border-radius:6px; overflow:hidden; }
+.qz-barre span{ display:block; height:100%; background:var(--navy); transition:width .3s; }
+.qz-carte{ background:var(--paper); border:2px solid var(--line); border-radius:14px; padding:14px 16px; margin:10px 0; display:flex; flex-direction:column; gap:10px; }
+.qz-num{ margin:0; font-family:var(--mono); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.qz-q{ margin:0; font-weight:700; font-size:1.08rem; max-width:none; }
+.qz-dessin{ display:flex; justify-content:center; }
+.qz-svg{ width:100%; max-width:340px; height:auto; border-radius:10px; border:1px solid var(--line); }
+.qz-choix{ display:flex; flex-direction:column; gap:8px; }
+.qz-opt{ box-sizing:border-box; width:100%; display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; text-align:left;
+  font:inherit; color:var(--ink); background:var(--bg); border:2px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer; }
+.qz-opt .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qz-opt .qz-t{ flex:1 1 0; min-width:0; }
+.qz-opt.bonne{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qz-opt.fausse{ border-color:var(--red); background:color-mix(in srgb, var(--red) 12%, var(--paper)); }
+.qz-opt:disabled{ cursor:default; opacity:1; color:var(--ink); }
+.qz-e{ flex:1 0 100%; font-size:.92rem; color:var(--muted); }
+.qz-verdict{ margin:0; font-weight:800; } .qz-verdict.ok{ color:var(--green); } .qz-verdict.ko{ color:var(--red); }
+.qz-ex{ margin:0; max-width:none; }
+.qz-piege{ border-left:4px solid var(--amber); background:color-mix(in srgb, var(--amber) 12%, var(--paper)); padding:10px 12px; border-radius:0 10px 10px 0; }
+.qz-piege p{ margin:4px 0 0; max-width:none; }
+.qz-ref{ margin:0; font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.qz-tarep{ margin:0; color:var(--red); max-width:none; }
+.qz-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 20px; }
+.qz-btn{ font:inherit; font-weight:700; padding:12px 16px; border-radius:12px; border:2px solid var(--line); background:var(--paper); color:var(--ink); cursor:pointer; }
+.qz-btn.pri{ background:var(--navy); color:var(--paper); border-color:var(--navy); flex:1 1 auto; }
+.qz-resultat.ok{ color:var(--green); font-size:1.3rem; } .qz-resultat.ko{ color:var(--red); font-size:1.3rem; }
+.menu-item.qz-cat[disabled]{ cursor:default; }
+/* QCM : tableau des parties (3 colonnes courtes) */
+main table.qz-regle-tab th:first-child, main table.qz-regle-tab td:first-child{ width:55%; overflow-wrap:normal; }
+main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:first-child){ text-align:center; }
+/* sommaire : nom du cours, puis ses entrées « Cours » et « QCM » en retrait */
+.cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
+.cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
+.menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+/* QCM : bandeau de reprise, choix fait à l'examen */
+.qz-reprise{ margin:0 0 10px; padding:10px 12px; border-radius:10px; background:var(--sea); border:1px solid var(--navy); font-weight:700; }
+.qz-opt.choisie{ border-color:var(--navy); border-width:2px; background:var(--sea); }
+/* QCM : planche de dessins numérotés */
+.qz-planche{ display:grid; grid-template-columns:repeat(auto-fit, minmax(90px, 1fr)); gap:8px; }
+.qz-planche figure{ margin:0; text-align:center; }
+.qz-planche figcaption{ font-family:var(--mono); font-weight:700; margin-top:4px; }
+/* QCM : un panneau sur fond neutre, de taille raisonnable */
+.qz-panfond{ background:#e9eef2; border-radius:10px; padding:12px; display:flex; justify-content:center; }
+.qz-svg.qz-pan{ width:150px; max-width:100%; height:auto; border:none; border-radius:0; }
+.qz-planche .qz-svg.qz-pan{ max-width:100%; }
+/* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
+   l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
+   de la question (défaut des v1 et v2 du QCM fluvial). */
+#qz [hidden], #qz-regle[hidden], #rappel[hidden]{ display:none !important; }
+/* QCM balises : rappel théorique */
+.rap{ border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin:10px 0; background:var(--paper); }
+.rap summary{ font-family:var(--display); font-weight:700; font-size:1.1rem; cursor:pointer; }
+.rap-grille{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; margin:10px 0; }
+.rap-grille.un{ grid-template-columns:1fr; }
+.rap-grille figure{ margin:0; }
+.rap-grille figcaption{ font-size:.9rem; margin-top:4px; }
+.rap-img .qz-svg{ max-width:100%; }
+.rap-img .qz-panfond{ padding:6px; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v7 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v8 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -4687,6 +4753,28 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
     }).join("");
   }
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------ bouton « Retour »
+     Un lien ordinaire rechargeait la page précédente comme une page neuve :
+     le sommaire revenait tout fermé, et la recherche OneDrive repartait.
+     Quand on vient justement de la page visée, on fait un vrai retour
+     arrière : le navigateur réaffiche souvent la page telle qu'on l'a
+     laissée. Sinon, le lien fonctionne comme avant. */
+  (function(){
+    var retour = document.querySelector(".kam-bar a[href]");
+    if(!retour) return;
+    retour.addEventListener("click", function(ev){
+      try{
+        if(!document.referrer || history.length < 2) return;
+        var cible = new URL(retour.getAttribute("href"), location.href);
+        var venu = new URL(document.referrer);
+        if(venu.origin === cible.origin && venu.pathname === cible.pathname){
+          ev.preventDefault();
+          history.back();
+        }
+      }catch(e){}
+    });
+  })();
 
   /* ------------------------------------------------------- taille du texte */
   var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;

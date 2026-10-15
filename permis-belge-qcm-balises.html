@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Balises et panneaux</span></div>
 <main>
 <header>
-  <div class="ver">QCM BALISES ET PANNEAUX · v1 · fluvial · 50 balises · 50 panneaux et feux des ouvrages</div>
+  <div class="ver">QCM BALISES ET PANNEAUX · v2 · fluvial · 50 balises · 50 panneaux et feux des ouvrages</div>
   <h1>QCM spécial balises et panneaux</h1>
   <p>Cent questions, toutes avec un dessin : 50 sur le balisage, 50 sur les panneaux et les feux des écluses et des ponts. Après chaque réponse : l'explication de chaque choix, la référence, et le <b>piège</b> quand tu te trompes. Commence par le rappel ci-dessous si tu veux revoir la théorie.</p>
 </header>
@@ -742,6 +742,28 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     }).join("");
   }
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------ bouton « Retour »
+     Un lien ordinaire rechargeait la page précédente comme une page neuve :
+     le sommaire revenait tout fermé, et la recherche OneDrive repartait.
+     Quand on vient justement de la page visée, on fait un vrai retour
+     arrière : le navigateur réaffiche souvent la page telle qu'on l'a
+     laissée. Sinon, le lien fonctionne comme avant. */
+  (function(){
+    var retour = document.querySelector(".kam-bar a[href]");
+    if(!retour) return;
+    retour.addEventListener("click", function(ev){
+      try{
+        if(!document.referrer || history.length < 2) return;
+        var cible = new URL(retour.getAttribute("href"), location.href);
+        var venu = new URL(document.referrer);
+        if(venu.origin === cible.origin && venu.pathname === cible.pathname){
+          ev.preventDefault();
+          history.back();
+        }
+      }catch(e){}
+    });
+  })();
 
   /* ------------------------------------------------------- taille du texte */
   var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
