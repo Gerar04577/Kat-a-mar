@@ -574,13 +574,70 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .od-etat:empty{ display:none; }
 .od-etat a{ color:var(--navy); font-weight:700; }
 
+/* ===================== moteur des QCM (pages QCM des cours) ===================== */
+.qz-mini{ display:block; height:5px; background:var(--sea); border-radius:3px; margin-top:6px; overflow:hidden; }
+.qz-mini span{ display:block; height:100%; background:var(--green); }
+.qz-tete{ position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0 10px; }
+.qz-titre{ font-family:var(--display); font-weight:700; font-size:1.1rem; }
+.qz-compteur{ font-family:var(--mono); font-size:.9rem; margin:4px 0 6px; }
+.qz-ok{ color:var(--green); font-weight:700; } .qz-ko{ color:var(--red); font-weight:700; }
+.qz-barre{ height:10px; background:var(--sea); border-radius:6px; overflow:hidden; }
+.qz-barre span{ display:block; height:100%; background:var(--navy); transition:width .3s; }
+.qz-carte{ background:var(--paper); border:2px solid var(--line); border-radius:14px; padding:14px 16px; margin:10px 0; display:flex; flex-direction:column; gap:10px; }
+.qz-num{ margin:0; font-family:var(--mono); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.qz-q{ margin:0; font-weight:700; font-size:1.08rem; max-width:none; }
+.qz-dessin{ display:flex; justify-content:center; }
+.qz-svg{ width:100%; max-width:340px; height:auto; border-radius:10px; border:1px solid var(--line); }
+.qz-choix{ display:flex; flex-direction:column; gap:8px; }
+.qz-opt{ box-sizing:border-box; width:100%; display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; text-align:left;
+  font:inherit; color:var(--ink); background:var(--bg); border:2px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer; }
+.qz-opt .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qz-opt .qz-t{ flex:1 1 0; min-width:0; }
+.qz-opt.bonne{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qz-opt.fausse{ border-color:var(--red); background:color-mix(in srgb, var(--red) 12%, var(--paper)); }
+.qz-opt:disabled{ cursor:default; opacity:1; color:var(--ink); }
+.qz-e{ flex:1 0 100%; font-size:.92rem; color:var(--muted); }
+.qz-verdict{ margin:0; font-weight:800; } .qz-verdict.ok{ color:var(--green); } .qz-verdict.ko{ color:var(--red); }
+.qz-ex{ margin:0; max-width:none; }
+.qz-piege{ border-left:4px solid var(--amber); background:color-mix(in srgb, var(--amber) 12%, var(--paper)); padding:10px 12px; border-radius:0 10px 10px 0; }
+.qz-piege p{ margin:4px 0 0; max-width:none; }
+.qz-ref{ margin:0; font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.qz-tarep{ margin:0; color:var(--red); max-width:none; }
+.qz-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 20px; }
+.qz-btn{ font:inherit; font-weight:700; padding:12px 16px; border-radius:12px; border:2px solid var(--line); background:var(--paper); color:var(--ink); cursor:pointer; }
+.qz-btn.pri{ background:var(--navy); color:var(--paper); border-color:var(--navy); flex:1 1 auto; }
+.qz-resultat.ok{ color:var(--green); font-size:1.3rem; } .qz-resultat.ko{ color:var(--red); font-size:1.3rem; }
+.menu-item.qz-cat[disabled]{ cursor:default; }
+/* QCM : tableau des parties (3 colonnes courtes) */
+main table.qz-regle-tab th:first-child, main table.qz-regle-tab td:first-child{ width:55%; overflow-wrap:normal; }
+main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:first-child){ text-align:center; }
+/* sommaire : nom du cours, puis ses entrées « Cours » et « QCM » en retrait */
+.cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
+.cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
+.menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+/* QCM : bandeau de reprise, choix fait à l'examen */
+.qz-reprise{ margin:0 0 10px; padding:10px 12px; border-radius:10px; background:var(--sea); border:1px solid var(--navy); font-weight:700; }
+.qz-opt.choisie{ border-color:var(--navy); border-width:2px; background:var(--sea); }
+/* QCM : planche de dessins numérotés */
+.qz-planche{ display:grid; grid-template-columns:repeat(auto-fit, minmax(90px, 1fr)); gap:8px; }
+.qz-planche figure{ margin:0; text-align:center; }
+.qz-planche figcaption{ font-family:var(--mono); font-weight:700; margin-top:4px; }
+/* QCM : un panneau sur fond neutre, de taille raisonnable */
+.qz-panfond{ background:#e9eef2; border-radius:10px; padding:12px; display:flex; justify-content:center; }
+.qz-svg.qz-pan{ width:150px; max-width:100%; height:auto; border:none; border-radius:0; }
+.qz-planche .qz-svg.qz-pan{ max-width:100%; }
+/* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
+   l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
+   de la question (défaut des v1 et v2 du QCM fluvial). */
+#qz [hidden], #qz-regle[hidden]{ display:none !important; }
+
 </style>
 </head>
 <body>
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Erreurs du manuel</span></div>
 <main>
 <header>
-  <div class="ver">ERREURS DU MANUEL · v2 · module 1, chapitres 1 à 6</div>
+  <div class="ver">ERREURS DU MANUEL · v3 · module 1, chapitres 1 à 6, 9 à 11</div>
   <h1>Ce que le manuel dit, et ce que dit le règlement</h1>
   <p>Le cours suit ton manuel chapitre par chapitre, et il est vérifié sur le <b>texte officiel</b> : le <b>Règlement général de police pour la navigation sur les eaux intérieures</b> (arrêté royal du 24 septembre 2006), dans la version coordonnée que tu m'as fournie. Chaque fois que le manuel s'en écarte, l'écart est signalé dans le cours et repris ici.</p>
   <p class="why">Pour chaque point : ce que le manuel affirme, ce que dit le texte, l'article, s'il est <b>au programme de l'examen</b> (matière officielle du SPF Mobilité pour le brevet restreint), et <b>où</b> la règle s'applique — eaux intérieures ou mer.</p>
@@ -601,7 +658,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 </section>
 
 <section id="m1">
-  <h2>Module 1 — Fluvial : 16 points</h2>
+  <h2>Module 1 — Fluvial : 19 points</h2>
 
   <h3 id="m1-ch2">Chapitre 2 · Le balisage</h3>
   <div class="err">
@@ -722,6 +779,28 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
     <p class="tg"><span>Appendice 6, III et A</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
     <p class="ea"><a href="./permis-belge-m1.html#ch6">Voir dans le cours</a></p>
   </div>
+  <h3 id="m1-ch9">Chapitres 9 à 11 · RPNE, Meuse mitoyenne, canal de Bruxelles</h3>
+  <div class="err">
+    <p class="ek">17 · Imprécision</p>
+    <p class="em">Le manuel (Tome 1, p. 73) : « en passant sous les ponts et dans les écluses, un espace libre de 30 cm de chaque côté du bateau doit toujours être respecté ».</p>
+    <p class="er">L'arrêté de 1935 dit autre chose : aux écluses, le bateau doit être au moins <b>0,30 m plus court</b> et <b>0,20 m plus étroit</b> que le sas (tolérance de 0,10 m pour les écluses de 5,20 m ou moins) ; sous les ponts, les parties fixes restent <b>0,30 m sous la hauteur libre</b>. Il n'y a pas de « 30 cm de chaque côté ».</p>
+    <p class="tg"><span>AR 15/10/1935, art. 1 §2 et §3</span><span class="oui">Au programme</span><span>Eaux intérieures</span></p>
+    <p class="ea"><a href="./permis-belge-m1.html#ch1">Voir dans le cours</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">18 · Imprécision</p>
+    <p class="em">Le manuel (Tome 1, p. 75) : « la vitesse est limitée à 16 km/h près de la rive ».</p>
+    <p class="er">Le règlement de la Meuse mitoyenne limite la vitesse à <b>16 km/h par rapport à la rive</b> — c'est-à-dire la vitesse sur le fond — sur toute la Meuse mitoyenne, sauf dans les zones de navigation rapide. Dans ces zones, la vitesse reste interdite avant 10 h, après le coucher du soleil, par visibilité de moins de 150 m, près d'un événement, à moins de <b>20 m de la rive</b> et à moins de <b>50 m</b> d'une installation d'amarrage.</p>
+    <p class="tg"><span>Règlement de la Meuse mitoyenne, art. 6.33a et 6.33b</span><span class="oui">Au programme</span><span>Meuse mitoyenne</span></p>
+    <p class="ea"><a href="./permis-belge-qcm-fluvial.html">S'entraîner dans le QCM fluvial</a></p>
+  </div>
+  <div class="err">
+    <p class="ek">19 · Imprécision</p>
+    <p class="em">Le manuel (Tome 1, p. 77) : sur le canal de Bruxelles, « 18 km/h » pour un tirant d'eau de 1,50 m ou moins, 12 km/h au-delà.</p>
+    <p class="er">La réglementation flamande actuelle (Visuris, Zeekanaal Brussel-Schelde) donne <b>16 km/h</b> jusqu'à 1,50 m de tirant d'eau, <b>12 km/h</b> au-delà (jusqu'à 4 m) et <b>20 km/h</b> pour la plaisance. Seul le 12 km/h concorde. Le QCM n'interroge donc que ce chiffre-là ; si une question d'examen porte sur le 18 km/h, c'est celui du manuel.</p>
+    <p class="tg"><span>Règlement du canal de Bruxelles au Rupel, art. 11 · Visuris</span><span class="oui">Au programme</span><span>Canal de Bruxelles</span></p>
+    <p class="ea"><a href="./permis-belge-qcm-fluvial.html">S'entraîner dans le QCM fluvial</a></p>
+  </div>
 </section>
 
 <section id="sources">
@@ -729,6 +808,8 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
   <ul>
     <li><b>Règlement général de police pour la navigation sur les eaux intérieures</b>, arrêté royal du 24 septembre 2006, version coordonnée au 1<sup>er</sup> mai 2014 — la référence de l'examen. Les modifications de 2017 et 2022 ne touchent que l'AIS (art. 4.07).</li>
     <li><b>Matière d'examen du brevet de conduite restreint</b>, SPF Mobilité et Transports — elle dit quels articles sont au programme.</li>
+    <li><b>Règlement de police de la Meuse mitoyenne</b> (convention belgo-néerlandaise), art. 2.02a, 6.33a et 6.33b.</li>
+    <li><b>Visuris</b>, vitesses maximales sur les voies flamandes (Zeekanaal Brussel-Schelde).</li>
     <li><b>RIPAM</b> (règlement international pour prévenir les abordages en mer), pour les règles de mer — programme du brevet général.</li>
   </ul>
 </section>
