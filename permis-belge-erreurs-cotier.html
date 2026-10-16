@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Erreurs du manuel côtier</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+
+/* Layout: one airy column; each notion = definition, why, diagram, formula, worked examples, trap, exercise */
+:root{
+  --bg:#f2f5f6; --paper:#ffffff; --ink:#14263a; --muted:#566a7c; --line:#cfd9e0;
+  --sea:#e1eef6; --navy:#1d4e89; --red:#c0392b; --green:#1f7a3f; --amber:#a86400; --water:#9cc6ea; --land:#cfe3b0; --sun:#f6c453; --warm:#d1443a; --cold:#2f6fd0; --occl:#7a4fc2; --warmair:#f2b24a; --coldair:#7fb2e6; --cloud:#c9cdd1; --cloudd:#7c838a; --rain:#3b7ad8;
+  --display:"Zilla Slab",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --paper:#16212d; --ink:#e4ecf2; --muted:#9db0c0; --line:#2f4052;
+  --sea:#1a3245; --navy:#86b6ee; --red:#ff7f72; --green:#5fcb8d; --amber:#f2ad52; --water:#2c5b82; --land:#35502c; --sun:#e0a93a; --warm:#ff7a6e; --cold:#6aa6ff; --occl:#b796ff; --warmair:#b9792a; --coldair:#2f5f8f; --cloud:#59616a; --cloudd:#8a939c; --rain:#7fb0ff; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.7;padding:0 16px}
+main{max-width:680px;margin:0 auto;padding-block:32px 72px;display:flex;flex-direction:column;gap:56px}
+header{display:flex;flex-direction:column;gap:10px}
+header h1{font-family:var(--display);font-size:2.1rem;line-height:1.15;margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted)}
+.ver{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+section{display:flex;flex-direction:column;gap:22px;min-width:0}
+.kicker{margin:0;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+h2{font-family:var(--display);font-size:1.6rem;line-height:1.2;margin:-14px 0 0;text-wrap:balance;border-bottom:2px solid var(--line);padding-bottom:10px}
+h3{font-family:var(--display);font-size:1.15rem;margin:8px 0 -8px;color:var(--navy)}
+p{margin:0;max-width:62ch}
+ul,ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+.def{background:var(--sea);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.def .term{font-weight:700;color:var(--navy);font-size:1.05rem}
+.why{color:var(--muted)}
+.why b{color:var(--ink)}
+.formula{font-family:var(--mono);font-size:1.15rem;text-align:center;background:var(--paper);border:2px solid var(--navy);border-radius:10px;padding:14px 12px;max-width:none;font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.ctitle{font-weight:700;font-size:1.05rem}
+.given-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px}
+.given{gap:4px}
+.steps{list-style:decimal;gap:8px}
+.steps li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;border-bottom:1px dotted var(--line);padding-bottom:6px}
+.steps .what{min-width:0}
+.steps .res{font-family:var(--mono);font-weight:500;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.result{font-weight:700;color:var(--green);margin-top:4px}
+.trap{border-left:4px solid var(--red);padding:12px 16px;background:var(--paper);border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:4px}
+.trap-h{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);font-weight:700}
+details.ex{border:2px dashed var(--navy);border-radius:12px;padding:14px 18px;display:block}
+details.ex summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details.ex[open] summary{margin-bottom:10px}
+details.ex[open]{display:flex;flex-direction:column;gap:10px}
+.fig{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px}
+svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+.t-m{fill:var(--muted)} .t-n{fill:var(--navy)} .t-r{fill:var(--red)} .t-g{fill:var(--green)} .t-a{fill:var(--amber)}
+.s-ink{stroke:var(--ink)} .s-n{stroke:var(--navy)} .s-r{stroke:var(--red)} .s-g{stroke:var(--green)} .s-a{stroke:var(--amber)} .s-l{stroke:var(--line)}
+.f-sea{fill:var(--sea)} .f-paper{fill:var(--paper)} .f-n{fill:var(--navy)} .f-r{fill:var(--red)} .f-g{fill:var(--green)} .f-a{fill:var(--amber)} .f-ink{fill:var(--ink)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td:first-child{font-family:var(--mono);font-weight:500;color:var(--navy);white-space:nowrap}
+.plus{color:var(--green);font-weight:700} .minus{color:var(--red);font-weight:700}
+nav.toc ol{gap:6px}
+nav.toc a{color:var(--navy)}
+.memo{font-family:var(--mono);font-size:.95rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;white-space:pre;overflow-x:auto;line-height:1.9}
+
+.sym{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.sym p{max-width:none}
+.sym b{font-family:var(--mono);color:var(--navy);display:inline-block;min-width:3.2em}
+.note{font-size:.85rem;color:var(--muted)}
+td.hl{background:var(--amber);color:var(--paper);font-weight:700;border-radius:4px}
+
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;margin:0 -16px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px}
+.kam-bar span{font-weight:700;flex:1;text-align:center;padding-right:70px}
+.anim.live .ctl label{display:flex;align-items:center;gap:8px;flex:1 1 100%;min-width:0;font-size:.9rem;color:var(--muted);font-weight:700}
+.anim.live .ctl label input{flex:1 1 0;width:0;min-width:60px;accent-color:var(--navy)}
+.anim.live .ctl label output{font-family:var(--mono);font-size:.8rem;color:var(--navy);flex:0 0 auto;text-align:right;white-space:nowrap}
+.anim.live .ctl button.on{background:var(--sea)}
+figure.anim{margin:0;min-width:0}
+.anim .ctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--navy)}
+.anim .ctl .tm{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.opt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt button{font:inherit;font-weight:700;font-size:.92rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:7px 10px;cursor:pointer;min-width:0}
+.opt button.on{background:var(--sea)}
+.opt button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cards div{background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0}
+.cards .l{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.cards .v{font-size:.95rem;font-weight:700;line-height:1.35}
+.keep{border:2px solid var(--green);border-radius:10px;padding:12px 14px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.keep .kt{font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--green);font-weight:700;margin:0}
+.lead{color:var(--muted)}
+.ok{color:var(--green);font-weight:700} .ko{color:var(--red);font-weight:700}
+.mto-sub{display:flex;flex-direction:column;gap:18px;min-width:0}
+.mto-sub td:first-child,.cmp td:first-child,.symt td:first-child{font-family:var(--body);font-weight:700;white-space:normal}
+.mto .memo{font-size:.85rem}
+svg.sy{width:40px;height:30px;margin:0}
+.qcm .opts{list-style:none;padding-left:0}
+.qcm .rep{padding-left:1.1em}
+.qcm .rep li.ok>b:first-child{color:var(--green)} .qcm .rep li.ko>b:first-child{color:var(--red)}
+.qcm .rep li{color:var(--ink);font-weight:400}
+.tp{gap:8px}.tp .tpt{font-weight:700;font-size:1.05rem}
+.tpx{background:var(--sea);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.tpx p{max-width:none}.tko span,.tok span{display:inline-block;font-weight:700;margin-right:6px}
+.tko span{color:var(--red)}.tok span{color:var(--green)}.tpk{color:var(--navy)}
+@media (max-width:560px){.mto .tw table{font-size:.82rem}.mto .tw td,.mto .tw th{padding:7px 4px;-webkit-hyphens:auto;hyphens:auto}}
+
+
+.anim{background:var(--paper);border:2px solid var(--navy);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:10px}
+.anim .atitle{font-weight:700;color:var(--navy);font-size:.95rem}
+.anim svg{max-width:560px}
+.anim .cap{min-height:4.6em;background:var(--sea);border-radius:8px;padding:10px 12px;font-size:.98rem;line-height:1.5;max-width:none}
+.anim .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.anim .ctl button{font:inherit;font-weight:700;font-size:.95rem;border-radius:10px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:8px 14px;cursor:pointer}
+.anim .ctl button.pri{background:var(--navy);color:var(--paper)}
+.anim .ctl button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.anim .ctl .cnt{margin-left:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.tool-prot path.body{fill:var(--paper);fill-opacity:.82;stroke:var(--ink);stroke-width:1.5}
+.tool-prot line{stroke:var(--ink)}
+.tool-prot text{font-size:9px;fill:var(--ink)}
+.tool-comp line{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.tool-comp circle{fill:var(--amber)}
+
+
+.rappel{background:var(--paper);border:2px solid var(--amber);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.rappel .rt{font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.rappel p{font-family:var(--mono);font-size:.95rem;max-width:none;line-height:1.6}
+.etapes{display:flex;flex-direction:column;gap:14px}
+.etape{border-left:4px solid var(--navy);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
+.etape .et{font-weight:700;color:var(--navy)}
+.etape .ef{font-family:var(--mono);font-size:.92rem;color:var(--muted)}
+.etape .ec{font-family:var(--mono);font-size:1rem;font-weight:500}
+.etape .es{font-size:.95rem}
+
+</style>
+<style>
+/* ===== AJOUTS PROPRES AU PERMIS BELGE =====
+   Reprend les jetons du permis hauturier ; n'ajoute que ce qui lui manque :
+   les sous-menus, l'encadré « ce que dit le règlement », le QCM interactif,
+   la recherche à occurrences et le réglage de taille. */
+:root{
+  --ech:1;                 /* multiplicateur de taille, boutons A / A */
+  --h-kam:56px;            /* hauteur réelle de la barre « Retour », mesurée */
+  --surl:#ffe2a0; --surl-actif:#ffd0a3; --surl-trait:#e8690b;
+  font-size:calc(16px * var(--ech));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442;
+}}
+:root[data-theme="dark"]{ --surl:#6b5212; --surl-actif:#7a3f0b; --surl-trait:#ff9442; }
+body{ font-size:calc(18px * var(--ech)); }
+
+/* ---- sous-menus du sommaire ---- */
+.menus{ display:flex; flex-direction:column; gap:12px; }
+.menu-item{
+  /* sans box-sizing, width:100% + 18px de padding + 2px de bordure débordaient
+     de 40 px : la page du sommaire glissait latéralement sur l'iPhone. */
+  box-sizing:border-box;
+  display:flex; align-items:center; gap:14px; text-align:left;
+  background:var(--paper); border:2px solid var(--line); border-radius:14px;
+  padding:16px 18px; font:inherit; color:var(--ink); cursor:pointer;
+  text-decoration:none; width:100%;
+}
+.menu-item:active{ background:var(--sea); }
+.menu-item.pret{ border-color:var(--navy); }
+/* Un module pas encore écrit ne doit JAMAIS ressembler à un module prêt :
+   bordure en pointillé, teinte éteinte, et une étiquette qui le dit en toutes
+   lettres. Il répond quand même à l'appui, en expliquant ce qu'il contiendra —
+   une tuile muette se lit comme une panne. */
+.menu-item.avenir{
+  border-style:dashed; background:transparent; color:var(--muted);
+}
+.menu-item.avenir .t{ color:var(--muted); }
+.menu-item.avenir .num{ background:var(--bg); color:var(--muted); }
+.menu-item.avenir .etat{ color:var(--amber); font-weight:700; }
+.menu-item.avenir[aria-expanded="true"]{ border-style:solid; border-color:var(--amber); }
+.bientot{
+  margin:-6px 0 2px; padding:12px 16px; font-size:.95rem; color:var(--ink);
+  background:var(--sea); border-radius:12px; max-width:none;
+}
+.menu-item .num{
+  font-family:var(--mono); font-weight:700; font-size:1.3rem; color:var(--navy);
+  background:var(--sea); border-radius:11px; padding:10px 13px; flex:0 0 auto;
+}
+.menu-item .txt{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.menu-item .t{ font-family:var(--display); font-weight:700; font-size:1.2rem; }
+.menu-item .s{ color:var(--muted); font-size:.92rem; }
+.menu-item .etat{
+  margin-left:auto; flex:0 0 auto; font-family:var(--mono); font-size:.72rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.menu-item.pret .etat{ color:var(--green); }
+
+/* ---- sommaire interne d'un module ---- */
+.chapitres{ display:flex; flex-direction:column; gap:6px; list-style:none; padding-left:0; }
+.chapitres li{ display:flex; gap:10px; align-items:baseline; }
+.chapitres .n{ font-family:var(--mono); color:var(--navy); font-weight:700; flex:0 0 auto; }
+.chapitres a{ color:var(--ink); }
+.chapitres .avenir{ color:var(--muted); }
+
+/* ---- encadré « ce que dit le règlement » ---- */
+.regl{
+  border-left:4px solid var(--red); background:var(--paper);
+  border-radius:0 10px 10px 0; padding:14px 16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.regl .rh{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--red); font-weight:700;
+}
+.regl .art{ font-family:var(--mono); font-size:.85rem; color:var(--navy); }
+.regl p{ max-width:none; }
+
+/* ---- QCM interactif ---- */
+.qcm{
+  background:var(--paper); border:2px solid var(--navy); border-radius:12px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:12px;
+}
+.qcm .qn{
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--navy);
+}
+.qcm .qt{ font-weight:700; font-size:1.05rem; max-width:none; }
+.qcm .choix{ display:flex; flex-direction:column; gap:8px; }
+.qcm .choix button{
+  font:inherit; text-align:left; background:var(--bg); color:var(--ink);
+  border:1.5px solid var(--line); border-radius:10px; padding:11px 14px;
+  cursor:pointer; display:flex; gap:10px; align-items:flex-start;
+}
+.qcm .choix button .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qcm .choix button:active{ background:var(--sea); }
+.qcm .choix button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+.qcm .choix button.juste{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qcm .choix button.faux{ border-color:var(--red); background:color-mix(in srgb, var(--red) 10%, var(--paper)); }
+.qcm .choix button[disabled]{ cursor:default; }
+.qcm .corr{ display:flex; flex-direction:column; gap:8px; }
+.qcm .corr .verdict{ font-weight:700; }
+.qcm .corr .verdict.ok{ color:var(--green); }
+.qcm .corr .verdict.ko{ color:var(--red); }
+.qcm .corr ul{ list-style:none; padding-left:0; gap:7px; }
+.qcm .corr li{ font-size:.95rem; }
+.qcm .corr li b{ font-family:var(--mono); }
+.qcm .corr li.ok b{ color:var(--green); }
+.qcm .corr li.ko b{ color:var(--red); }
+.qcm .cat{
+  font-family:var(--mono); font-size:.72rem; color:var(--muted);
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.score{
+  background:var(--sea); border-radius:12px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.score .big{ font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--navy); }
+.score .regle{ font-size:.88rem; color:var(--muted); }
+
+/* ---- barre de recherche (identique au permis hauturier) ---- */
+#kam-chercher{
+  position:sticky; top:var(--h-kam); z-index:40;
+  background:var(--bg); border-bottom:1.5px solid var(--line);
+  margin:-28px -16px 0; padding:12px 16px 10px;
+}
+#kam-chercher .ligne{ display:flex; gap:10px; align-items:stretch; max-width:680px; margin:0 auto; }
+#kam-chercher .boite{ position:relative; flex:1; min-width:0; }
+#kam-q{
+  width:100%; height:calc(56px * var(--ech));
+  font-family:var(--body); font-size:calc(19px * var(--ech)); font-weight:600;
+  color:var(--ink); background:var(--paper);
+  border:2px solid var(--line); border-radius:14px; padding:0 46px;
+}
+#kam-q::placeholder{ color:var(--muted); font-weight:400; }
+#kam-q:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px var(--sea); }
+#kam-chercher .loupe{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; pointer-events:none; color:var(--muted);
+}
+#kam-vider{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:var(--line); color:var(--ink); font-size:19px; line-height:1;
+  cursor:pointer; display:none;
+}
+#kam-vider.vu{ display:block; }
+#kam-chercher .fleches{ display:flex; gap:8px; }
+#kam-chercher .fleche{
+  width:calc(60px * var(--ech)); height:calc(56px * var(--ech));
+  border:2px solid var(--navy); border-radius:14px;
+  background:var(--paper); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; padding:0;
+}
+#kam-chercher .fleche svg{ width:28px; height:28px; }
+#kam-chercher .fleche:active{ background:var(--sea); }
+#kam-chercher .fleche:disabled{ opacity:.3; cursor:default; }
+#kam-chercher .fleche:focus-visible{ outline:3px solid var(--surl-trait); outline-offset:2px; }
+#kam-chercher .bas{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin:9px auto 0; min-height:26px; max-width:680px;
+}
+#kam-compteur{
+  font-family:var(--mono); font-weight:600; font-variant-numeric:tabular-nums;
+  font-size:calc(16px * var(--ech)); color:var(--muted); letter-spacing:.02em;
+}
+#kam-compteur b{ color:var(--surl-trait); font-size:calc(19px * var(--ech)); }
+#kam-compteur.rien{ color:var(--amber); }
+#kam-chercher .tailles{ display:flex; align-items:center; gap:6px; }
+#kam-chercher .tailles i{
+  font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-right:2px;
+}
+#kam-chercher .tbtn{
+  width:44px; height:38px; border:2px solid var(--line); border-radius:11px;
+  background:var(--paper); color:var(--ink); cursor:pointer;
+  font-family:var(--body); font-weight:700; line-height:1; padding:0;
+}
+#kam-chercher .tbtn:active{ background:var(--sea); }
+#kam-chercher .tbtn:disabled{ opacity:.35; cursor:default; }
+#kam-chercher .tbtn.pt{ font-size:14px; }
+#kam-chercher .tbtn.gd{ font-size:21px; }
+mark.kam-occ{
+  background:var(--surl); color:inherit; border-radius:4px; padding:1px 2px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+mark.kam-occ.actif{ background:var(--surl-actif); box-shadow:0 0 0 3px var(--surl-trait); }
+@media (max-width:420px){ #kam-chercher .tailles i{ display:none; } }
+
+/* ---- habillage des schémas ---- */
+.f-ciel{ fill:var(--bg); }
+.f-terre{ fill:var(--land); }
+.f-eau{ fill:var(--water); }
+.f-mur{ fill:var(--cloudd); }
+.f-porte{ fill:var(--ink); }
+.f-coque{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; }
+.f-cabine{ fill:var(--sea); stroke:var(--ink); stroke-width:1.4; }
+.f-mat{ fill:var(--ink); }
+.s-cote{ stroke:var(--navy); stroke-width:1.6; }
+.s-amarre{ stroke:var(--red); stroke-width:2; stroke-linecap:round; }
+.t-lab{ font-family:var(--mono); font-size:10px; fill:var(--muted); }
+.cards .v{ font-weight:700; }
+.anim .cap .verdict-ok{ color:var(--green); font-weight:700; }
+.anim .cap .verdict-ko{ color:var(--red); font-weight:700; }
+
+
+/* ---- corrections d'affichage sur téléphone ----
+   Trouvées en regardant la page rendue, pas en lisant le code. */
+
+/* La pastille d'état passe sous le texte quand la largeur ne suffit plus. */
+@media (max-width:470px){
+  .menu-item{ flex-wrap:wrap; }
+  .menu-item .etat{ margin-left:0; width:100%; text-align:right; }
+}
+
+/* Les curseurs des animations : la valeur était coupée au bord du cadre.
+   Sur téléphone, le curseur passe sur sa propre ligne, pleine largeur. */
+@media (max-width:560px){
+  .anim.live .ctl label{ flex-wrap:wrap; }
+  .anim.live .ctl label input{ order:3; flex:1 1 100%; width:auto; min-width:0; }
+  .anim.live .ctl label output{ margin-left:auto; }
+}
+
+/* Deux flèches un peu moins larges : sans ça, « Chercher un mot… » était
+   tronqué dès 390 px de large. */
+@media (max-width:430px){
+  #kam-chercher .fleche{ width:calc(50px * var(--ech)); }
+  #kam-q{ padding-left:42px; padding-right:42px; }
+}
+
+/* La barre « Retour » et la barre de recherche sont collantes : sans marge de
+   défilement, tout ce qu'on rejoint par un lien ou par le score se retrouvait
+   caché dessous. */
+section[id], .score, .qcm, figure.anim, [id]{
+  scroll-margin-top: var(--h-collant, 170px);
+}
+
+/* Même précaution que sur le permis hauturier : au texte agrandi, un tableau
+   ne doit jamais entraîner toute la page de côté. */
+@media (max-width:620px){
+  main table{ display:block; width:max-content; max-width:100%; overflow-x:auto; }
+  main .steps .res, main .res{ white-space:normal; }
+}
+
+/* ---- habillage du chapitre 2 : balisage ---- */
+.f-rouge{ fill:var(--red); }
+.f-vert{ fill:var(--green); }
+.f-noir{ fill:#14263a; }
+.f-jaune{ fill:#f6c453; }
+.f-rose{ fill:var(--paper); stroke:var(--line); stroke-width:1.5; }
+.f-sain{ fill:var(--green); fill-opacity:.30; }
+.f-danger{ fill:var(--red); }
+.t-cote{ font-family:var(--mono); font-size:11px; font-weight:600; fill:var(--navy); }
+/* En thème sombre, le « noir » des bouées doit rester lisible sur fond sombre :
+   on l'éclaircit juste assez pour qu'il se détache, sans devenir gris. */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .f-noir{ fill:#5a6b80; }}
+:root[data-theme="dark"] .f-noir{ fill:#5a6b80; }
+
+/* ---- habillage du chapitre 3 : la signalisation ----
+   Un panneau garde ses VRAIES couleurs dans les deux thèmes : un panneau
+   blanc bordé de rouge reste blanc bordé de rouge, de jour comme de nuit.
+   On n'ajoute qu'un filet gris, pour qu'un panneau blanc ne disparaisse pas
+   sur fond sombre. Ces couleurs sont donc écrites en dur, volontairement. */
+.p-face{ fill:#ffffff; }
+.p-bleu{ fill:#1b5fae; }
+.p-vertf{ fill:#1b8a4b; }
+.p-rougef{ fill:#d7263d; }
+.p-jaunef{ fill:#f2c230; }
+.p-bord{ fill:none; stroke:#d7263d; stroke-width:6; }
+.p-filet{ fill:none; stroke:rgba(108,122,140,.65); stroke-width:1.4; }
+.p-barre{ stroke:#d7263d; stroke-width:7; stroke-linecap:round; }
+.p-pic{ fill:#14263a; }
+.p-picb{ fill:#ffffff; }
+.p-trait{ fill:none; stroke:#14263a; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-traitb{ fill:none; stroke:#ffffff; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+.p-txt{ font-family:var(--mono); font-weight:700; fill:#14263a; }
+.p-txtb{ font-family:var(--mono); font-weight:700; fill:#ffffff; }
+
+/* la grille de l'explorateur de panneaux */
+/* « Recommandation » est un mot long : sous 140 px, il se faisait couper. */
+.opt.cinq{ grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); }
+.opt.cinq button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; }
+.panneaux{ display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:10px; }
+.panneaux button{
+  box-sizing:border-box; font:inherit; cursor:pointer; min-width:0;
+  background:var(--bg); border:2px solid var(--line); border-radius:11px;
+  padding:7px 6px 5px; display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.panneaux button.on{ border-color:var(--navy); background:var(--sea); }
+.panneaux button:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+/* plus spécifique que « .anim svg », qui plafonne à 560 px */
+.panneaux button svg{ width:100%; max-width:66px; height:auto; display:block; }
+/* un nom long (« Pavillon rouge balancé ») doit s'enrouler dans sa case,
+   surtout au texte agrandi, au lieu d'en déborder. */
+.panneaux .code{
+  font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--navy);
+  max-width:100%; text-align:center; overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto;
+}
+
+/* les feux d'un ouvrage : des couleurs de lampe, pas des couleurs de thème */
+.f-eteint{ fill:#36404f; }
+.f-feurouge{ fill:#ff3b30; }
+.f-feuvert{ fill:#1fc45c; }
+.s-lampe{ stroke:#14263a; stroke-width:2; }
+
+/* Les tables de panneaux ont une colonne de texte long. Sans cette reprise,
+   la règle « main table { width:max-content } » les étirerait sur plusieurs
+   écrans de large au lieu de les laisser s'enrouler. */
+/* table-layout:fixed : la largeur est DONNÉE, donc le tableau ne peut plus
+   dépasser l'écran quoi qu'on mette dedans. Sans ça, la colonne des codes
+   (« E.5.4 à E.5.15 ») imposait une largeur minimale et entraînait toute la
+   page de côté, surtout au texte agrandi. */
+main table.pan-tab{ display:table; width:100%; table-layout:fixed; }
+main table.pan-tab th:first-child,
+main table.pan-tab td:first-child{ width:28%; white-space:normal; overflow-wrap:anywhere; }
+main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
+
+/* ---- habillage du chapitre 4 : les priorités ---- */
+/* l'étiquette au-dessus de chaque groupe de boutons de l'outil */
+.qlab{
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--muted); margin:2px 0 -4px;
+}
+/* « Courant : tu es montant » est long : les boutons doivent pouvoir
+   s'enrouler plutôt que se faire couper, comme au chapitre 3. */
+.opt.quatre{ grid-template-columns:repeat(auto-fit, minmax(152px, 1fr)); }
+.opt.trois{ grid-template-columns:repeat(auto-fit, minmax(132px, 1fr)); }
+.opt.deux{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.opt.quatre button, .opt.trois button, .opt.deux button{
+  overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+}
+/* la flèche orange de celui qui doit s'écarter */
+.s-ecart{ fill:none; stroke:#e8690b; stroke-width:3.5; stroke-linecap:round; }
+.f-ecart{ fill:#e8690b; }
+.t-ecart{ font-family:var(--mono); font-size:11px; font-weight:700; fill:#e8690b; }
+/* l'axe du chenal, et le feu blanc scintillant du panneau bleu */
+.s-axe{ stroke:var(--line); stroke-width:1.4; stroke-dasharray:7 7; }
+.f-feublanc{ fill:#ffffff; stroke:#8a6a10; stroke-width:1.5; }
+/* les voiliers de l'outil des amures */
+.f-voile{ fill:var(--paper); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; }
+.f-mat2{ stroke:var(--ink); stroke-width:2.4; }
+.s-vent{ stroke:var(--navy); stroke-width:2.2; stroke-linecap:round; }
+.f-vent{ fill:var(--navy); }
+
+/* ---- habillage du chapitre 5 : feux et marques ----
+   Les scènes de nuit gardent un fond sombre dans les DEUX thèmes : un feu
+   de navigation se lit sur du noir, pas sur du papier. */
+.f-nuit{ fill:#0e1a2b; }
+.f-eau-nuit{ fill:#13263d; }
+.f-coque-nuit{ fill:#2a3a52; stroke:#6b7f9c; stroke-width:1.4; }
+.f-cabine-nuit{ fill:#1f2e45; stroke:#6b7f9c; stroke-width:1.2; }
+.s-mat-nuit{ stroke:#8a9bb5; stroke-width:2.2; stroke-linecap:round; }
+.s-cote-nuit{ stroke:#8a9bb5; stroke-width:1.2; stroke-dasharray:4 3; }
+.s-cable{ stroke:#8a9bb5; stroke-width:1.6; stroke-dasharray:5 4; }
+.t-nuit{ font-family:var(--mono); font-size:10px; fill:#c7d2e3; }
+/* les lampes : couleur réelle et un halo, comme des feux dans la nuit */
+.l-blanc{ fill:#ffffff; stroke:rgba(255,255,255,.45); stroke-width:4; }
+.l-vert{ fill:#22e06a; stroke:rgba(34,224,106,.45); stroke-width:4; }
+.l-rouge{ fill:#ff4a3d; stroke:rgba(255,74,61,.45); stroke-width:4; }
+.l-jaune{ fill:#ffd23f; stroke:rgba(255,210,63,.45); stroke-width:4; }
+.l-bleu{ fill:#3b8bff; stroke:rgba(59,139,255,.5); stroke-width:4; }
+/* les secteurs de l'outil des angles */
+.sec-blanc{ fill:#ffffff; fill-opacity:.11; }
+.sec-vert{ fill:#22e06a; fill-opacity:.22; }
+.sec-rouge{ fill:#ff4a3d; fill-opacity:.22; }
+.s-orbite{ fill:none; stroke:#8a9bb5; stroke-width:1; stroke-dasharray:3 5; }
+.f-toi{ fill:#e8690b; stroke:#ffffff; stroke-width:1.5; }
+.t-toi{ font-family:var(--mono); font-size:9px; font-weight:700; fill:#ffffff; }
+/* les marques de jour, en couleurs réelles */
+.m-noir{ fill:#14263a; }
+.m-jaune{ fill:#f2c230; stroke:#8a6a10; stroke-width:1; }
+.m-bleu{ fill:#1b5fae; }
+.m-vert{ fill:#1b8a4b; }
+.m-rouge{ fill:#d7263d; }
+.m-blanc{ fill:#ffffff; }
+.s-balance{ fill:none; stroke:#d7263d; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:4 3; }
+
+/* ---- habillage du chapitre 6 : les signaux sonores ---- */
+.sn-bar{ fill:#3a4a63; stroke:#8a9bb5; stroke-width:1; }
+.sn-bar.on{ fill:#ffd23f; stroke:#ffffff; }
+.s-tete{ stroke:#e8690b; stroke-width:2.5; stroke-linecap:round; }
+.f-brume{ fill:#b9c4d2; }
+/* dix-sept boutons de signaux : deux colonnes, texte qui s'enroule */
+#sn-btns button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; text-align:left; }
+
+/* ---- la page des erreurs du manuel ---- */
+.err{
+  border-left:4px solid var(--red); background:var(--paper); border-radius:0 12px 12px 0;
+  padding:14px 16px; display:flex; flex-direction:column; gap:7px;
+}
+.err.ok{ border-left-color:var(--green); }
+.err .ek{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--red); font-weight:700;
+}
+.err.ok .ek{ color:var(--green); }
+.err .em{ color:var(--muted); font-style:italic; max-width:none; }
+.err .er{ max-width:none; }
+.err .ea{ font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.err .ea a{ color:var(--navy); font-weight:700; }
+
+/* ---- questions hors du programme officiel de l'examen ---- */
+.qcm[data-hors]{ border-style:dashed; border-color:var(--muted); }
+.badge-hors{
+  display:inline-block; margin-left:6px; padding:1px 7px; border-radius:6px;
+  background:var(--amber); color:var(--paper); font-weight:700; letter-spacing:.06em;
+}
+.score li.hors{ color:var(--muted); }
+/* encadré de matière hors examen : même bordure pointillée que les questions hors examen */
+.def.hors-def{ background:transparent; border:2px dashed var(--muted); }
+/* étiquettes d'un écart du manuel : article, programme, lieu d'application */
+.err .tg{ display:flex; flex-wrap:wrap; gap:6px; max-width:none; }
+.err .tg span{
+  font-family:var(--mono); font-size:.74rem; padding:2px 8px; border-radius:6px;
+  background:var(--sea); color:var(--navy); overflow-wrap:anywhere;
+}
+.err .tg span.oui{ background:var(--green); color:var(--paper); font-weight:700; }
+.err .tg span.non{ background:var(--amber); color:var(--paper); font-weight:700; }
+/* ---- les deux groupes du sommaire : cours officiels, cours amélioré ---- */
+.menu-item.groupe .num{ background:var(--navy); color:var(--paper); }
+.menu-item.groupe[aria-expanded="true"]{ background:var(--sea); }
+.sousmenu{
+  display:flex; flex-direction:column; gap:10px;
+  margin:-2px 0 4px 10px; padding-left:12px; border-left:3px solid var(--sea);
+}
+.sousmenu[hidden]{ display:none; }
+.menu-item.tome[aria-disabled="true"]{ border-style:dashed; }
+.menu-item.tome[aria-disabled="true"] .etat{ color:var(--amber); }
+.od-etat{ margin:0; font-size:.92rem; color:var(--muted); max-width:none; }
+.od-etat:empty{ display:none; }
+.od-etat a{ color:var(--navy); font-weight:700; }
+
+/* ===================== moteur des QCM (pages QCM des cours) ===================== */
+.qz-mini{ display:block; height:5px; background:var(--sea); border-radius:3px; margin-top:6px; overflow:hidden; }
+.qz-mini span{ display:block; height:100%; background:var(--green); }
+.qz-tete{ position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0 10px; }
+.qz-titre{ font-family:var(--display); font-weight:700; font-size:1.1rem; }
+.qz-compteur{ font-family:var(--mono); font-size:.9rem; margin:4px 0 6px; }
+.qz-ok{ color:var(--green); font-weight:700; } .qz-ko{ color:var(--red); font-weight:700; }
+.qz-barre{ height:10px; background:var(--sea); border-radius:6px; overflow:hidden; }
+.qz-barre span{ display:block; height:100%; background:var(--navy); transition:width .3s; }
+.qz-carte{ background:var(--paper); border:2px solid var(--line); border-radius:14px; padding:14px 16px; margin:10px 0; display:flex; flex-direction:column; gap:10px; }
+.qz-num{ margin:0; font-family:var(--mono); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.qz-q{ margin:0; font-weight:700; font-size:1.08rem; max-width:none; }
+.qz-dessin{ display:flex; justify-content:center; }
+.qz-svg{ width:100%; max-width:340px; height:auto; border-radius:10px; border:1px solid var(--line); }
+.qz-choix{ display:flex; flex-direction:column; gap:8px; }
+.qz-opt{ box-sizing:border-box; width:100%; display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; text-align:left;
+  font:inherit; color:var(--ink); background:var(--bg); border:2px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer; }
+.qz-opt .l{ font-family:var(--mono); font-weight:700; color:var(--navy); flex:0 0 auto; }
+.qz-opt .qz-t{ flex:1 1 0; min-width:0; }
+.qz-opt.bonne{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--paper)); }
+.qz-opt.fausse{ border-color:var(--red); background:color-mix(in srgb, var(--red) 12%, var(--paper)); }
+.qz-opt:disabled{ cursor:default; opacity:1; color:var(--ink); }
+.qz-e{ flex:1 0 100%; font-size:.92rem; color:var(--muted); }
+.qz-verdict{ margin:0; font-weight:800; } .qz-verdict.ok{ color:var(--green); } .qz-verdict.ko{ color:var(--red); }
+.qz-ex{ margin:0; max-width:none; }
+.qz-piege{ border-left:4px solid var(--amber); background:color-mix(in srgb, var(--amber) 12%, var(--paper)); padding:10px 12px; border-radius:0 10px 10px 0; }
+.qz-piege p{ margin:4px 0 0; max-width:none; }
+.qz-ref{ margin:0; font-family:var(--mono); font-size:.82rem; color:var(--navy); max-width:none; }
+.qz-tarep{ margin:0; color:var(--red); max-width:none; }
+.qz-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 20px; }
+.qz-btn{ font:inherit; font-weight:700; padding:12px 16px; border-radius:12px; border:2px solid var(--line); background:var(--paper); color:var(--ink); cursor:pointer; }
+.qz-btn.pri{ background:var(--navy); color:var(--paper); border-color:var(--navy); flex:1 1 auto; }
+.qz-resultat.ok{ color:var(--green); font-size:1.3rem; } .qz-resultat.ko{ color:var(--red); font-size:1.3rem; }
+.menu-item.qz-cat[disabled]{ cursor:default; }
+/* QCM : tableau des parties (3 colonnes courtes) */
+main table.qz-regle-tab th:first-child, main table.qz-regle-tab td:first-child{ width:55%; overflow-wrap:normal; }
+main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:first-child){ text-align:center; }
+/* sommaire : nom du cours, puis ses entrées « Cours » et « QCM » en retrait */
+.cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
+.cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
+.menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+/* QCM : bandeau de reprise, choix fait à l'examen */
+.qz-reprise{ margin:0 0 10px; padding:10px 12px; border-radius:10px; background:var(--sea); border:1px solid var(--navy); font-weight:700; }
+.qz-opt.choisie{ border-color:var(--navy); border-width:2px; background:var(--sea); }
+/* QCM : planche de dessins numérotés */
+.qz-planche{ display:grid; grid-template-columns:repeat(auto-fit, minmax(90px, 1fr)); gap:8px; }
+.qz-planche figure{ margin:0; text-align:center; }
+.qz-planche figcaption{ font-family:var(--mono); font-weight:700; margin-top:4px; }
+/* QCM : un panneau sur fond neutre, de taille raisonnable */
+.qz-panfond{ background:#e9eef2; border-radius:10px; padding:12px; display:flex; justify-content:center; }
+.qz-svg.qz-pan{ width:150px; max-width:100%; height:auto; border:none; border-radius:0; }
+.qz-planche .qz-svg.qz-pan{ max-width:100%; }
+/* QCM : un bloc caché l'est vraiment — .menus impose display:flex, qui
+   l'emportait sur l'attribut hidden : le menu restait affiché au-dessus
+   de la question (défaut des v1 et v2 du QCM fluvial). */
+#qz [hidden], #qz-regle[hidden], #rappel[hidden]{ display:none !important; }
+/* QCM balises : rappel théorique */
+.rap{ border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin:10px 0; background:var(--paper); }
+.rap summary{ font-family:var(--display); font-weight:700; font-size:1.1rem; cursor:pointer; }
+.rap-grille{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; margin:10px 0; }
+.rap-grille.un{ grid-template-columns:1fr; }
+.rap-grille figure{ margin:0; }
+.rap-grille figcaption{ font-size:.9rem; margin-top:4px; }
+.rap-img .qz-svg{ max-width:100%; }
+.rap-img .qz-panfond{ padding:6px; }
+
+</style>
+</head>
+<body>
+<div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Erreurs du manuel · côtier</span></div>
+<main>
+
+<header>
+  <div class="ver">ERREURS DU MANUEL · CÔTIER · v1.2 · 16 octobre 2026</div>
+  <h1>Le manuel côtier face à la matière officielle</h1>
+  <p>Le manuel Booost-Boat <b>Tome 2 côtier</b> (p. 4 à 70) a été relu page par page, figures comprises, et comparé aux <b>textes officiels</b> de la matière du complément pour le brevet de conduite général. Pour la partie sécurité, les Tomes 1 et 3 ont aussi été relus. Résultat : <b>48 erreurs</b> certaines, et de nombreux sujets <b>au programme qui manquent</b>.</p>
+  <p class="why">Pour chaque erreur : ce que le manuel affirme, ce qui est juste, la source officielle, et si le point est <b>au programme</b> de l'examen.</p>
+</header>
+
+<section>
+  <h2>Comment lire cette liste</h2>
+  <div class="cards">
+    <div><div class="l">Erreur</div><div class="v">contredite par un texte officiel en vigueur, par une référence reconnue (OMM, ERC, Code international des signaux), par un calcul ou par le manuel lui-même</div></div>
+    <div><div class="l">T1, T2, T3</div><div class="v">Tome 1 fluvial, Tome 2 côtier, Tome 3 pratique</div></div>
+    <div><div class="l">Au programme ?</div><div class="v">oui : peut tomber à l'examen ; non : hors matière</div></div>
+  </div>
+  <div class="trap">
+    <div class="trap-h">Pour l'examen</div>
+    <p>L'examen se passe sur ordinateur : <b>30 questions</b> (10 réglementation, 10 navigation, 10 sécurité et manœuvres). Il faut <b>60 %</b> au total et <b>50 %</b> dans chaque partie (AR plaisance, art. 4.12). Quand le manuel et le texte officiel divergent, c'est le <b>texte officiel</b> qui fait foi.</p>
+  </div>
+</section>
+
+<section id="bref">
+  <h2>En bref</h2>
+  <div class="cards">
+    <div><div class="l">Navigation et marées</div><div class="v">18 erreurs</div></div>
+    <div><div class="l">Météo et sécurité</div><div class="v">7 erreurs</div></div>
+    <div><div class="l">RIPAM</div><div class="v">12 erreurs</div></div>
+    <div><div class="l">Réglementation belge</div><div class="v">11 erreurs</div></div>
+  </div>
+  <nav class="toc"><ol>
+    <li><a href="#erreurs">Les 48 erreurs, chapitre par chapitre</a></li>
+    <li><a href="#verifier">Points non tranchés</a></li>
+    <li><a href="#ne-pas">Ce qu'il ne faut pas étudier</a></li>
+    <li><a href="#oublis">Ce que le manuel oublie (au programme)</a></li>
+    <li><a href="#impr">Imprécisions utiles à connaître</a></li>
+    <li><a href="#sources">Les sources</a></li>
+  </ol></nav>
+</section>
+
+<section id="erreurs">
+  <h2>Les erreurs</h2>
+  <p class="why">Les trois erreurs de la section sur les dispositifs de séparation du trafic (hors programme) sont regroupées dans une seule fiche.</p>
+  <h3>Chapitres 1 et 2 · Navigation et marées (Tome 2 p. 4-42)</h3>
+  <div class="err">
+    <p class="ek">1 · Erreur · manuel T2 p. 6</p>
+    <p class="em">Le manuel : « reportez-la sur <b>l'échelle horizontale</b> des latitudes ».</p>
+    <p class="er">On mesure une distance sur l'échelle <b>verticale</b> des latitudes, sur le bord gauche ou droit de la carte (1′ de latitude = 1 mille). L'échelle horizontale est celle des longitudes : elle ne sert jamais à mesurer une distance. Le manuel le dit lui-même p. 4 et 5, et sa figure p. 6 montre le bord vertical.</p>
+    <p class="tg"><span>Programme Navigation : bord vertical, bord horizontal, mille</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">2 · Erreur · manuel T2 p. 8</p>
+    <p class="em">Le manuel : les cartes sont « généralement actualisées <b>tous les deux ans</b> ».</p>
+    <p class="er">Il n'existe pas de cycle de deux ans. On tient une carte à jour <b>en continu</b> avec les <b>Avis aux navigateurs</b>, publiés régulièrement (en Belgique, les « Berichten aan Zeevarenden »). Les nouvelles éditions paraissent à intervalles irréguliers.</p>
+    <p class="tg"><span>Programme Navigation : « Mise à jour des cartes marines »</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">3 · Erreur · manuel T2 p. 8</p>
+    <p class="em">Le manuel : la réglementation exige les cartes officielles à bord « <b>à partir de 6 milles d'un abri</b> ».</p>
+    <p class="er">Ce seuil vient de la règle <b>française</b> (Division 240), et il est même mal repris : en France, les cartes officielles sont exigées dès qu'on navigue à plus de <b>2 milles</b> d'un abri. En Belgique, <b>tout</b> bâtiment doit avoir à bord un exemplaire du règlement et une <b>carte officielle à jour</b> de la mer territoriale belge, sans seuil de distance (sauf engins de plage et planches à voile). Sur l'Escaut maritime inférieur, tout bateau (sauf un petit bateau non ponté) doit avoir le règlement à jour et la dernière édition de la carte marine officielle.</p>
+    <p class="tg"><span>Mer territoriale, art. 44 ; Escaut navigation, art. 48 ; Escaut police, art. 42 ; AR plaisance, art. 3.74 8° (règlements à bord)</span><span class="oui">Au programme</span><span>Côte belge et Escaut</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">4 · Erreur · manuel T2 p. 17</p>
+    <p class="em">Le manuel : le compas de relèvement donne l'angle avec « le Nord magnétique <b>ou vrai</b> ».</p>
+    <p class="er">Un compas de relèvement donne un relèvement <b>compas (Zc)</b>, jamais le Nord vrai. Pour obtenir Zv il faut appliquer la déclinaison (et la déviation s'il y a lieu). Le manuel l'écrit lui-même p. 30 : Zv = Zc + W.</p>
+    <p class="tg"><span>Programme Navigation : Zv, Zm, Zc</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">5 · Erreur · manuel T2 p. 19</p>
+    <p class="em">Le manuel : encadré « 3°30W 2000 <b>(8°E)</b> ».</p>
+    <p class="er"><b>8′E</b> : 8 <b>minutes</b> par an vers l'Est, comme dans le texte de la même page. Calcul juste : 19 ans × 8′ = 152′ = 2°32′ ; 3°30′ − 2°32′ = 0°58′ W, soit D ≈ 1° W.</p>
+    <p class="tg"><span>Programme Navigation : déclinaison (D)</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">6 · Erreur · manuel T2 p. 23</p>
+    <p class="em">Le manuel : la dérive est le déplacement latéral « sous l'action du vent, <b>du courant ou de la marée</b> ».</p>
+    <p class="er">La dérive (dér) est l'angle entre le cap vrai et la route surface, dû au <b>vent seul</b>. Le courant se traite à part, par un vecteur, pour passer de la route surface (Rs) à la route fond (Rv). Le manuel se contredit sur la même page et p. 28.</p>
+    <p class="tg"><span>Programme Navigation : « dérive due au vent (dér) »</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">7 · Erreur · manuel T2 p. 23</p>
+    <p class="em">Le manuel : « <b>Fardage</b> : déplacement latéral d'un bateau sous l'action du vent ou du courant ».</p>
+    <p class="er">Le fardage est la <b>prise au vent</b> du bateau (coque émergée, superstructures, gréement), pas un déplacement. Le déplacement latéral, c'est la dérive. Le manuel écrit lui-même plus haut « fardage (prise au vent) ».</p>
+    <p class="tg"><span>Vocabulaire maritime</span><span class="non">Hors programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">8 · Erreur · manuel T2 p. 25</p>
+    <p class="em">Le manuel : Cc 230°, W −3°, Cv 227°, dérive +5° → « <b>Rs = 332°</b> » (deux fois).</p>
+    <p class="er"><b>Rs = 232°</b> : 227 + 5 = 232. Erreur de 100°, présente dans les deux schémas.</p>
+    <p class="tg"><span>Programme Navigation : Rs, dérive</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">9 · Erreur · manuel T2 p. 26</p>
+    <p class="em">Le manuel : tableau de courant : « <b>362°</b> pour 0,7 kt ».</p>
+    <p class="er"><b>352°</b> pour 0,7 nœud en vives-eaux (354° pour 0,3 nœud en mortes-eaux). Une direction ne dépasse jamais 359° ; l'image du tableau reproduit dans le manuel porte bien 352.</p>
+    <p class="tg"><span>Programme Navigation : tableaux de courants</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">10 · Erreur · manuel T2 p. 27</p>
+    <p class="em">Le manuel : exemple 1 : cap vrai 300° à 10 nœuds, courant 190° à 2 nœuds → « route fond <b>280°</b>, vitesse <b>12 kt</b> ».</p>
+    <p class="er"><b>Route fond ≈ 289°, vitesse fond ≈ 9,5 nœuds.</b> Le courant fait 110° avec le cap : il pousse surtout de travers vers bâbord (1,88 nœud) et freine un peu (0,68 nœud contre). La vitesse fond doit donc être <b>plus petite</b> que 10 nœuds, pas plus grande. Calcul vérifié : 288,6° et 9,50 nœuds.</p>
+    <p class="tg"><span>Programme Navigation : notions vectorielles, Rs et Rv</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">11 · Erreur · manuel T2 p. 27</p>
+    <p class="em">Le manuel : exemple 2 : route voulue 130°, courant 080° à 2 nœuds, vitesse surface 5 nœuds → « cap vrai <b>145°</b>, vitesse fond <b>5,5 kt</b> ».</p>
+    <p class="er"><b>Cap vrai ≈ 148°, vitesse fond ≈ 6,0 nœuds.</b> Le courant pousse vers la gauche de la route (composante 1,53 nœud) et aide vers l'avant (1,29 nœud) : correction de 17,8°, vitesse 4,76 + 1,29 = 6,05 nœuds.</p>
+    <p class="tg"><span>Programme Navigation : cap compas vers l'objectif</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">12 · Erreur · manuel T2 p. 28</p>
+    <p class="em">Le manuel : axe « Cc (d) (D) (dér) (crt) → <b>Cv</b> ».</p>
+    <p class="er">Cc + d = Cm ; Cm + D = <b>Cv</b> ; Cv + dér = <b>Rs</b> ; Rs + courant (par vecteur) = <b>Rv</b>. Après la dérive et le courant, on n'obtient plus un cap mais une route.</p>
+    <p class="tg"><span>Programme Navigation : Cc, Cm, Cv, Rs, Rv</span><span class="oui">Au programme</span><span>Navigation</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">13 · Erreur · manuel T2 p. 31</p>
+    <p class="em">Le manuel : « lorsque la Lune est au plus proche de la Terre <b>(en conjonction)</b>, … une pleine mer ».</p>
+    <p class="er">« Au plus proche » se dit <b>périgée</b>. La <b>conjonction</b> est l'alignement Soleil-Lune du même côté (nouvelle lune), qui donne les vives-eaux. Et la pleine mer se produit du côté de la Lune <b>et</b> du côté opposé, quelle que soit sa distance.</p>
+    <p class="tg"><span>Théorie astronomique de la marée</span><span class="non">Hors programme</span><span>Marées</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">14 · Erreur · manuel T2 p. 34</p>
+    <p class="em">Le manuel : « deux marées hautes et deux marées basses <b>toutes les 24 heures</b> » (en gras).</p>
+    <p class="er">Deux pleines mers et deux basses mers par <b>jour lunaire, environ 24 h 50</b>. La marée retarde donc d'environ 50 minutes par jour, et certains jours n'ont qu'une seule pleine mer ou basse mer. Le manuel se corrige plus bas sur la page.</p>
+    <p class="tg"><span>Programme Navigation : durée de la marée</span><span class="oui">Au programme</span><span>Marées</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">15 · Erreur · manuel T2 p. 39</p>
+    <p class="em">Le manuel : le zéro hydrographique : « la mer ne pourra <b>jamais</b> baisser en dessous de ce seuil ».</p>
+    <p class="er">Le zéro des cartes (LAT) est le niveau le plus bas <b>prévu par la marée astronomique</b>. Une forte pression ou un vent de terre peuvent faire descendre la mer <b>en dessous</b>. Le manuel le dit lui-même p. 35.</p>
+    <p class="tg"><span>Programme Navigation : zéro hydrographique, LAT</span><span class="oui">Au programme</span><span>Marées</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">16 · Erreur · manuel T2 p. 39</p>
+    <p class="em">Le manuel : hauteur de marée 3 m, sonde 1,4 : « <b>4 mètres</b> de profondeur ».</p>
+    <p class="er"><b>4,4 m</b> : profondeur = hauteur de marée + sonde = 3 + 1,4.</p>
+    <p class="tg"><span>Programme Navigation : profondeur de l'eau</span><span class="oui">Au programme</span><span>Marées</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">17 · Erreur · manuel T2 p. 39</p>
+    <p class="em">Le manuel : sonde soulignée 0,6 : « seulement <b>1 mètre</b> de profondeur ».</p>
+    <p class="er"><b>2,4 m</b> : sur un fond qui assèche, profondeur = hauteur de marée − hauteur d'assèchement = 3 − 0,6. Les valeurs de la figure (marée 3 m, assèchement 0,6 m) conduisent bien à 2,4 m.</p>
+    <p class="tg"><span>Programme Navigation : assèchement, profondeur</span><span class="oui">Au programme</span><span>Marées</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">18 · Erreur · manuel T2 p. 41-42</p>
+    <p class="em">Le manuel : règle des douzièmes : heure-marée calculée sur la marée <b>descendante</b> (03h21 → 09h44) puis appliquée à la marée <b>montante</b> ; pleine mer annoncée à « 16h08 », avec la hauteur de la pleine mer du matin.</p>
+    <p class="er">On utilise toujours la basse mer et la pleine mer <b>qui encadrent</b> l'heure cherchée. L'annuaire reproduit donne <b>BM 09h44 2,45 m → PM 15h43 6,45 m</b> : durée 5 h 59, heure-marée ≈ 60 min, marnage 4,00 m, 1/12 = 0,333 m. Hauteurs : 10h44 2,78 · 11h44 3,45 · 12h44 4,45 · 13h44 5,45 · 14h44 6,12 · 15h43 6,45. À 14h00 : <b>≈ 5,6 m</b> (5,63 m ; et non 5,5 m).</p>
+    <p class="tg"><span>Programme Navigation : règle des douzièmes</span><span class="oui">Au programme</span><span>Marées</span></p>
+  </div>
+  <h3>Chapitre 3 · Météo (Tome 2 p. 43-52) et sécurité (Tomes 1 et 3)</h3>
+  <div class="err">
+    <p class="ek">19 · Erreur · manuel T2 p. 43</p>
+    <p class="em">Le manuel : réception des bulletins météo et BMS « en VHF <b>sur le 16</b> ».</p>
+    <p class="er">Le canal 16 sert à la détresse, l'urgence, la sécurité et les appels. Les bulletins y sont seulement <b>annoncés</b>, puis diffusés sur un <b>canal de travail</b> indiqué dans l'annonce. Qui reste sur le 16 n'entend pas le bulletin.</p>
+    <p class="tg"><span>Programme Météo : sources d'informations météo</span><span class="oui">Au programme</span><span>Météo</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">20 · Erreur · manuel T2 p. 44 et 48</p>
+    <p class="em">Le manuel : une dépression est une zone de pression « <b>inférieure à 1013 hPa</b> ».</p>
+    <p class="er">Une dépression est une zone où la pression est <b>plus basse qu'autour</b> ; un anticyclone, <b>plus haute qu'autour</b>. Aucun des deux ne se définit par 1013 hPa. La carte du manuel p. 45 montre d'ailleurs une dépression à 1016 hPa et un anticyclone à 1013 hPa.</p>
+    <p class="tg"><span>Programme Météo : cartes synoptiques</span><span class="oui">Au programme</span><span>Météo</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">21 · Erreur · manuel T2 p. 46</p>
+    <p class="em">Le manuel : au passage d'un front froid : « … ainsi qu'une <b>diminution du vent</b> ».</p>
+    <p class="er">Au passage du front froid : <b>grains et fortes rafales</b>, le vent <b>vire</b> (par exemple de sud-ouest à ouest ou nord-ouest), la pression remonte, la température baisse. Le manuel dit lui-même « rafales de vent » p. 45.</p>
+    <p class="tg"><span>Programme Météo : identifier une dépression et ses fronts</span><span class="oui">Au programme</span><span>Météo</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">22 · Erreur · manuel T2 p. 48</p>
+    <p class="em">Le manuel : le vent tourne dans le sens des aiguilles d'une montre : « on dit que le vent <b>adonne</b> ».</p>
+    <p class="er">Rotation dans le sens horaire : le vent <b>vire</b>. Dans le sens antihoraire : le vent <b>recule</b>. « Adonner » et « refuser » se disent par rapport au cap du bateau (le vent adonne quand il passe vers l'arrière).</p>
+    <p class="tg"><span>Programme Météo : terminologie des vents</span><span class="oui">Au programme</span><span>Météo</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">23 · Erreur · manuel T1 p. 64</p>
+    <p class="em">Le manuel : noyade : « Administrez 30 compressions thoraciques jusqu'à l'arrivée des secours. Placez la personne en Position Latérale de Sécurité (PLS) ».</p>
+    <p class="er">Noyade : <b>5 insufflations</b> d'abord, puis cycles de <b>30 compressions et 2 insufflations</b> jusqu'au relais. La PLS ne concerne qu'une victime inconsciente <b>qui respire normalement</b>. Les manuels se contredisent : l'infographie du Tome 3 (p. 24) dit « alternez 30 compressions et 2 insufflations » (plus juste, mais sans les 5 insufflations de départ). Le Tome 1 se contredit d'ailleurs sur la même page : il réserve le bouche-à-bouche à la noyade, l'électrocution et l'enfant. (Au programme du brevet restreint, pas du complément.)</p>
+    <p class="tg"><span>Lignes directrices du Conseil européen de réanimation (ERC) 2021</span><span class="non">Hors programme</span><span>Premiers secours</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">24 · Erreur · manuel T1 p. 69</p>
+    <p class="em">Le manuel : « col de cygne : permet l'<b>entretien</b> des composants situés sous la ligne d'eau ».</p>
+    <p class="er">Le col de cygne fait remonter le circuit <b>au-dessus de la flottaison</b> pour empêcher l'eau de mer de refluer vers le moteur. C'est un anti-retour d'eau, pas un accès d'entretien.</p>
+    <p class="tg"><span>Programme Sécurité : moteurs, connaissances élémentaires</span><span class="oui">Au programme</span><span>Moteur</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">25 · Erreur · manuel T1 p. 69</p>
+    <p class="em">Le manuel : « waterlock : <b>vanne</b> anti-retour pour éviter qu'aucune impureté ne pénètre lors d'une marche arrière ».</p>
+    <p class="er">Le waterlock (pot de détente) est un <b>réservoir</b> sur l'échappement, pas une vanne. Il recueille l'eau de refroidissement à l'arrêt du moteur pour qu'elle ne reflue pas dans les cylindres.</p>
+    <p class="tg"><span>Programme Sécurité : moteurs, connaissances élémentaires</span><span class="oui">Au programme</span><span>Moteur</span></p>
+  </div>
+  <h3>Chapitre 4 · RIPAM (Tome 2 p. 53-64)</h3>
+  <div class="err">
+    <p class="ek">26 · Erreur · manuel T2 p. 55</p>
+    <p class="em">Le manuel : le navire privilégié « <b>peut</b> conserver sa route et sa vitesse ».</p>
+    <p class="er">Il <b>doit maintenir</b> son cap et sa vitesse. C'est une obligation, pas une faculté.</p>
+    <p class="tg"><span>RIPAM règle 17 a) i)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">27 · Erreur · manuel T2 p. 56</p>
+    <p class="em">Le manuel : « dans les chenaux, les grands navires (<b>plus de 20 mètres</b>) … sont toujours privilégiés ».</p>
+    <p class="er">Le critère n'est pas la taille. Les navires de <b>moins de 20 m</b> et les <b>voiliers</b> ne doivent pas <b>gêner</b> un navire qui ne peut naviguer en sécurité <b>qu'à l'intérieur</b> du chenal. « Ne pas gêner » n'est pas « être privilégié » : ce navire reste tenu par les règles de barre.</p>
+    <p class="tg"><span>RIPAM règles 9 b), 9 d), 8 f)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">28 · Erreur · manuel T2 p. 57</p>
+    <p class="em">Le manuel : section sur les dispositifs de séparation du trafic : « il est <b>interdit</b> de mouiller » dans le trafic ; « les navires de moins de 20 m (<b>à voile ou à moteur</b>) » ; les navires de pêche utilisent « <b>prioritairement</b> » la zone côtière.</p>
+    <p class="er">Trois erreurs : on doit <b>éviter</b> de mouiller (pas une interdiction absolue) ; les voiliers sont visés <b>quelle que soit leur longueur</b> ; la zone côtière <b>peut</b> être utilisée (aucune priorité). Cette matière (règle 10) est <b>exclue</b> du programme du complément général : inutile de l'étudier.</p>
+    <p class="tg"><span>RIPAM règle 10 d), g), j)</span><span class="non">Hors programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">29 · Erreur · manuel T2 p. 61</p>
+    <p class="em">Le manuel : « les signaux de brume en mer sont donnés <b>toutes les 2 minutes</b> ».</p>
+    <p class="er">Au mouillage et échoué : cloche à intervalles d'<b>une minute au plus</b>. Pour les autres signaux : à intervalles <b>ne dépassant pas</b> deux minutes (c'est un maximum, pas un rythme fixe). La matière d'examen exclut la <b>fréquence</b> des signaux sonores : retiens surtout <b>quel</b> signal correspond à quel navire.</p>
+    <p class="tg"><span>RIPAM règle 35 a) à h)</span><span class="non">Hors programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">30 · Erreur · manuel T2 p. 61</p>
+    <p class="em">Le manuel : figure de brume : « — • • <b>privilégié</b> / remorqueur ».</p>
+    <p class="er">« Privilégié » n'existe pas dans la règle 35. Un son prolongé + deux brefs : navire non maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, <b>voilier</b>, navire en train de pêcher, navire qui remorque ou pousse. Un navire à moteur ordinaire : <b>un son prolongé</b>.</p>
+    <p class="tg"><span>RIPAM règles 35 a) et 35 c)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">31 · Erreur · manuel T2 p. 62</p>
+    <p class="em">Le manuel : échelle des priorités : le non maître de sa manœuvre <b>au-dessus</b> du navire à capacité de manœuvre restreinte.</p>
+    <p class="er">Le RIPAM ne les hiérarchise pas : ils figurent <b>ensemble, au même niveau</b>, dans chaque liste de la règle 18.</p>
+    <p class="tg"><span>RIPAM règle 18</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">32 · Erreur · manuel T2 p. 62</p>
+    <p class="em">Le manuel : « le navire privilégié doit conserver son cap et sa vitesse (<b>sauf risque de collision</b>) ».</p>
+    <p class="er">C'est l'inverse : l'obligation s'applique <b>justement quand il y a risque d'abordage</b>. Il <b>peut</b> manœuvrer seul dès qu'il est évident que l'autre ne manœuvre pas, et il <b>doit</b> manœuvrer quand l'abordage ne peut plus être évité par l'autre seul.</p>
+    <p class="tg"><span>RIPAM règles 15, 17 a) et b)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">33 · Erreur · manuel T2 p. 63</p>
+    <p class="em">Le manuel : « les convois remorqués, peu manœuvrants, doivent être identifiés afin de <b>se dérouter</b> à leur approche ».</p>
+    <p class="er">Un remorqueur n'a <b>aucun privilège du seul fait qu'il remorque</b> : les règles ordinaires (rattrapage, croisement…) s'appliquent. Il ne passe au-dessus du navire à moteur ordinaire que s'il est <b>à capacité de manœuvre restreinte</b> et qu'il le montre (feux rouge-blanc-rouge, ou boule-bicône-boule de jour).</p>
+    <p class="tg"><span>RIPAM règles 3 g) vi), 18 a), 27 c)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">34 · Erreur · manuel T2 p. 64</p>
+    <p class="em">Le manuel : vue arrière du remorqueur (train de plus de 200 m) : feu <b>blanc au-dessus du jaune</b>.</p>
+    <p class="er">Le feu de remorquage <b>jaune</b> est <b>au-dessus</b> du feu de poupe blanc. La figure de la p. 63 est juste, celle de la p. 64 la contredit.</p>
+    <p class="tg"><span>RIPAM règle 24 a) iv)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">35 · Erreur · manuel T2 p. 64</p>
+    <p class="em">Le manuel : bulle « couleur feu de poupe : <b>jaune et blanc</b> ».</p>
+    <p class="er">Le feu de poupe est <b>blanc</b>. Le jaune est un feu distinct, le <b>feu de remorquage</b>, avec le même secteur de 135°.</p>
+    <p class="tg"><span>RIPAM règles 21 c), 21 d), 24 a)</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <h3>Chapitre 5 · Réglementation belge (Tome 2 p. 65-70, et p. 60-61)</h3>
+  <div class="err">
+    <p class="ek">36 · Erreur · manuel T2 p. 60</p>
+    <p class="em">Le manuel : « MAYDAY 3 fois sur le canal 16 (<b>196</b> depuis un téléphone portable) ».</p>
+    <p class="er">Le <b>196</b> est le numéro d'urgence maritime <b>français</b> (CROSS). Sur la côte belge : <b>VHF 16 ou ASN</b>, et par téléphone le <b>112</b> ; la recherche et le sauvetage sont coordonnés par le <b>MRCC Oostende</b>. Le même 196 revient dans des images : la fiche VHF du Tome 1 (p. 63, « CROSS : VHF 16 ou Tél 196 ») et l'affiche « Appelez le CROSS — c'est le 196 » du Tome 3 (p. 28). Le Tome 3 donne pourtant le 112 aux p. 27 et 28.</p>
+    <p class="tg"><span>Programme Sécurité : organisation des services de sauvetage belges</span><span class="oui">Au programme</span><span>Côte belge</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">37 · Erreur · manuel T2 p. 61</p>
+    <p class="em">Le manuel : encadré : zone 5 « jusqu'à 6 milles de la côte », zone 6 « jusqu'à 60 milles de la côte », zone 7 « plus de 60 milles - Haute mer ».</p>
+    <p class="er">Les numéros sont décalés d'un rang. <b>Zone 4</b> : de la plage à 6 milles ; <b>zone 5</b> : de 6 à 60 milles ; <b>zone 6</b> : de 60 à 200 milles ; <b>zone 7</b> : au-delà de 200 milles (distances depuis la laisse de basse mer).</p>
+    <p class="tg"><span>AR plaisance du 28/06/2019, art. 1.3</span><span class="oui">Au programme</span><span>Mer</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">38 · Erreur · manuel T2 p. 65</p>
+    <p class="em">Le manuel : ordre de priorité sur l'Escaut : « non maître de sa manœuvre, <b>handicapé par son tirant d'eau</b>, capacité de manœuvre restreinte… ».</p>
+    <p class="er">Sur l'Escaut maritime inférieur, la catégorie s'appelle <b>navire de grandes dimensions</b> (désigné comme tel par le pilotage, à cause de sa longueur ou de son tirant d'eau). Un bateau à moteur s'écarte : du non maître de sa manœuvre, du navire de grandes dimensions, du bateau à capacité de manœuvre restreinte, et du <b>bateau en train de pêcher hors du chenal</b> (oublié par le manuel).</p>
+    <p class="tg"><span>Règlement de navigation Escaut, art. 2 §1 4° et art. 18</span><span class="oui">Au programme</span><span>Escaut maritime inférieur</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">39 · Erreur · manuel T2 p. 65</p>
+    <p class="em">Le manuel : « les navires de moins de 12 m doivent rester hors du chenal mais peuvent <b>y</b> naviguer <b>à leurs risques et périls</b> ».</p>
+    <p class="er">C'est l'inverse : celui qui navigue <b>hors du chenal</b> le fait à ses risques et périls. Un bateau de moins de 12 m doit, <b>lorsque cela peut se faire</b>, se tenir hors du chenal.</p>
+    <p class="tg"><span>Règlement de police Escaut, art. 5 ; règlement de navigation, art. 9 §3</span><span class="oui">Au programme</span><span>Escaut maritime inférieur</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">40 · Erreur · manuel T2 p. 65</p>
+    <p class="em">Le manuel : « <b>chaque</b> bateau doit disposer d'un moteur lui permettant d'atteindre au moins 6 km/h ».</p>
+    <p class="er">L'exigence vise le bateau de <b>moins de 12 m qui se trouve dans le chenal principal</b> (sauf s'il est remorqué ou poussé) : moteur immédiatement utilisable, capable de <b>maintenir</b> au moins 6 km/h <b>par rapport à l'eau</b>. À partir de 12 m : un moteur assez puissant en état de marche.</p>
+    <p class="tg"><span>Règlement de navigation Escaut, art. 6 §2</span><span class="oui">Au programme</span><span>Escaut maritime inférieur</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">41 · Erreur · manuel T2 p. 65</p>
+    <p class="em">Le manuel : « il est interdit de se laisser dériver <b>avec</b> le courant ».</p>
+    <p class="er">Il est interdit de laisser dériver un bateau <b>en travers</b> du courant. Exception : les déplacements de courte distance.</p>
+    <p class="tg"><span>Règlement de navigation Escaut, art. 6 §6</span><span class="oui">Au programme</span><span>Escaut maritime inférieur</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">42 · Erreur · manuel T2 p. 65</p>
+    <p class="em">Le manuel : « Les <b>voiliers</b> portent ce réflecteur <b>aussi haut possible</b>, à une hauteur de 4 m ».</p>
+    <p class="er">Toute petite embarcation a un réflecteur radar (sur l'Escaut : sauf planche à voile) : voilier à <b>4 m au moins au-dessus de l'eau</b> ; bateau à moteur <b>le plus haut possible au-dessus de la superstructure</b>. Le manuel attribue aux voiliers la règle des bateaux à moteur.</p>
+    <p class="tg"><span>Règlement de navigation Escaut, art. 41 §9 ; Gand-Terneuzen, art. 29 §9</span><span class="oui">Au programme</span><span>Escaut et canal Gand-Terneuzen</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">43 · Erreur · manuel T2 p. 65</p>
+    <p class="em">Le manuel : dessin du pavillon L : carré <b>noir</b> en haut à gauche.</p>
+    <p class="er">Dans le Code international des signaux, le pavillon L a le carré <b>jaune en haut côté mât</b> (en haut à gauche), noir en haut à droite, noir en bas à gauche, jaune en bas à droite. Le dessin est inversé. À noter : depuis le 8/05/2023, le texte en vigueur dit seulement « s'arrêter sur ordre de l'Autorité nautique commune », mais la matière d'examen cite toujours le pavillon L : apprends-le.</p>
+    <p class="tg"><span>Règlement de police Escaut, art. 40 ; Code international des signaux</span><span class="oui">Au programme</span><span>Escaut maritime inférieur</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">44 · Erreur · manuel T2 p. 66</p>
+    <p class="em">Le manuel : le nom doit être lisible à « une distance de <b>20 mètres</b> ».</p>
+    <p class="er"><b>50 m au moins</b>, par temps clair, en lettres contrastées ; des deux côtés si le nom est sur le flanc. Le manuel dit d'ailleurs « 50M » p. 67 (lire 50 mètres).</p>
+    <p class="tg"><span>Règlement de police Escaut, art. 3 §2 ; mer territoriale, art. 7 §1</span><span class="oui">Au programme</span><span>Escaut et côte belge</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">45 · Erreur · manuel T2 p. 67</p>
+    <p class="em">Le manuel : sports de vague autorisés « dans la zone maritime <b>jusqu'à</b> un maximum de 2 milles nautiques vers le large ».</p>
+    <p class="er">La <b>zone côtière</b> va jusqu'à <b>½ mille</b> ; la <b>zone maritime</b> est la zone <b>au-delà</b> de 2 milles. Ce que le manuel dit p. 68 sur la nuit (interdit, dérogation possible) est conforme. Sur l'équipement, deux nuances : la géolocalisation du moyen de détresse est seulement recommandée (« de préférence ») ; et le jet-ski n'est pas admis en zone de pratique, sauf dérogation.</p>
+    <p class="tg"><span>AR plaisance du 28/06/2019, art. 7.1 et 7.3 à 7.5</span><span class="non">Hors programme</span><span>Côte belge</span></p>
+  </div>
+  <div class="err">
+    <p class="ek">46 · Erreur · manuel T2 p. 69</p>
+    <p class="em">Le manuel : pas d'obligation de gilet « avec un bastingage fixe <b>de 1,10 m</b> de haut ».</p>
+    <p class="er">Il faut un bastingage fixe de <b>plus de 110 cm</b>. Un bastingage d'exactement 1,10 m ne dispense pas.</p>
+    <p class="tg"><span>AR plaisance du 28/06/2019, art. 3.81</span><span class="oui">Au programme</span><span>Mer (zones 4 à 7)</span></p>
+  </div>
+</section>
+
+<section id="verifier">
+  <h2>Points non tranchés : suivre le cours de l'école</h2>
+  <p>Deux textes de la matière ne sont disponibles que dans d'anciennes éditions du SPF : le règlement de la <b>mer territoriale</b> (à jour au 8/06/2007) et celui du <b>canal Gand-Terneuzen</b> (à jour au 17/09/2005). Les quantités d'équipement relèvent d'une <b>liste ministérielle</b> qui ne fait pas partie des textes de la matière. Quand le manuel les contredit, rien ne prouve qu'il a tort. Sur ces points, <b>on suit le cours de l'école</b>, et ils ne sont pas comptés comme erreurs. Sujets concernés :</p>
+  <ul>
+    <li>les vitesses chiffrées dans les ports de Nieuport et de Blankenberge (T2 p. 67)</li>
+    <li>la règle des 200 m de la plage (T2 p. 13 et 67)</li>
+    <li>la voile interdite aux bateaux de 20 m et plus, et les vitesses maximales sur le canal Gand-Terneuzen (T2 p. 70)</li>
+    <li>la « priorité » des bateaux qui quittent le canal à Terneuzen (T2 p. 70)</li>
+    <li>l'ancre et ses 10 m de corde, l'extincteur de 2 kg, les feux à main (T2 p. 66 ; T1 p. 60 et 62)</li>
+    <li>les quantités de pyrotechnie par zone (T2 p. 61)</li>
+    <li>les langues des Avis aux navigateurs (T2 p. 66)</li>
+  </ul>
+</section>
+
+<section id="ne-pas">
+  <h2>Ce qu'il ne faut pas étudier dans le manuel</h2>
+  <p>D'après la <b>matière d'examen officielle</b> du complément pour le brevet de conduite général (SPF Mobilité et Transports). Pages du Tome 2.</p>
+  <div class="trap"><div class="trap-h">Attention</div><p>L'<b>AIS</b> (p. 54) et les notions de <b>VHF</b> sont bien <b>au programme</b>, dans la partie navigation.</p></div>
+  <h3>Navigation et marées</h3>
+  <ul>
+    <li><b>p. 5</b> — le calcul du mille à partir des 40 000 km (retiens seulement : 1 mille = 1852 m = 1′ de latitude)</li>
+    <li><b>p. 7</b> — l'histoire des cartes marines</li>
+    <li><b>p. 8</b> — les fournisseurs de cartes (SHOM, Navicarte, Navionics…) et la règle française (cartes officielles exigées en France au-delà de 2 milles d'un abri)</li>
+    <li><b>p. 9-10</b> — le code couleur des cartes SHOM et l'anatomie de la carte SHOM 7144 (l'examen utilise des cartes belges)</li>
+    <li><b>p. 16</b> — le fonctionnement du GPS (satellites) et l'ECDIS ; seul l'<b>usage</b> du GPS est au programme</li>
+    <li><b>p. 17</b> — la physique de l'écho-sondeur</li>
+    <li><b>p. 20</b> — la compensation du compas par aimants (retiens : erreurs, corrections, table de déviation)</li>
+    <li><b>p. 26</b> — les atlas de courants SHOM et l'écran Navionics</li>
+    <li><b>p. 29</b> — le gisement (utile, mais pas exigé)</li>
+    <li><b>p. 31 et 40</b> — les causes astronomiques de la marée et l'orbite de la Lune</li>
+    <li><b>p. 33</b> — les coefficients de marée (notion française : les tables belges n'en donnent pas)</li>
+    <li><b>p. 34</b> — les types de marées (semi-diurne, mixte, diurne)</li>
+    <li><b>p. 35</b> — la correction barométrique (le manuel le dit : pas à l'examen)</li>
+    <li><b>p. 37-38</b> — l'annuaire SHOM, ses ports rattachés et ses corrections (garde l'encadré UTC+1 / heure légale p. 37)</li>
+  </ul>
+  <h3>RIPAM</h3>
+  <ul>
+    <li><b>p. 57</b> — toute la section sur les dispositifs de séparation du trafic (règle 10 : exclue du programme du complément général)</li>
+    <li><b>p. 61</b> — la fréquence des signaux de brume (« toutes les 2 minutes », « toutes les minutes ») : fréquence exclue de l'examen</li>
+  </ul>
+  <h3>Météo</h3>
+  <ul>
+    <li><b>p. 43</b> — l'« effet papillon »</li>
+    <li><b>p. 44</b> — trombes et tornades</li>
+    <li><b>p. 51</b> — la page sur les inversions de température</li>
+    <li><b>p. 52</b> — le brouillard d'évaporation, l'humidité relative et l'hygromètre (seuls les brouillards de rayonnement et d'advection sont au programme)</li>
+  </ul>
+  <h3>Réglementation belge</h3>
+  <ul>
+    <li><b>p. 65</b> — l'ancre côté voie navigable et l'équipage au mouillage (articles hors programme, mais exacts)</li>
+    <li><b>p. 66</b> — la langue des Avis aux navigateurs</li>
+    <li><b>p. 67</b> — la bande des 300 m en France</li>
+    <li><b>p. 67-68</b> — les sports de vague et les jet-skis (chapitre 7 de l'AR plaisance, hors de la liste de la matière) et les conseils de prudence. Mais garde la règle des <b>activités de groupe</b> (autorisation à demander 3 semaines à l'avance, AR plaisance art. 5.1, au programme)</li>
+    <li><b>p. 69</b> — la check-list du gilet et les recommandations (seul l'article 3.81 est au programme)</li>
+    <li><b>p. 70</b> — les données géographiques et économiques du canal Gand-Terneuzen</li>
+  </ul>
+</section>
+
+<section id="oublis">
+  <h2>Ce que le manuel oublie — et qui est au programme</h2>
+  <p class="why">Les plus graves pour l'examen : les feux et marques du RIPAM (règles 20 à 30) et les voiliers entre eux (règle 12), vus seulement au Tome 1 ; la visibilité réduite (règle 19) ; les termes GPS et AIS ; les règles belges des petites embarcations.</p>
+  <h3>Navigation — absent du manuel</h3>
+  <ul>
+    <li>Les termes du GPS : <b>COG, SOG, RNG, BRG, ETA, TTG, XTE</b>, et les boutons <b>GOTO</b> et <b>MOB</b></li>
+    <li>L'<b>AIS</b> : classes A et B, limites, réglages ; l'interprétation du <b>CPA</b> et du <b>TCPA</b></li>
+    <li>Les limites du réseau <b>GSM</b> en mer</li>
+    <li>Le système géodésique <b>WGS 84</b> (régler le GPS sur le même système que la carte)</li>
+    <li>Le zéro des cartes : les termes <b>LAT</b> et <b>BMMVE</b> (basse mer moyenne de vives-eaux)</li>
+    <li>La <b>renverse</b> et l'<b>étale</b> (eau calme) ; la sonde à main</li>
+    <li>Le calcul de l'<b>ETA</b> (distance ÷ vitesse fond) et de l'<b>autonomie</b> (consommation × durée, carburant à bord)</li>
+    <li>Le <b>relèvement arrière</b> (Z ± 180°), la navigation dans un <b>secteur</b> défini par relèvements, le suivi d'un <b>alignement</b></li>
+  </ul>
+  <h3>Navigation — traité en partie</h3>
+  <ul>
+    <li>Les <b>tables de marées belges</b> (Nieuport, Ostende, Zeebrugge ; hauteurs au-dessus de LAT ; heure légale) : le manuel n'utilise que des annuaires français</li>
+    <li>Les termes d'examen <b>Rv</b> (le manuel dit Rf), <b>Dév</b> (le manuel dit d), <b>dénivellation</b> (le manuel dit marnage), <b>assèchement</b>, <b>dégagement sous la quille</b></li>
+    <li>La <b>position estimée</b>, le calcul complet Rv → Rs → Cv → Cc, le point par deux ou trois relèvements, le relèvement <b>Zm</b></li>
+    <li>Les abréviations de <b>feux</b> (Fl, Oc, Iso, Q…), de <b>nature des fonds</b>, de stations et de frontières</li>
+    <li>Le complément de balisage AISM A : rythmes des feux, marque d'épave nouvelle</li>
+    <li>Les perturbations du compas par les <b>appareils électroniques</b> et les câbles</li>
+    <li>La lecture d'une <b>table de déviation</b> (la déviation dépend du cap du bateau)</li>
+  </ul>
+  <h3>RIPAM — règles du programme absentes</h3>
+  <ul>
+    <li>Règle 1 (champ d'application), 2 b) (s'écarter des règles pour éviter un danger immédiat), 3 (toutes les définitions), 4 et 11 (domaine des sections)</li>
+    <li>Règle <b>12 : les voiliers entre eux</b> (amures bâbord s'écarte ; au vent s'écarte) — absente du Tome 2 ; vue seulement au Tome 1 (p. 38-41), dans le cadre fluvial</li>
+    <li>Règle <b>19 : conduite par visibilité réduite</b> — entièrement absente</li>
+    <li>Règles <b>20 à 30 : les feux et marques</b> (navire à moteur, moins de 12 m, moins de 7 m, voilier, pêche, non maître, capacité restreinte, tirant d'eau, pilote, mouillage, échouement) — presque absentes du Tome 2, qui renvoie aux « règles de base » : celles-ci sont au Tome 1 (p. 43-53). Vérifie-les avec le texte du RIPAM</li>
+    <li>Règle 21 : les secteurs des feux (225°, 112,5°, 360°) — absents du Tome 2 (seul le 135° du feu de poupe y figure, p. 56 et 63), mais vus au Tome 1</li>
+    <li>Règle 32 (son bref ≈ 1 s, son prolongé 4 à 6 s) et règle 33 (<b>cloche à partir de 20 m</b>)</li>
+    <li>Compléments des règles 6 à 9, 13 à 18 (22,5° sur l'arrière du travers ; manœuvrer tôt et franchement ; ne pas venir sur bâbord), 34 et 35 (signaux lumineux, au moins cinq sons brefs, signaux au mouillage) et 36</li>
+    <li>Annexe IV : canon à une minute d'intervalle, fusées à étoiles rouges, NC, pavillon carré avec une boule, flammes à bord, bras levés et abaissés</li>
+  </ul>
+  <h3>Escaut maritime inférieur — articles du programme absents</h3>
+  <ul>
+    <li>Navigation : art. 1, 3 à 5, 7, 8 ; signaux pour virer (art. 10) ; voiliers, rattrapage, routes opposées et croisement (art. 11 à 17)</li>
+    <li>Art. 18 §2 : <b>sur l'Escaut, le voilier s'écarte du bateau à moteur</b> — seulement sous-entendu par l'ordre de la p. 65, jamais dit clairement ; art. 18 §3 (bateau qui pêche dans le chenal)</li>
+    <li>Art. 19 à 39 : visibilité réduite, feux et marques (navire de grandes dimensions : trois feux rouges ou un cylindre), signaux sonores, poussage</li>
+    <li>Art. 41 et 42 : feux et règles de conduite des <b>petites embarcations</b> (moins de 20 m) ; art. 44 (informer la police des eaux), 47 (directives temporaires), 48 (règlement et carte officielle à bord)</li>
+    <li>Police : art. 1 §2, 3 §1, 4 (alcool), 6 (mouillage), 18, 20, 21 (signaler échouement, balisage abîmé), 23 (pollution), 42</li>
+  </ul>
+  <h3>Mer territoriale, ports et plages — articles du programme absents</h3>
+  <ul>
+    <li>Art. 3 (définitions), 8, 9 (alcool), 11 à 17 (stationnement, écluses, navire de grandes dimensions, dragage, matières dangereuses de nuit, remous, travaux)</li>
+    <li>Art. 10 §8 : dans les ports, un bâtiment de <b>moins de 20 m</b> serre la rive à tribord et s'écarte à temps des autres — c'est la « priorité des navires de plus de 20 m » du programme</li>
+    <li>Art. 7 §3 : pavillon national hissé <b>à l'entrée et à la sortie du port</b></li>
+    <li>Art. 19, 27 à 32 (amarrage, incidents, pollution, échouement, épaves, balisage), 44 (règlement et carte à bord). La matière cite aussi les art. 38 §2 et 39, mais ils ont été <b>abrogés en 2019</b> (AR plaisance, art. 10.7) pour les compétences fédérales</li>
+  </ul>
+  <h3>Canal Gand-Terneuzen — articles du programme absents</h3>
+  <ul>
+    <li>Art. 2 à 5, 7 et 8 ; art. 9 §9 (distances de mouillage : 10, 50 ou 100 m selon les feux ou cônes bleus) ; art. 10 (virer) ; art. 13 à 17 (rattrapage : pas de dépassement d'un navire de grandes dimensions sans autorisation)</li>
+    <li>Art. 18 : la petite embarcation s'écarte de tout bateau autre qu'une petite embarcation</li>
+    <li>Art. 19 à 37 (visibilité réduite, feux, signaux), 43 à 45, 52, 53 et l'annexe 1 (signaux de navigation)</li>
+  </ul>
+  <h3>AR plaisance 2019 — articles du programme absents</h3>
+  <ul>
+    <li>Art. 1.3 : les zones de navigation 0 à 7 (le manuel les numérote faux)</li>
+    <li>Art. 2.2 (enregistrement), 2.19 (pavillon : bateaux de plus de 6,5 m et bateaux à moteur, à l'entrée et à la sortie des ports belges), 2.20 (numéro d'enregistrement et sa présentation)</li>
+    <li>Art. 3.73 et 3.74 (équipement par zone, radeau à partir de la zone 6, journal de bord), 3.83 (équipage)</li>
+    <li>Art. 5.2 : moins de 6 m, pas au-delà de 2 milles si la houle dépasse 100 cm</li>
+    <li>Art. 6.1 : les devoirs du conducteur (informer les passagers sur les équipements de sauvetage et d'incendie)</li>
+  </ul>
+  <h3>Météo</h3>
+  <ul>
+    <li>L'<b>interaction vent-courant</b> (vent contre courant : mer courte et creuse sur les bancs) — absente</li>
+    <li>« Le vent <b>vire</b> / <b>recule</b> », rafale et vent moyen, vent réel et apparent</li>
+    <li>Les sources belges : <b>Oostende Radio</b>, NAVTEX, bulletins de l'IRM</li>
+    <li>Le <b>cumulonimbus</b> (reconnaissance, signes d'approche, conduite à tenir), le cycle de la brise de mer, l'ordre de grandeur d'une chute rapide de pression</li>
+  </ul>
+  <h3>Manœuvres et sécurité</h3>
+  <ul>
+    <li>Le <b>mouillage</b> : types d'ancres, longueur de ligne, choix du fond, vérifier que l'ancre tient — absent</li>
+    <li><b>Purger</b> un diesel, remplacer le <b>thermostat</b> et l'<b>impeller</b>, nettoyer le filtre à eau de mer, contrôler les batteries</li>
+    <li>La sécurité pendant les travaux à bord ; le gaz (détecteur, test à l'eau savonneuse)</li>
+    <li><b>MARPOL</b> (hydrocarbures, eaux noires, ordures) — absent</li>
+    <li>Premiers secours : <b>état de choc</b>, <b>mal de mer</b>, techniques d'évacuation (hélitreuillage), brûlures</li>
+    <li>Les différentes manœuvres d'<b>homme à la mer</b> (une seule est décrite), harnais et ligne de vie</li>
+    <li>Le <b>MRCC Oostende</b> et l'organisation belge du sauvetage (le manuel décrit surtout le système français)</li>
+    <li>Les documents à bord en mer, le remorquage d'un bateau (points d'amarrage, patte d'oie), la fonction du réflecteur radar</li>
+  </ul>
+</section>
+
+<section id="impr">
+  <h2>Imprécisions utiles à connaître</h2>
+  <p class="why">Pas fausses à proprement parler, mais elles peuvent te faire rater une question.</p>
+  <ul>
+    <li><b>T2 p. 21</b> — « W = D + d » : sur la carte belge, <b>VAR = déclinaison seule</b> (la carte p. 12 porte « Variatie 1°W »). Lis bien la question.</li>
+    <li><b>T2 p. 30</b> — pour un relèvement au compas de route, on applique la déviation du <b>cap du bateau</b>, pas celle de la direction de l'amer ; au compas de relèvement à main, la déviation est ≈ 0.</li>
+    <li><b>T2 p. 31</b> — « flot = marée montante » : la marée montante et le <b>courant de flot</b> ne coïncident pas (d'après le manuel lui-même p. 36, le courant vers les Pays-Bas dure jusqu'à PM+3).</li>
+    <li><b>T2 p. 39-40</b> — hauteur de marée nécessaire = tirant d'eau + pied de pilote + hauteur d'assèchement : 0,7 + 0,3 + 0,6 = <b>1,6 m</b> (la figure oublie le pied de pilote).</li>
+    <li><b>T2 p. 43 et 47</b> — deux paires de seuils différentes pour les avis de vent fort, sans source.</li>
+    <li><b>T2 p. 55</b> — « rouge sur rouge, rien ne bouge » n'est vrai qu'<b>après</b> la manœuvre ; routes opposées = on voit les <b>deux feux de côté</b> de l'autre.</li>
+    <li><b>T2 p. 59-60</b> — un échouement n'est pas en soi une détresse ; lampe de poche, miroir ou CD ne sont pas des signaux de l'annexe IV ; la fumée officielle est <b>orange</b>.</li>
+    <li><b>T2 p. 62</b> — l'échelle se lit de bas en haut, dans le sens de la flèche ; lue de haut en bas, elle contredit son sous-titre « du moins privilégié au plus privilégié ». Le navire handicapé par son tirant d'eau n'est pas un échelon de « priorité » : on évite de le <b>gêner</b>, s'il montre ses signaux.</li>
+    <li><b>T2 p. 63</b> — deux feux de tête de mât tant que le train de remorque <b>ne dépasse pas</b> 200 m (200 m compris) ; trois feux et, de jour, une marque biconique au-delà.</li>
+    <li><b>T2 p. 65</b> — mouillage hors chenal, sauf pour qui ne peut naviguer que dans le chenal (Escaut navigation, art. 9 § 5) ; « virer » vaut aussi en eau sans courant (art. 2 § 2 k)).</li>
+    <li><b>T2 p. 66</b> — « pas de vitesse maximale » sur l'Escaut : exact, mais tu dois garder une <b>vitesse de sécurité</b> et réduire à temps près des bateaux sensibles aux remous (Escaut navigation, art. 6 § 1 et § 3, au programme).</li>
+    <li><b>T2 p. 66</b> — l'usage du moteur par les voiliers vaut dans <b>tous les ports du littoral</b> et leurs chenaux, à l'entrée comme à la sortie, s'ils en ont un.</li>
+    <li><b>T2 p. 69</b> — le gilet : il suffit d'<b>une seule</b> des cinq situations pour qu'il soit obligatoire ; l'enfant de <b>12 ans inclus</b> ; uniquement en zones 4 à 7.</li>
+    <li><b>T1 p. 65</b> — hémorragie : on ne surélève plus le membre ; compression directe, puis garrot si elle ne suffit pas.</li>
+    <li><b>T1 p. 63 · T3 p. 27</b> — le manuel mélange le système français (CROSS, SNSM) et le belge (MRCC Oostende).</li>
+  </ul>
+</section>
+
+<section id="sources">
+  <h2>Les sources</h2>
+  <ul>
+    <li><b>Matière d'examen, complément pour le brevet de conduite général</b>, SPF Mobilité et Transports (parties réglementation, navigation, manœuvres et sécurité).</li>
+    <li><b>RIPAM / COLREG 1972</b>, texte français à jour des amendements jusqu'à la résolution A.1085(28) (mer.gouv.fr).</li>
+    <li><b>Règlement de navigation</b> et <b>règlement de police de l'Escaut maritime inférieur</b>, AR du 23/09/1992, textes consolidés Justel (police : version en vigueur depuis le 8/05/2023).</li>
+    <li><b>Règlement de police et de navigation pour la mer territoriale belge, les ports et les plages</b>, AR du 4/08/1981, édition SPF à jour au 8/06/2007.</li>
+    <li><b>Règlement de navigation du canal de Gand à Terneuzen</b>, AR du 23/09/1992, édition SPF à jour au 17/09/2005.</li>
+    <li><b>AR du 28/06/2019 relatif à la navigation de plaisance</b>.</li>
+    <li>Pour la météo et les premiers secours, qui n'ont pas de texte belge : définitions de l'Organisation météorologique mondiale ; lignes directrices 2021 du Conseil européen de réanimation (ERC) ; Code international des signaux pour le pavillon L.</li>
+  </ul>
+</section>
+
+</main>
+
+<script>
+/* ===== SOCLE COMMUN DES PAGES DU PERMIS BELGE =====
+   Trois choses : la recherche à occurrences, le réglage de la taille du
+   texte, et le moteur d'animations. Plus le QCM, qui compte par catégorie
+   parce que l'examen belge se rate catégorie par catégorie. */
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------- outils */
+  function aplatir(s){
+    return Array.from(String(s)).map(function(c){
+      var b = (c.normalize("NFD").charAt(0) || c).toLowerCase();
+      return b.charAt(0) || c;       /* toujours UN caractère */
+    }).join("");
+  }
+  var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ------------------------------------------------------ bouton « Retour »
+     Un lien ordinaire rechargeait la page précédente comme une page neuve :
+     le sommaire revenait tout fermé, et la recherche OneDrive repartait.
+     Quand on vient justement de la page visée, on fait un vrai retour
+     arrière : le navigateur réaffiche souvent la page telle qu'on l'a
+     laissée. Sinon, le lien fonctionne comme avant. */
+  (function(){
+    var retour = document.querySelector(".kam-bar a[href]");
+    if(!retour) return;
+    retour.addEventListener("click", function(ev){
+      try{
+        if(!document.referrer || history.length < 2) return;
+        var cible = new URL(retour.getAttribute("href"), location.href);
+        var venu = new URL(document.referrer);
+        if(venu.origin === cible.origin && venu.pathname === cible.pathname){
+          ev.preventDefault();
+          history.back();
+        }
+      }catch(e){}
+    });
+  })();
+
+  /* ------------------------------------------------------- taille du texte */
+  var ECHELLES = [1, 1.15, 1.3, 1.5], iEch = 0;
+  var bPlus = document.getElementById("kam-plus");
+  var bMoins = document.getElementById("kam-moins");
+  function mesurerBarre(){
+    var b = document.querySelector(".kam-bar");
+    var h = b ? b.offsetHeight : 56;
+    if(b) document.documentElement.style.setProperty("--h-kam", h + "px");
+    /* Hauteur TOTALE de ce qui reste collé en haut : la barre « Retour » plus
+       la barre de recherche. C'est elle qui sert de marge de défilement —
+       calculée, jamais devinée, sinon un titre rejoint par un lien se cache
+       dessous. */
+    var c = document.getElementById("kam-chercher");
+    document.documentElement.style.setProperty("--h-collant",
+      (h + (c ? c.offsetHeight : 0) + 12) + "px");
+  }
+  function appliquerTaille(){
+    document.documentElement.style.setProperty("--ech", ECHELLES[iEch]);
+    if(bMoins) bMoins.disabled = (iEch === 0);
+    if(bPlus) bPlus.disabled = (iEch === ECHELLES.length - 1);
+    try{ localStorage.setItem("katamar-permis-taille", String(iEch)); }catch(e){}
+    mesurerBarre();
+  }
+  try{
+    var g = parseInt(localStorage.getItem("katamar-permis-taille"), 10);
+    if(g >= 0 && g < ECHELLES.length) iEch = g;
+  }catch(e){}
+  if(bPlus) bPlus.addEventListener("click", function(){ if(iEch < ECHELLES.length - 1){ iEch++; appliquerTaille(); } });
+  if(bMoins) bMoins.addEventListener("click", function(){ if(iEch > 0){ iEch--; appliquerTaille(); } });
+  mesurerBarre();
+  window.addEventListener("resize", mesurerBarre);
+  window.addEventListener("orientationchange", mesurerBarre);
+  appliquerTaille();
+
+  /* --------------------------------------------- recherche à occurrences */
+  var cours = document.querySelector("main");
+  var champ = document.getElementById("kam-q");
+  if(cours && champ){
+    var compteur = document.getElementById("kam-compteur");
+    var bPrec = document.getElementById("kam-prec");
+    var bSuiv = document.getElementById("kam-suiv");
+    var bVider = document.getElementById("kam-vider");
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var marques = [], courant = -1;
+
+    function aEviter(noeud){
+      var p = noeud.parentNode;
+      while(p && p !== cours){
+        if(p.nodeType === 1){
+          var n = p.nodeName.toUpperCase();
+          if(n === "SCRIPT" || n === "STYLE" || n === "NOSCRIPT" || n === "TEXTAREA") return true;
+          if(p.namespaceURI === SVG_NS) return true;   /* un <mark> casserait le schéma */
+          if(p.id === "kam-chercher") return true;
+          if(p.hidden) return true;                    /* corrections non révélées */
+        }
+        p = p.parentNode;
+      }
+      return false;
+    }
+    function effacerSurlignage(){
+      for(var i = 0; i < marques.length; i++){
+        var m = marques[i], p = m.parentNode;
+        if(!p) continue;
+        p.replaceChild(document.createTextNode(m.textContent), m);
+        p.normalize();
+      }
+      marques = []; courant = -1;
+    }
+    function surligner(mot){
+      var cible = aplatir(mot);
+      if(!cible) return;
+      var promeneur = document.createTreeWalker(cours, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(n){
+          if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+          return aEviter(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var noeuds = [], n;
+      while((n = promeneur.nextNode())) noeuds.push(n);
+      for(var i = 0; i < noeuds.length; i++){
+        var noeud = noeuds[i], texte = noeud.nodeValue, plat = aplatir(texte);
+        var pos = plat.indexOf(cible);
+        if(pos === -1) continue;
+        var frag = document.createDocumentFragment(), depart = 0;
+        while(pos !== -1){
+          if(pos > depart) frag.appendChild(document.createTextNode(texte.slice(depart, pos)));
+          var m = document.createElement("mark");
+          m.className = "kam-occ";
+          m.textContent = texte.slice(pos, pos + cible.length);
+          frag.appendChild(m); marques.push(m);
+          depart = pos + cible.length;
+          pos = plat.indexOf(cible, depart);
+        }
+        if(depart < texte.length) frag.appendChild(document.createTextNode(texte.slice(depart)));
+        noeud.parentNode.replaceChild(frag, noeud);
+      }
+    }
+    function majCompteur(){
+      var mot = champ.value.trim();
+      if(!mot){ compteur.textContent = "Cherche dans tout le module"; compteur.className = ""; return; }
+      if(mot.length < 2){ compteur.textContent = "Encore une lettre…"; compteur.className = ""; return; }
+      if(marques.length === 0){
+        compteur.textContent = "Aucune occurrence de « " + mot + " »";
+        compteur.className = "rien"; return;
+      }
+      compteur.innerHTML = "<b>" + (courant + 1) + "</b> / " + marques.length
+        + (marques.length > 1 ? " occurrences" : " occurrence");
+      compteur.className = "";
+    }
+    function ouvrirLesReplis(el){
+      var p = el.parentNode;
+      while(p && p !== cours){
+        if(p.nodeName === "DETAILS" && !p.open) p.open = true;
+        p = p.parentNode;
+      }
+    }
+    function allerA(i){
+      if(marques.length === 0) return;
+      if(courant >= 0 && marques[courant]) marques[courant].classList.remove("actif");
+      courant = (i + marques.length) % marques.length;
+      var m = marques[courant];
+      m.classList.add("actif");
+      ouvrirLesReplis(m);
+      m.scrollIntoView({ block:"center", behavior: reduit ? "auto" : "smooth" });
+      majCompteur();
+    }
+    var minuteur = null;
+    function chercher(){
+      var mot = champ.value.trim();
+      effacerSurlignage();
+      bVider.classList.toggle("vu", champ.value.length > 0);
+      if(mot.length >= 2) surligner(mot);
+      bPrec.disabled = bSuiv.disabled = (marques.length === 0);
+      if(marques.length > 0) allerA(0); else majCompteur();
+    }
+    champ.addEventListener("input", function(){ clearTimeout(minuteur); minuteur = setTimeout(chercher, 150); });
+    champ.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(marques.length === 0){ clearTimeout(minuteur); chercher(); return; }
+      allerA(courant + (e.shiftKey ? -1 : 1));
+    });
+    bSuiv.addEventListener("click", function(){ allerA(courant + 1); });
+    bPrec.addEventListener("click", function(){ allerA(courant - 1); });
+    bVider.addEventListener("click", function(){ champ.value = ""; clearTimeout(minuteur); chercher(); champ.focus(); });
+  }
+
+  /* --------------------------------------------------------- animations */
+  /* Chaque animation déclare un état de départ, une suite d'images et une
+     fonction de rendu. Entre deux images, les nombres sont interpolés : le
+     sas se remplit sous les yeux au lieu de sauter d'un niveau à l'autre. */
+  var ANIMS = {};
+  window.kamAnim = function(id, def){
+    var fig = document.getElementById(id);
+    if(!fig) return;
+    var cap = fig.querySelector(".cap");
+    var cnt = fig.querySelector(".cnt");
+    var bLect = fig.querySelector("[data-lecture]");
+    var bEtape = fig.querySelector("[data-etape]");
+    var bRejouer = fig.querySelector("[data-rejouer]");
+    var etat = Object.assign({}, def.etat0);
+    var i = -1, enCours = false, tache = null;
+    /* Chaque transition porte un numéro. Deux appuis rapides sur « Étape »
+       lançaient deux boucles en même temps : l'ancienne continuait d'écrire
+       l'état et ramenait le feu au rouge ou le bateau en arrière. Une boucle
+       qui n'est plus la dernière s'arrête d'elle-même. */
+    var gen = 0;
+    /* Cible de la transition en cours. Appuyer sur « Étape » pendant qu'une
+       image se joue doit la TERMINER d'un coup, puis passer à la suivante —
+       sinon le mouvement se fige à mi-chemin : le feu reste entre rouge et
+       vert, et le bateau s'arrête au milieu du sas. */
+    var cibleEnCours = null;
+
+    function rendre(){ def.rendu(etat, fig); }
+    function majCnt(){ if(cnt) cnt.textContent = Math.max(0, i + 1) + " / " + def.images.length; }
+    function poser(n, immediat, apres){
+      var img = def.images[n];
+      var depart = Object.assign({}, etat);
+      var cible = Object.assign({}, etat, img.etat || {});
+      var duree = (immediat || reduit) ? 0 : (img.d || 700);
+      if(cap) cap.innerHTML = img.cap;
+      i = n; majCnt();
+      if(duree === 0){
+        gen++; cibleEnCours = null; etat = cible; rendre(); if(apres) apres();
+        return;
+      }
+      var t0 = performance.now();
+      cibleEnCours = cible;
+      var moi = ++gen;
+      cancelAnimationFrame(tache);
+      (function boucle(t){
+        if(moi !== gen) return;               /* une transition plus récente a pris la main */
+        var k = Math.min(1, (t - t0) / duree);
+        var doux = k < .5 ? 2*k*k : 1 - Math.pow(-2*k + 2, 2)/2;   /* ease-in-out */
+        var e = {};
+        Object.keys(cible).forEach(function(cle){
+          var a = depart[cle], b = cible[cle];
+          e[cle] = (typeof a === "number" && typeof b === "number") ? a + (b - a) * doux : b;
+        });
+        etat = e; rendre();
+        if(k < 1) tache = requestAnimationFrame(boucle);
+        else { cibleEnCours = null; if(apres) apres(); }
+      })(t0);
+    }
+    function terminerEnCours(){
+      if(!cibleEnCours) return;
+      gen++; cancelAnimationFrame(tache);
+      etat = cibleEnCours; cibleEnCours = null; rendre();
+    }
+    function suivante(){
+      terminerEnCours();
+      if(i + 1 >= def.images.length) return false;
+      poser(i + 1, false, null);
+      return true;
+    }
+    function lire(){
+      if(enCours){ enCours = false; couper(); if(bLect) bLect.textContent = "▶ Lecture"; return; }
+      enCours = true; if(bLect) bLect.textContent = "⏸ Pause";
+      var n = (i + 1 >= def.images.length) ? 0 : i + 1;
+      if(n === 0){ etat = Object.assign({}, def.etat0); rendre(); }
+      (function enchaine(k){
+        if(!enCours || k >= def.images.length){
+          enCours = false; if(bLect) bLect.textContent = "▶ Lecture"; return;
+        }
+        poser(k, false, function(){ setTimeout(function(){ enchaine(k + 1); }, reduit ? 0 : 450); });
+      })(n);
+    }
+    function couper(){ gen++; cibleEnCours = null; cancelAnimationFrame(tache); }
+    if(bLect) bLect.addEventListener("click", lire);
+    if(bEtape) bEtape.addEventListener("click", function(){
+      enCours = false; if(bLect) bLect.textContent = "▶ Lecture";
+      /* on ne coupe pas ici : poser() incrémente lui-même le numéro */
+      if(!suivante()){ etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+        if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture »."; }
+    });
+    if(bRejouer) bRejouer.addEventListener("click", function(){
+      enCours = false; couper();
+      if(bLect) bLect.textContent = "▶ Lecture";
+      etat = Object.assign({}, def.etat0); i = -1; rendre(); majCnt();
+      if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    });
+    if(cap) cap.innerHTML = def.capDepart || "Prêt. Touche « Étape » ou « Lecture ».";
+    rendre(); majCnt();
+    ANIMS[id] = { rendre: rendre };
+  };
+
+  /* ------------------------------------------- modules pas encore écrits */
+  document.querySelectorAll("[data-bientot]").forEach(function(b){
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", "bientot-" + b.dataset.bientot);
+    b.addEventListener("click", function(){
+      var note = document.getElementById("bientot-" + b.dataset.bientot);
+      if(!note) return;
+      var ouvert = !note.hidden;
+      note.hidden = ouvert;
+      b.setAttribute("aria-expanded", ouvert ? "false" : "true");
+    });
+  });
+
+  /* --------------------------------------------------------------- QCM */
+  /* L'examen belge se rate catégorie par catégorie : 60 % au total ET 50 %
+     minimum dans chaque catégorie. Le score est donc tenu par catégorie. */
+  var scores = {};
+  /* Les questions hors du programme officiel de l'examen (matière d'examen
+     du SPF Mobilité) restent pour la culture et la sécurité sur l'eau, mais
+     elles ne comptent ni dans le total ni dans la règle des 50 % : sinon le
+     score dirait « réussi » ou « raté » sur une matière qu'on ne te posera pas. */
+  var HORS = "Hors examen";
+  function majScore(){
+    var panneau = document.getElementById("score");
+    if(!panneau) return;
+    var tout = Object.keys(scores);
+    if(tout.length === 0){ panneau.hidden = true; return; }
+    panneau.hidden = false;
+    var hors = scores[HORS] || null;
+    var cats = tout.filter(function(c){ return c !== HORS; });
+    var justes = 0, total = 0;
+    cats.forEach(function(c){ justes += scores[c].ok; total += scores[c].n; });
+    var pc = total ? Math.round(justes / total * 100) : 0;
+    var lignes = cats.sort().map(function(c){
+      var s = scores[c], p = Math.round(s.ok / s.n * 100);
+      return '<li><b>' + (p >= 50 ? "✓" : "✗") + "</b> " + c + " — " + s.ok + " / " + s.n
+           + " (" + p + " %)" + (p >= 50 ? "" : " <b>sous la barre des 50 %</b>") + "</li>";
+    }).join("");
+    if(hors) lignes += '<li class="hors"><b>·</b> ' + HORS + " — " + hors.ok + " / " + hors.n
+                     + " <i>(non compté : hors du programme de l'examen)</i></li>";
+    var sousBarre = cats.some(function(c){ return scores[c].ok / scores[c].n < 0.5; });
+    if(total === 0){
+      panneau.innerHTML = '<div class="big">—</div><ul class="chapitres">' + lignes + "</ul>"
+        + '<p class="regle">Tu n\'as encore répondu qu\'à des questions hors examen : elles ne comptent pas.</p>';
+      return;
+    }
+    panneau.innerHTML = '<div class="big">' + justes + " / " + total + "  ·  " + pc + " %</div>"
+      + '<ul class="chapitres">' + lignes + "</ul>"
+      + '<p class="regle">' + (pc >= 60 && !sousBarre
+          ? "Au-dessus des deux barres : 60 % au total, et 50 % dans chaque catégorie."
+          : "Il faut <b>60 % au total</b> ET <b>50 % minimum dans chaque catégorie</b>. "
+            + (pc < 60 ? "Le total n'y est pas. " : "")
+            + (sousBarre ? "Une catégorie au moins est sous la barre." : "")) + "</p>";
+  }
+  document.querySelectorAll(".qcm").forEach(function(q){
+    var bonne = (q.dataset.bonne || "").toUpperCase();
+    var cat = q.hasAttribute("data-hors") ? HORS : (q.dataset.cat || "Général");
+    if(q.hasAttribute("data-hors")){
+      /* le badge est écrit dans la page, pas seulement en CSS : il se lit
+         aussi sans style, et la recherche le trouve */
+      var qn = q.querySelector(".qn");
+      if(qn && !qn.querySelector(".badge-hors")){
+        var bh = document.createElement("span");
+        bh.className = "badge-hors"; bh.textContent = "Hors examen";
+        qn.appendChild(document.createTextNode(" ")); qn.appendChild(bh);
+      }
+    }
+    var corr = q.querySelector(".corr");
+    var boutons = [].slice.call(q.querySelectorAll(".choix button"));
+    boutons.forEach(function(b){
+      b.addEventListener("click", function(){
+        if(q.dataset.repondu) return;
+        q.dataset.repondu = "1";
+        var choisi = (b.dataset.l || "").toUpperCase();
+        var juste = (choisi === bonne);
+        boutons.forEach(function(x){
+          x.disabled = true;
+          var l = (x.dataset.l || "").toUpperCase();
+          if(l === bonne) x.classList.add("juste");
+          else if(l === choisi) x.classList.add("faux");
+        });
+        if(corr){
+          corr.hidden = false;
+          var v = corr.querySelector(".verdict");
+          if(v){
+            v.className = "verdict " + (juste ? "ok" : "ko");
+            v.textContent = juste ? "Juste." : "Faux — la bonne réponse est " + bonne + ".";
+          }
+        }
+        if(!scores[cat]) scores[cat] = { ok:0, n:0 };
+        scores[cat].n++; if(juste) scores[cat].ok++;
+        majScore();
+      });
+    });
+  });
+  var raz = document.getElementById("qcm-raz");
+  if(raz) raz.addEventListener("click", function(){
+    scores = {};
+    document.querySelectorAll(".qcm").forEach(function(q){
+      delete q.dataset.repondu;
+      q.querySelectorAll(".choix button").forEach(function(b){
+        b.disabled = false; b.classList.remove("juste", "faux");
+      });
+      var c = q.querySelector(".corr"); if(c) c.hidden = true;
+    });
+    majScore();
+    var p = document.getElementById("score"); if(p) p.hidden = true;
+  });
+  majScore();
+})();
+
+</script>
+
+</body>
+</html>
