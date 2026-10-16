@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feux et marques côtier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout : colonne unique — scène animée, fiche (titre, explication, piège), commandes ; mode Quiz dans la même colonne. */
+:root{
+  --bg:#EEF1F4; --fg:#16202A; --muted:#55626F; --panel:#FFFFFF; --line:#CBD3DC;
+  --accent:#0E5A8A; --accent-fg:#FFFFFF; --trap-bg:#FFF4D6; --trap-fg:#6A4A00; --trap-line:#E0B43A;
+  --ok:#2C7A35; --ok-bg:#E5F3E6; --ko:#B3261E; --ko-bg:#FBE7E5;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
+  --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
+  --ok:#7FCB86; --ok-bg:#16301A; --ko:#F28B82; --ko-bg:#3A1714; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
+  --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
+  --ok:#7FCB86; --ok-bg:#16301A; --ko:#F28B82; --ko-bg:#3A1714; color-scheme:dark}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:600px;margin:0 auto;padding-block:12px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:10px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spacing:.02em;text-wrap:balance}
+.ver{font-size:12px;color:var(--muted)}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.seg button,.chip{font:600 14px var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chip{font-size:13px;padding:5px 10px;white-space:nowrap}
+.stage{position:relative;height:min(38vh,300px);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.stage.day{background:linear-gradient(#BFE0F5 0 46%,#7FB5D9 46% 100%)}
+.stage.night{background:radial-gradient(ellipse at 50% 120%,#13324B 0,#071420 60%,#03080D 100%)}
+.bank{position:absolute;left:0;right:0;top:40%;height:8%;background:#8FBF5A}
+.night .bank{background:#0E2216}
+.bank,.post{display:none}
+.post{position:absolute;right:27%;top:60%;width:5px;height:18%;background:#6B6B63}
+.night .post{display:none}
+.sign{position:absolute;right:5%;top:6%;width:44%;height:62%;transform-origin:85% 100%;display:flex;align-items:center;justify-content:center;transform:scale(.15);opacity:0;transition:transform 1.4s cubic-bezier(.2,.8,.2,1),opacity .6s}
+.sign img{max-width:100%;max-height:100%;border-radius:6px;background:#fff}
+.night .sign{right:5%;left:5%;width:auto;height:auto;top:8%;bottom:8%;transform-origin:50% 50%}
+.night .sign img{box-shadow:0 0 28px rgba(255,255,255,.18);background:transparent}
+.sign.in{transform:scale(1);opacity:1}
+.sign.wide{left:4%;right:4%;width:auto;top:6%;height:70%;transform-origin:50% 100%}
+.stage.wd .post{display:none}
+.boat{position:absolute;left:-60px;bottom:18%;width:64px;transition:left 1.8s ease-out}
+.boat.in{left:18%}
+.night .boat{display:none}
+.blasts{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 12px}
+.bl{height:14px;border-radius:7px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5)}
+.bl.T{width:6px}.bl.b{width:16px}.bl.L{width:64px}.bl.c{width:28px;border-radius:3px}.bl.tri{width:40px;border-style:dashed}
+.bl.C{width:46px;border-radius:3px;background:rgba(242,194,48,.35)}.bl.G{width:46px;border-radius:3px;background:rgba(176,141,87,.45)}.bl.x{width:12px;border-radius:50%}.bl.K{width:110px}
+.bl.on{background:#FFD23F;border-color:#FFD23F;box-shadow:0 0 12px #FFD23F}
+.horn{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-family:var(--display);font-size:22px;color:#fff;letter-spacing:.06em;text-align:center}
+.stage.tall{height:auto}
+.stage.tall .bank,.stage.tall .post,.stage.tall .boat{display:none}
+.cmp{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px;padding:10px}
+.pan{display:flex;flex-direction:column;align-items:center;min-width:0;border-radius:8px;padding:4px 2px}
+.pan.day{background:#BFE0F5}.pan.night{background:rgba(255,255,255,.04)}
+.pan svg{width:100%;height:auto;max-height:190px}
+.pan.solo svg{max-height:260px}
+.pan.solo .dif{display:none}
+.pan .lab{font:600 12.5px/1.15 var(--body);color:#fff;text-align:center;padding:2px}
+.pan.day .lab{color:#0B2236}
+.pan.solo{grid-column:1/-1}
+.pan img.cq{width:100%;height:auto;display:block;border-radius:6px}
+.dif{fill:none;stroke:#FFD23F;stroke-width:2.2;stroke-dasharray:4 3;animation:difb 1.1s ease-in-out infinite}
+@keyframes difb{0%,100%{opacity:.25}50%{opacity:1}}
+.blk{animation:blk .5s steps(1) infinite}@keyframes blk{50%{opacity:.08}}
+@media (prefers-reduced-motion: reduce){.dif,.blk{animation:none}}
+.theory{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:var(--display);font-size:26px;color:#0B2236;background:rgba(255,255,255,.55)}
+.night .theory{color:#fff;background:rgba(0,0,0,.35)}
+.theory{flex-direction:column;gap:10px}
+.theory .tt{font-size:22px;line-height:1.15}
+.theory .ex{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:100%}
+.theory .ex figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:3px;width:78px}
+.theory .ex img{width:72px;height:72px;object-fit:contain;background:#fff;border-radius:6px;padding:2px}
+.theory .ex figcaption{font:600 11.5px/1.15 var(--body);color:inherit}
+.theory .bls{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;justify-content:center}
+.stage.th .post,.stage.th .boat{display:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-height:170px}
+.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;gap:8px}
+.cat{font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.card h2{font-family:var(--display);font-weight:700;font-size:24px;margin:0;text-wrap:balance}
+.card p{margin:0}
+.lbl{font-weight:600}
+.trap{background:var(--trap-bg);color:var(--trap-fg);border-left:4px solid var(--trap-line);padding:7px 10px;border-radius:0}
+.ref{font-size:13px;color:var(--accent)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--trap-line)}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 15px var(--body);padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,.opt:focus-visible{outline:3px solid var(--trap-line);outline-offset:2px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;font:600 16px var(--body);padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.opt.good{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.opt.bad{background:var(--ko-bg);border-color:var(--ko);color:var(--ko)}
+.verdict{font-family:var(--display);font-size:22px;font-weight:700}
+.verdict.good{color:var(--ok)}.verdict.bad{color:var(--ko)}
+.note{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){.sign,.boat{transition:none}}
+</style>
+
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%}</style>
+</head>
+<body>
+<a href="#" id="katBack" onclick="if(history.length>1){history.back();}else{location.href='index.html';}return false;" style="position:sticky;top:0;z-index:5;display:inline-block;margin:8px max(16px,env(safe-area-inset-left,0px)) 0;padding:8px 14px;border-radius:8px;background:#0E5A8A;color:#fff;font:600 15px 'Source Sans 3',Arial,sans-serif;text-decoration:none">‹ Retour</a>
+
+
+<div class="wrap">
+  <header><h1>Feux et marques qui se ressemblent</h1><span class="ver">version 1.0 · permis côtier · RIPAM</span></header>
+  <div class="row seg" id="tabs"></div>
+  <div class="row seg" role="group" aria-label="Mode">
+    <button id="mDef" aria-pressed="true">Défilé</button><button id="mQuiz" aria-pressed="false">Quiz</button>
+  </div>
+  <div class="chips" id="cats"></div>
+  <div class="stage" id="stage">
+    <div class="bank"></div><div class="post"></div>
+    <div class="sign" id="sign"></div>
+    <svg class="boat" id="boat" viewBox="0 0 64 26" aria-hidden="true"><path d="M2 12 L44 12 L62 16 L46 24 L6 24 Z" fill="#F08A24" stroke="#7A3E06"/><rect x="14" y="5" width="16" height="7" rx="1.5" fill="#FFF6E8" stroke="#7A3E06"/></svg>
+    <div class="horn" id="horn"></div>
+    <div class="blasts" id="blasts"></div>
+    <div class="theory" id="theory" hidden></div>
+    <div class="cmp" id="cmp" hidden></div>
+  </div>
+  <section class="card" id="card" aria-live="polite"></section>
+  <div class="controls" id="ctrlDef">
+    <button class="btn primary" id="bPlay">Démarrer</button>
+    <button class="btn" id="bPrev">Précédent</button>
+    <button class="btn" id="bNext">Suivant</button>
+    <button class="btn" id="bRestart">Recommencer</button>
+    <button class="btn" id="bSpeed" hidden>Sons : durée réelle</button>
+  </div>
+  <div class="controls" id="ctrlQuiz" hidden>
+    <button class="btn primary" id="qNext">Question suivante</button>
+    <button class="btn" id="qRestart">Recommencer le quiz</button>
+    <button class="btn" id="qListen" hidden>Réécouter</button>
+  </div>
+  <p class="note" id="note">Dessins faits d'après le texte du RIPAM (règles 20 à 31 et annexe I) : de nuit sur fond sombre, de jour sur fond bleu clair. Les bateaux vus de côté vont vers la droite ; vus de face, ils viennent vers toi (leur vert est à ta gauche). Un feu qui clignote est un feu scintillant ou à éclats. Le Défilé montre les comparaisons puis les 10 pièges ; le Quiz te demande quel bateau montre ces feux ou ces marques, parmi ceux qui leur ressemblent.</p>
+</div>
+
+<script>
+const DATA = {"tabs": [{"key": "comparer", "label": "Comparer", "scene": "night", "items": [{"kind": "compare", "cat": "Tête de mât", "t": "Deux feux en tête de mât : lequel est en haut ?", "panels": [{"lab": "Bateau-pilote en service", "sub": "Blanc AU-DESSUS du rouge, plus ses feux de côté s'il fait route. De jour : pas de marque prévue par le RIPAM (en pratique, le pavillon H du Code international).", "day": false, "it": [["L", 50, 22, "W", ""], ["L", 50, 40, "R", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Navire en pêche (pas au chalut)", "sub": "Rouge AU-DESSUS du blanc, plus ses feux de côté s'il a de l'erre.", "day": false, "it": [["L", 50, 22, "R", ""], ["L", 50, 40, "W", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Chalutier", "sub": "Vert AU-DESSUS du blanc, plus ses feux de côté s'il a de l'erre.", "day": false, "it": [["L", 50, 22, "G", ""], ["L", 50, 40, "W", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Navire en pêche (pas au chalut)", "sub": "De jour : deux cônes pointes réunies (un sablier). Si ses engins s'étendent à plus de 150 m : en plus, un cône pointe en haut du côté des engins.", "day": true, "it": [["coneD", 50, 20, "K"], ["coneU", 50, 38, "K"], ["coneU", 70, 52, "K"]]}, {"lab": "Chalutier", "sub": "De jour : deux cônes pointes réunies, exactement comme un autre navire en pêche.", "day": true, "it": [["coneD", 50, 20, "K"], ["coneU", 50, 38, "K"]]}], "a": "Trois navires qui montrent deux feux superposés en haut du mât, avec leurs feux de côté. Seuls la couleur et l'ordre changent.", "p": "Lis toujours de HAUT en BAS. Blanc-rouge = pilote (« blanc sur rouge, pilote à bord »). Rouge-blanc = pêche. Vert-blanc = chalut. De jour, pêche et chalut portent la MÊME marque (deux cônes en sablier) : seul le cône supplémentaire signale des engins de plus de 150 m.", "r": "RIPAM règles 26 et 29"}, {"kind": "compare", "cat": "Feux rouges", "t": "Deux rouges, trois rouges ou rouge-blanc-rouge ?", "panels": [{"lab": "Pas maître de sa manœuvre", "sub": "Deux rouges superposés, tout horizon. PAS de feu de mât. Avec de l'erre, il ajoute ses feux de côté et de poupe (ici, on voit ses feux de côté).", "day": false, "it": [["L", 50, 28, "R", ""], ["L", 50, 46, "R", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Capacité de manœuvre restreinte", "sub": "Rouge, blanc, rouge superposés. Avec de l'erre, il ajoute feux de mât, de côté et de poupe (ici sans erre).", "day": false, "it": [["L", 50, 22, "R", ""], ["L", 50, 40, "W", ""], ["L", 50, 58, "R", ""]]}, {"lab": "Handicapé par son tirant d'eau", "sub": "Trois rouges superposés EN PLUS des feux d'un navire à moteur (feux de mât, de côté, de poupe).", "day": false, "it": [["L", 50, 18, "W", ""], ["L", 50, 44, "W", ""], ["L", 65, 16, "R", ""], ["L", 65, 34, "R", ""], ["L", 65, 52, "R", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Pas maître de sa manœuvre", "sub": "De jour : deux boules noires superposées.", "day": true, "it": [["ball", 50, 28, "K"], ["ball", 50, 46, "K"]]}, {"lab": "Capacité de manœuvre restreinte", "sub": "De jour : boule, losange (bicône), boule.", "day": true, "it": [["ball", 50, 20, "K"], ["bic", 50, 38, "K"], ["ball", 50, 56, "K"]]}, {"lab": "Handicapé par son tirant d'eau", "sub": "De jour : un cylindre noir.", "day": true, "it": [["cyl", 50, 36, "K"]]}], "a": "Trois navires qui ont du mal à manœuvrer. Compte les rouges et cherche le blanc entre eux.", "p": "2 rouges = « je ne peux pas manœuvrer » (et aucun feu de mât). Rouge-blanc-rouge = « je travaille, je manœuvre mal ». 3 rouges = « je suis collé au chenal par ma profondeur » (avec ses feux de mât). De jour : 2 boules / boule-losange-boule / cylindre. Ports belges, leurs rades et chenaux d'accès : 3 rouges et cylindre = navire de grandes dimensions, dont tu dois éviter la route.", "r": "RIPAM règles 27 et 28 ; AR 4/08/1981 (mer territoriale, ports et plages), art. 10 § 2 et 13 § 2"}, {"kind": "compare", "cat": "Feux rouges", "t": "Deux rouges : pas maître de sa manœuvre, ou échoué ?", "panels": [{"lab": "Pas maître de sa manœuvre, sans erre", "sub": "Deux rouges superposés, et rien d'autre.", "day": false, "it": [["L", 53, 28, "R", ""], ["L", 53, 46, "R", ""]], "v": "side"}, {"lab": "Pas maître de sa manœuvre, avec erre", "sub": "Deux rouges superposés + feux de côté et de poupe (ici on voit son vert : son flanc tribord).", "day": false, "it": [["L", 53, 28, "R", ""], ["L", 53, 46, "R", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Échoué", "sub": "Deux rouges superposés + ses feux de MOUILLAGE (blanc à l'avant, plus haut ; blanc à l'arrière s'il fait 50 m ou plus).", "day": false, "it": [["L", 53, 28, "R", ""], ["L", 53, 46, "R", ""], ["L", 92, 40, "W", ""], ["L", 8, 64, "W", ""]], "v": "side"}, {"lab": "Pas maître de sa manœuvre", "sub": "De jour : DEUX boules superposées (avec ou sans erre).", "day": true, "it": [["ball", 53, 28, "K"], ["ball", 53, 46, "K"]], "v": "side"}, {"lab": "Échoué", "sub": "De jour : TROIS boules superposées.", "day": true, "it": [["ball", 53, 18, "K"], ["ball", 53, 36, "K"], ["ball", 53, 54, "K"]], "v": "side"}], "a": "Les mêmes deux feux rouges : ce sont les AUTRES feux qui disent ce qui se passe.", "p": "Deux rouges + feux blancs de mouillage = échoué : il y a un haut-fond, n'approche pas. Deux rouges + feux de côté = pas maître de sa manœuvre mais il avance encore. De jour : 2 boules = pas maître, 3 boules = échoué.", "r": "RIPAM règles 27 a) et 30 d)"}, {"kind": "compare", "cat": "Feux blancs", "t": "Deux ou trois feux blancs : grand navire ou remorqueur ?", "panels": [{"lab": "Navire à moteur de 50 m ou plus", "sub": "Deux feux de mât sur DEUX mâts, décalés : celui de l'arrière est plus haut. Plus feux de côté et de poupe.", "day": false, "it": [["L", 78, 40, "W", ""], ["L", 28, 20, "W", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Remorqueur, remorque de 200 m ou moins", "sub": "Deux feux blancs l'un au-dessus de l'autre, sur le même mât. Plus feux de côté, de poupe, et un feu JAUNE de remorquage au-dessus du feu de poupe.", "day": false, "it": [["L", 78, 24, "W", ""], ["L", 78, 42, "W", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Remorqueur, remorque de plus de 200 m", "sub": "TROIS feux blancs superposés sur le même mât. Plus feux de côté, de poupe et de remorquage.", "day": false, "it": [["L", 78, 16, "W", ""], ["L", 78, 34, "W", ""], ["L", 78, 52, "W", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Remorqueur, remorque de plus de 200 m", "sub": "De jour : un bicône (losange) sur le remorqueur, et un autre sur l'objet remorqué.", "day": true, "it": [["bic", 78, 36, "K"]], "v": "side"}], "a": "Plusieurs feux blancs en hauteur : regarde s'ils sont sur deux mâts décalés ou exactement l'un au-dessus de l'autre.", "p": "Décalés, le plus haut en arrière = grand navire. Exactement superposés = remorqueur : 2 blancs = remorque jusqu'à 200 m, 3 blancs = plus de 200 m. Vus de FACE, grand navire et remorqueur court se ressemblent : attends de voir son flanc. Ne passe JAMAIS entre un remorqueur et ce qu'il tire. Le grand navire et la remorque courte n'ont aucune marque de jour.", "r": "RIPAM règles 23 et 24"}, {"kind": "compare", "cat": "Voiliers", "t": "Voilier : sous voiles, au moteur, ou avec ses feux facultatifs ?", "panels": [{"lab": "Voilier sous voiles", "sub": "Feux de côté et de poupe seulement : AUCUN feu de mât. Attention : un objet remorqué montre exactement les mêmes feux ; cherche un remorqueur devant lui.", "day": false, "it": [["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Voilier au moteur", "sub": "Propulsé par son moteur = navire à moteur, même voiles hissées : feu blanc de mât + feux de côté et de poupe.", "day": false, "it": [["L", 78, 30, "W", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Voilier avec rouge sur vert", "sub": "Facultatif : rouge AU-DESSUS du vert en tête de mât, tout horizon, en plus des feux de côté et de poupe. Interdit avec le feu tricolore.", "day": false, "it": [["L", 78, 14, "R", ""], ["L", 78, 32, "G", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Voilier au moteur", "sub": "De jour : un cône pointe EN BAS, à l'avant.", "day": true, "it": [["coneD", 78, 40, "K"]], "v": "side"}, {"lab": "Navire remorqué (plus de 200 m)", "sub": "De jour : un bicône (losange). Le remorqué n'a pas de marque si la remorque fait 200 m ou moins.", "day": true, "it": [["bic", 53, 40, "K"]], "v": "side"}], "a": "Un voilier se reconnaît d'abord à l'ABSENCE de feu blanc de mât.", "p": "Propulsé par ton moteur = tu es un navire à moteur, même voiles hissées : tu allumes ton feu de mât et tu perds la priorité du voilier. De jour, voilier au moteur = cône pointe EN BAS. Rouge sur vert = voilier ; vert sur blanc = chalutier : ne les confonds pas.", "r": "RIPAM règles 3 b) et c), 24 e), 25"}, {"kind": "compare", "cat": "Feux verts", "t": "Feux verts en hauteur : voilier, chalutier ou déminage ?", "panels": [{"lab": "Voilier avec rouge sur vert", "sub": "Rouge au-dessus du vert en tête de mât, sans feu blanc. Plus feux de côté.", "day": false, "it": [["L", 50, 14, "R", ""], ["L", 50, 32, "G", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Chalutier", "sub": "Vert au-dessus du BLANC. Plus feux de côté s'il a de l'erre.", "day": false, "it": [["L", 50, 20, "G", ""], ["L", 50, 38, "W", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Déminage", "sub": "Trois verts en TRIANGLE (un en haut du mât, un à chaque bout de vergue), en plus des feux d'un navire à moteur. Reste à 1 000 m au moins.", "day": false, "it": [["L", 50, 12, "W", ""], ["L", 50, 30, "G", ""], ["L", 28, 44, "G", ""], ["L", 72, 44, "G", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Chalutier", "sub": "De jour : deux cônes pointes réunies (sablier).", "day": true, "it": [["coneD", 50, 20, "K"], ["coneU", 50, 38, "K"]]}, {"lab": "Déminage", "sub": "De jour : trois boules en triangle.", "day": true, "it": [["ball", 50, 30, "K"], ["ball", 28, 44, "K"], ["ball", 72, 44, "K"]]}], "a": "Trois façons de montrer du vert en hauteur. Regarde ce qui accompagne le vert.", "p": "Rouge sur vert = voilier. Vert sur blanc = chalutier. Trois verts en triangle = déminage, danger à moins de 1 000 m. De jour : trois boules EN TRIANGLE = déminage, alors que trois boules SUPERPOSÉES = échoué.", "r": "RIPAM règles 25 c), 26 b), 27 f)"}, {"kind": "compare", "cat": "Mouillage", "t": "Un feu blanc seul : au mouillage ou petit bateau qui avance ?", "panels": [{"lab": "Au mouillage, moins de 50 m", "sub": "Un seul feu blanc tout horizon, à l'avant.", "day": false, "it": [["L", 90, 40, "W", ""]], "v": "side"}, {"lab": "Au mouillage, 50 m ou plus", "sub": "Deux feux blancs tout horizon : à l'avant, le plus HAUT ; à l'arrière, plus bas.", "day": false, "it": [["L", 92, 36, "W", ""], ["L", 8, 64, "W", ""]], "v": "side"}, {"lab": "Bateau à moteur de moins de 12 m qui avance", "sub": "Un feu blanc tout horizon (au lieu du feu de mât et du feu de poupe) + ses feux de côté.", "day": false, "it": [["L", 78, 26, "W", ""], ["L", 72, 95, "G", ""]], "v": "side"}, {"lab": "Au mouillage, moins de 50 m", "sub": "De jour : une boule noire à l'avant.", "day": true, "it": [["ball", 90, 34, "K"]], "v": "side"}, {"lab": "Échoué", "sub": "De jour : trois boules superposées. (Ne pas confondre avec la boule unique du mouillage.)", "day": true, "it": [["ball", 53, 18, "K"], ["ball", 53, 36, "K"], ["ball", 53, 54, "K"]], "v": "side"}], "a": "Un feu blanc qui ne bouge pas, ou un feu blanc avec un feu de côté : ce n'est pas la même chose.", "p": "Feu blanc seul et immobile = mouillage. Au mouillage, le feu le plus HAUT est à l'AVANT : c'est l'inverse des feux de mât en route. Feu blanc + feu de côté = petit bateau à moteur qui avance. De jour : 1 boule = mouillage, 3 boules = échoué.", "r": "RIPAM règles 23 d), 30 a), b) et d)"}, {"kind": "compare", "cat": "Rouge-blanc-rouge", "t": "Rouge-blanc-rouge : quatre situations", "panels": [{"lab": "Capacité restreinte, au mouillage", "sub": "Rouge-blanc-rouge + feu(x) blanc(s) de mouillage.", "day": false, "it": [["L", 53, 18, "R", ""], ["L", 53, 36, "W", ""], ["L", 53, 54, "R", ""], ["L", 92, 44, "W", ""]], "v": "side"}, {"lab": "Drague avec obstruction", "sub": "Rouge-blanc-rouge + DEUX ROUGES du côté de l'obstruction + DEUX VERTS du côté où l'on peut passer.", "day": false, "it": [["L", 50, 14, "R", ""], ["L", 50, 32, "W", ""], ["L", 50, 50, "R", ""], ["L", 26, 42, "R", ""], ["L", 26, 60, "R", ""], ["L", 74, 42, "G", ""], ["L", 74, 60, "G", ""]]}, {"lab": "Remorqueur qui ne peut pas s'écarter", "sub": "Feux de remorquage (2 blancs superposés ici) + rouge-blanc-rouge.", "day": false, "it": [["L", 50, 14, "W", ""], ["L", 50, 32, "W", ""], ["L", 65, 34, "R", ""], ["L", 65, 52, "W", ""], ["L", 65, 70, "R", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Capacité restreinte, au mouillage", "sub": "De jour : boule-losange-boule, + une boule à l'avant.", "day": true, "it": [["ball", 53, 20, "K"], ["bic", 53, 38, "K"], ["ball", 53, 56, "K"], ["ball", 90, 34, "K"]], "v": "side"}, {"lab": "Drague avec obstruction", "sub": "De jour : boule-losange-boule + DEUX BOULES côté obstruction + DEUX LOSANGES côté passage.", "day": true, "it": [["ball", 50, 14, "K"], ["bic", 50, 32, "K"], ["ball", 50, 50, "K"], ["ball", 26, 42, "K"], ["ball", 26, 60, "K"], ["bic", 74, 42, "K"], ["bic", 74, 60, "K"]]}, {"lab": "Petit navire qui soutient des plongeurs", "sub": "De jour : le pavillon A du Code international (blanc et bleu), rigide, d'au moins 1 m. De nuit : rouge-blanc-rouge.", "day": true, "it": [["flagA", 46, 40, "K"]]}], "a": "Rouge-blanc-rouge est le « noyau » du navire qui travaille. Ce qui l'entoure précise la situation.", "p": "Rouge = obstacle, vert = passage (drague). De jour, côté obstruction = 2 boules, côté passage = 2 losanges. Plongeurs : de jour un pavillon A, pas de boules ; passe loin et lentement.", "r": "RIPAM règle 27 b), c), d), e)"}, {"kind": "compare", "cat": "Jaune et éclats", "t": "Feu jaune ou feu qui clignote : qui est-ce ?", "panels": [{"lab": "Aéroglisseur", "sub": "Feu JAUNE À ÉCLATS rapides (scintillant) tout horizon, quand il est en sustentation (hors de l'eau), en plus des feux d'un navire à moteur.", "day": false, "it": [["L", 50, 14, "Y", "b"], ["L", 50, 32, "W", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Engin à effet de surface", "sub": "Feu ROUGE à éclats de haute intensité, au décollage, à l'atterrissage et en vol près de l'eau, en plus des feux d'un navire à moteur.", "day": false, "it": [["L", 50, 14, "R", "b"], ["L", 50, 32, "W", ""], ["L", 40, 95, "G", ""], ["L", 60, 95, "R", ""]]}, {"lab": "Remorqueur vu de l'arrière", "sub": "Feu jaune FIXE de remorquage au-dessus du feu blanc de poupe.", "day": false, "it": [["L", 50, 68, "Y", ""], ["L", 50, 86, "W", ""]], "v": "stern"}, {"lab": "Navire vu de l'arrière", "sub": "Un feu blanc de poupe, seul.", "day": false, "it": [["L", 50, 86, "W", ""]], "v": "stern"}], "a": "Le jaune se voit surtout chez le remorqueur (fixe, vers l'arrière) et l'aéroglisseur (à éclats rapides, tout horizon).", "p": "Jaune fixe au-dessus du blanc, vu de l'arrière = remorqueur : sa remorque est DERRIÈRE lui, donc entre toi et lui. Ne coupe jamais sa route par l'arrière. Jaune à éclats rapides = aéroglisseur, très rapide. Rouge à éclats puissant = engin à effet de surface.", "r": "RIPAM règles 21 d), 23 b) et c), 24 a)"}, {"kind": "theory", "cat": "Pièges", "t": "Piège 1 · Blanc sur rouge ou rouge sur blanc", "a": "Les deux paires se ressemblent. Seul l'ordre compte.", "p": "Blanc-rouge = PILOTE. Rouge-blanc = PÊCHE. Lis toujours de haut en bas."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 2 · Le voilier qui a mis le moteur", "a": "Un voilier qui utilise son moteur est un navire à moteur, même voiles hissées.", "p": "Il allume son feu de mât et, de jour, montre un cône pointe EN BAS. Il perd la priorité du voilier."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 3 · Mouillage : le feu le plus haut", "a": "En route, le feu de mât le plus haut est à l'ARRIÈRE.", "p": "Au mouillage, c'est l'inverse : le feu le plus haut est à l'AVANT."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 4 · Trois boules", "a": "Trois boules superposées ou trois boules en triangle n'ont rien à voir.", "p": "Superposées = ÉCHOUÉ. En triangle = DÉMINAGE (reste à 1 000 m)."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 5 · Deux rouges et le reste", "a": "Deux rouges superposés : regarde les autres feux.", "p": "Avec feux de mouillage = ÉCHOUÉ. Avec feux de côté = pas maître de sa manœuvre, mais il avance."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 6 · Pêche et chalut de jour", "a": "La nuit, rouge-blanc et vert-blanc sont différents.", "p": "De jour, les deux montrent la MÊME marque : deux cônes pointes réunies (sablier)."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 7 · Vu de face", "a": "De face, un grand navire (2 feux de mât) et un remorqueur court (2 blancs superposés) se ressemblent.", "p": "Attends de voir le flanc : décalés = grand navire ; superposés = remorqueur."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 8 · Le jaune vu de l'arrière", "a": "Jaune fixe au-dessus du blanc de poupe = remorqueur.", "p": "La remorque est entre toi et lui : ne passe jamais derrière lui."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 9 · Feux de côté seuls", "a": "Un feu vert ou rouge sans feu blanc au-dessus.", "p": "C'est un voilier… ou un objet remorqué. Cherche un remorqueur devant."}, {"kind": "theory", "cat": "Pièges", "t": "Piège 10 · Trois rouges sur la côte belge", "a": "Dans le RIPAM, c'est le navire handicapé par son tirant d'eau.", "p": "Dans les ports belges, leurs rades et chenaux d'accès, c'est le navire de grandes dimensions : tu dois éviter sa route."}]}]};
+(function(){
+const $=id=>document.getElementById(id);
+const READ=10;
+let tab=DATA.tabs[0].key, mode='def', cat='Tous', list=[], i=0, running=false, timer=0, last=null, playing=null;
+let fast=false, quiz={q:[],k:0,score:0,done:0,answered:false};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- audio ---------- */
+let ac=null, nodes=[];
+function audio(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(ac&&ac.state==='suspended') ac.resume(); return ac; }
+function horn(t0,dur){ const a=audio(); if(!a) return; const g=a.createGain(); const f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1100;
+  const o1=a.createOscillator(), o2=a.createOscillator(); o1.type='sawtooth'; o2.type='sawtooth'; o1.frequency.value=165; o2.frequency.value=247;
+  o1.connect(f); o2.connect(f); f.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(.22,t0+.06); g.gain.setValueAtTime(.22,t0+dur-.08); g.gain.linearRampToValueAtTime(0,t0+dur);
+  o1.start(t0); o2.start(t0); o1.stop(t0+dur+.05); o2.stop(t0+dur+.05); nodes.push(o1,o2); }
+function bell(t0){ const a=audio(); if(!a) return; [880,1320,2210].forEach((fq,k)=>{ const o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.value=fq; o.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(.18/(k+1),t0); g.gain.exponentialRampToValueAtTime(.0001,t0+.9); o.start(t0); o.stop(t0+1); nodes.push(o); }); }
+function gong(t0){ const a=audio(); if(!a) return; [196,293,415].forEach((fq,k)=>{ const o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.value=fq; o.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(.25/(k+1),t0); g.gain.exponentialRampToValueAtTime(.0001,t0+.9); o.start(t0); o.stop(t0+1); nodes.push(o); }); }
+function tone(t0,fq,dur){ const a=audio(); if(!a) return; const o=a.createOscillator(), g=a.createGain(); o.type='triangle'; o.frequency.value=fq; o.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(.25,t0+.03); g.gain.setValueAtTime(.25,t0+dur-.05); g.gain.linearRampToValueAtTime(0,t0+dur); o.start(t0); o.stop(t0+dur+.02); nodes.push(o); }
+/* séquence : renvoie [{start,dur,idx}] en secondes */
+function plan(p){ const B=fast?.5:1, L=fast?2:4, G=fast?.5:1; let t=0, seq=[], idx=0;
+  for(const ch of p){
+    if(ch==='T'){ const d=fast?.15:.25; seq.push({s:t,d:d,k:'T',i:idx++}); t+=2*d; }
+    else if(ch==='b'){ seq.push({s:t,d:B,k:'b',i:idx++}); t+=B+G; }
+    else if(ch==='L'){ seq.push({s:t,d:L,k:'L',i:idx++}); t+=L+G; }
+    else if(ch==='_'){ t+=fast?1:2.5; seq.push({s:t,d:L,k:'L',i:idx++}); t+=L+G; }
+    else if(ch==='c'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.8,k:'c',i:idx++}); t+=2.3; } }
+    else if(ch==='t'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.5,k:'tri',i:idx++}); t+=2; } }
+    else if(ch==='p'){ t+=fast?.5:1; }
+    else if(ch==='C'){ const d=fast?2.5:5; seq.push({s:t,d:d,k:'C',i:idx++}); t+=d+G; }
+    else if(ch==='G'){ const d=fast?2.5:5; seq.push({s:t,d:d,k:'G',i:idx++}); t+=d+G; }
+    else if(ch==='x'){ seq.push({s:t,d:.5,k:'x',i:idx++}); t+=fast?.7:1.2; }
+    else if(ch==='K'){ const d=fast?5:10; seq.push({s:t,d:d,k:'K',i:idx++}); t+=d+G; }
+  } return {seq,total:t}; }
+function blastsHTML(p){ const {seq}=plan(p); return seq.map(x=>`<span class="bl ${x.k}" data-i="${x.i}"></span>`).join(''); }
+function play(p){ stopPlay(); const a=audio(); const {seq,total}=plan(p); if(!a){ return total; }
+  const t0=a.currentTime+.15;
+  seq.forEach(x=>{ if(x.k==='b'||x.k==='L'||x.k==='T') horn(t0+x.s,Math.max(.12,x.d));
+    else if(x.k==='c'){ for(let r=0;r<5;r++) bell(t0+x.s+r*.36); }
+    else if(x.k==='K') horn(t0+x.s,x.d);
+    else if(x.k==='C'){ for(let r=0;r*.2<x.d;r++) bell(t0+x.s+r*.2); }
+    else if(x.k==='G'){ for(let r=0;r*.25<x.d;r++) gong(t0+x.s+r*.25); }
+    else if(x.k==='x') bell(t0+x.s);
+    else if(x.k==='tri'){ tone(t0+x.s,330,.5); tone(t0+x.s+.5,415,.5); tone(t0+x.s+1,495,.5); } });
+  playing={t0,seq,total}; return total; }
+function stopPlay(){ nodes.forEach(n=>{ try{ n.stop(); }catch(e){} }); nodes=[]; playing=null; document.querySelectorAll('#blasts .bl.on').forEach(e=>e.classList.remove('on')); }
+function lightBlasts(){ if(!playing||!ac) return; const now=ac.currentTime-playing.t0;
+  document.querySelectorAll('#blasts .bl').forEach(el=>{ const x=playing.seq[+el.dataset.i]; el.classList.toggle('on',x&&now>=x.s&&now<=x.s+x.d); }); }
+
+/* ---------- construction de l'interface ---------- */
+function curTab(){ return DATA.tabs.find(t=>t.key===tab); }
+function buildTabs(){ const el=$('tabs'); if(DATA.tabs.length<2){ el.hidden=true; return; }
+  el.innerHTML=DATA.tabs.map(t=>`<button data-k="${t.key}" aria-pressed="${t.key===tab}">${esc(t.label)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ tab=b.dataset.k; cat='Tous'; buildTabs(); buildCats(); reset(); }); }
+function buildCats(){ const t=curTab(); const cats=['Tous',...new Set(t.items.filter(x=>x.cat).map(x=>x.cat))];
+  $('cats').innerHTML=cats.length>2?cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join(''):'';
+  $('cats').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ cat=b.dataset.c; buildCats(); reset(); }); }
+function filtered(){ const t=curTab(); return t.items.filter(x=>cat==='Tous'||x.cat===cat||(x.kind==='theory'&&cat==='Tous')); }
+
+
+function panelSVG(p){
+  const dark=p.day?'#3A4654':'#26313C', st=p.day?'#22303C':'#56636F';
+  let h='';
+  if(p.v==='side'){ h+=`<line x1="78" y1="20" x2="78" y2="100" stroke="${st}" stroke-width="1.5"/><line x1="28" y1="14" x2="28" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="6,100 94,100 86,117 14,117" fill="${dark}" stroke="${st}"/><polygon points="94,100 99,96 99,100" fill="${dark}"/>`; }
+  else if(p.v==='stern'){ h+=`<line x1="50" y1="14" x2="50" y2="96" stroke="${st}" stroke-width="1.5"/><rect x="30" y="96" width="40" height="21" fill="${dark}" stroke="${st}"/>`; }
+  else { h+=`<line x1="50" y1="12" x2="50" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="30,100 70,100 60,118 40,118" fill="${dark}" stroke="${st}"/><polygon points="44,100 56,100 50,88" fill="${dark}"/>`; }
+  const C={W:'#FFFFFF',R:'#FF3B30',G:'#34C759',Y:'#FFCC00',B:'#2F7BFF',K:'#111'};
+  const rings=[];
+  for(const it of p.it){ const [t,x,y,c,f]=it; const col=C[c]||c||'#111'; const blk=(f||'').includes('b')?' class="blk"':''; const dif=(f||'').includes('d');
+    if(t==='L') h+=`<g${blk}><circle cx="${x}" cy="${y}" r="10" fill="${col}" opacity=".28"/><circle cx="${x}" cy="${y}" r="5" fill="${col}"/></g>`;
+    else if(t==='ghost') h+=`<circle cx="${x}" cy="${y}" r="5" fill="none" stroke="#9AA8B5" stroke-dasharray="2 2"/><text x="${x+8}" y="${y+3}" font-size="8" fill="#9AA8B5" font-family="Arial">aucun</text>`;
+    else if(t==='ball') h+=`<circle cx="${x}" cy="${y}" r="6" fill="${col}"/>`;
+    else if(t==='coneU') h+=`<polygon points="${x-6},${y+6} ${x+6},${y+6} ${x},${y-6}" fill="${col}"/>`;
+    else if(t==='coneD') h+=`<polygon points="${x-6},${y-6} ${x+6},${y-6} ${x},${y+6}" fill="${col}"/>`;
+    else if(t==='bic') h+=`<polygon points="${x},${y-8} ${x+6},${y} ${x},${y+8} ${x-6},${y}" fill="${col}"/>`;
+    else if(t==='cyl') h+=`<rect x="${x-5}" y="${y-7}" width="10" height="14" fill="${col}"/>`;
+    else if(t==='cylTow') h+=`<rect x="${x-5}" y="${y-8}" width="10" height="16" fill="#F2CE2E" stroke="#111"/><rect x="${x-5}" y="${y-3}" width="10" height="3" fill="#111"/><rect x="${x-5}" y="${y+2}" width="10" height="3" fill="#fff"/>`;
+    else if(t==='flagH') h+=`<rect x="${x}" y="${y-7}" width="8" height="14" fill="#fff" stroke="#999" stroke-width=".5"/><rect x="${x+8}" y="${y-7}" width="8" height="14" fill="#E0332B"/>`;
+    else if(t==='flagA') h+=`<line x1="${x}" y1="${y-9}" x2="${x}" y2="${y+12}" stroke="#888" stroke-width="1"/><rect x="${x}" y="${y-8}" width="9" height="15" fill="#fff" stroke="#999" stroke-width=".5"/><polygon points="${x+9},${y-8} ${x+21},${y-8} ${x+15},${y-.5} ${x+21},${y+7} ${x+9},${y+7}" fill="#1F4FBF"/>`;
+    else if(t==='flagR') h+=`<line x1="${x}" y1="${y-9}" x2="${x}" y2="${y+12}" stroke="#888" stroke-width="1"/><rect x="${x}" y="${y-8}" width="14" height="11" fill="#E0332B"/><path d="M${x+18} ${y-8} q4 5 0 10 M${x-4} ${y-8} q-4 5 0 10" fill="none" stroke="#9AA8B5" stroke-width="1"/>`;
+    else if(t==='sq') h+=`<rect x="${x-6}" y="${y-6}" width="12" height="12" fill="${col}" stroke="#999" stroke-width=".5"/>`;
+    else if(t==='sqRW') h+=`<rect x="${x-6}" y="${y-6}" width="12" height="6" fill="#E0332B"/><rect x="${x-6}" y="${y}" width="12" height="6" fill="#fff"/><rect x="${x-6}" y="${y-6}" width="12" height="12" fill="none" stroke="#999" stroke-width=".5"/>`;
+    else if(t==='pennant') h+=`<polygon points="${x},${y-5} ${x+18},${y} ${x},${y+5}" fill="#E0332B"/>`;
+    if(dif) rings.push(`<circle class="dif" cx="${x}" cy="${y}" r="11"/>`);
+  }
+  if(p.box) rings.push(`<rect class="dif" x="${p.box[0]}" y="${p.box[1]}" width="${p.box[2]}" height="${p.box[3]}" rx="6"/>`);
+  const vb=p.v==='side'?'0 8 100 114':'16 8 68 114'; return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${h}${rings.join('')}</svg>`;
+}
+function cmpHTML(panels,solo){ return panels.map(p=>`<div class="pan ${p.day?'day':'night'}${solo?' solo':''}">${p.img?`<img class="cq" alt="" src="${p.img}">`:panelSVG(p)}<div class="lab">${solo?'?':esc(p.lab)}</div></div>`).join(''); }
+function setStage(x,anim){
+  const st=$('stage'); st.className='stage '+(curTab().scene||'day');
+  const sign=$('sign'), boat=$('boat'), th=$('theory');
+  sign.classList.remove('in'); boat.classList.remove('in'); $('blasts').innerHTML=''; $('horn').textContent=''; th.hidden=true; $('cmp').hidden=true;
+  if(!x){ return; }
+  if(x.imgs&&x.kind==='item'){ st.classList.add('tall'); sign.innerHTML=''; const c=$('cmp'); c.style.setProperty('--n',Math.min(x.imgs.length,x.imgs.length>4?3:2)); c.innerHTML=cmpHTML(x.imgs,false); c.hidden=false; return; }
+  if(x.panels&&x.kind==='item'){ st.classList.add('tall'); sign.innerHTML=''; const c=$('cmp'); c.style.setProperty('--n',Math.min(x.panels.length,3)); c.innerHTML=cmpHTML(x.panels,false); c.hidden=false; return; }
+  if(x.kind==='compare'||x.kind==='panel'){ st.classList.add('tall'); sign.innerHTML=''; const c=$('cmp'); const ps=x.kind==='compare'?x.panels:[x.panel]; c.style.setProperty('--n',Math.min(ps.length,ps[0]&&ps[0].img?2:3)); c.innerHTML=cmpHTML(ps,x.kind==='panel'); c.hidden=false; return; }
+  if(x.kind==='theory'){ st.classList.add('th'); th.hidden=false; sign.innerHTML='';
+    let h=`<div class="tt">${esc(x.t)}</div>`;
+    if(x.imgs) h+=`<div class="ex">${x.imgs.map(m=>`<figure><img alt="" src="${m.img}"><figcaption>${esc(m.lab)}</figcaption></figure>`).join('')}</div>`;
+    if(x.snd) h+=`<div class="bls">${x.snd.map(g=>`<figure style="margin:0;display:flex;flex-direction:column;align-items:center;gap:4px"><div class="blasts" style="position:static">${blastsHTML(g[0])}</div><figcaption style="font:600 12px/1.15 var(--body)">${esc(g[1])}</figcaption></figure>`).join('')}</div>`;
+    th.innerHTML=h; return; }
+  if(x.kind==='sound'){ sign.innerHTML=''; $('horn').textContent='♪ signal sonore'; $('blasts').innerHTML=blastsHTML(x.snd); return; }
+  sign.classList.toggle('wide',!!x.wide); st.classList.toggle('wd',!!x.wide);
+  sign.innerHTML=`<img alt="" src="${x.img}">`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ sign.classList.add('in'); boat.classList.add('in'); }));
+}
+function cardHTML(x,full){
+  const k=curTab();
+  let h=`<div class="meta"><span class="cat">${esc(x.kind==='theory'?'Rappel théorique':(x.cat||''))}</span><span id="count"></span></div><h2>${esc(x.t)}</h2>`;
+  if(full){
+    if(x.kind==='compare'){ h+=`<p>${esc(x.a)}</p>`; h+=x.panels.map(p=>`<p><span class="lbl">${esc(p.lab)}${p.day?' (de jour)':' (de nuit)'} : </span>${esc(p.sub||'')}</p>`).join(''); if(x.p) h+=`<p class="trap"><span class="lbl">Piège à éviter : </span>${esc(x.p)}</p>`; }
+    else if(x.kind==='theory'){ h+=`<p>${esc(x.a)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">${x.cat==='Pièges'?'Pour l\'éviter':'À retenir'} : </span>${esc(x.p)}</p>`; }
+    else if(k.key==='feux'&&x.g==='theorie'){ h+=`<p>${esc(x.a)}</p><p>${esc(x.b)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">À retenir : </span>${esc(x.p)}</p>`; }
+    else if(k.key==='feux'){ h+=`<p><span class="lbl">Jour : </span>${esc(x.a)}</p><p><span class="lbl">Nuit : </span>${esc(x.b)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">Piège : </span>${esc(x.p)}</p>`; }
+    else { h+=`<p>${esc(x.a)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">Piège : </span>${esc(x.p)}</p>`; }
+    if(x.r) h+=`<span class="ref">${esc(x.r)}</span>`;
+  }
+  h+=`<div class="bar" aria-hidden="true"><i id="prog"></i></div>`;
+  return h;
+}
+
+/* ---------- défilé ---------- */
+function show(n){ list=filtered(); if(!list.length) return; i=(n+list.length)%list.length; const x=list[i];
+  setStage(x); $('card').innerHTML=cardHTML(x,true);
+  let dur=x.kind==='compare'?15:READ; if(x.kind==='sound'){ const pd=running?play(x.snd):plan(x.snd).total; dur=Math.max(READ,pd+3); }
+  timer=dur; x._dur=dur; updCount(); }
+function updCount(){ const c=$('count'); if(!c) return; const x=list[i]; c.textContent=`${i+1} / ${list.length}`+(running?` · ${Math.max(0,Math.ceil(timer))} s`:' · en pause');
+  const p=$('prog'); if(p) p.style.width=`${(1-Math.max(0,timer)/(x._dur||READ))*100}%`; }
+function tick(t){ if(last===null) last=t; const dt=Math.min(.1,(t-last)/1000); last=t;
+  if(mode==='def'&&running){ timer-=dt; if(timer<=0) show(i+1); }
+  if(mode==='def') updCount(); lightBlasts(); requestAnimationFrame(tick); }
+function reset(){ stopPlay(); running=false; $('bPlay').textContent='Démarrer'; if(mode==='def'){ show(0); } else startQuiz();
+  $('bSpeed').hidden=!(curTab().key==='sons'); $('qListen').hidden=!(curTab().key==='sons'); }
+$('bPlay').onclick=()=>{ audio(); running=!running; $('bPlay').textContent=running?'Pause':'Reprendre'; if(running){ const x=list[i]; if(x&&x.kind==='sound'){ show(i); } } else stopPlay(); };
+$('bNext').onclick=()=>{ show(i+1); };
+$('bPrev').onclick=()=>{ show(i-1); };
+$('bRestart').onclick=()=>{ show(0); };
+$('bSpeed').onclick=()=>{ fast=!fast; $('bSpeed').textContent=fast?'Sons : accélérés':'Sons : durée réelle'; show(i); };
+
+/* ---------- quiz ---------- */
+function shuffle(a){ for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; } return a; }
+function startQuiz(){ stopPlay(); let pool=filtered().filter(x=>x.kind!=='theory'&&x.g!=='theorie');
+  if(curTab().key==='comparer'){ pool=[]; filtered().filter(c=>c.panels).forEach(c=>c.panels.forEach(p=>{ const memes=new Set(c.panels.filter(q=>!!q.day===!!p.day).map(q=>q.lab)); if(memes.size>=2) pool.push({kind:'panel',panel:p,t:p.lab,comp:c,cat:c.t}); })); } quiz={q:shuffle(pool.slice()),k:0,score:0,done:0,answered:false}; askQ(); }
+function distractors(x){ if(x.kind==='panel'){ const vus=new Set([x.t]); return shuffle(x.comp.panels.filter(p=>!!p.day===!!x.panel.day&&!vus.has(p.lab)&&vus.add(p.lab)).map(p=>({t:p.lab}))).slice(0,3); }
+  const all=curTab().items.filter(y=>y.kind!=='theory'&&y.g!=='theorie'&&y.t!==x.t);
+  let same=shuffle(all.filter(y=>y.g===x.g)); let rest=shuffle(all.filter(y=>y.g!==x.g&&y.cat===x.cat)); let any=shuffle(all.filter(y=>y.g!==x.g&&y.cat!==x.cat));
+  const vus=new Set([x.t]); return [...same,...rest,...any].filter(y=>!vus.has(y.t)&&vus.add(y.t)).slice(0,2); }
+function askQ(){ const Q=quiz.q; if(!Q.length){ $('card').innerHTML='<h2>Aucune question dans ce filtre</h2>'; return; }
+  if(quiz.k>=Q.length){ setStage(null); $('card').innerHTML=`<h2>Quiz terminé</h2><p class="verdict ${quiz.score>=Q.length*0.8?'good':'bad'}">${quiz.score} / ${Q.length} bonnes réponses</p><p class="note">Recommencez : l'ordre des questions et des réponses change à chaque fois.</p>`; return; }
+  const x=Q[quiz.k]; quiz.answered=false; setStage(x);
+  if(x.kind==='sound'){ play(x.snd); }
+  const opts=shuffle([x,...distractors(x)]);
+  const qtxt=x.q?x.q:curTab().key==='comparer'?(x.panel.day?'Quel bateau montre ces marques de jour ?':'Quel bateau montre ces feux ?'):curTab().key==='sons'?'Que signifie ce signal sonore ?':(curTab().key==='feux'?'Quel bateau montre ces feux ou ces marques ?':'Que signifie ce panneau ?');
+  $('card').innerHTML=`<div class="meta"><span class="cat">${esc(x.cat||'')}</span><span>Question ${quiz.k+1} / ${Q.length} · score ${quiz.score}</span></div><h2>${qtxt}</h2><div class="opts">${opts.map((o,n)=>`<button class="opt" data-n="${n}">${esc(o.t)}</button>`).join('')}</div><div id="fb"></div>`;
+  $('card').querySelectorAll('.opt').forEach((b,n)=>b.onclick=()=>{ if(quiz.answered) return; quiz.answered=true; const ok=opts[n]===x||(x.kind==='panel'&&opts[n].t===x.t); if(ok) quiz.score++;
+    $('card').querySelectorAll('.opt').forEach((bb,m)=>{ if(opts[m]===x||opts[m].t===x.t) bb.classList.add('good'); else if(m===n) bb.classList.add('bad'); });
+    const k=curTab().key; let fb=`<p class="verdict ${ok?'good':'bad'}">${ok?'Juste.':'Faux.'}</p>`;
+    if(x.kind==='panel'){ fb+=`<p>${esc(x.panel.sub||'')}</p><p>${esc(x.comp.a)}</p><p class="trap"><span class="lbl">Pour ne plus confondre : </span>${esc(x.comp.p)}</p>`; } else if(k==='feux') fb+=`<p><span class="lbl">Jour : </span>${esc(x.a)}</p><p><span class="lbl">Nuit : </span>${esc(x.b)}</p>`; else fb+=`<p>${esc(x.a)}</p>`;
+    if(x.p&&x.kind!=='panel') fb+=`<p class="trap"><span class="lbl">Piège : </span>${esc(x.p)}</p>`; if(x.r) fb+=`<span class="ref">${esc(x.r)}</span>`;
+    $('fb').innerHTML=fb; }); }
+$('qNext').onclick=()=>{ quiz.k++; askQ(); };
+$('qRestart').onclick=()=>startQuiz();
+$('qListen').onclick=()=>{ const x=quiz.q[quiz.k]; if(x&&x.kind==='sound') play(x.snd); };
+
+function setMode(m){ mode=m; $('mDef').setAttribute('aria-pressed',m==='def'); $('mQuiz').setAttribute('aria-pressed',m==='quiz');
+  $('ctrlDef').hidden=m!=='def'; $('ctrlQuiz').hidden=m!=='quiz'; reset(); }
+$('mDef').onclick=()=>setMode('def'); $('mQuiz').onclick=()=>setMode('quiz');
+
+buildTabs(); buildCats(); reset(); requestAnimationFrame(tick);
+})();
+</script>
+
+</body>
+</html>
