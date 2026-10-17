@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.17 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.18 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1730,19 +1730,16 @@ window.KAM_IMG = {};
     var x = 100, eau = 104, s = osvg(200, 150);
     var cols = o.bandes || [o.couleur || "rouge"], sommet;
     s += zig(20, eau, 160, 22);
-    if(o.voyant && o.forme !== "espar"){ /* bouée avec voyant : corps en tronc de cône, comme à l'appendice 8 */
-      var T = "M" + (x - 30) + " " + (eau + 8) + " L" + (x - 16) + " " + (eau - 12) + " L" + (x + 16) + " " + (eau - 12) + " L" + (x + 30) + " " + (eau + 8) + " Z";
-      s += (o.rayures ? vbandes : bandes)(T, cols, x - 30, eau - 12, 60, 20); sommet = eau - 12;
-    }
-    else if(o.forme === "cyl"){ var P = "M" + (x - 20) + " " + (eau + 8) + " L" + (x - 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau + 8) + " Z"; s += (o.rayures ? vbandes : bandes)(P, cols, x - 20, eau - 34, 40, 42); sommet = eau - 34; }
-    else if(o.forme === "cone"){ var Q = "M" + (x - 24) + " " + (eau + 8) + " L" + x + " " + (eau - 40) + " L" + (x + 24) + " " + (eau + 8) + " Z"; s += bandes(Q, cols, x - 24, eau - 40, 48, 48); sommet = eau - 40; }
+    /* balisage maritime AISM : la forme de la bouée compte (cylindrique, conique, sphérique, espar) */
+    if(o.forme === "cyl"){ var P = "M" + (x - 20) + " " + (eau + 8) + " L" + (x - 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau + 8) + " Z"; s += (o.rayures ? vbandes : bandes)(P, cols, x - 20, eau - 34, 40, 42); sommet = eau - 34; }
+    else if(o.forme === "cone"){ var Q = "M" + (x - 24) + " " + (eau + 8) + " L" + (x - 3) + " " + (eau - 40) + " L" + (x + 3) + " " + (eau - 40) + " L" + (x + 24) + " " + (eau + 8) + " Z"; s += bandes(Q, cols, x - 24, eau - 40, 48, 48); sommet = eau - 40; }
     else if(o.forme === "sphere"){ var R = "M" + (x - 22) + " " + (eau - 12) + " a22 22 0 1 0 44 0 a22 22 0 1 0 -44 0"; s += (o.rayures ? vbandes : bandes)(R, cols, x - 22, eau - 34, 44, 44); sommet = eau - 34; }
     else { /* espar */
       var E = "M" + (x - 7) + " " + (eau + 8) + " L" + (x - 7) + " " + (eau - 62) + " L" + (x + 7) + " " + (eau - 62) + " L" + (x + 7) + " " + (eau + 8) + " Z";
       var c2 = cols.length > 1 ? cols : [cols[0]];
       s += (o.rayures ? vbandes : bandes)(E, c2, x - 7, eau - 62, 14, 70); sommet = eau - 62;
     }
-    if(o.voyant){ sommet -= 6; s += ovoyant(o.voyant, x, sommet); sommet -= (/^card|deux/.test(o.voyant) ? 50 : 26); }
+    if(o.voyant){ s += '<line x1="' + x + '" y1="' + sommet + '" x2="' + x + '" y2="' + (sommet - 8) + '" stroke="#000" stroke-width="2"/>'; sommet -= 8; s += ovoyant(o.voyant, x, sommet); sommet -= (/^card|deux/.test(o.voyant) ? 50 : 26); }
     if(o.reflecteur){
       s += '<line x1="' + x + '" y1="' + sommet + '" x2="' + x + '" y2="' + (sommet - 6) + '" stroke="#000" stroke-width="1.5"/>'
          + '<path d="M' + x + " " + (sommet - 26) + " L" + (x + 10) + " " + (sommet - 16) + " L" + x + " " + (sommet - 6) + " L" + (x - 10) + " " + (sommet - 16) + ' Z" fill="#d9d9d9" stroke="#000" stroke-width="1"/>'
