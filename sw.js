@@ -1,6 +1,6 @@
-/* Kat-a-Mar — service worker — v50
+/* Kat-a-Mar — service worker — v51
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v50";
+const CACHE = "kat-a-mar-v51";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
 const FILES = ["./", "./index.html", "./permis-hauturier.html",
