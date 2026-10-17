@@ -647,7 +647,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v22 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v23 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -3524,7 +3524,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   </div>
   <div class="trap">
     <div class="trap-h">Le piège</div>
-    <p>Le cône est <b>noir</b> et pointe <b>en bas</b>. La pointe en haut, c'est la marque d'épi du chapitre 2. La couleur bleue, ce sont les matières dangereuses. À l'examen, le dessin est petit : lis la couleur et le sens de la pointe avant de répondre.</p>
+    <p>Le cône est <b>noir</b> et pointe <b>en bas</b>, hissé à bord. Les cônes <b>verts pointe en haut</b> et <b>rouges pointe en bas</b> posés sur la rive, ce sont les marques d'épi du chapitre 2. La couleur bleue, ce sont les matières dangereuses. À l'examen, le dessin est petit : lis la couleur et le sens de la pointe avant de répondre.</p>
   </div>
 
   <h3>Les convois</h3>
@@ -3555,7 +3555,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   </table>
   <div class="trap">
     <div class="trap-h">Le piège</div>
-    <p><b>Jaune à l'arrière = il y a quelque chose derrière.</b> Le feu de poupe jaune du remorqueur te dit qu'un câble et une barge suivent, dans le noir. Ne passe jamais entre un feu de poupe jaune et le feu blanc qui le suit.</p>
+    <p><b>Jaune à l'arrière d'un remorqueur = il y a quelque chose derrière.</b> Le feu de poupe jaune du remorqueur te dit qu'un câble et une barge suivent, dans le noir. Ne passe jamais entre un feu de poupe jaune et le feu blanc qui le suit. (Seule exception : les trois feux de poupe jaunes d'un convoi poussé assisté, qui signalent l'assistance, pas une remorque.)</p>
   </div>
 
   <h3>Les signaux particuliers</h3>
@@ -6159,10 +6159,10 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
            + "Obligatoire au-delà de 110 m, permis en dessous.",
         d: 1200, etat: { mat2:1, cotes:0 } },
       { cap: "La <b>menue embarcation</b> à moteur porte les mêmes feux, un cran moins forts : feu de mât <b>clair</b>, "
-           + "feux de côté qui <b>peuvent être ordinaires</b> et peuvent être <b>réunis dans une même lanterne</b> à la proue.",
+           + "feux de côté qui <b>peuvent être ordinaires</b> et peuvent être <b>réunis dans une même lanterne</b> à la proue. (Le dessin garde la silhouette du grand bateau.)",
         d: 1100, etat: { mat2:0, cotes:0, titre:"la menue embarcation à moteur" } },
       { cap: "Autre option pour elle : un <b>feu blanc visible de tous les côtés</b> à la place du feu de mât. "
-           + "Alors le feu de poupe <b>n'est plus porté</b> : le blanc éclaire déjà l'arrière.",
+           + "Alors le feu de poupe <b>n'est plus porté</b> : le blanc éclaire déjà l'arrière. (Sur le dessin, le feu en haut du mât est maintenant ce blanc visible de tous les côtés.)",
         d: 1200, etat: { mat:0, poupe:0, tout:1 } },
       { cap: "Et la plus petite — <b>non pontée</b>, <b>moins de 7 m</b>, <b>13 km/h</b> au plus : "
            + "<b>un seul feu blanc</b> visible de tous les côtés. Trois conditions, pas une.",
@@ -6218,12 +6218,12 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       pousse: {
         svg: coque(40, 60, 90, 70, "f-coque-nuit") + coque(130, 50, 140, 90) + coque(270, 50, 140, 90)
            /* trois feux de mât en triangle à l'avant de la barge de tête */
-           + feu(392, 80, "l-blanc") + feu(380, 95, "l-blanc") + feu(392, 110, "l-blanc")
+           + feu(392, 80, "l-blanc") + feu(392, 95, "l-blanc") + feu(392, 110, "l-blanc")
            /* feux de côté sur la partie la plus large, près du pousseur */
            + feu(150, 140, "l-vert") + feu(150, 50, "l-rouge")
            /* trois feux de poupe alignés sur le pousseur */
            + feu(46, 78, "l-blanc") + feu(46, 95, "l-blanc") + feu(46, 112, "l-blanc")
-           + lab(380, 158, "3 feux de mât en triangle", "middle")
+           + lab(380, 158, "3 feux de mât en triangle (vertical, face à l'avant)", "middle")
            + lab(46, 160, "3 feux de poupe alignés", "start"),
         t: "<b>Convoi poussé.</b> <b>Trois feux de mât en triangle</b> à l'avant du bateau de tête, le feu du haut à 5 m au moins ; "
          + "feux de côté sur la <b>partie la plus large</b>, au plus près du pousseur ; <b>trois feux de poupe alignés</b> sur le "
