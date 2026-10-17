@@ -74,7 +74,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Météo : les fronts, la dépression et l'anticyclone</h1>
-  <span class="ver">version 1.2 · permis côtier · météorologie · hémisphère Nord</span>
+  <span class="ver">version 1.3 · permis côtier · météorologie · hémisphère Nord</span>
 </header>
 
 <div class="seg" role="tablist" id="onglets">
@@ -133,6 +133,29 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
     <svg id="carte-vire" viewBox="0 0 360 250" role="img" aria-label="Trajet d'un bateau immobile à travers une perturbation, avec le vent à chaque étape"></svg>
     <p id="txt-vire"></p>
     <p>Le vent tourne vers la droite, dans le sens des aiguilles d'une montre : les marins disent qu'il <b>vire</b>. À chaque front, il tourne d'un coup parce que les isobares y font un coude (le front est un creux de pression). Si au contraire la dépression passe <b>au sud</b> de vous, vous restez dans l'air froid au nord du centre : le vent passe de l'est au nord-est puis au nord, il tourne vers la gauche, il <b>recule</b>.</p>
+  </div>
+
+  <div class="card" id="carte-girouette">
+    <h2>Animation : le vent à bord quand la dépression passe</h2>
+    <p>Votre bateau reste immobile ; la dépression (D) et tous ses vents (flèches vertes) défilent d'ouest en est. La flèche orange est le vent qui touche votre bateau ; la girouette montre d'où il vient.</p>
+    <div class="seg" id="gir-pos" style="margin-bottom:8px">
+      <button type="button" data-p="sud" aria-pressed="true">Bateau au sud</button>
+      <button type="button" data-p="nord" aria-pressed="false">Bateau au nord</button>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center;margin-bottom:8px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="ins" style="text-align:left;padding:6px 10px"><div class="t">À bord, le vent vient du</div><div class="v" id="gir-dir"></div></div>
+        <div class="ins" style="text-align:left;padding:6px 10px"><div class="t">La girouette tourne</div><div class="v" id="gir-sens"></div><div class="s" id="gir-sens2" style="min-height:0"></div></div>
+      </div>
+      <svg id="gir-cadran" viewBox="0 0 120 120" role="img" aria-label="Girouette du bateau" style="max-width:150px;margin:0 auto"></svg>
+    </div>
+    <div class="scene" style="background:#F4F7FA"><svg id="gir-carte" viewBox="0 0 360 260" role="img" aria-label="Carte des vents de la dépression autour du bateau"></svg></div>
+    <div class="ctrl" style="margin-top:8px">
+      <button type="button" class="btn" id="gir-jouer">▶ Lecture</button>
+      <input type="range" id="gir-curseur" min="0" max="100" step="1" value="0" aria-label="Avancée de la dépression">
+    </div>
+    <p id="gir-txt" style="margin-top:8px"></p>
+    <p class="src">Pointe de la flèche : là où va le vent. Queue : là d'où il vient. La ligne bleue est le front froid, qui part du centre vers le sud.</p>
   </div>
 
   <div class="card">
@@ -621,7 +644,7 @@ function coupeDA(){
 /* ---------- commandes ---------- */
 function choisir(o){
   document.querySelectorAll("#onglets button").forEach(b => b.setAttribute("aria-pressed", b.dataset.o === o));
-  arreter(); arreterCarte();
+  arreter(); arreterCarte(); girArreter();
   if(o === "carte"){ $("vue-front").style.display = "none"; $("vue-carte").hidden = false; $("vue-carte").style.display = "flex"; dessinerCarte(); return; }
   $("vue-carte").hidden = true; $("vue-front").style.display = "flex";
   cur = o; pos = 0; $("curseur").value = 0;
@@ -657,6 +680,71 @@ $("jouer-carte").addEventListener("click", () => {
   timerCarte = setInterval(() => { if(etape >= ETAPES.length - 1){ arreterCarte(); return; } etape++; dessinerCarte(); }, 4500);
 });
 
+/* ---------- animation girouette (v1.3) ---------- */
+const GIR = { pos:"sud", p:0, run:false, prec:0 };
+const GIR_NOMS = ["nord","nord-est","est","sud-est","sud","sud-ouest","ouest","nord-ouest"];
+function girGeo(){ return GIR.pos === "sud" ? { B:{x:180,y:200}, Dy:70 } : { B:{x:180,y:64}, Dy:190 }; }
+function girVent(px, py, Dx, Dy){ const rx=px-Dx, ry=py-Dy, l=Math.hypot(rx,ry), nx=rx/l, ny=ry/l;
+  let wx=ny-0.15*nx, wy=-nx-0.15*ny; const m=Math.hypot(wx,wy); return { wx:wx/m, wy:wy/m, l }; }
+function girCap(o){ return (Math.atan2(-o.wx, o.wy)*180/Math.PI + 360) % 360; }
+function girPointe(x, y, ux, uy, h, col){ const bx=x-h*ux, by=y-h*uy, k=h*0.6;
+  return `<polygon points="${x.toFixed(1)},${y.toFixed(1)} ${(bx-k*uy).toFixed(1)},${(by+k*ux).toFixed(1)} ${(bx+k*uy).toFixed(1)},${(by-k*ux).toFixed(1)}" fill="${col}"/>`; }
+function girFleche(x1, y1, x2, y2, col, ep, h){ const l=Math.hypot(x2-x1,y2-y1), ux=(x2-x1)/l, uy=(y2-y1)/l;
+  return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${(x2-h*0.8*ux).toFixed(1)}" y2="${(y2-h*0.8*uy).toFixed(1)}" stroke="${col}" stroke-width="${ep}" stroke-linecap="round"/>` + girPointe(x2, y2, ux, uy, h, col); }
+function girDessiner(){
+  const { B, Dy } = girGeo(), Dx = 30 + GIR.p * 3, sud = GIR.pos === "sud";
+  let g = "";
+  [45,95,145].forEach(r => { g += `<circle cx="${Dx}" cy="${Dy}" r="${r}" fill="none" stroke="#9AA8B5" stroke-width="1" stroke-dasharray="3 4"/>`; });
+  for(let x=20; x<=340; x+=40) for(let y=20; y<=250; y+=40){
+    if(Math.hypot(x-B.x, y-B.y) < 40) continue;
+    const o = girVent(x, y, Dx, Dy); if(o.l < 26) continue;
+    g += girFleche(x-10*o.wx, y-10*o.wy, x+10*o.wx, y+10*o.wy, "#1D9E75", 1.8, 8);
+  }
+  g += `<line x1="${Dx}" y1="${Dy+18}" x2="${Dx-50}" y2="${Dy+200}" stroke="#1F66C9" stroke-width="3"/>`;
+  g += `<circle cx="${Dx}" cy="${Dy}" r="18" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/><text x="${Dx}" y="${Dy+6}" text-anchor="middle" font-size="17" font-weight="700" fill="#B3261E">D</text>`;
+  const o = girVent(B.x, B.y, Dx, Dy);
+  g += girFleche(B.x-56*o.wx, B.y-56*o.wy, B.x-12*o.wx, B.y-12*o.wy, "#D85A30", 3.5, 13);
+  g += `<path d="M${B.x} ${B.y-14} L${B.x+9} ${B.y} L${B.x+9} ${B.y+14} L${B.x-9} ${B.y+14} L${B.x-9} ${B.y} Z" fill="#FFFFFF" stroke="#16202A" stroke-width="1"/>`;
+  g += `<rect x="${B.x-42}" y="${B.y+21}" width="84" height="18" rx="4" fill="#FFFFFF" stroke="#CBD3DC" stroke-width="1"/>`;
+  g += `<text x="${B.x}" y="${B.y+34}" text-anchor="middle" font-size="12" font-weight="700" fill="#16202A">Votre bateau</text>`;
+  $("gir-carte").innerHTML = g;
+  const C = {x:60, y:60}, pt = (b, r) => { const a=b*Math.PI/180; return [C.x+r*Math.sin(a), C.y-r*Math.cos(a)]; };
+  const b0 = girCap(girVent(B.x, B.y, 30, Dy)), b = girCap(o);
+  const diff = sud ? (b-b0+360)%360 : (b0-b+360)%360;
+  let d = `<circle cx="60" cy="60" r="40" fill="none" class="s-mu" stroke-width="1"/>`
+    + `<text x="60" y="14" text-anchor="middle" font-size="12" class="c-mu">N</text><text x="60" y="114" text-anchor="middle" font-size="12" class="c-mu">S</text>`
+    + `<text x="10" y="64" text-anchor="middle" font-size="12" class="c-mu">O</text><text x="110" y="64" text-anchor="middle" font-size="12" class="c-mu">E</text>`;
+  if(diff > 8 && diff < 350){ const [sx,sy]=pt(b0,28), [ex,ey]=pt(b,28), a=b*Math.PI/180, sg = sud ? 1 : -1;
+    d += `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} A28 28 0 ${diff>180?1:0} ${sud?1:0} ${ex.toFixed(1)} ${ey.toFixed(1)}" fill="none" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="3 3"/>` + girPointe(ex, ey, sg*Math.cos(a), sg*Math.sin(a), 7, "#D85A30"); }
+  const [nx, ny] = pt(b, 34);
+  d += `<line x1="60" y1="60" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#D85A30" stroke-width="2.5"/><circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="4" fill="#D85A30"/>`;
+  $("gir-cadran").innerHTML = d;
+  $("gir-dir").textContent = GIR_NOMS[Math.round(b/45) % 8];
+  $("gir-sens").textContent = sud ? "à droite" : "à gauche";
+  $("gir-sens2").textContent = sud ? "sens des aiguilles : il vire" : "sens inverse : il recule";
+  $("gir-txt").innerHTML = sud
+    ? "La dépression passe <b>au nord</b> de vous : le vent part du sud-ouest et finit au nord-ouest. Il tourne vers la droite : il <b>vire</b>, et le front froid passe sur vous. C'est le cas habituel en Belgique."
+    : "La dépression passe <b>au sud</b> de vous : le vent part du sud-est, passe par l'est et finit au nord-est. Il tourne vers la gauche : il <b>recule</b>, et aucun front ne passe sur vous.";
+}
+function girArreter(){ GIR.run = false; $("gir-jouer").textContent = GIR.p >= 100 ? "↺ Recommencer" : "▶ Lecture"; $("gir-jouer").classList.remove("on"); }
+function girBoucle(t){
+  if(!GIR.run) return;
+  const dt = GIR.prec ? (t - GIR.prec) / 1000 : 0; GIR.prec = t;
+  GIR.p = Math.min(100, GIR.p + dt * 8); $("gir-curseur").value = Math.round(GIR.p); girDessiner();
+  if(GIR.p >= 100){ girArreter(); return; }
+  requestAnimationFrame(girBoucle);
+}
+$("gir-jouer").addEventListener("click", () => {
+  if(GIR.run){ girArreter(); return; }
+  if(GIR.p >= 100) GIR.p = 0;
+  GIR.run = true; GIR.prec = 0; $("gir-jouer").textContent = "⏸ Pause"; $("gir-jouer").classList.add("on"); requestAnimationFrame(girBoucle);
+});
+$("gir-curseur").addEventListener("input", e => { GIR.p = +e.target.value; girArreter(); girDessiner(); });
+document.querySelectorAll("#gir-pos button").forEach(btn => btn.addEventListener("click", () => {
+  document.querySelectorAll("#gir-pos button").forEach(x => x.setAttribute("aria-pressed", x === btn));
+  GIR.pos = btn.dataset.p; GIR.p = 0; $("gir-curseur").value = 0; girArreter(); girDessiner();
+}));
+girDessiner();
 coupeDA();
 schemaVire();
 choisir("chaud");
