@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v18 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v19 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -3479,7 +3479,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         <line x1="380" y1="84" x2="380" y2="52" class="s-cote-nuit"/>
         <text x="386" y="70" class="t-nuit">≥ 1 m</text>
       </g>
-      <text id="mo-titre" x="8" y="18" class="t-nuit"></text>
+      <text id="mo-titre" x="452" y="18" text-anchor="end" class="t-nuit"></text>
       <text x="452" y="198" class="t-nuit" text-anchor="end">avant →</text>
     </svg>
     <p class="cap"></p>
@@ -3512,7 +3512,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   <h3>Le voilier qui fait route</h3>
   <div class="def">
     <p class="term">Pas de feu de mât</p>
-    <p>Un voilier <b>à la voile</b> porte ses <b>feux de côté</b> et son <b>feu de poupe</b> — <b>jamais de feu de mât</b>. Vu de l'avant, un voilier n'est que rouge et vert ; vu de l'arrière, il n'est qu'un blanc. C'est à ça qu'on le reconnaît de nuit.</p>
+    <p>Un voilier <b>à la voile</b> porte ses <b>feux de côté</b> et son <b>feu de poupe</b> — <b>jamais de feu de mât</b>. Vu de l'avant, un voilier n'est que rouge et vert ; vu de l'arrière, un voilier de moins de 20 m n'est qu'un blanc (un grand voilier montre en plus rouge sur vert en tête de mât). C'est à ça qu'on le reconnaît de nuit.</p>
     <p>Un <b>grand voilier</b> porte en plus, en tête de mât, <b>deux feux superposés visibles de tous les côtés : rouge au-dessus, vert en dessous</b>.</p>
     <p>Une <b>menue embarcation à voile</b> peut réunir feux de côté et feu de poupe <b>dans une même lanterne en tête de mât</b>. Si elle fait moins de 7 m, un feu blanc visible de tous les côtés suffit — et, en cas de risque d'abordage, elle montre un <b>second feu blanc</b> pour attirer l'attention.</p>
   </div>
@@ -6103,7 +6103,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       if(v.rouge)
         return ce + "Tu es sur son <b>bâbord</b>. Sa proue pointe vers <b>ta gauche</b> : il passe de ta droite vers ta gauche."
           + (t === "voile" ? " Pas de blanc : c'est un voilier." : "");
-      return ce + "Tu es <b>derrière</b> lui : un seul feu blanc, bas. <b>Il s'éloigne.</b> Même silhouette pour un voilier ou un bateau à moteur.";
+      return ce + "Tu es <b>derrière</b> lui : un seul feu blanc, bas. <b>Il s'éloigne.</b> Même silhouette pour un bateau à moteur ou un voilier de moins de 20 m ; un grand voilier montre en plus rouge sur vert en tête de mât.";
     }
     function majSecteurs(){
       var deg = parseInt(curseur.value, 10) || 0;
@@ -6154,7 +6154,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       { cap: "Le <b>feu de poupe</b> : blanc, à l'arrière, sur 135°. Mât et poupe se complètent : d'où que tu regardes, "
            + "tu vois toujours un blanc. Vu d'ici, par le travers, tu ne le verrais pas : il n'éclaire que vers l'arrière.",
         d: 1000, etat: { poupe:0.25 } },
-      { cap: "<b>Plus de 110 m</b> : un <b>second feu de mât</b>, derrière le premier et <b>au moins 3 m plus haut</b>. "
+      { cap: "<b>Plus de 110 m</b> : un <b>second feu de mât</b>, derrière le premier et <b>au moins 3 m plus haut</b> (dessin non à l'échelle). "
            + "Obligatoire au-delà de 110 m, permis en dessous.",
         d: 1200, etat: { mat2:1, cotes:0 } },
       { cap: "La <b>menue embarcation</b> à moteur porte les mêmes feux, un cran moins forts : feu de mât <b>clair</b>, "
@@ -6202,7 +6202,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         svg: coque(290, 70, 120, 50) + coque(60, 78, 130, 36)
            + '<line x1="190" y1="96" x2="290" y2="95" class="s-cable"/>'
            /* remorqueur : deux feux de mât (superposés, donc dessinés côte à côte ici), côtés, poupe jaune */
-           + feu(380, 95, "l-blanc") + lab(380, 84, "×2 superposés", "middle")
+           + feu(380, 95, "l-blanc") + lab(380, 62, "×2 superposés", "middle")
            + feu(340, 118, "l-vert") + feu(340, 72, "l-rouge") + feu(296, 95, "l-jaune")
            /* remorqué : un blanc 360°, et le feu de poupe du dernier bateau */
            + feu(125, 96, "l-blanc") + feu(66, 96, "l-blanc")
@@ -6217,7 +6217,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       pousse: {
         svg: coque(40, 60, 90, 70, "f-coque-nuit") + coque(130, 50, 140, 90) + coque(270, 50, 140, 90)
            /* trois feux de mât en triangle à l'avant de la barge de tête */
-           + feu(392, 80, "l-blanc") + feu(380, 100, "l-blanc") + feu(392, 110, "l-blanc")
+           + feu(392, 80, "l-blanc") + feu(380, 95, "l-blanc") + feu(392, 110, "l-blanc")
            /* feux de côté sur la partie la plus large, près du pousseur */
            + feu(150, 140, "l-vert") + feu(150, 50, "l-rouge")
            /* trois feux de poupe alignés sur le pousseur */
