@@ -55,7 +55,7 @@ h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spa
 .blasts{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 12px}
 .bl{height:14px;border-radius:7px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5)}
 .bl.T{width:6px}.bl.b{width:16px}.bl.L{width:64px}.bl.c{width:28px;border-radius:3px}.bl.tri{width:40px;border-style:dashed}
-.bl.C{width:46px;border-radius:3px;background:rgba(242,194,48,.35)}.bl.G{width:46px;border-radius:3px;background:rgba(176,141,87,.45)}.bl.x{width:12px;border-radius:50%}.bl.K{width:110px}
+.bl.C{width:46px;border-radius:3px;background:rgba(242,194,48,.35)}.bl.G{width:46px;border-radius:3px;background:rgba(176,141,87,.45)}.bl.x{width:12px;border-radius:50%}.bl.K{width:110px}.bl.D{width:12px}
 .bl.on{background:#FFD23F;border-color:#FFD23F;box-shadow:0 0 12px #FFD23F}
 .horn{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-family:var(--display);font-size:22px;color:#fff;letter-spacing:.06em;text-align:center}
 .stage.tall{height:auto}
@@ -178,6 +178,7 @@ function plan(p){ const B=fast?.5:1, L=fast?2:4, G=fast?.5:1; let t=0, seq=[], i
     else if(ch==='c'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.8,k:'c',i:idx++}); t+=2.3; } }
     else if(ch==='t'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.5,k:'tri',i:idx++}); t+=2; } }
     else if(ch==='p'){ t+=fast?.5:1; }
+    else if(ch==='D'){ const d=fast?.4:.75; seq.push({s:t,d:d,k:'D',i:idx++}); t+=d+(fast?.15:.25); }
     else if(ch==='C'){ const d=fast?2.5:5; seq.push({s:t,d:d,k:'C',i:idx++}); t+=d+G; }
     else if(ch==='G'){ const d=fast?2.5:5; seq.push({s:t,d:d,k:'G',i:idx++}); t+=d+G; }
     else if(ch==='x'){ seq.push({s:t,d:.5,k:'x',i:idx++}); t+=fast?.7:1.2; }
@@ -188,7 +189,7 @@ function play(p){ stopPlay(); const a=audio(); const {seq,total}=plan(p); if(!a)
   const t0=a.currentTime+.15;
   seq.forEach(x=>{ if(x.k==='b'||x.k==='L'||x.k==='T') horn(t0+x.s,Math.max(.12,x.d));
     else if(x.k==='c'){ for(let r=0;r<5;r++) bell(t0+x.s+r*.36); }
-    else if(x.k==='K') horn(t0+x.s,x.d);
+    else if(x.k==='K'||x.k==='D') horn(t0+x.s,x.d);
     else if(x.k==='C'){ for(let r=0;r*.2<x.d;r++) bell(t0+x.s+r*.2); }
     else if(x.k==='G'){ for(let r=0;r*.25<x.d;r++) gong(t0+x.s+r*.25); }
     else if(x.k==='x') bell(t0+x.s);
