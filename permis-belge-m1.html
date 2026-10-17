@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v12 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v13 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -3428,7 +3428,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   <div class="keep">
     <p class="kt">Les trois cas qu'on te demande</p>
     <p><b>Rouge et vert ensemble</b>, avec ou sans blanc au-dessus : il <b>vient vers toi</b>.<br>
-    <b>Un seul feu de côté</b> : tu es sur son travers — <b>vert</b>, il passe de gauche à droite ; <b>rouge</b>, de droite à gauche.<br>
+    <b>Un seul feu de côté</b> : tu le vois par son flanc, quelque part entre son avant et un peu en arrière de son travers — <b>vert</b>, il passe de gauche à droite ; <b>rouge</b>, de droite à gauche.<br>
     <b>Un seul feu blanc</b> : soit tu le vois <b>par l'arrière</b> (feu de poupe), soit c'est une <b>menue embarcation</b> ou un bateau <b>au stationnement</b>. Ralentis, et regarde s'il bouge.</p>
   </div>
 
@@ -6150,15 +6150,15 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         d: 900, etat: { mat:1, cotes:1, titre:"le grand bateau à moteur" } },
       { cap: "Les <b>feux de côté</b> : vert à tribord, rouge à bâbord, à la même hauteur, <b>au moins 1 m plus bas</b> "
            + "que le feu de mât. Vu d'ici, tu ne vois que le <b>vert</b> : le rouge est de l'autre bord, masqué.",
-        d: 1100, etat: { vert:1, rouge:0.25 } },
+        d: 1100, etat: { vert:1, rouge:0 } },
       { cap: "Le <b>feu de poupe</b> : blanc, à l'arrière, sur 135°. Mât et poupe se complètent : d'où que tu regardes, "
            + "tu vois toujours un blanc. Vu d'ici, par le travers, tu ne le verrais pas : il n'éclaire que vers l'arrière.",
         d: 1000, etat: { poupe:0.25 } },
       { cap: "<b>Plus de 110 m</b> : un <b>second feu de mât</b>, derrière le premier et <b>au moins 3 m plus haut</b>. "
            + "Obligatoire au-delà de 110 m, permis en dessous.",
-        d: 1200, etat: { mat2:1 } },
+        d: 1200, etat: { mat2:1, cotes:0 } },
       { cap: "La <b>menue embarcation</b> à moteur porte les mêmes feux, un cran moins forts : feu de mât <b>clair</b>, "
-           + "feux de côté <b>ordinaires</b>, qui peuvent être <b>réunis dans une même lanterne</b> à la proue.",
+           + "feux de côté qui <b>peuvent être ordinaires</b> et peuvent être <b>réunis dans une même lanterne</b> à la proue.",
         d: 1100, etat: { mat2:0, cotes:0, titre:"la menue embarcation à moteur" } },
       { cap: "Autre option pour elle : un <b>feu blanc visible de tous les côtés</b> à la place du feu de mât. "
            + "Alors le feu de poupe <b>n'est plus porté</b> : le blanc éclaire déjà l'arrière.",
@@ -6202,7 +6202,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         svg: coque(290, 70, 120, 50) + coque(60, 78, 130, 36)
            + '<line x1="190" y1="96" x2="290" y2="95" class="s-cable"/>'
            /* remorqueur : deux feux de mât (superposés, donc dessinés côte à côte ici), côtés, poupe jaune */
-           + feu(372, 95, "l-blanc") + feu(386, 95, "l-blanc")
+           + feu(380, 95, "l-blanc") + lab(380, 84, "×2 superposés", "middle")
            + feu(340, 118, "l-vert") + feu(340, 72, "l-rouge") + feu(296, 95, "l-jaune")
            /* remorqué : un blanc 360°, et le feu de poupe du dernier bateau */
            + feu(125, 96, "l-blanc") + feu(66, 96, "l-blanc")
@@ -6244,7 +6244,8 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
            + feu(350, 90, "l-blanc") + feu(260, 120, "l-vert") + feu(260, 60, "l-rouge") + feu(156, 90, "l-blanc")
            + '<circle cx="330" cy="40" r="11" class="m-jaune"/>'
            + lab(330, 24, "ballon jaune, de jour", "middle")
-           + lab(105, 172, "le bateau qui assiste", "middle")
+           + feu(132, 138, "l-blanc") + lab(132, 182, "×2", "middle") + feu(105, 120, "l-rouge") + feu(105, 156, "l-vert") + feu(64, 138, "l-jaune")
+           + lab(90, 196, "le bateau qui assiste", "middle")
            + lab(156, 140, "poupe blanche", "middle"),
         t: "<b>Bateau assisté.</b> Un bateau motorisé, un convoi poussé ou une formation à couple <b>aidé par un autre bateau "
          + "motorisé</b> hisse de jour un <b>ballon jaune</b> : à l'avant, à 5 m au moins, sur un bateau isolé ; sur le pousseur d'un convoi poussé ; "
@@ -6297,16 +6298,16 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       { c:"Un cône bleu", n:"Matières <b>inflammables</b>. De nuit : un feu bleu.", d: JOUR + matMarque() + cone(50, 44, "m-bleu", true) },
       { c:"Deux cônes bleus", n:"Matières <b>nocives pour la santé</b>. De nuit : deux feux bleus.",
         d: JOUR + matMarque() + cone(50, 30, "m-bleu", true) + cone(50, 64, "m-bleu", true) },
-      { c:"Trois cônes bleus", n:"Matières <b>explosives</b>. De nuit : trois feux bleus. Dans un convoi, c'est le pousseur (ou le bateau qui propulse la formation à couple) qui les porte, et seulement le nombre le plus élevé.",
+      { c:"Trois cônes bleus", n:"Matières <b>explosives</b>. De nuit : trois feux bleus. Dans un convoi poussé ou une formation à couple, c'est le pousseur (ou le bateau qui propulse la formation) qui les porte, et seulement le nombre le plus élevé.",
         d: JOUR + matMarque() + cone(50, 24, "m-bleu", true) + cone(50, 50, "m-bleu", true) + cone(50, 76, "m-bleu", true) },
       { c:"Flamme rouge", n:"Bateau qui a obtenu une <b>priorité de passage</b> là où l'ordre de passage est réglementé — aux écluses, par exemple — et qui veut en user : une flamme rouge à l'avant (art. 3.17).",
         d: JOUR + matMarque() + '<path d="M 50 24 L 88 36 L 50 48 Z" class="m-rouge"/>' },
       { c:"Pavillon rouge balancé", n:"Bateau <b>incapable de manœuvrer</b>, de jour — ou, au choix, deux ballons noirs superposés. De nuit : un feu rouge balancé (blanc pour une menue embarcation), ou deux feux rouges superposés (art. 3.18).",
-        d: JOUR + matMarque() + '<path d="M 50 22 L 86 28 L 50 50 Z" class="m-rouge"/><path d="M 30 70 q 20 -10 40 0" class="s-balance"/>' },
+        d: JOUR + matMarque() + '<rect x="50" y="22" width="34" height="24" class="m-rouge"/><path d="M 30 70 q 20 -10 40 0" class="s-balance"/>' },
       { c:"Feu bleu scintillant", n:"<b>Services publics ou d'urgence</b> — police, pompiers, gestionnaire, secours — qui se déplacent pour une raison urgente : ils peuvent le porter de jour comme de nuit (art. 3.27).",
         d: NUIT + lampeMarque(50, 50, "l-bleu") + '<text x="50" y="86" class="t-nuit" text-anchor="middle" font-size="11">scintillant</text>' },
       { c:"Deux verts / un rouge", n:"<b>Engin flottant au travail</b>, ou bateau qui fait des travaux ou des sondages dans le chenal : deux feux verts superposés du côté où le passage est <b>libre</b>, un feu rouge du côté où il est <b>entravé</b>. De jour : deux bicônes verts, et un ballon rouge (art. 3.25).",
-        d: NUIT + lampeMarque(30, 36, "l-vert") + lampeMarque(30, 64, "l-vert") + lampeMarque(70, 50, "l-rouge")
+        d: NUIT + lampeMarque(30, 36, "l-vert") + lampeMarque(30, 64, "l-vert") + lampeMarque(70, 36, "l-rouge")
             + '<text x="30" y="90" class="t-nuit" text-anchor="middle" font-size="10">libre</text>'
             + '<text x="70" y="90" class="t-nuit" text-anchor="middle" font-size="10">fermé</text>' },
       { c:"Rouge sur blanc", n:"Côté où le passage est libre, quand l'engin au travail veut être <b>protégé des remous</b> — et toujours pour un <b>bateau échoué ou coulé</b> : feu rouge au-dessus, feu blanc en dessous ; un feu rouge du côté entravé (art. 3.25).",
