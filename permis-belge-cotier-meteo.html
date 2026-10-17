@@ -74,7 +74,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Météo : les fronts, la dépression et l'anticyclone</h1>
-  <span class="ver">version 1.0 · permis côtier · météorologie · hémisphère Nord</span>
+  <span class="ver">version 1.2 · permis côtier · météorologie · hémisphère Nord</span>
 </header>
 
 <div class="seg" role="tablist" id="onglets">
@@ -106,9 +106,10 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
     <svg id="courbes" viewBox="0 0 360 196" role="img" aria-label="Évolution de la pression, de la température et de la pluie"></svg>
     <div class="leg"><span><i style="background:var(--accent)"></i>pression</span><span><i style="background:var(--chaud)"></i>température</span><span><i style="background:var(--pluie)"></i>pluie</span><span>trait rouge : maintenant</span></div>
   </div>
+  <div class="card" id="pourquoi"></div>
   <div class="card" id="rappel"></div>
   <div class="trap" id="pieges"></div>
-  <p class="src">Valeurs d'exemple, pour comprendre le <b>sens</b> des changements : chaque front réel est différent. Le front se déplace d'ouest en est ; on le regarde de côté, l'ouest à gauche.</p>
+  <p class="src">Valeurs d'exemple, pour comprendre le <b>sens</b> des changements : chaque front réel est différent. Le front se déplace d'ouest en est ; on le regarde de côté, l'ouest à gauche. Sur le dessin, les pentes sont très exagérées : en réalité, la surface d'un front froid monte d'environ 1 km tous les 70 km (IRM), et celle d'un front chaud est encore bien plus douce. Vent : la flèche montre où va l'air ; « SO » veut dire un vent qui <b>vient</b> du sud-ouest.</p>
 </section>
 
 <!-- ================= DÉPRESSION ET ANTICYCLONE ================= -->
@@ -124,6 +125,14 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
   <div class="card phase" id="legende-etape"></div>
   <div class="leg" style="margin-top:-4px">
     <span><i style="background:var(--chaud)"></i>front chaud (demi-cercles)</span><span><i style="background:var(--froid)"></i>front froid (triangles)</span><span><i style="background:var(--occl)"></i>front occlus</span><span>traits gris : isobares, tous les 4 hPa</span><span>flèches : vent</span>
+  </div>
+
+  <div class="card">
+    <h2>Pourquoi le vent vire au passage des fronts</h2>
+    <p>La perturbation se déplace vers l'est. Pour vous, qui restez au même endroit, c'est comme si vous traversiez la carte <b>de droite à gauche</b>, au sud du centre de la dépression :</p>
+    <svg id="carte-vire" viewBox="0 0 360 250" role="img" aria-label="Trajet d'un bateau immobile à travers une perturbation, avec le vent à chaque étape"></svg>
+    <p id="txt-vire"></p>
+    <p>Le vent tourne vers la droite, dans le sens des aiguilles d'une montre : les marins disent qu'il <b>vire</b>. À chaque front, il tourne d'un coup parce que les isobares y font un coude (le front est un creux de pression). Si au contraire la dépression passe <b>au sud</b> de vous, vous restez dans l'air froid au nord du centre : le vent passe de l'est au nord-est puis au nord, il tourne vers la gauche, il <b>recule</b>.</p>
   </div>
 
   <div class="card">
@@ -147,7 +156,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
       <li><b>L'air va de l'anticyclone vers la dépression</b>, mais la rotation de la Terre le dévie : il tourne autour d'eux au lieu d'aller tout droit. Plus les isobares sont <b>serrées</b> entre les deux, plus le vent est <b>fort</b>.</li>
       <li><b>L'anticyclone guide les dépressions.</b> Elles le contournent. Quand l'anticyclone des Açores remonte vers le nord en été, les perturbations passent plus au nord et la Belgique a du beau temps ; quand il recule, elles arrivent sur nous l'une après l'autre.</li>
       <li><b>Toutes les dépressions n'ont pas de fronts.</b> Une dépression thermique (air chauffé par le sol, par exemple sur l'Espagne en été) n'en a pas.</li>
-      <li><b>Le front est un creux de pression.</b> Sur la carte, les isobares font un coude sur chaque front, pointe tournée vers l'extérieur de la dépression. C'est pour cela que la pression baisse quand le front approche et remonte après.</li>
+      <li><b>Le front est un creux de pression.</b> Sur la carte, les isobares font un coude sur chaque front, pointe tournée vers l'extérieur de la dépression. C'est pour cela que la pression baisse quand un front approche. Après un front froid, elle remonte nettement ; après un front chaud, elle cesse surtout de baisser.</li>
       <li><b>Règle de Buys-Ballot</b> : dos au vent, la dépression est à votre gauche (un peu en avant), dans l'hémisphère Nord.</li>
     </ul>
   </div>
@@ -170,7 +179,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
       <li>« Dépression » ne veut pas dire « moins de 1013 hPa ». Une dépression est une pression plus basse <b>qu'autour</b> ; un anticyclone, plus haute qu'autour.</li>
       <li>Ne mettez pas de front dans un anticyclone : les fronts vont avec les dépressions.</li>
       <li>Dans l'hémisphère Nord, le vent tourne en sens <b>inverse</b> des aiguilles d'une montre autour de la dépression, et <b>dans le sens</b> des aiguilles autour de l'anticyclone.</li>
-      <li>Les triangles et les demi-cercles sont dessinés du côté vers lequel le front <b>avance</b>.</li>
+      <li>Les triangles et les demi-cercles sont dessinés du côté vers lequel le front <b>avance</b> (front stationnaire : triangles d'un côté, demi-cercles de l'autre).</li>
       <li>Le front froid va plus vite que le front chaud : c'est lui qui rattrape l'autre, et l'occlusion arrive quand la dépression vieillit.</li>
     </ul>
   </div>
@@ -203,19 +212,20 @@ const FR = {
     intro: "<p><b>Le front chaud</b> : de l'air chaud arrive et remplace l'air froid. Plus léger, il glisse lentement <b>au-dessus</b> de l'air froid, sur une pente très douce. En montant, il se refroidit et forme une immense couche de nuages qui s'étend loin devant le front.</p><p>Touchez <b>Lecture</b> : le front avance vers votre bateau, et les instruments changent.</p>",
     pres: [[650,1014],[0,1001],[-40,1000.6],[-250,1000]],
     temp: [[650,7],[30,7.5],[0,9.5],[-30,12],[-250,12.5]],
-    pluie: [[650,0],[420,0],[400,.3],[220,.8],[120,2.5],[10,3],[-15,.3],[-250,.2]],
-    ventDir: [[650,155],[300,160],[60,170],[10,180],[-25,225],[-250,230]],
+    pluie: [[650,0],[300,0],[280,.3],[220,.8],[120,2.5],[10,3],[-15,.3],[-250,.2]],
+    ventDir: [[650,165],[300,160],[60,150],[10,150],[-25,220],[-250,230]],
     ventF: [[650,3],[300,4],[60,5],[0,5],[-30,4],[-250,4]],
     zones: [
       [450, "Cirrus", "Bonne", "Les premiers <b>cirrus</b> (filaments blancs très hauts) arrivent de l'ouest. Le baromètre commence à baisser. Un front chaud approche : souvent dans 12 à 24 heures."],
       [300, "Cirrostratus : voile blanc, halo autour du soleil", "Bonne", "Le ciel se voile et un <b>halo</b> entoure le soleil ou la lune. La pression baisse régulièrement."],
-      [120, "Altostratus : soleil comme derrière un verre dépoli", "Bonne puis en baisse", "Le ciel devient gris, le soleil disparaît. Une <b>pluie faible et continue</b> commence. Le vent de secteur sud fraîchit."],
+      [120, "Altostratus : soleil comme derrière un verre dépoli", "Bonne puis en baisse", "Le ciel devient gris, le soleil disparaît. Une <b>pluie faible et continue</b> commence. Le vent de sud-est fraîchit et recule un peu."],
       [15, "Nimbostratus : couche grise, épaisse et basse", "Mauvaise sous la pluie", "Pluie <b>continue</b>, modérée, pendant plusieurs heures. La pression baisse toujours."],
-      [-25, "Nimbostratus qui s'éloigne", "Médiocre", "<b>Le front passe</b> : la pluie s'arrête ou devient bruine, la <b>température monte</b>, le vent <b>vire</b> du sud au sud-ouest, la pression <b>cesse de baisser</b>."],
+      [-25, "Nimbostratus qui s'éloigne", "Médiocre", "<b>Le front passe</b> : la pluie s'arrête ou devient bruine, la <b>température monte</b>, le vent <b>vire</b> du sud-est au sud-ouest, la pression <b>cesse de baisser</b>."],
       [-9999, "Stratus : ciel gris et bas, bruine", "Médiocre : brume, bruine", "Vous êtes dans le <b>secteur chaud</b> : air doux et humide, ciel bas, bruine possible, pression à peu près stable. Ce n'est pas le beau temps : le front froid suivra."]
     ],
-    rappel: "<h2>Rappel théorique</h2><ul><li>Air <b>chaud</b> qui remplace l'air froid, et qui monte <b>lentement</b> au-dessus de lui.</li><li>Il s'annonce <b>longtemps à l'avance</b> : cirrus, cirrostratus (halo), altostratus, nimbostratus.</li><li>Pluie <b>continue</b> et modérée, sur une large bande.</li><li>Pression : baisse <b>régulière</b> avant, puis stable. Température : <b>monte</b> après. Vent : se renforce, puis <b>vire</b> au passage.</li><li>Sur la carte : ligne <b style=\"color:var(--chaud)\">rouge</b> avec des <b>demi-cercles</b>, tournés dans le sens où le front avance.</li></ul>",
-    pieges: ["Ne confondez pas : le front chaud prévient des heures à l'avance (cirrus, halo, baromètre en baisse régulière) ; le front froid arrive presque sans prévenir.", "Après le front chaud, il ne fait pas beau : le secteur chaud est doux mais gris, avec bruine et mauvaise visibilité.", "Au passage, le vent <b>vire</b> : il tourne dans le sens des aiguilles d'une montre (ici du sud au sud-ouest).", "Front chaud = température qui <b>monte</b> après le passage."]
+    pourquoi: "<h2>Pourquoi ça change ?</h2><p><b>Le vent vire et se renforce.</b> Autour d'une dépression, dans l'hémisphère Nord, le vent tourne en sens inverse des aiguilles d'une montre, presque le long des isobares (les lignes d'égale pression). Le front est dans un creux de pression : les isobares y font un coude. Devant le front chaud, elles donnent un vent de sud-est à sud ; derrière, dans le secteur chaud, un vent de sud-ouest. La dépression passe en général au nord de la Belgique en allant vers l'est : vous traversez donc ces zones dans l'ordre, sud-est puis sud-ouest, et le vent tourne vers la droite : il <b>vire</b>. Avant le front, il se renforce parce que les isobares se resserrent à l'approche de la dépression, et il recule un peu (vers le sud-est) parce que vous vous rapprochez du centre, qui passe au nord de vous. Voir le schéma dans l'onglet « Dépression et anticyclone ».</p><p><b>La pression baisse, puis se stabilise.</b> Vous vous rapprochez du centre de la dépression et du creux de pression où se trouve le front. En plus, l'air chaud, plus léger, remplace peu à peu l'air froid au-dessus de vous : la colonne d'air pèse moins lourd. Une fois le front passé, vous êtes dans une seule masse d'air, le secteur chaud : la pression change peu.</p><p><b>La température monte.</b> Au sol, l'air froid est remplacé par l'air chaud venu du sud-ouest : vous changez de masse d'air.</p><p><b>Nuages et pluie : en couches, continus, longtemps à l'avance.</b> L'air chaud monte sur l'air froid le long d'une pente très douce (environ 1 km de hauteur pour 100 à 200 km de distance). Il s'élève lentement, sur une très grande largeur : il forme des nuages en couches et une pluie continue et modérée. À plusieurs centaines de kilomètres devant le front, cet air chaud est déjà à 8 ou 10 km d'altitude : c'est là que naissent les cirrus, d'où le préavis de 12 à 24 heures.</p><p><b>Visibilité médiocre.</b> L'air chaud qui arrive est très humide : sous la pluie, puis dans le secteur chaud, la brume et la bruine réduisent la visibilité.</p><p class=\"src\" style=\"margin-top:6px\">Rappel du vocabulaire : le vent <b>vire</b> quand sa direction tourne vers la droite, dans le sens des aiguilles d'une montre (sud → sud-ouest → ouest) ; il <b>recule</b> quand elle tourne vers la gauche (sud → sud-est → est).</p>",
+    rappel: "<h2>Rappel théorique</h2><ul><li>Air <b>chaud</b> qui remplace l'air froid, et qui monte <b>lentement</b> au-dessus de lui.</li><li>Il s'annonce <b>longtemps à l'avance</b> : cirrus, cirrostratus (halo), altostratus, nimbostratus.</li><li>Pluie <b>continue</b> et modérée, sur une large bande.</li><li>Pression : baisse <b>régulière</b> avant, puis stable. Température : <b>monte</b> après. Vent : se renforce et recule un peu, puis <b>vire</b> au passage.</li><li>Sur la carte : ligne <b style=\"color:var(--chaud)\">rouge</b> avec des <b>demi-cercles</b>, tournés dans le sens où le front avance.</li></ul>",
+    pieges: ["Ne confondez pas : le front chaud prévient des heures à l'avance (cirrus, halo, baromètre en baisse régulière) ; le front froid arrive presque sans prévenir.", "Après le front chaud, il ne fait pas beau : le secteur chaud est doux mais gris, avec bruine et mauvaise visibilité.", "Au passage, le vent <b>vire</b> (il tourne vers la droite, ici du sud-est au sud-ouest) parce que la dépression passe au nord de vous : vous passez de la zone de vent de sud-est à celle de vent de sud-ouest. Si la dépression passe au sud de vous, vous restez dans l'air froid, sans traverser les fronts, et le vent <b>recule</b> (il tourne vers la gauche).", "Front chaud = température qui <b>monte</b> après le passage."]
   },
   froid: {
     nom: "front froid", couleur: "var(--froid)", vitesse: 40, echelle: .6, dmax: 330, dmin: -230,
@@ -233,7 +243,8 @@ const FR = {
       [-60, "Éclaircies", "Très bonne", "Le ciel se dégage vite derrière le front. Air plus froid et plus sec : <b>très bonne visibilité</b>. La pression monte."],
       [-9999, "Cumulus, averses éparses (ciel de traîne)", "Très bonne hors des averses", "<b>Ciel de traîne</b> : cumulus, averses brèves avec rafales sous les plus gros nuages. Vent de nord-ouest. La pression continue de monter."]
     ],
-    rappel: "<h2>Rappel théorique</h2><ul><li>Air <b>froid</b> qui remplace l'air chaud, en le soulevant <b>brutalement</b>.</li><li>Peu de signes avant : un mur de nuages sombres qui arrive.</li><li>Pluie <b>courte et forte</b> (averse), rafales, orage possible ; puis éclaircies et <b>averses de traîne</b>.</li><li>Pression : baisse <b>faible</b> avant, <b>hausse rapide</b> après. Température : <b>baisse</b>. Vent : <b>vire brusquement</b> (sud-ouest → nord-ouest) avec rafales.</li><li>Sur la carte : ligne <b style=\"color:var(--froid)\">bleue</b> avec des <b>triangles</b>, tournés dans le sens où le front avance.</li></ul>",
+    pourquoi: "<h2>Pourquoi ça change ?</h2><p><b>Le vent vire d'un coup, avec rafales.</b> Le front froid est lui aussi dans un creux de pression, avec un coude des isobares plus marqué. Devant lui (secteur chaud), elles donnent un vent de sud-ouest ; derrière, un vent d'ouest à nord-ouest. En le traversant, le vent tourne encore vers la droite : il <b>vire</b>, brusquement cette fois, parce que le coude est serré et que le front avance vite. Les rafales viennent du cumulonimbus : l'air froid qui tombe du nuage avec la pluie s'étale sur la mer en violentes bourrasques (le grain).</p><p><b>La pression remonte vite.</b> Avant le front, vous êtes déjà dans le secteur chaud : la pression baisse peu. Au passage, l'air froid, plus lourd, arrive au-dessus de vous : la colonne d'air pèse plus lourd et la pression remonte d'un coup. Elle continue de monter ensuite, car la dépression s'éloigne.</p><p><b>La température baisse.</b> L'air chaud est chassé par l'air froid venu du nord-ouest : vous changez de masse d'air, parfois avec plusieurs degrés de moins en quelques minutes.</p><p><b>Nuages et pluie : violents mais courts, puis averses.</b> L'air froid, plus lourd, se glisse comme un coin sous l'air chaud et le soulève brutalement, sur une pente raide (environ 1 km pour 50 à 100 km). L'air chaud monte vite et très haut : cumulonimbus, averse forte, orage possible, mais sur une bande étroite, donc pendant peu de temps. Derrière, l'air froid passe sur une mer plus chaude que lui : il est chauffé par en dessous, monte en bulles et forme des cumulus qui donnent des averses : c'est le ciel de traîne.</p><p><b>Visibilité : mauvaise, puis excellente.</b> Mauvaise dans l'averse. Très bonne ensuite, parce que l'air froid qui arrive est sec et propre.</p><p class=\"src\" style=\"margin-top:6px\">Rappel du vocabulaire : le vent <b>vire</b> quand sa direction tourne vers la droite, dans le sens des aiguilles d'une montre (sud → sud-ouest → ouest) ; il <b>recule</b> quand elle tourne vers la gauche (sud → sud-est → est).</p>",
+    rappel: "<h2>Rappel théorique</h2><ul><li>Air <b>froid</b> qui remplace l'air chaud, en le soulevant <b>brutalement</b>.</li><li>Peu de signes avant : un mur de nuages sombres qui arrive.</li><li>Pluie <b>courte et forte</b> (averse), rafales, orage possible ; puis éclaircies et <b>averses de traîne</b>.</li><li>Pression : baisse avant (souvent peu), <b>hausse rapide</b> après. Température : <b>baisse</b>. Vent : <b>vire brusquement</b> (sud-ouest → nord-ouest) avec rafales.</li><li>Sur la carte : ligne <b style=\"color:var(--froid)\">bleue</b> avec des <b>triangles</b>, tournés dans le sens où le front avance.</li></ul>",
     pieges: ["La pluie est courte mais violente, avec rafales (grain) : réduisez la toile ou rentrez <b>avant</b> l'arrivée du front.", "Le baromètre qui remonte vite ne veut pas dire que tout est fini : la traîne donne encore averses et rafales.", "Le vent vire brusquement au nord-ouest et forcit souvent : un mouillage abrité du sud-ouest peut devenir exposé.", "Front froid = température qui <b>baisse</b> ; front chaud = température qui monte. Ne les inversez pas."]
   },
   occlus: {
@@ -243,7 +254,7 @@ const FR = {
     temp: [[480,9],[20,9],[-20,8],[-300,7]],
     pluie: [[480,0],[330,0],[300,.4],[140,1.8],[10,4],[-35,1.2],[-55,0],[-300,0]],
     averses: -90,
-    ventDir: [[480,150],[100,165],[0,190],[-40,260],[-300,280]],
+    ventDir: [[480,165],[100,155],[0,150],[-40,250],[-300,280]],
     ventF: [[480,4],[100,5],[0,6],[-40,5],[-300,5]],
     zones: [
       [300, "Cirrus puis cirrostratus", "Bonne", "Le ciel se voile, comme devant un front chaud. La pression baisse."],
@@ -252,6 +263,7 @@ const FR = {
       [-50, "Nimbostratus qui s'éloigne", "En amélioration", "<b>Passage du front</b> : le vent <b>vire</b>, la pluie faiblit, la pression <b>se met à remonter</b>. La température change <b>peu</b> (un peu plus froid ici)."],
       [-9999, "Éclaircies, quelques averses", "Bonne", "Après l'occlusion : éclaircies et averses, la pression remonte. Pas de secteur chaud entre la pluie et les averses."]
     ],
+    pourquoi: "<h2>Pourquoi ça change ?</h2><p><b>Le vent vire.</b> L'occlusion est elle aussi dans un creux de pression, près du centre de la dépression. Devant elle, les isobares donnent un vent de sud-est à sud ; derrière, un vent d'ouest. En la traversant, le vent tourne vers la droite : il <b>vire</b>, comme au passage des deux autres fronts.</p><p><b>La pression baisse puis remonte.</b> Vous vous approchez du creux de pression et du centre de la dépression, puis vous vous en éloignez : la pression baisse, elle est au plus bas au passage, puis elle remonte.</p><p><b>La température change peu.</b> Au sol, il n'y a plus d'air chaud : de l'air froid devant, de l'air froid derrière. Si l'air de derrière est un peu plus froid (occlusion de type froid), la température baisse un peu ; s'il est un peu moins froid (type chaud), elle monte un peu.</p><p><b>Nuages et pluie des deux fronts, l'un après l'autre.</b> L'air chaud a été soulevé en altitude, au-dessus des deux masses d'air froid. Il continue de se refroidir en montant et donne les nuages et la pluie du front chaud, puis les averses du front froid, sans secteur chaud entre les deux.</p><p><b>Visibilité.</b> Mauvaise sous la pluie, puis bonne quand l'air plus froid et plus sec arrive derrière.</p><p class=\"src\" style=\"margin-top:6px\">Rappel du vocabulaire : le vent <b>vire</b> quand sa direction tourne vers la droite, dans le sens des aiguilles d'une montre (sud → sud-ouest → ouest) ; il <b>recule</b> quand elle tourne vers la gauche (sud → sud-est → est).</p>",
     rappel: "<h2>Rappel théorique</h2><ul><li>Le front froid <b>rattrape</b> le front chaud : l'air chaud est rejeté en <b>altitude</b>.</li><li>Le temps ressemble à celui d'un front chaud (nuages, pluie continue) suivi de celui d'un front froid (éclaircies, averses), <b>sans secteur chaud</b> entre les deux.</li><li>Pression : <b>baisse puis remonte</b>. Température : <b>change peu</b> (type froid : un peu plus froid après ; type chaud : un peu plus doux après). Vent : <b>vire</b>.</li><li>Il est proche du centre de la dépression, souvent quand elle commence à se combler.</li><li>Sur la carte : ligne <b style=\"color:var(--occl)\">violette</b> avec <b>triangles et demi-cercles alternés</b>, du même côté.</li></ul>",
     pieges: ["La température change peu : reconnaissez l'occlusion au baromètre qui <b>baisse puis remonte</b> et au vent qui <b>vire</b>.", "Il n'y a plus d'air chaud au sol : pas de secteur chaud doux et gris entre la pluie et les averses.", "Près du centre de la dépression, le vent peut être fort.", "Sur la carte, triangles <b>et</b> demi-cercles du <b>même</b> côté = occlusion ; de côtés opposés = front stationnaire."]
   }
@@ -316,25 +328,25 @@ function dessinerCoupe(){
     // nuages en bande au-dessus de la surface frontale (dans l'air chaud qui monte)
     const bande = (a, b, o1, o2, coul, op) => { const hi = [], lo = []; for(let km = a; km <= b; km += 10){ const h = Math.max(0, km) / 100; lo.push([sx(km), o1 === null ? Y0 - 12 : hy(Math.min(10, h + o1))]); hi.push([sx(km), hy(Math.min(10, h + o2))]); }
       return `<polygon points="${lo.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")} ${hi.reverse().map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")}" fill="${coul}" opacity="${op}" stroke="${coul}" stroke-width="6" stroke-linejoin="round"/>`; };
-    s += bande(-25, 160, null, 4.2, "#7D8790", .95);            // Ns, du bas jusqu'à ~5 km
-    s += bande(160, 380, .3, 2.8, "#A9B2BA", .9);               // As
-    s += bande(380, 620, .4, 1.3, "#FFFFFF", .9);               // Cs
-    for(let i=0;i<5;i++){ const km = 640 + i*55, x = sx(km), y = hy(Math.min(9.6, km/100 + .8)); s += `<path d="M${x.toFixed(1)},${y.toFixed(1)} q12,-6 26,-2" stroke="#fff" stroke-width="2.4" fill="none"/>`; } // Ci
+    s += bande(-25, 120, null, 4.2, "#7D8790", .95);            // Ns, du bas jusqu'à ~5 km
+    s += bande(120, 300, .3, 2.8, "#A9B2BA", .9);               // As
+    s += bande(300, 450, .4, 1.3, "#FFFFFF", .9);               // Cs
+    for(let i=0;i<5;i++){ const km = 470 + i*55, x = sx(km), y = hy(Math.min(9.6, km/100 + 2.5)); s += `<path d="M${x.toFixed(1)},${y.toFixed(1)} q12,-6 26,-2" stroke="#fff" stroke-width="2.4" fill="none"/>`; } // Ci
     s += nuage(-20, sx(-25), Y0-8, Y0-20, "#9AA3AA", .7);                         // St du secteur chaud
-    s += pluieZone(sx(0), sx(150), hy(1.2), 1.5, pos);
-    s += pluieZone(sx(150), sx(260), hy(1.6), .6, pos);
+    s += pluieZone(sx(0), sx(120), hy(1.2), 1.5, pos);
+    s += pluieZone(sx(120), sx(290), hy(1.6), .6, pos);
     s += pluieZone(-10, sx(-30), Y0-8, .25, pos);
     s += `<text x="${sx(60)}" y="${hy(2.6)}" font-size="9" text-anchor="middle" fill="#fff" font-weight="700">Ns</text>`;
-    s += `<text x="${sx(270)}" y="${hy(4.4)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">As</text>`;
-    s += `<text x="${sx(500)}" y="${hy(5.8)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">Cs</text>`;
-    s += `<text x="${sx(700)}" y="${hy(9.9)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">Ci</text>`;
+    s += `<text x="${sx(210)}" y="${hy(3.9)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">As</text>`;
+    s += `<text x="${sx(375)}" y="${hy(4.6)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">Cs</text>`;
+    s += `<text x="${sx(560)}" y="${hy(9.6)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">Ci</text>`;
     s += `<path d="M${sx(-160)},${hy(1.2)} L${sx(150)},${hy(2.8)}" stroke="#C0391B" stroke-width="1.5" fill="none" marker-end="url(#fl)" opacity=".8"/>`;
     s += `<text x="${Math.max(30, Math.min(330, fx - 70))}" y="${hy(6.5)}" font-size="11" text-anchor="middle" fill="#A2341A" font-weight="700">air chaud</text>`;
-    s += `<text x="${Math.max(60, Math.min(330, fx + 140))}" y="${Y0-30}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air froid</text>`;
+    if(fx < 230) s += `<text x="${Math.max(60, Math.min(330, fx + 140))}" y="${Y0-30}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air froid</text>`;
   } else if(cur === "froid"){
     // coin d'air froid derrière le front (à gauche) : pente forte
-    const sx = km => fx - km * k, sy = km => hy(Math.min(10, km / 50 + (km < 15 ? 0 : .35)));
-    const surf = [[fx, Y0], [fx - 4, Y0 - 8], [sx(20), hy(.75)]]; for(let km = 40; km <= 600; km += 40) surf.push([sx(km), sy(km)]);
+    const sx = km => fx - km * k, sy = km => hy(Math.min(10, km / 20 + (km < 8 ? 0 : .35)));
+    const surf = [[fx, Y0], [fx - 4, Y0 - 8], [sx(8), hy(.75)]]; for(let km = 20; km <= 1200; km += 20) surf.push([sx(km), sy(km)]);
     s += `<polygon points="${surf.map(p=>p.join(",")).join(" ")} -10,20 400,20 400,${Y0}" fill="${CH}"/>`;
     s += `<polygon points="${surf.map(p=>p.join(",")).join(" ")} -10,${Y0}" fill="${FRO}"/>`;
     s += `<polyline points="${surf.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#1C55B0" stroke-width="2"/>`;
@@ -356,7 +368,7 @@ function dessinerCoupe(){
   } else {
     // occlusion de type froid : air froid derrière (plus froid), air frais devant, air chaud soulevé en altitude
     const T = [fx - 12, hy(2.6)];
-    const arr = []; for(let km = 0; km <= 700; km += 50) arr.push([T[0] - km * k, Math.max(20, T[1] - km / 45 * 15)]);
+    const arr = []; for(let km = 0; km <= 1400; km += 50) arr.push([T[0] - km * k, Math.max(20, T[1] - km / 45 * 15)]);
     const av = []; for(let km = 0; km <= 1000; km += 50) av.push([T[0] + km * k, Math.max(20, T[1] - km / 110 * 15)]);
     s += `<polygon points="${arr.slice().reverse().map(p=>p.join(",")).join(" ")} ${av.map(p=>p.join(",")).join(" ")} 400,20 -10,20" fill="${CH}"/>`;
     s += `<polygon points="${fx},${Y0} ${T.join(",")} ${arr.map(p=>p.join(",")).join(" ")} -10,${Y0}" fill="${FRO2}"/>`;
@@ -376,12 +388,12 @@ function dessinerCoupe(){
     s += `<text x="${ax(220)}" y="${hy(3.6)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">As</text>`;
     s += `<text x="${Math.max(50, Math.min(310, fx + 20))}" y="${hy(8.6)}" font-size="11" text-anchor="middle" fill="#A2341A" font-weight="700">air chaud soulevé</text>`;
     s += `<text x="${Math.max(40, Math.min(320, fx - 110))}" y="${Y0-12}" font-size="11" text-anchor="middle" fill="#123E80" font-weight="700">air froid</text>`;
-    s += `<text x="${Math.max(40, Math.min(320, fx + 120))}" y="${Y0-30}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air frais</text>`;
+    if(fx < 290) s += `<text x="${Math.max(40, Math.min(320, fx + 120))}" y="${Y0-30}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air frais</text>`;
   }
   s += `<defs><marker id="fl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker></defs>`;
   // mer, bateau, flèche de déplacement
   s += `<rect x="0" y="${Y0}" width="360" height="34" fill="#2E6F96"/>`;
-  s += symboles(fx, cur);
+  s += `<line x1="${fx}" y1="${Y0}" x2="${fx}" y2="${Y0+10}" stroke="#fff" stroke-width="2"/><text x="${fx}" y="${Y0+19}" font-size="8" text-anchor="middle" fill="#fff">front au sol</text>`;
   s += bateau(BATEAU);
   s += `<text x="8" y="14" font-size="10" fill="#2B3540">ouest</text><text x="352" y="14" font-size="10" fill="#2B3540" text-anchor="end">est</text>`;
   s += `<text x="180" y="14" font-size="10" fill="#2B3540" text-anchor="middle">le ${f.nom} avance →</text>`;
@@ -417,7 +429,8 @@ function instruments(){
   $("g-vent").innerHTML = `<circle cx="35" cy="30" r="24" fill="none" class="s-line" stroke-width="1.5"/><text x="35" y="9" font-size="7" text-anchor="middle" class="c-mu">N</text><text x="35" y="55" font-size="7" text-anchor="middle" class="c-mu">S</text><text x="5" y="33" font-size="7" class="c-mu">O</text><text x="61" y="33" font-size="7" class="c-mu">E</text>`
     + `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="s-acc" stroke-width="2.5" marker-end="url(#fv)"/><defs><marker id="fv" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" class="c-acc"/></marker></defs>`;
   $("v-vent").textContent = rose(e.dir);
-  $("s-vent").textContent = "de " + ROSE_LONG[rose(e.dir)] + ", force " + e.force + (cur === "froid" && Math.abs(d) < 25 ? ", rafales" : "");
+  const dv = e.dir - e3.dir;
+  $("s-vent").textContent = "de " + ROSE_LONG[rose(e.dir)] + ", force " + e.force + (cur === "froid" && Math.abs(d) < 25 ? ", rafales" : "") + (dv > 8 ? " · il vire" : dv < -8 ? " · il recule" : "");
   // texte
   const h = Math.abs(d) / f.vitesse;
   $("quand").textContent = Math.abs(d) < f.vitesse * .5 ? "Le front passe sur vous" : d > 0 ? `Le front passera sur vous dans ≈ ${fmt(h, 0)} h` : `Le front est passé il y a ≈ ${fmt(h, 0)} h`;
@@ -458,7 +471,7 @@ const ETAPES = [
     c: [175,122], prof: 7, chaud: [[175,122],[230,130],[290,138],[365,142]], froid: [[175,122],[135,140],[85,158],[20,178]] },
   { t: "3. La dépression se creuse", txt: "Le front chaud devant, le front froid derrière, et entre les deux le <b>secteur chaud</b>. Le tout se déplace vers l'est ou le nord-est, en contournant l'anticyclone. Le vent tourne autour de la dépression en sens inverse des aiguilles d'une montre.",
     c: [190,100], prof: 17, chaud: [[190,100],[235,120],[280,145],[335,178]], froid: [[190,100],[178,140],[155,188],[128,240]] },
-  { t: "4. L'occlusion commence", txt: "Le front froid, plus rapide, <b>rattrape</b> le front chaud près du centre : le morceau où ils se sont rejoints est le <b>front occlus</b>. La dépression est à son plus creux et le vent à son plus fort.",
+  { t: "4. L'occlusion commence", txt: "Le front froid, plus rapide, <b>rattrape</b> le front chaud près du centre : le morceau où ils se sont rejoints est le <b>front occlus</b>. La dépression est proche de son plus creux et le vent souvent à son plus fort.",
     c: [205,86], prof: 23, occl: [[205,86],[222,102],[240,120]], chaud: [[240,120],[285,141],[335,170]], froid: [[240,120],[222,165],[200,212],[183,252]] },
   { t: "5. La dépression se comble", txt: "L'occlusion s'allonge, l'air chaud a été rejeté en altitude. La pression remonte au centre : la dépression <b>se comble</b> et la perturbation s'affaiblit. Les fronts finissent par disparaître.",
     c: [214,74], prof: 13, occl: [[214,74],[244,92],[266,122],[285,150]], chaud: [[285,150],[330,172]], froid: [[285,150],[266,196],[250,240]] }
@@ -504,12 +517,21 @@ function vents(E){
   }
   return s;
 }
+function ventEn(E, x, y){   // direction d'où vient le vent (degrés, 0 = nord)
+  const h = 2, gx = (pression(E, x+h, y) - pression(E, x-h, y)) / (2*h), gy = (pression(E, x, y+h) - pression(E, x, y-h)) / (2*h);
+  const gmx = gx, gmy = -gy; let wx = -gmy, wy = gmx; wx -= .35 * gmx; wy -= .35 * gmy;
+  const vers = Math.atan2(wx, wy) * 180 / Math.PI; return ((vers + 180) % 360 + 360) % 360;
+}
 function ligneFront(pl, type){   // type : chaud, froid, occl, stat
   const coul = {chaud:"#D9481E", froid:"#1F66C9", occl:"#8A3FB5"};
   let s = "";
   if(type === "stat"){
     for(let i=1;i<pl.length;i++){ const mx = (pl[i-1][0]+pl[i][0])/2, my = (pl[i-1][1]+pl[i][1])/2;
       s += `<line x1="${pl[i-1][0]}" y1="${pl[i-1][1]}" x2="${mx}" y2="${my}" stroke="${coul.froid}" stroke-width="2.4"/><line x1="${mx}" y1="${my}" x2="${pl[i][0]}" y2="${pl[i][1]}" stroke="${coul.chaud}" stroke-width="2.4"/>`; }
+    for(let i=1;i<pl.length;i++){ const a=pl[i-1], b=pl[i], L=Math.hypot(b[0]-a[0],b[1]-a[1]), tx=(b[0]-a[0])/L, ty=(b[1]-a[1])/L, nx=ty, ny=-tx;
+      [.125,.375].forEach(f=>{ const x=a[0]+tx*L*f, y=a[1]+ty*L*f; s += `<path d="M${(x-tx*5).toFixed(1)},${(y-ty*5).toFixed(1)} L${(x+tx*5).toFixed(1)},${(y+ty*5).toFixed(1)} L${(x-nx*7).toFixed(1)},${(y-ny*7).toFixed(1)} Z" fill="${coul.froid}"/>`; });
+      [.625,.875].forEach(f=>{ const x=a[0]+tx*L*f, y=a[1]+ty*L*f, pts=[]; for(let q=0;q<=12;q++){ const t=Math.PI*q/12; pts.push([(x+5.5*Math.cos(t)*tx+5.5*Math.sin(t)*nx).toFixed(1),(y+5.5*Math.cos(t)*ty+5.5*Math.sin(t)*ny).toFixed(1)]); } s += `<polygon points="${pts.map(p=>p.join(",")).join(" ")}" fill="${coul.chaud}"/>`; }); }
+    return s;
   } else s += `<polyline points="${pl.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${coul[type]}" stroke-width="2.4"/>`;
   // symboles régulièrement espacés, du côté vers lequel le front avance (normale « à gauche » du tracé, écran y vers le bas)
   let acc = 9, k = 0;
@@ -531,8 +553,7 @@ function ligneFront(pl, type){   // type : chaud, froid, occl, stat
   }
   return s;
 }
-function dessinerCarte(){
-  const E = ETAPES[etape];
+function carteSVG(E, num, extra){
   let s = `<defs><marker id="fc" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0E5A8A"/></marker></defs>`;
   s += `<rect width="360" height="250" fill="#F4F7FA"/>`;
   // masses d'air : froid au nord, secteur chaud
@@ -554,12 +575,31 @@ function dessinerCarte(){
   if(E.c){ const pd = pression(E, E.c[0], E.c[1]);
     s += `<circle cx="${E.c[0]}" cy="${E.c[1]}" r="11" fill="#fff" opacity=".85"/><text x="${E.c[0]}" y="${E.c[1]+7}" font-family="Barlow Condensed,Arial" font-size="22" font-weight="700" text-anchor="middle" fill="#B3261E">D</text><text x="${E.c[0]+16}" y="${E.c[1]-8}" font-size="10" fill="#B3261E" font-weight="700">${Math.round(pd)} hPa</text>`; }
   s += `<text x="10" y="18" font-size="11" font-weight="700" fill="#174E9C">air froid</text>`;
-  const lab = E.stat ? [280, 200] : etape === 1 ? [300, 170] : etape === 2 ? [250, 200] : etape === 3 ? [280, 215] : [310, 215];
+  const lab = E.stat ? [280, 200] : num === 1 ? [300, 170] : num === 2 ? [250, 200] : num === 3 ? [280, 215] : [310, 215];
   s += `<text x="${lab[0]}" y="${lab[1]}" font-size="11" font-weight="700" fill="#A2341A" text-anchor="middle">${E.stat ? "air chaud" : "secteur chaud"}</text>`;
   s += `<text x="350" y="245" font-size="9" fill="#55626F" text-anchor="end">N ↑ · ouest à gauche</text>`;
-  $("carte").innerHTML = s;
+  return s + (extra || "");
+}
+function dessinerCarte(){
+  const E = ETAPES[etape];
+  $("carte").innerHTML = carteSVG(E, etape);
   $("legende-etape").innerHTML = `<h2>${E.t}</h2><p>${E.txt}</p>`;
   document.querySelectorAll("#etapes .et").forEach((b, i) => b.classList.toggle("on", i === etape));
+}
+function schemaVire(){
+  const E = ETAPES[2], P = [[330,130],[250,175],[140,130]], noms = ["devant le front chaud","dans le secteur chaud","derrière le front froid"];
+  let x = `<polyline points="${P.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#16202A" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fv2)"/>`;
+  x += `<defs><marker id="fv2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#16202A"/></marker></defs>`;
+  const txt = [];
+  P.forEach((p, i) => { const dir = ventEn(E, p[0], p[1]), vers = (dir + 180) * Math.PI / 180, L = 22;
+    const x2 = p[0] + L * Math.sin(vers), y2 = p[1] - L * Math.cos(vers);
+    x += `<line x1="${p[0]}" y1="${p[1]}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#E0302A" stroke-width="3.5" marker-end="url(#fv3)"/>`;
+    x += `<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="#16202A"/><text x="${p[0]}" y="${p[1]+4}" font-size="11" font-weight="700" text-anchor="middle" fill="#fff">${i+1}</text>`;
+    x += `<text x="${p[0]-13}" y="${p[1]+4}" font-size="12" font-weight="700" text-anchor="end" fill="#E0302A" stroke="#fff" stroke-width="3" paint-order="stroke">${rose(dir)}</text>`;
+    txt.push(`<b>${i+1}</b> ${noms[i]} : vent de <b>${ROSE_LONG[rose(dir)]}</b>`); });
+  x += `<defs><marker id="fv3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#E0302A"/></marker></defs>`;
+  $("carte-vire").innerHTML = carteSVG(E, 2, x);
+  $("txt-vire").innerHTML = txt.join(" → ") + ".";
 }
 function coupeDA(){
   let s = `<rect width="360" height="150" fill="none"/>`;
@@ -586,7 +626,7 @@ function choisir(o){
   $("vue-carte").hidden = true; $("vue-front").style.display = "flex";
   cur = o; pos = 0; $("curseur").value = 0;
   const f = FR[o];
-  $("intro-front").innerHTML = f.intro; $("rappel").innerHTML = f.rappel;
+  $("intro-front").innerHTML = f.intro; $("rappel").innerHTML = f.rappel; $("pourquoi").innerHTML = f.pourquoi;
   $("pieges").innerHTML = "<h2>Pièges à éviter</h2><ul>" + f.pieges.map(p => "<li>" + p + "</li>").join("") + "</ul>";
   majFront();
 }
@@ -618,6 +658,7 @@ $("jouer-carte").addEventListener("click", () => {
 });
 
 coupeDA();
+schemaVire();
 choisir("chaud");
 </script>
 </body>
