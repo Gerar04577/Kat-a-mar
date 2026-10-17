@@ -524,6 +524,7 @@ main table.pan-tab td:last-child{ white-space:normal; overflow-wrap:anywhere; }
 .sn-bar.on{ fill:#ffd23f; stroke:#ffffff; }
 .s-tete{ stroke:#e8690b; stroke-width:2.5; stroke-linecap:round; }
 .f-brume{ fill:#b9c4d2; }
+#outil-brume .t-lab, #outil-brume .t-cote{ fill:#16202a; }
 /* dix-sept boutons de signaux : deux colonnes, texte qui s'enroule */
 #sn-btns button{ overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto; text-align:left; }
 
@@ -646,7 +647,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v19 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v21 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -3887,7 +3888,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 
   <div class="qcm" data-cat="Marques et convois" data-bonne="B">
     <p class="qn">QCM 109</p>
-    <p class="qt">Un convoi poussé porte de nuit, à l'avant :</p>
+    <p class="qt">Un convoi poussé de plus de 110 m de long ou de plus de 12 m de large porte de nuit, à l'avant :</p>
     <div class="choix">
       <button type="button" data-l="A"><span class="l">A</span><span>deux feux de mât superposés</span></button>
       <button type="button" data-l="B"><span class="l">B</span><span>trois feux de mât en triangle</span></button>
@@ -3903,7 +3904,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 
   <div class="qcm" data-cat="Marques et convois" data-bonne="C">
     <p class="qn">QCM 110</p>
-    <p class="qt">De jour, un convoi poussé qui n'est pas assisté par un autre bateau motorisé montre :</p>
+    <p class="qt">De jour, un convoi poussé qui n'est pas assisté et ne transporte pas de matières dangereuses montre :</p>
     <div class="choix">
       <button type="button" data-l="A"><span class="l">A</span><span>un ballon jaune</span></button>
       <button type="button" data-l="B"><span class="l">B</span><span>un cylindre jaune</span></button>
@@ -3912,7 +3913,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <div class="corr" hidden><p class="verdict"></p><ul>
       <li class="ko"><b>A</b> — faux ici : le ballon jaune sur le pousseur n'est porté que si le convoi est <b>assisté</b> (art. 3.10 al. 2).</li>
       <li class="ko"><b>B</b> — faux.</li>
-      <li class="ok"><b>C</b> — juste, et la formation à couple non plus.</li>
+      <li class="ok"><b>C</b> — juste, et la formation à couple non plus (avec des matières dangereuses, les cônes bleus sont portés par le pousseur, art. 3.14 al. 4).</li>
     </ul></div>
     <p class="cat">Catégorie : marques et convois</p>
   </div>
@@ -4081,9 +4082,9 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <section id="ch6">
   <p class="kicker">Chapitre 6</p>
   <h2>Les signaux sonores</h2>
-  <p>Un coup de trompe n'est pas un klaxon de voiture : c'est une <b>phrase</b>, avec une grammaire courte. Deux durées, quelques combinaisons, et un principe qui commande tout : on ne sonne que quand le règlement le prévoit, et jamais pour dire bonjour.</p>
+  <p>Un coup de trompe n'est pas un klaxon de voiture : c'est une <b>phrase</b>, avec une grammaire courte. Trois durées, quelques combinaisons, et un principe qui commande tout : on ne sonne que quand le règlement le prévoit, et jamais pour dire bonjour.</p>
 
-  <h3>Deux durées, et c'est tout</h3>
+  <h3>Trois durées, et c'est tout</h3>
   <table class="pan-tab">
     <thead><tr><th>Son</th><th>Durée</th></tr></thead>
     <tbody>
@@ -6464,7 +6465,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     images: [
       { cap: "Tu quittes ton poste <b>sans virer</b>, en venant sur tribord : le signal de manœuvre ordinaire suffit — <b>un son bref</b>.",
         d: 1300, etat: { x: 150, y: 64, r: 15, son: "·", dire: "je quitte mon poste vers tribord" } },
-      { cap: "Un bateau vient en face et tu dois t'écarter : tu viens sur tribord — <b>un son bref</b>. (Virer, au sens du règlement, c'est faire demi-tour : un prolongé, un bref pour tribord.)",
+      { cap: "Tu viens sur tribord pour te placer sur ta droite du chenal — <b>un son bref</b>. (Virer, au sens du règlement, c'est faire demi-tour : un prolongé, un bref pour tribord.)",
         d: 1400, etat: { x: 230, y: 118, r: 20, son: "·", dire: "je viens sur tribord" } },
       { cap: "Le port s'ouvre à ta droite. Pour y entrer en tournant vers tribord : <b>trois prolongés, un bref</b>. Et si tu étais avalant, tu céderais la priorité au montant qui veut entrer dans le même port.",
         d: 1700, etat: { x: 330, y: 150, r: 60, son: "— — — ·", dire: "j'entre vers tribord" } },

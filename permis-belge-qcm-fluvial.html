@@ -666,7 +666,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v14 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
+  <div class="ver">QCM FLUVIAL · v16 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -1799,7 +1799,7 @@ window.KAM_IMG = {"A.1": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQQAAADQ
     var deck = o.type === "pont" || o.type === "pontfixe";
     s += zig(48, 118, 124, 20, nuitF ? "#000" : "#fff");
     if(deck){
-      s += '<path d="M14 30 L206 26 L206 40 L14 44 Z" fill="' + O.gris + '" stroke="' + trait + '" stroke-width="1"/>';
+      s += '<path d="M14 28 L206 28 L206 42 L14 42 Z" fill="' + O.gris + '" stroke="' + trait + '" stroke-width="1"/>';
     }
     var piles = o.un_cote ? [176] : [28, 192];
     piles.forEach(function(px){
@@ -3767,15 +3767,15 @@ window.KAM_QCM = {
 "t": "scene",
 "bateaux": [
 {
-"x": 70,
-"y": 60,
+"x": 135,
+"y": 75,
 "cap": 0,
 "grand": true,
 "l": "grand"
 },
 {
-"x": 70,
-"y": 100,
+"x": 35,
+"y": 75,
 "cap": 0,
 "l": "toi"
 }
@@ -4659,7 +4659,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Un seul blanc : feu de poupe, menue embarcation à feu blanc unique, ou bateau en stationnement.",
-"pg": "Un blanc isolé sur l'eau est d'abord un bateau ; un blanc isophase sur l'eau est une bifurcation.",
+"pg": "Un blanc fixe isolé sur l'eau est d'abord un bateau ; un blanc rythmé (scintillant ou isophase) sur une bouée peut marquer une bifurcation.",
 "ref": "Cours amélioré, module 1, chap. 5"
 },
 {
@@ -4798,7 +4798,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Remorqueur : de jour un cylindre jaune ; de nuit deux feux de mât superposés et un feu de poupe JAUNE.",
+"ex": "Remorqueur : de jour un cylindre jaune ; de nuit deux feux de mât superposés et un feu de poupe JAUNE. Le bateau qui en assiste un autre porte les mêmes signaux (art. 3.09 al. 1).",
 "pg": "Jaune à l'arrière la nuit = il y a quelque chose derrière : ne passe jamais entre lui et le feu blanc qui suit.",
 "ref": "Règlement général de police (AR 24/09/2006), art. 3.09 · Cours amélioré, module 1, chap. 5"
 },
@@ -4987,11 +4987,6 @@ window.KAM_QCM = {
 "cat": "R",
 "res": false,
 "q": "En eaux intérieures belges, un bateau INCAPABLE DE MANŒUVRER peut montrer de jour :",
-"d": {
-"t": "img",
-"k": "c42d",
-"cap": "Jour · croquis 42"
-},
 "o": [
 {
 "t": "un pavillon rouge balancé, ou deux ballons noirs superposés",
@@ -5556,7 +5551,7 @@ window.KAM_QCM = {
 "id": "R106",
 "cat": "R",
 "res": false,
-"q": "Sur la Meuse mitoyenne, un bateau de plaisance doit avoir à bord :",
+"q": "Sur la Meuse mitoyenne, une menue embarcation de plaisance qui fait route doit avoir à bord :",
 "d": {
 "t": "scene",
 "bateaux": [
@@ -5572,7 +5567,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "rames ou pagaies, un gilet par personne, une ancre, une écope",
-"e": "Entre autres : amarres, aussière, corne."
+"e": "Entre autres : amarres, filin, corne."
 },
 {
 "t": "seulement un gilet par personne",
@@ -5584,7 +5579,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Équipement obligatoire : rames ou pagaies ; un gilet (ou bouée, coussin de sauvetage) par personne ; une ou plusieurs amarres de 10 m et une aussière de 30 m ; une ancre ; une pompe à main ou une écope ; une corne de brume ; un extincteur à poudre pour un bateau à moteur.",
+"ex": "Équipement obligatoire : rames ou pagaies ; un gilet (ou bouée, coussin de sauvetage) par personne ; une ou plusieurs amarres de 10 m et un filin de 30 m ; une ancre ; une pompe à main ou une écope ; une corne de brume ou un avertisseur sonore ; un extincteur à poudre pour un bateau à moteur.",
 "pg": "Pas de radeau ni de VHF exigés par ce règlement : retiens la liste « de base ».",
 "ref": "Tome 1, p. 75-76 · Règlement de police de la Meuse mitoyenne (convention belgo-néerlandaise), art. 2.02a"
 },
@@ -6289,12 +6284,6 @@ window.KAM_QCM = {
 "cat": "N",
 "res": false,
 "q": "Les bouées du balisage latéral portent en général :",
-"d": {
-"t": "bouee",
-"forme": "cyl",
-"couleur": "rouge",
-"reflecteur": true
-},
 "o": [
 {
 "t": "un réflecteur radar",
@@ -10664,11 +10653,11 @@ window.KAM_QCM = {
 },
 {
 "t": "lance un appel sur le canal 10",
-"e": "En cas réel : MAYDAY sur le canal 16."
+"e": "Ce n'est pas son rôle : il garde la personne en vue. (En cas réel, sur une voie intérieure, le MAYDAY part sur le canal 10 ; en mer, sur le canal 16.)"
 }
 ],
 "b": 0,
-"ex": "Un équipier garde la personne en vue jusqu'à la fin et la pointe du bras ; en cas réel, MAYDAY sur le canal 16.",
+"ex": "Un équipier garde la personne en vue jusqu'à la fin et la pointe du bras ; en cas réel, MAYDAY sur le canal 10 (voie intérieure) ou 16 (en mer).",
 "pg": "Une tête dans les vagues se perd de vue en quelques secondes.",
 "ref": "Tome 3, p. 23"
 },
@@ -10731,28 +10720,28 @@ window.KAM_QCM = {
 "id": "S062",
 "cat": "S",
 "res": false,
-"q": "En détresse, en Belgique ou à l'étranger, sur quel canal VHF appelles-tu les secours ?",
+"q": "Sur une voie navigable intérieure belge, en détresse, sur quel canal VHF lances-tu ton MAYDAY ?",
 "d": {
 "t": "vhf",
 "canal": "?"
 },
 "o": [
 {
-"t": "le canal 16",
-"e": "Canal de détresse et de sécurité."
+"t": "le canal 10, ou le canal imposé (écluse proche)",
+"e": "En navigation intérieure, la détresse passe en principe sur le canal 10 (manuel IBPT)."
 },
 {
-"t": "le canal 10",
-"e": "Le canal de détresse est le 16."
+"t": "le canal 16",
+"e": "C'est le canal de détresse en mer."
 },
 {
 "t": "le canal 70",
-"e": "Le canal de détresse est le 16."
+"e": "Réservé à l'appel sélectif numérique (ASN), en mer."
 }
 ],
 "b": 0,
-"ex": "Détresse : VHF canal 16, ou le 112 au téléphone portable.",
-"pg": "En détresse : canal 16, ou le 112 au téléphone.",
+"ex": "Voies intérieures : MAYDAY sur le canal 10 ou le canal imposé ; en mer : canal 16. Au téléphone : le 112.",
+"pg": "Rivière ou canal : canal 10 ; en mer : canal 16 ; téléphone : 112.",
 "ref": "Tome 1, p. 63 · Tome 3, p. 27"
 },
 {
@@ -11030,7 +11019,7 @@ window.KAM_QCM = {
 "d": {
 "t": "fumee",
 "c": "noir",
-"legende": "feu dans la cale moteur"
+"legende": "fumée de la cale moteur"
 },
 "o": [
 {
@@ -12594,7 +12583,7 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "un remorqueur, en tête d'un convoi remorqué",
+"t": "un remorqueur en tête d'un convoi remorqué, ou un bateau qui en assiste un autre",
 "e": "Deux feux de mât superposés."
 },
 {
@@ -12607,7 +12596,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Remorqueur : deux feux de mât superposés à 1 m l'un de l'autre, feux de côté, feu de poupe jaune.",
+"ex": "Remorqueur : deux feux de mât superposés à 1 m l'un de l'autre, feux de côté, feu de poupe jaune. Mêmes feux pour le bateau motorisé qui assiste (art. 3.09 al. 1).",
 "pg": "Deux blancs superposés = remorqueur ; trois en triangle = poussé.",
 "ref": "Règlement général de police (AR 24/09/2006), art. 3.09 · Cours amélioré, module 1, chap. 5"
 },
@@ -12850,11 +12839,6 @@ window.KAM_QCM = {
 "cat": "R",
 "res": true,
 "q": "Le feu de poupe éclaire un secteur de :",
-"d": {
-"t": "secteurs",
-"feu": "poupe",
-"legende": "le feu de poupe, vu de dessus"
-},
 "o": [
 {
 "t": "135°",
@@ -14537,8 +14521,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Détresse, urgence ou sécurité : VHF canal 16, ou le 112 au téléphone portable.",
-"pg": "Canal 16 (radio) et 112 (téléphone) : retiens les deux.",
+"ex": "Détresse : VHF canal 10 (ou le canal imposé) sur les voies intérieures, canal 16 en mer ; ou le 112 au téléphone portable.",
+"pg": "Radio : canal 10 en rivière, 16 en mer ; téléphone : 112.",
 "ref": "Tome 3, p. 27"
 },
 {
