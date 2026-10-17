@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v17 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v18 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -4121,7 +4121,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="cap" id="sn-cap">Choisis un signal.</p>
   </figure>
 
-  <h3>Les signaux de manœuvre</h3>
+  <h3>Les signaux généraux</h3>
   <p>Ce sont les <b>signaux généraux</b>, les seuls qu'une menue embarcation peut utiliser. Le nombre de sons brefs donne la <b>direction</b>, et le manuel a un bon truc pour les retenir.</p>
   <table class="pan-tab">
     <thead><tr><th>Signal</th><th>Sens</th></tr></thead>
@@ -4576,7 +4576,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <div class="corr" hidden><p class="verdict"></p><ul>
       <li class="ko"><b>A</b> — faux.</li>
       <li class="ok"><b>B</b> — juste : elle ne peut utiliser que les signaux généraux (art. 4.02, al. 2 et 3).</li>
-      <li class="ko"><b>C</b> — faux : c'est justement face à un grand bateau que ces signaux ne s'appliquent pas.</li>
+      <li class="ko"><b>C</b> — faux : une menue embarcation ne les utilise jamais, ni face à un grand bateau ni face à une autre menue embarcation.</li>
     </ul></div>
     <p class="cat">Catégorie : rencontre et dépassement</p>
   </div>
@@ -6459,11 +6459,11 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 
   /* ----------------------------------------- les manœuvres annoncées ---- */
   window.kamAnim("anim-manoeuvre", {
-    etat0: { x: 80, y: 100, r: 0, son: "", dire: "" },
-    capDepart: "Cette fois, tu conduis un <b>grand bateau</b>, amarré rive gauche, en haut. Touche « Lecture ».",
+    etat0: { x: 80, y: 44, r: 0, son: "", dire: "" },
+    capDepart: "Cette fois, tu conduis un <b>grand bateau</b>, amarré le long de la berge du haut. Touche « Lecture ».",
     images: [
       { cap: "Tu quittes ton poste <b>sans virer</b>, en venant sur tribord : le signal de manœuvre ordinaire suffit — <b>un son bref</b>.",
-        d: 1300, etat: { x: 150, y: 100, son: "·", dire: "je quitte mon poste vers tribord" } },
+        d: 1300, etat: { x: 150, y: 64, r: 15, son: "·", dire: "je quitte mon poste vers tribord" } },
       { cap: "Un bateau vient en face et tu dois t'écarter : tu viens sur tribord — <b>un son bref</b>. (Virer, au sens du règlement, c'est faire demi-tour : un prolongé, un bref pour tribord.)",
         d: 1400, etat: { x: 230, y: 118, r: 20, son: "·", dire: "je viens sur tribord" } },
       { cap: "Le port s'ouvre à ta droite. Pour y entrer en tournant vers tribord : <b>trois prolongés, un bref</b>. Et si tu étais avalant, tu céderais la priorité au montant qui veut entrer dans le même port.",
@@ -6474,7 +6474,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         d: 1700, etat: { x: 330, y: 150, r: -100, son: "— — — · ·", dire: "je sors vers bâbord" } },
       { cap: "Et si tu devais <b>traverser</b> la voie navigable en sortant, droit devant toi : <b>trois prolongés</b>, rien d'autre.",
         d: 1300, etat: { x: 330, y: 60, r: -90, son: "— — —", dire: "je traverse" } },
-      { cap: "Retiens la grammaire : <b>les prolongés disent la manœuvre</b> (un : virer ; deux : dépasser ; trois : entrer, sortir, traverser), <b>les brefs disent le côté</b> (un : tribord ; deux : bâbord). Et le Kat-a-Mar, menue embarcation, n'émet <b>aucun</b> de ces signaux de manœuvre : seulement les signaux généraux.",
+      { cap: "Retiens la grammaire : <b>les prolongés disent la manœuvre</b> (un : virer ; deux : dépasser ; trois : entrer, sortir, traverser), <b>les brefs disent le côté</b> (un : tribord ; deux : bâbord). Et le Kat-a-Mar, menue embarcation, n'émet <b>aucun</b> signal de virage, d'entrée, de sortie ou de traversée : seulement les signaux généraux — dont le bref ou les deux brefs du départ.",
         d: 900, etat: { son: "", dire: "" } }
     ],
     rendu: function(e, fig){
