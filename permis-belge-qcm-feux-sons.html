@@ -672,7 +672,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Feux et sons</span></div>
 <main>
 <header>
-  <div class="ver">QCM FEUX ET SONS · v1.12 · côtier · RIPAM et règles belges de la côte · 60 questions sur les feux · 20 sur les signaux sonores</div>
+  <div class="ver">QCM FEUX ET SONS · v1.13 · côtier · RIPAM et règles belges de la côte · 60 questions sur les feux · 20 sur les signaux sonores</div>
   <h1>QCM feux et signaux sonores</h1>
   <p>Entraînement ciblé sur les feux des navires et les signaux sonores du RIPAM, avec quelques règles belges de la côte. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Pour les signaux sonores, touche <b>▶ Écouter</b> pour entendre le signal. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -4370,7 +4370,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Règle 34 a) : trois sons brefs = « je bats en arrière ». Le navire peut encore avancer un moment sur son erre.",
-"pg": "Trois brefs = « je recule » (machines en arrière).",
+"pg": "Trois brefs = « je bats en arrière » (machines en arrière : il peut encore avancer sur son erre).",
 "ref": "RIPAM règle 34 a)"
 },
 {
@@ -4426,9 +4426,9 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 34 c) ii) : le navire qui va être rattrapé indique son accord par un son prolongé, un bref, un prolongé, un bref, dans cet ordre. S'il doute, il émet au moins cinq sons brefs. <button type=\"button\" class=\"qz-ecouter\" data-seq=\"PBPB\">▶ Écouter le signal</button>",
+"ex": "Règle 34 c) ii) : le navire qui va être rattrapé indique son accord par un son prolongé, un bref, un prolongé, un bref, dans cet ordre. S'il a des doutes, il peut émettre au moins cinq sons brefs en série rapide (règles 9 e) i) et 34 d). <button type=\"button\" class=\"qz-ecouter\" data-seq=\"PBPB\">▶ Écouter le signal</button>",
 "pg": "Accord = « — · — · » (la lettre C en morse : « Correct »).",
-"ref": "RIPAM règle 34 c) ii)"
+"ref": "RIPAM règles 34 c) ii), 9 e) i) et 34 d)"
 },
 {
 "id": "S08",
@@ -4475,7 +4475,7 @@ window.KAM_QCM = {
 ],
 "b": 1,
 "ex": "Règle 35 a) : par visibilité réduite, un navire à propulsion mécanique qui a de l'erre émet un son prolongé à des intervalles ne dépassant pas 2 minutes. <button type=\"button\" class=\"qz-ecouter\" data-seq=\"P\">▶ Écouter le signal</button>",
-"pg": "Brume + moteur + tu avances : un long toutes les 2 minutes au plus.",
+"pg": "Brume + navire à moteur ordinaire + tu avances : un long toutes les 2 minutes au plus (s'il pêche, remorque ou manœuvre difficilement : « — · · »).",
 "ref": "RIPAM règle 35 a)"
 },
 {
@@ -4530,8 +4530,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 35 c) : un voilier, un navire qui n'est pas maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, en train de pêcher, ou qui remorque ou pousse, émet un prolongé suivi de deux brefs, à des intervalles ne dépassant pas 2 minutes. <button type=\"button\" class=\"qz-ecouter\" data-seq=\"PBB\">▶ Écouter le signal</button>",
-"pg": "« — · · » : le signal de tous ceux qui manœuvrent mal (voiliers compris).",
+"ex": "Règle 35 c) : un voilier, un navire qui n'est pas maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, en train de pêcher, ou qui remorque ou pousse (sauf l'unité composite rigide pousseur-poussé, qui siffle comme un navire à moteur : règle 35 f), émet un prolongé suivi de deux brefs, à des intervalles ne dépassant pas 2 minutes. <button type=\"button\" class=\"qz-ecouter\" data-seq=\"PBB\">▶ Écouter le signal</button>",
+"pg": "« — · · » : voilier, pêcheur, remorqueur ou pousseur, et navires gênés dans leur manœuvre (non maître, capacité restreinte, tirant d'eau). Le remorqué, lui, ajoute un bref : « — · · · ».",
 "ref": "RIPAM règle 35 c)"
 },
 {
@@ -4549,8 +4549,8 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "Un navire à moteur avec de l'erre",
-"e": "Faux : un seul son prolongé."
+"t": "Un navire à moteur ordinaire (ni en pêche, ni en remorque, ni gêné dans sa manœuvre) faisant route avec de l'erre",
+"e": "Faux : il émet un seul son prolongé (règle 35 a)."
 },
 {
 "t": "Un navire en train de pêcher",
@@ -4562,7 +4562,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
-"ex": "Règle 35 c) : le prolongé suivi de deux brefs est émis par les navires moins manœuvrants : pas maître de sa manœuvre, capacité restreinte, tirant d'eau, pêche, voilier, remorqueur ou pousseur.",
+"ex": "Règle 35 c) : le prolongé suivi de deux brefs est émis par les navires moins manœuvrants : pas maître de sa manœuvre, capacité restreinte, tirant d'eau, pêche, voilier, navire qui en remorque ou en pousse un autre (sauf l'unité composite rigide, qui siffle comme un navire à moteur : règle 35 f).",
 "pg": "« — · · » = un navire qui ne peut pas facilement t'éviter. Sois prudent.",
 "ref": "RIPAM règle 35 c)"
 },
@@ -4627,7 +4627,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Règle 35 g) : un navire au mouillage sonne rapidement la cloche pendant environ 5 secondes, à des intervalles ne dépassant pas 1 minute. À partir de 100 m, il sonne la cloche à l'avant, puis aussitôt le gong à l'arrière.",
-"pg": "Cloche = mouillage. Toutes les minutes (et pas 2).",
+"pg": "Cloche seule = mouillage ; trois coups distincts avant et après = échoué. Toutes les minutes au plus (et pas 2).",
 "ref": "RIPAM règle 35 g)"
 },
 {

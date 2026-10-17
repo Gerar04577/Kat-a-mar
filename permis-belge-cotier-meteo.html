@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Météo : les fronts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Météo côtier — passage des fronts (coupe animée + instruments + courbes) et carte dépression / anticyclone. */
+:root{
+  --bg:#EEF1F4; --fg:#16202A; --muted:#55626F; --panel:#FFFFFF; --line:#CBD3DC;
+  --accent:#0E5A8A; --accent-fg:#FFFFFF; --trap-bg:#FFF4D6; --trap-fg:#6A4A00; --trap-line:#E0B43A;
+  --chaud:#D9481E; --froid:#1F66C9; --occl:#8A3FB5; --pluie:#1F7FBF;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
+  --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
+  --chaud:#FF7A4D; --froid:#6FA8FF; --occl:#C58BEA; --pluie:#5DB2E8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
+  --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
+  --chaud:#FF7A4D; --froid:#6FA8FF; --occl:#C58BEA; --pluie:#5DB2E8; color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:640px;margin:0 auto;padding-block:12px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:10px}
+.retour{color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+header{display:flex;flex-direction:column;gap:2px}
+h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spacing:.02em;line-height:1.1}
+h2{font-family:var(--display);font-weight:700;font-size:21px;margin:0 0 6px;letter-spacing:.02em}
+.ver{font-size:12px;color:var(--muted)}
+.seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.seg button,.btn{font:600 14px var(--body);padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"],.btn.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.card p{margin:0 0 8px}.card p:last-child{margin-bottom:0}
+.scene{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#BFE0F5}
+.scene svg,.card svg{display:block;width:100%;height:auto}
+.quand{font-family:var(--display);font-size:20px;font-weight:700;text-align:center}
+.ctrl{display:flex;gap:8px;align-items:center}
+.ctrl input[type=range]{flex:1;accent-color:var(--accent);height:32px}
+.inst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ins{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 4px 8px;text-align:center;min-width:0}
+.ins .t{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.ins .v{font-family:var(--display);font-size:21px;font-weight:700;line-height:1.05}
+.ins .s{font-size:12px;color:var(--muted);line-height:1.2;min-height:2.4em}
+.ins svg{width:100%;max-width:70px;height:56px;margin:2px auto 0}
+.etat{font-size:14px}.etat b{font-weight:700}
+.phase{border-left:5px solid var(--accent)}
+.trap{background:var(--trap-bg);color:var(--trap-fg);border:1px solid var(--trap-line);border-radius:12px;padding:12px 14px}
+.trap h2{color:var(--trap-fg)}
+.trap ul,.card ul{margin:0;padding-left:20px}.trap li,.card li{margin-bottom:6px}
+.leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin-top:4px}
+.leg i{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:middle;margin-right:4px}
+.etapes{display:flex;gap:6px;flex-wrap:wrap}
+.etapes .btn{padding:6px 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{border-top:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.src{font-size:12px;color:var(--muted)}
+.src a{color:var(--accent)}
+/* couleurs des dessins qui suivent le thème */
+.c-fg{fill:var(--fg)}.c-mu{fill:var(--muted)}.s-mu{stroke:var(--muted)}.s-line{stroke:var(--line)}
+.s-acc{stroke:var(--accent)}.c-acc{fill:var(--accent)}
+.s-ch{stroke:var(--chaud)}.c-ch{fill:var(--chaud)}.s-fr{stroke:var(--froid)}.c-fr{fill:var(--froid)}
+.s-oc{stroke:var(--occl)}.c-oc{fill:var(--occl)}.c-pl{fill:var(--pluie)}.s-pl{stroke:var(--pluie)}
+@media (max-width:400px){.ins .v{font-size:18px}.ins .s{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<header>
+  <h1>Météo : les fronts, la dépression et l'anticyclone</h1>
+  <span class="ver">version 1.0 · permis côtier · météorologie · hémisphère Nord</span>
+</header>
+
+<div class="seg" role="tablist" id="onglets">
+  <button type="button" data-o="chaud" aria-pressed="true">Front chaud</button>
+  <button type="button" data-o="froid" aria-pressed="false">Front froid</button>
+  <button type="button" data-o="occlus" aria-pressed="false">Front occlus</button>
+  <button type="button" data-o="carte" aria-pressed="false">Dépression et anticyclone</button>
+</div>
+
+<!-- ================= PASSAGE D'UN FRONT ================= -->
+<section id="vue-front" style="display:flex;flex-direction:column;gap:10px">
+  <div class="card" id="intro-front"></div>
+  <div class="scene"><svg id="coupe" viewBox="0 0 360 214" role="img" aria-label="Coupe verticale du front qui passe au-dessus du bateau"></svg></div>
+  <div class="quand" id="quand"></div>
+  <div class="ctrl">
+    <button type="button" class="btn" id="jouer">▶ Lecture</button>
+    <input type="range" id="curseur" min="0" max="1000" value="0" aria-label="Avancer le temps">
+  </div>
+  <div class="inst">
+    <div class="ins"><div class="t">Température</div><svg id="g-temp" viewBox="0 0 70 56"></svg><div class="v" id="v-temp"></div><div class="s" id="s-temp"></div></div>
+    <div class="ins"><div class="t">Pression</div><svg id="g-pres" viewBox="0 0 70 56"></svg><div class="v" id="v-pres"></div><div class="s" id="s-pres"></div></div>
+    <div class="ins"><div class="t">Pluie</div><svg id="g-pluie" viewBox="0 0 70 56"></svg><div class="v" id="v-pluie"></div><div class="s" id="s-pluie"></div></div>
+    <div class="ins"><div class="t">Vent</div><svg id="g-vent" viewBox="0 0 70 56"></svg><div class="v" id="v-vent"></div><div class="s" id="s-vent"></div></div>
+  </div>
+  <div class="card etat" id="etat"></div>
+  <div class="card phase" id="phase"></div>
+  <div class="card">
+    <h2>Les courbes du passage</h2>
+    <svg id="courbes" viewBox="0 0 360 196" role="img" aria-label="Évolution de la pression, de la température et de la pluie"></svg>
+    <div class="leg"><span><i style="background:var(--accent)"></i>pression</span><span><i style="background:var(--chaud)"></i>température</span><span><i style="background:var(--pluie)"></i>pluie</span><span>trait rouge : maintenant</span></div>
+  </div>
+  <div class="card" id="rappel"></div>
+  <div class="trap" id="pieges"></div>
+  <p class="src">Valeurs d'exemple, pour comprendre le <b>sens</b> des changements : chaque front réel est différent. Le front se déplace d'ouest en est ; on le regarde de côté, l'ouest à gauche.</p>
+</section>
+
+<!-- ================= DÉPRESSION ET ANTICYCLONE ================= -->
+<section id="vue-carte" hidden style="flex-direction:column;gap:10px">
+  <div class="card">
+    <h2>La vie d'une dépression</h2>
+    <p>Les fronts naissent avec la dépression, vivent avec elle et disparaissent quand elle se comble. Touchez les étapes, ou Lecture.</p>
+  </div>
+  <div class="scene" style="background:#F4F7FA"><svg id="carte" viewBox="0 0 360 250" role="img" aria-label="Carte avec isobares, dépression, anticyclone et fronts"></svg></div>
+  <div class="etapes" id="etapes">
+    <button type="button" class="btn" id="jouer-carte">▶ Lecture</button>
+  </div>
+  <div class="card phase" id="legende-etape"></div>
+  <div class="leg" style="margin-top:-4px">
+    <span><i style="background:var(--chaud)"></i>front chaud (demi-cercles)</span><span><i style="background:var(--froid)"></i>front froid (triangles)</span><span><i style="background:var(--occl)"></i>front occlus</span><span>traits gris : isobares, tous les 4 hPa</span><span>flèches : vent</span>
+  </div>
+
+  <div class="card">
+    <h2>Dépression et anticyclone : ce que c'est</h2>
+    <svg id="coupe-da" viewBox="0 0 360 150" role="img" aria-label="Air qui monte dans la dépression, air qui descend dans l'anticyclone"></svg>
+    <table>
+      <tr><th></th><th>Dépression (D)</th><th>Anticyclone (A)</th></tr>
+      <tr><td><b>Pression</b></td><td>Plus basse qu'autour</td><td>Plus haute qu'autour</td></tr>
+      <tr><td><b>Air</b></td><td>Monte : il se refroidit et forme des nuages, puis de la pluie</td><td>Descend : il se réchauffe, les nuages se dissipent</td></tr>
+      <tr><td><b>Vent</b></td><td>Tourne en sens <b>inverse</b> des aiguilles d'une montre, un peu vers le centre ; souvent fort</td><td>Tourne dans le sens des aiguilles d'une montre, un peu vers l'extérieur ; faible au centre</td></tr>
+      <tr><td><b>Fronts</b></td><td><b>Oui</b> : la dépression des latitudes moyennes porte un front chaud, un front froid, puis une occlusion</td><td><b>Non</b> : un front qui s'en approche s'affaiblit</td></tr>
+      <tr><td><b>Temps</b></td><td>Nuageux, pluie, vent</td><td>Calme, sec ; brouillard ou nuages bas possibles en hiver</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Le rapport entre les deux</h2>
+    <ul>
+      <li><b>Les fronts appartiennent à la dépression.</b> Ils partent de son centre, comme les branches d'un V : le front chaud devant, le front froid derrière, l'air chaud entre les deux (le <b>secteur chaud</b>). Dépression et fronts forment ensemble une <b>perturbation</b>.</li>
+      <li><b>L'anticyclone n'a pas de front.</b> L'air qui y descend dissout les nuages : un front qui arrive près d'un anticyclone faiblit et finit par disparaître.</li>
+      <li><b>L'air va de l'anticyclone vers la dépression</b>, mais la rotation de la Terre le dévie : il tourne autour d'eux au lieu d'aller tout droit. Plus les isobares sont <b>serrées</b> entre les deux, plus le vent est <b>fort</b>.</li>
+      <li><b>L'anticyclone guide les dépressions.</b> Elles le contournent. Quand l'anticyclone des Açores remonte vers le nord en été, les perturbations passent plus au nord et la Belgique a du beau temps ; quand il recule, elles arrivent sur nous l'une après l'autre.</li>
+      <li><b>Toutes les dépressions n'ont pas de fronts.</b> Une dépression thermique (air chauffé par le sol, par exemple sur l'Espagne en été) n'en a pas.</li>
+      <li><b>Le front est un creux de pression.</b> Sur la carte, les isobares font un coude sur chaque front, pointe tournée vers l'extérieur de la dépression. C'est pour cela que la pression baisse quand le front approche et remonte après.</li>
+      <li><b>Règle de Buys-Ballot</b> : dos au vent, la dépression est à votre gauche (un peu en avant), dans l'hémisphère Nord.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Ce que dit votre baromètre</h2>
+    <table>
+      <tr><th>Le baromètre…</th><th>Cela annonce souvent…</th></tr>
+      <tr><td>baisse lentement et régulièrement</td><td>une dépression ou un front chaud qui approche</td></tr>
+      <tr><td>baisse vite (plusieurs hPa en 3 heures)</td><td>une dépression qui se creuse : vent fort probable</td></tr>
+      <tr><td>remonte d'un coup</td><td>un front froid vient de passer : traîne avec averses et rafales</td></tr>
+      <tr><td>baisse puis remonte, la température change peu</td><td>une occlusion</td></tr>
+      <tr><td>est haut et stable</td><td>un anticyclone : temps calme</td></tr>
+    </table>
+  </div>
+
+  <div class="trap">
+    <h2>Pièges à éviter</h2>
+    <ul>
+      <li>« Dépression » ne veut pas dire « moins de 1013 hPa ». Une dépression est une pression plus basse <b>qu'autour</b> ; un anticyclone, plus haute qu'autour.</li>
+      <li>Ne mettez pas de front dans un anticyclone : les fronts vont avec les dépressions.</li>
+      <li>Dans l'hémisphère Nord, le vent tourne en sens <b>inverse</b> des aiguilles d'une montre autour de la dépression, et <b>dans le sens</b> des aiguilles autour de l'anticyclone.</li>
+      <li>Les triangles et les demi-cercles sont dessinés du côté vers lequel le front <b>avance</b>.</li>
+      <li>Le front froid va plus vite que le front chaud : c'est lui qui rattrape l'autre, et l'occlusion arrive quand la dépression vieillit.</li>
+    </ul>
+  </div>
+</section>
+
+<p class="src">Sources : <a href="https://www.meteo.be/fr/infos/dico-meteo/front">IRM, « Front »</a> · <a href="https://www.meteo.be/fr/infos/dico-meteo/front-froid">IRM, « Front froid »</a> · <a href="https://sites.ac-nancy-metz.fr/ciras/cahierdubia/mto4/fronts.html">Cahier du BIA, « Fronts et perturbations »</a> · <a href="https://www.inforef.be/projets/climatic/doc_rapport/10_fronts.pdf">Inforef, « Les fronts »</a></p>
+</div>
+
+<script>
+"use strict";
+/* ---------- outils ---------- */
+const $ = id => document.getElementById(id);
+const NS = "http://www.w3.org/2000/svg";
+const fmt = (x, n=0) => x.toFixed(n).replace(".", ",");
+function lerp(pts, d){             // pts : [[d, valeur], …] avec d décroissant (du futur vers le passé)
+  if(d >= pts[0][0]) return pts[0][1];
+  for(let i=1;i<pts.length;i++){ const [d1,v1]=pts[i-1],[d2,v2]=pts[i]; if(d >= d2){ const k=(d1-d)/(d1-d2); return v1+(v2-v1)*k; } }
+  return pts[pts.length-1][1];
+}
+function lerpAngle(pts, d){ return lerp(pts, d); }  // les angles donnés ne passent jamais par 0/360
+const ROSE = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"];
+const rose = a => ROSE[Math.round(((a%360)+360)%360/22.5)%16];
+const ROSE_LONG = {N:"nord",NNE:"nord-nord-est",NE:"nord-est",ENE:"est-nord-est",E:"est",ESE:"est-sud-est",SE:"sud-est",SSE:"sud-sud-est",S:"sud",SSO:"sud-sud-ouest",SO:"sud-ouest",OSO:"ouest-sud-ouest",O:"ouest",ONO:"ouest-nord-ouest",NO:"nord-ouest",NNO:"nord-nord-ouest"};
+
+/* ---------- données des trois fronts ----------
+   d = distance (km) entre le front et le bateau : d > 0, le front n'est pas encore arrivé ; d < 0, il est passé. */
+const FR = {
+  chaud: {
+    nom: "front chaud", couleur: "var(--chaud)", vitesse: 25, echelle: .3, dmax: 650, dmin: -250,
+    intro: "<p><b>Le front chaud</b> : de l'air chaud arrive et remplace l'air froid. Plus léger, il glisse lentement <b>au-dessus</b> de l'air froid, sur une pente très douce. En montant, il se refroidit et forme une immense couche de nuages qui s'étend loin devant le front.</p><p>Touchez <b>Lecture</b> : le front avance vers votre bateau, et les instruments changent.</p>",
+    pres: [[650,1014],[0,1001],[-40,1000.6],[-250,1000]],
+    temp: [[650,7],[30,7.5],[0,9.5],[-30,12],[-250,12.5]],
+    pluie: [[650,0],[420,0],[400,.3],[220,.8],[120,2.5],[10,3],[-15,.3],[-250,.2]],
+    ventDir: [[650,155],[300,160],[60,170],[10,180],[-25,225],[-250,230]],
+    ventF: [[650,3],[300,4],[60,5],[0,5],[-30,4],[-250,4]],
+    zones: [
+      [450, "Cirrus", "Bonne", "Les premiers <b>cirrus</b> (filaments blancs très hauts) arrivent de l'ouest. Le baromètre commence à baisser. Un front chaud approche : souvent dans 12 à 24 heures."],
+      [300, "Cirrostratus : voile blanc, halo autour du soleil", "Bonne", "Le ciel se voile et un <b>halo</b> entoure le soleil ou la lune. La pression baisse régulièrement."],
+      [120, "Altostratus : soleil comme derrière un verre dépoli", "Bonne puis en baisse", "Le ciel devient gris, le soleil disparaît. Une <b>pluie faible et continue</b> commence. Le vent de secteur sud fraîchit."],
+      [15, "Nimbostratus : couche grise, épaisse et basse", "Mauvaise sous la pluie", "Pluie <b>continue</b>, modérée, pendant plusieurs heures. La pression baisse toujours."],
+      [-25, "Nimbostratus qui s'éloigne", "Médiocre", "<b>Le front passe</b> : la pluie s'arrête ou devient bruine, la <b>température monte</b>, le vent <b>vire</b> du sud au sud-ouest, la pression <b>cesse de baisser</b>."],
+      [-9999, "Stratus : ciel gris et bas, bruine", "Médiocre : brume, bruine", "Vous êtes dans le <b>secteur chaud</b> : air doux et humide, ciel bas, bruine possible, pression à peu près stable. Ce n'est pas le beau temps : le front froid suivra."]
+    ],
+    rappel: "<h2>Rappel théorique</h2><ul><li>Air <b>chaud</b> qui remplace l'air froid, et qui monte <b>lentement</b> au-dessus de lui.</li><li>Il s'annonce <b>longtemps à l'avance</b> : cirrus, cirrostratus (halo), altostratus, nimbostratus.</li><li>Pluie <b>continue</b> et modérée, sur une large bande.</li><li>Pression : baisse <b>régulière</b> avant, puis stable. Température : <b>monte</b> après. Vent : se renforce, puis <b>vire</b> au passage.</li><li>Sur la carte : ligne <b style=\"color:var(--chaud)\">rouge</b> avec des <b>demi-cercles</b>, tournés dans le sens où le front avance.</li></ul>",
+    pieges: ["Ne confondez pas : le front chaud prévient des heures à l'avance (cirrus, halo, baromètre en baisse régulière) ; le front froid arrive presque sans prévenir.", "Après le front chaud, il ne fait pas beau : le secteur chaud est doux mais gris, avec bruine et mauvaise visibilité.", "Au passage, le vent <b>vire</b> : il tourne dans le sens des aiguilles d'une montre (ici du sud au sud-ouest).", "Front chaud = température qui <b>monte</b> après le passage."]
+  },
+  froid: {
+    nom: "front froid", couleur: "var(--froid)", vitesse: 40, echelle: .6, dmax: 330, dmin: -230,
+    intro: "<p><b>Le front froid</b> : de l'air froid arrive et remplace l'air chaud. Plus lourd et plus rapide, il se glisse comme un <b>coin</b> sous l'air chaud et le soulève brutalement. Cela crée des nuages très hauts, les <b>cumulonimbus</b>, sur une bande étroite.</p><p>Touchez <b>Lecture</b> : vous êtes dans le secteur chaud, le front froid arrive.</p>",
+    pres: [[330,1003],[30,1000.5],[0,1000],[-15,1003],[-60,1006],[-230,1011]],
+    temp: [[330,14],[20,14],[-5,11],[-30,9],[-230,8]],
+    pluie: [[330,.2],[70,.2],[45,3],[15,10],[-15,8],[-30,.5],[-45,0],[-230,0]],
+    averses: -70,
+    ventDir: [[330,220],[30,225],[0,250],[-25,295],[-230,305]],
+    ventF: [[330,5],[40,6],[0,7],[-30,6],[-230,5]],
+    zones: [
+      [80, "Stratus, stratocumulus (secteur chaud)", "Médiocre", "Vous êtes dans le <b>secteur chaud</b> : doux, humide, ciel bas. Le vent de sud-ouest est assez fort. La pression baisse peu."],
+      [20, "Cumulonimbus qui arrive : mur sombre à l'ouest", "En baisse", "Un <b>mur de nuages sombres</b> arrive par l'ouest. Le vent forcit, les premières grosses gouttes tombent."],
+      [-25, "Cumulonimbus", "Mauvaise", "<b>Passage du front</b> : averse forte, <b>rafales</b> (grain), orage possible. Le vent <b>vire brusquement</b> à l'ouest – nord-ouest. La pression <b>remonte d'un coup</b>, la <b>température chute</b>."],
+      [-60, "Éclaircies", "Très bonne", "Le ciel se dégage vite derrière le front. Air plus froid et plus sec : <b>très bonne visibilité</b>. La pression monte."],
+      [-9999, "Cumulus, averses éparses (ciel de traîne)", "Très bonne hors des averses", "<b>Ciel de traîne</b> : cumulus, averses brèves avec rafales sous les plus gros nuages. Vent de nord-ouest. La pression continue de monter."]
+    ],
+    rappel: "<h2>Rappel théorique</h2><ul><li>Air <b>froid</b> qui remplace l'air chaud, en le soulevant <b>brutalement</b>.</li><li>Peu de signes avant : un mur de nuages sombres qui arrive.</li><li>Pluie <b>courte et forte</b> (averse), rafales, orage possible ; puis éclaircies et <b>averses de traîne</b>.</li><li>Pression : baisse <b>faible</b> avant, <b>hausse rapide</b> après. Température : <b>baisse</b>. Vent : <b>vire brusquement</b> (sud-ouest → nord-ouest) avec rafales.</li><li>Sur la carte : ligne <b style=\"color:var(--froid)\">bleue</b> avec des <b>triangles</b>, tournés dans le sens où le front avance.</li></ul>",
+    pieges: ["La pluie est courte mais violente, avec rafales (grain) : réduisez la toile ou rentrez <b>avant</b> l'arrivée du front.", "Le baromètre qui remonte vite ne veut pas dire que tout est fini : la traîne donne encore averses et rafales.", "Le vent vire brusquement au nord-ouest et forcit souvent : un mouillage abrité du sud-ouest peut devenir exposé.", "Front froid = température qui <b>baisse</b> ; front chaud = température qui monte. Ne les inversez pas."]
+  },
+  occlus: {
+    nom: "front occlus", couleur: "var(--occl)", vitesse: 30, echelle: .45, dmax: 480, dmin: -300,
+    intro: "<p><b>Le front occlus</b> : le front froid, plus rapide, a <b>rattrapé</b> le front chaud. L'air chaud, coincé entre les deux, est soulevé et ne touche plus le sol : il ne reste au sol que de l'air froid devant et de l'air froid derrière. C'est le signe d'une dépression âgée.</p><p>Ici, une occlusion « de type froid » : l'air derrière est un peu plus froid que l'air devant. Touchez <b>Lecture</b>.</p>",
+    pres: [[480,1007],[0,995],[-60,997.5],[-300,1004]],
+    temp: [[480,9],[20,9],[-20,8],[-300,7]],
+    pluie: [[480,0],[330,0],[300,.4],[140,1.8],[10,4],[-35,1.2],[-55,0],[-300,0]],
+    averses: -90,
+    ventDir: [[480,150],[100,165],[0,190],[-40,260],[-300,280]],
+    ventF: [[480,4],[100,5],[0,6],[-40,5],[-300,5]],
+    zones: [
+      [300, "Cirrus puis cirrostratus", "Bonne", "Le ciel se voile, comme devant un front chaud. La pression baisse."],
+      [120, "Altostratus", "Bonne puis en baisse", "Le ciel devient gris, une pluie faible commence. La pression baisse toujours."],
+      [10, "Nimbostratus, parfois cumulonimbus noyés dedans", "Mauvaise sous la pluie", "Pluie <b>continue</b>, parfois plus forte. La pression est au plus bas."],
+      [-50, "Nimbostratus qui s'éloigne", "En amélioration", "<b>Passage du front</b> : le vent <b>vire</b>, la pluie faiblit, la pression <b>se met à remonter</b>. La température change <b>peu</b> (un peu plus froid ici)."],
+      [-9999, "Éclaircies, quelques averses", "Bonne", "Après l'occlusion : éclaircies et averses, la pression remonte. Pas de secteur chaud entre la pluie et les averses."]
+    ],
+    rappel: "<h2>Rappel théorique</h2><ul><li>Le front froid <b>rattrape</b> le front chaud : l'air chaud est rejeté en <b>altitude</b>.</li><li>Le temps ressemble à celui d'un front chaud (nuages, pluie continue) suivi de celui d'un front froid (éclaircies, averses), <b>sans secteur chaud</b> entre les deux.</li><li>Pression : <b>baisse puis remonte</b>. Température : <b>change peu</b> (type froid : un peu plus froid après ; type chaud : un peu plus doux après). Vent : <b>vire</b>.</li><li>Il est proche du centre de la dépression, souvent quand elle commence à se combler.</li><li>Sur la carte : ligne <b style=\"color:var(--occl)\">violette</b> avec <b>triangles et demi-cercles alternés</b>, du même côté.</li></ul>",
+    pieges: ["La température change peu : reconnaissez l'occlusion au baromètre qui <b>baisse puis remonte</b> et au vent qui <b>vire</b>.", "Il n'y a plus d'air chaud au sol : pas de secteur chaud doux et gris entre la pluie et les averses.", "Près du centre de la dépression, le vent peut être fort.", "Sur la carte, triangles <b>et</b> demi-cercles du <b>même</b> côté = occlusion ; de côtés opposés = front stationnaire."]
+  }
+};
+
+let cur = "chaud", pos = 0, enLecture = false, tPrec = 0;
+
+function etatAt(f, d){
+  let pl = lerp(f.pluie, d);
+  if(f.averses && d < f.averses){ const k = ((-d) % 55); pl = (k > 8 && k < 20) ? 2.5 : 0; }
+  const z = f.zones.find(z => d >= z[0]);
+  return { p: lerp(f.pres, d), t: lerp(f.temp, d), pl, dir: lerpAngle(f.ventDir, d), force: Math.round(lerp(f.ventF, d)), zone: z };
+}
+
+/* ---------- la coupe (vue de côté) ---------- */
+const Y0 = 180, BATEAU = 250;
+const hy = km => Y0 - km * 15;          // altitude (km) → y
+function nuage(x1, x2, yb, yt, coul, op){  // nuage stratiforme : bande aux bords arrondis
+  if(x2 < -20 || x1 > 380) return "";
+  return `<rect x="${x1.toFixed(1)}" y="${yt.toFixed(1)}" width="${(x2-x1).toFixed(1)}" height="${(yb-yt).toFixed(1)}" rx="${Math.min(10,(yb-yt)/2).toFixed(1)}" fill="${coul}" opacity="${op}"/>`;
+}
+function cumulo(x, yb, h, w, coul){        // nuage bourgeonnant
+  if(x < -60 || x > 420) return "";
+  const r = w / 4; let s = `<g fill="${coul}">`;
+  s += `<rect x="${(x-w/2).toFixed(1)}" y="${(yb-h*.55).toFixed(1)}" width="${w.toFixed(1)}" height="${(h*.55).toFixed(1)}" rx="${r.toFixed(1)}"/>`;
+  s += `<circle cx="${(x-w*.22).toFixed(1)}" cy="${(yb-h*.55).toFixed(1)}" r="${(w*.3).toFixed(1)}"/><circle cx="${(x+w*.18).toFixed(1)}" cy="${(yb-h*.62).toFixed(1)}" r="${(w*.34).toFixed(1)}"/><circle cx="${x.toFixed(1)}" cy="${(yb-h*.85).toFixed(1)}" r="${(w*.3).toFixed(1)}"/>`;
+  return s + "</g>";
+}
+function pluieZone(x1, x2, ytop, dens, avance){
+  if(x2 < 0 || x1 > 360 || dens <= 0) return "";
+  let s = `<g stroke="#2F6FA8" stroke-width="1.1" opacity=".75">`;
+  const pas = Math.max(3, 12 / dens);
+  for(let x = x1; x < x2; x += pas){
+    const o = ((x * 7.3 + avance * 40) % 14);
+    for(let y = ytop + o; y < Y0 - 2; y += 14){ s += `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x-2).toFixed(1)}" y2="${Math.min(Y0-1,y+6).toFixed(1)}"/>`; }
+  }
+  return s + "</g>";
+}
+function symboles(fx, type){   // petit morceau de front au sol, vu sur une carte, dessiné au pied du front
+  const y = 196; let s = `<line x1="${fx-24}" y1="${y}" x2="${fx+24}" y2="${y}" stroke-width="3" class="${type==='chaud'?'s-ch':type==='froid'?'s-fr':'s-oc'}"/>`;
+  const items = type === 'occlus' ? ['t','c','t'] : type === 'chaud' ? ['c','c','c'] : ['t','t','t'];
+  items.forEach((k, i) => { const x = fx - 16 + i * 16; const cl = type==='chaud'?'c-ch':type==='froid'?'c-fr':'c-oc';
+    s += k === 't' ? `<path d="M${x-5},${y} L${x+5},${y} L${x},${y-7} Z" transform="rotate(90 ${x} ${y}) translate(0 0)" class="${cl}"/>`.replace(`transform="rotate(90 ${x} ${y}) translate(0 0)" `, `transform="rotate(90 ${x} ${y})" `)
+                   : `<path d="M${x},${y-5} A5,5 0 0 1 ${x},${y+5} Z" class="${cl}"/>`; });
+  return s;
+}
+function bateau(x){
+  return `<g transform="translate(${x-14},${Y0-9})"><path d="M0,6 L28,6 L24,12 L4,12 Z" fill="#fff" stroke="#16202A" stroke-width="1"/><rect x="9" y="1" width="9" height="5" fill="#fff" stroke="#16202A" stroke-width="1"/></g>`
+       + `<text x="${x}" y="${Y0+28}" text-anchor="middle" font-size="9" font-weight="700" fill="#16202A">votre bateau</text>`;
+}
+function dessinerCoupe(){
+  const f = FR[cur], d = f.dmax + pos * (f.dmin - f.dmax), fx = BATEAU - d * f.echelle, k = f.echelle;
+  let s = `<defs><linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FD0F0"/><stop offset="1" stop-color="#DDEFFA"/></linearGradient></defs>`;
+  s += `<rect width="360" height="214" fill="#F7D6BF"/>`;
+  const CH = "#F7D6BF", FRO = "#CFE2F7", FRO2 = "#AFCBEF";
+  if(cur === "chaud"){
+    // surface frontale : pente douce vers l'avant (droite)
+    const sx = km => fx + km * k, sy = km => hy(Math.min(10, km / 100));
+    const surf = []; for(let km = 0; km <= 1100; km += 50) surf.push([sx(km), sy(km)]);
+    s += `<polygon points="${surf.map(p=>p.join(",")).join(" ")} ${Math.max(400,sx(1100))},${Y0}" fill="${FRO}"/>`;
+    s += `<polyline points="${surf.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#C0391B" stroke-width="2"/>`;
+    // nuages en bande au-dessus de la surface frontale (dans l'air chaud qui monte)
+    const bande = (a, b, o1, o2, coul, op) => { const hi = [], lo = []; for(let km = a; km <= b; km += 10){ const h = Math.max(0, km) / 100; lo.push([sx(km), o1 === null ? Y0 - 12 : hy(Math.min(10, h + o1))]); hi.push([sx(km), hy(Math.min(10, h + o2))]); }
+      return `<polygon points="${lo.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")} ${hi.reverse().map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")}" fill="${coul}" opacity="${op}" stroke="${coul}" stroke-width="6" stroke-linejoin="round"/>`; };
+    s += bande(-25, 160, null, 4.2, "#7D8790", .95);            // Ns, du bas jusqu'à ~5 km
+    s += bande(160, 380, .3, 2.8, "#A9B2BA", .9);               // As
+    s += bande(380, 620, .4, 1.3, "#FFFFFF", .9);               // Cs
+    for(let i=0;i<5;i++){ const km = 640 + i*55, x = sx(km), y = hy(Math.min(9.6, km/100 + .8)); s += `<path d="M${x.toFixed(1)},${y.toFixed(1)} q12,-6 26,-2" stroke="#fff" stroke-width="2.4" fill="none"/>`; } // Ci
+    s += nuage(-20, sx(-25), Y0-8, Y0-20, "#9AA3AA", .7);                         // St du secteur chaud
+    s += pluieZone(sx(0), sx(150), hy(1.2), 1.5, pos);
+    s += pluieZone(sx(150), sx(260), hy(1.6), .6, pos);
+    s += pluieZone(-10, sx(-30), Y0-8, .25, pos);
+    s += `<text x="${sx(60)}" y="${hy(2.6)}" font-size="9" text-anchor="middle" fill="#fff" font-weight="700">Ns</text>`;
+    s += `<text x="${sx(270)}" y="${hy(4.4)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">As</text>`;
+    s += `<text x="${sx(500)}" y="${hy(5.8)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">Cs</text>`;
+    s += `<text x="${sx(700)}" y="${hy(9.9)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">Ci</text>`;
+    s += `<path d="M${sx(-160)},${hy(1.2)} L${sx(150)},${hy(2.8)}" stroke="#C0391B" stroke-width="1.5" fill="none" marker-end="url(#fl)" opacity=".8"/>`;
+    s += `<text x="${Math.max(30, Math.min(330, fx - 70))}" y="${hy(6.5)}" font-size="11" text-anchor="middle" fill="#A2341A" font-weight="700">air chaud</text>`;
+    s += `<text x="${Math.max(60, Math.min(330, fx + 140))}" y="${Y0-30}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air froid</text>`;
+  } else if(cur === "froid"){
+    // coin d'air froid derrière le front (à gauche) : pente forte
+    const sx = km => fx - km * k, sy = km => hy(Math.min(10, km / 50 + (km < 15 ? 0 : .35)));
+    const surf = [[fx, Y0], [fx - 4, Y0 - 8], [sx(20), hy(.75)]]; for(let km = 40; km <= 600; km += 40) surf.push([sx(km), sy(km)]);
+    s += `<polygon points="${surf.map(p=>p.join(",")).join(" ")} -10,20 400,20 400,${Y0}" fill="${CH}"/>`;
+    s += `<polygon points="${surf.map(p=>p.join(",")).join(" ")} -10,${Y0}" fill="${FRO}"/>`;
+    s += `<polyline points="${surf.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#1C55B0" stroke-width="2"/>`;
+    // cumulonimbus sur le front, avec enclume vers l'avant
+    s += `<path d="M${fx-55},${hy(9.7)} Q${fx},${hy(10.2)} ${fx+75},${hy(9.6)} L${fx+60},${hy(9.0)} L${fx-40},${hy(9.0)} Z" fill="#8A949C" opacity=".95"/>`;
+    s += cumulo(fx + 4, Y0 - 12, Y0 - 12 - hy(9.2), 52, "#6E7880");
+    s += pluieZone(fx - 22, fx + 30, Y0 - 14, 2.6, pos);
+    s += `<text x="${fx+4}" y="${hy(5)}" font-size="9" text-anchor="middle" fill="#fff" font-weight="700">Cb</text>`;
+    // secteur chaud devant : nuages bas
+    s += nuage(fx + 40, 400, Y0 - 16, Y0 - 32, "#9AA3AA", .75);
+    s += pluieZone(fx + 50, 380, Y0 - 16, .2, pos);
+    // traîne : cumulus isolés avec averses
+    for(let i = 0; i < 6; i++){ const km = 120 + i * 55, x = sx(km); const gros = i % 2 === 0;
+      s += cumulo(x, hy(1.2), gros ? 52 : 26, gros ? 30 : 20, gros ? "#B3BBC2" : "#F2F5F7");
+      if(gros) s += pluieZone(x - 10, x + 10, hy(1.2), 1.2, pos); }
+    s += `<path d="M${sx(160)},${Y0-12} L${fx-12},${Y0-12}" stroke="#1C55B0" stroke-width="1.5" fill="none" marker-end="url(#fl)" opacity=".8"/>`;
+    s += `<text x="${Math.max(40, Math.min(320, fx - 110))}" y="${Y0-22}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air froid</text>`;
+    s += `<text x="${Math.max(40, Math.min(320, fx + 100))}" y="${hy(5.5)}" font-size="11" text-anchor="middle" fill="#A2341A" font-weight="700">air chaud</text>`;
+  } else {
+    // occlusion de type froid : air froid derrière (plus froid), air frais devant, air chaud soulevé en altitude
+    const T = [fx - 12, hy(2.6)];
+    const arr = []; for(let km = 0; km <= 700; km += 50) arr.push([T[0] - km * k, Math.max(20, T[1] - km / 45 * 15)]);
+    const av = []; for(let km = 0; km <= 1000; km += 50) av.push([T[0] + km * k, Math.max(20, T[1] - km / 110 * 15)]);
+    s += `<polygon points="${arr.slice().reverse().map(p=>p.join(",")).join(" ")} ${av.map(p=>p.join(",")).join(" ")} 400,20 -10,20" fill="${CH}"/>`;
+    s += `<polygon points="${fx},${Y0} ${T.join(",")} ${arr.map(p=>p.join(",")).join(" ")} -10,${Y0}" fill="${FRO2}"/>`;
+    s += `<polygon points="${fx},${Y0} ${T.join(",")} ${av.map(p=>p.join(",")).join(" ")} 400,${Y0}" fill="${FRO}"/>`;
+    s += `<polyline points="${fx},${Y0} ${T.join(",")}" fill="none" stroke="#7A32A6" stroke-width="2.4"/>`;
+    s += `<polyline points="${arr.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#1C55B0" stroke-width="1.6"/>`;
+    s += `<polyline points="${av.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#C0391B" stroke-width="1.6"/>`;
+    const ax = km => fx + km * k;
+    s += nuage(ax(-40), ax(140), Y0 - 14, hy(5.2), "#7D8790", .92);
+    s += cumulo(ax(10), hy(3), 60, 26, "#646E76");
+    s += nuage(ax(130), ax(300), hy(2.8), hy(5.4), "#A9B2BA", .85);
+    s += nuage(ax(290), ax(450), hy(6.4), hy(7.5), "#F4F7FA", .85);
+    s += pluieZone(ax(-35), ax(140), hy(1), 1.6, pos);
+    s += pluieZone(ax(140), ax(300), hy(2.2), .5, pos);
+    for(let i = 0; i < 4; i++){ const x = fx - (130 + i * 70) * k; s += cumulo(x, hy(1.2), 36, 24, "#C2C9CF"); if(i % 2 === 0) s += pluieZone(x - 8, x + 8, hy(1.2), 1, pos); }
+    s += `<text x="${ax(40)}" y="${hy(4.4)}" font-size="9" text-anchor="middle" fill="#fff" font-weight="700">Ns</text>`;
+    s += `<text x="${ax(220)}" y="${hy(3.6)}" font-size="9" text-anchor="middle" fill="#2B3540" font-weight="700">As</text>`;
+    s += `<text x="${Math.max(50, Math.min(310, fx + 20))}" y="${hy(8.6)}" font-size="11" text-anchor="middle" fill="#A2341A" font-weight="700">air chaud soulevé</text>`;
+    s += `<text x="${Math.max(40, Math.min(320, fx - 110))}" y="${Y0-12}" font-size="11" text-anchor="middle" fill="#123E80" font-weight="700">air froid</text>`;
+    s += `<text x="${Math.max(40, Math.min(320, fx + 120))}" y="${Y0-30}" font-size="11" text-anchor="middle" fill="#174E9C" font-weight="700">air frais</text>`;
+  }
+  s += `<defs><marker id="fl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker></defs>`;
+  // mer, bateau, flèche de déplacement
+  s += `<rect x="0" y="${Y0}" width="360" height="34" fill="#2E6F96"/>`;
+  s += symboles(fx, cur);
+  s += bateau(BATEAU);
+  s += `<text x="8" y="14" font-size="10" fill="#2B3540">ouest</text><text x="352" y="14" font-size="10" fill="#2B3540" text-anchor="end">est</text>`;
+  s += `<text x="180" y="14" font-size="10" fill="#2B3540" text-anchor="middle">le ${f.nom} avance →</text>`;
+  s += `<text x="4" y="${hy(10)+3}" font-size="8" fill="#55626F">10 km</text><text x="4" y="${hy(5)+3}" font-size="8" fill="#55626F">5 km</text>`;
+  $("coupe").innerHTML = s;
+}
+
+/* ---------- les instruments ---------- */
+function instruments(){
+  const f = FR[cur], d = f.dmax + pos * (f.dmin - f.dmax), e = etatAt(f, d);
+  const e3 = etatAt(f, d + f.vitesse * 3);   // il y a 3 heures
+  // température
+  const tf = Math.max(0, Math.min(1, (e.t + 2) / 22));
+  $("g-temp").innerHTML = `<rect x="30" y="4" width="10" height="40" rx="5" fill="none" class="s-mu" stroke-width="1.5"/><circle cx="35" cy="47" r="7" class="c-ch"/><rect x="32" y="${(42 - 36*tf).toFixed(1)}" width="6" height="${(36*tf+4).toFixed(1)}" class="c-ch"/>`;
+  $("v-temp").textContent = fmt(e.t, 0) + " °C";
+  const dt = e.t - e3.t; $("s-temp").textContent = Math.abs(dt) < .4 ? "stable" : dt > 0 ? "monte" : "baisse";
+  // pression
+  const a = (Math.max(985, Math.min(1025, e.p)) - 1005) / 20 * 70 * Math.PI / 180;
+  const nx = 35 + 24 * Math.sin(a), ny = 40 - 24 * Math.cos(a);
+  $("g-pres").innerHTML = `<path d="M9,40 A26,26 0 0 1 61,40" fill="none" class="s-mu" stroke-width="2"/><text x="8" y="52" font-size="7" class="c-mu">985</text><text x="53" y="52" font-size="7" class="c-mu">1025</text><line x1="35" y1="40" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" class="s-acc" stroke-width="2.5" stroke-linecap="round"/><circle cx="35" cy="40" r="3" class="c-acc"/>`;
+  $("v-pres").textContent = fmt(e.p, 0) + " hPa";
+  const dp = e.p - e3.p; $("s-pres").textContent = Math.abs(dp) < .5 ? "stable" : (dp > 0 ? "+" : "−") + fmt(Math.abs(dp), 1) + " hPa en 3 h";
+  // pluie
+  const n = e.pl <= 0 ? 0 : e.pl < .5 ? 1 : e.pl < 2 ? 2 : e.pl < 5 ? 3 : 4;
+  let g = ""; for(let i = 0; i < 4; i++){ const x = 12 + i * 15; g += `<path d="M${x},14 C${x-6},26 ${x-6},34 ${x},34 C${x+6},34 ${x+6},26 ${x},14 Z" ${i < n ? 'class="c-pl"' : 'fill="none" class="s-line" stroke-width="1.5"'}/>`; }
+  $("g-pluie").innerHTML = g;
+  $("v-pluie").textContent = e.pl <= 0 ? "aucune" : fmt(e.pl, e.pl < 1 ? 1 : 0) + " mm/h";
+  const averse = (cur === "froid" && d < 50 && d > -35) || (f.averses && d < f.averses && e.pl > 0);
+  $("s-pluie").textContent = e.pl <= 0 ? "sec" : e.pl < .5 ? "bruine ou très faible" : averse ? (e.pl >= 5 ? "averse forte" : "averse") : e.pl < 2 ? "faible, continue" : "modérée, continue";
+  // vent : la flèche montre où va l'air ; « vient du … » donne la direction d'origine
+  const r = (e.dir + 180) * Math.PI / 180, L = 20;
+  const x2 = 35 + L * Math.sin(r), y2 = 30 - L * Math.cos(r), x1 = 35 - L * Math.sin(r), y1 = 30 + L * Math.cos(r);
+  $("g-vent").innerHTML = `<circle cx="35" cy="30" r="24" fill="none" class="s-line" stroke-width="1.5"/><text x="35" y="9" font-size="7" text-anchor="middle" class="c-mu">N</text><text x="35" y="55" font-size="7" text-anchor="middle" class="c-mu">S</text><text x="5" y="33" font-size="7" class="c-mu">O</text><text x="61" y="33" font-size="7" class="c-mu">E</text>`
+    + `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="s-acc" stroke-width="2.5" marker-end="url(#fv)"/><defs><marker id="fv" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" class="c-acc"/></marker></defs>`;
+  $("v-vent").textContent = rose(e.dir);
+  $("s-vent").textContent = "de " + ROSE_LONG[rose(e.dir)] + ", force " + e.force + (cur === "froid" && Math.abs(d) < 25 ? ", rafales" : "");
+  // texte
+  const h = Math.abs(d) / f.vitesse;
+  $("quand").textContent = Math.abs(d) < f.vitesse * .5 ? "Le front passe sur vous" : d > 0 ? `Le front passera sur vous dans ≈ ${fmt(h, 0)} h` : `Le front est passé il y a ≈ ${fmt(h, 0)} h`;
+  $("etat").innerHTML = `<b>Nuages :</b> ${e.zone[1]}<br><b>Visibilité :</b> ${e.zone[2]}`;
+  $("phase").innerHTML = e.zone[3];
+  courbes(d);
+}
+
+/* ---------- les courbes ---------- */
+function courbes(dnow){
+  const f = FR[cur], N = 160, X0 = 40, X1 = 352, xs = i => X0 + (X1 - X0) * i / (N - 1), ds = i => f.dmax + (f.dmin - f.dmax) * i / (N - 1);
+  const val = []; for(let i = 0; i < N; i++) val.push(etatAt(f, ds(i)));
+  const pmin = Math.min(...val.map(v => v.p)), pmax = Math.max(...val.map(v => v.p));
+  const tmin = Math.min(...val.map(v => v.t)), tmax = Math.max(...val.map(v => v.t));
+  const yP = p => 62 - (p - pmin) / Math.max(1, pmax - pmin) * 48, yT = t => 122 - (t - tmin) / Math.max(1, tmax - tmin) * 44;
+  let s = "";
+  [[8,"Pression"],[72,"Température"],[134,"Pluie"]].forEach(([y, t]) => s += `<text x="0" y="${y + 6}" font-size="9" font-weight="700" class="c-mu">${t}</text>`);
+  s += `<text x="0" y="22" font-size="8" class="c-mu">${fmt(pmax,0)}</text><text x="0" y="62" font-size="8" class="c-mu">${fmt(pmin,0)}</text>`;
+  s += `<text x="0" y="86" font-size="8" class="c-mu">${fmt(tmax,0)} °C</text><text x="0" y="122" font-size="8" class="c-mu">${fmt(tmin,0)} °C</text>`;
+  s += `<polyline fill="none" class="s-acc" stroke-width="2" points="${val.map((v,i)=>xs(i).toFixed(1)+","+yP(v.p).toFixed(1)).join(" ")}"/>`;
+  s += `<polyline fill="none" class="s-ch" stroke-width="2" points="${val.map((v,i)=>xs(i).toFixed(1)+","+yT(v.t).toFixed(1)).join(" ")}"/>`;
+  val.forEach((v, i) => { if(v.pl > 0){ const h = Math.min(36, 3 + v.pl * 3.4); s += `<rect x="${(xs(i)-1).toFixed(1)}" y="${(178 - h).toFixed(1)}" width="2" height="${h.toFixed(1)}" class="c-pl"/>`; } });
+  s += `<line x1="${X0}" y1="178" x2="${X1}" y2="178" class="s-line"/>`;
+  const x0 = X0 + (X1 - X0) * (f.dmax / (f.dmax - f.dmin));
+  s += `<line x1="${x0.toFixed(1)}" y1="10" x2="${x0.toFixed(1)}" y2="180" class="s-mu" stroke-dasharray="3 3"/><text x="${x0.toFixed(1)}" y="192" font-size="8.5" text-anchor="middle" class="c-mu">passage du front</text>`;
+  s += `<text x="${X0}" y="192" font-size="8.5" class="c-mu">avant</text><text x="${X1}" y="192" font-size="8.5" text-anchor="end" class="c-mu">après</text>`;
+  const xn = X0 + (X1 - X0) * ((f.dmax - dnow) / (f.dmax - f.dmin));
+  s += `<line x1="${xn.toFixed(1)}" y1="8" x2="${xn.toFixed(1)}" y2="180" stroke="#E0302A" stroke-width="2"/>`;
+  $("courbes").innerHTML = s;
+}
+
+/* ---------- la carte : dépression, anticyclone, fronts ---------- */
+const A_POS = [62, 205], A_AMP = 17, BASE = 1014;
+const ETAPES = [
+  { t: "1. Le front polaire", txt: "L'air froid du nord et l'air chaud du sud se côtoient le long d'un front qui ne bouge presque pas : le <b>front stationnaire</b>. Au sud-ouest, l'anticyclone : pas de front chez lui.",
+    c: null, prof: 0, stat: [[-5,140],[90,132],[180,126],[270,121],[365,117]] },
+  { t: "2. Une onde se forme", txt: "Le front se plisse : l'air chaud avance vers le nord-est, l'air froid vers le sud-est. À la pointe, la pression baisse : <b>une dépression naît</b>, et avec elle un front chaud et un front froid.",
+    c: [175,122], prof: 7, chaud: [[175,122],[230,130],[290,138],[365,142]], froid: [[175,122],[135,140],[85,158],[20,178]] },
+  { t: "3. La dépression se creuse", txt: "Le front chaud devant, le front froid derrière, et entre les deux le <b>secteur chaud</b>. Le tout se déplace vers l'est ou le nord-est, en contournant l'anticyclone. Le vent tourne autour de la dépression en sens inverse des aiguilles d'une montre.",
+    c: [190,100], prof: 17, chaud: [[190,100],[235,120],[280,145],[335,178]], froid: [[190,100],[178,140],[155,188],[128,240]] },
+  { t: "4. L'occlusion commence", txt: "Le front froid, plus rapide, <b>rattrape</b> le front chaud près du centre : le morceau où ils se sont rejoints est le <b>front occlus</b>. La dépression est à son plus creux et le vent à son plus fort.",
+    c: [205,86], prof: 23, occl: [[205,86],[222,102],[240,120]], chaud: [[240,120],[285,141],[335,170]], froid: [[240,120],[222,165],[200,212],[183,252]] },
+  { t: "5. La dépression se comble", txt: "L'occlusion s'allonge, l'air chaud a été rejeté en altitude. La pression remonte au centre : la dépression <b>se comble</b> et la perturbation s'affaiblit. Les fronts finissent par disparaître.",
+    c: [214,74], prof: 13, occl: [[214,74],[244,92],[266,122],[285,150]], chaud: [[285,150],[330,172]], froid: [[285,150],[266,196],[250,240]] }
+];
+let etape = 0, timerCarte = null;
+function distSeg(px, py, a, b){ const dx = b[0]-a[0], dy = b[1]-a[1], L = dx*dx+dy*dy; let t = L ? ((px-a[0])*dx+(py-a[1])*dy)/L : 0; t = Math.max(0, Math.min(1, t)); const x = a[0]+t*dx-px, y = a[1]+t*dy-py; return Math.sqrt(x*x+y*y); }
+function distPoly(px, py, pl){ let m = 1e9; for(let i=1;i<pl.length;i++) m = Math.min(m, distSeg(px, py, pl[i-1], pl[i])); return m; }
+function pression(E, x, y){
+  let p = BASE + A_AMP * Math.exp(-((x-A_POS[0])**2 + (y-A_POS[1])**2) / (2*85*85));
+  if(E.c) p -= E.prof * Math.exp(-((x-E.c[0])**2 + (y-E.c[1])**2) / (2*62*62));
+  const creux = E.c ? 2.2 : 1.2;
+  [E.stat, E.chaud, E.froid, E.occl].forEach(pl => { if(pl) p -= creux * Math.exp(-(distPoly(x, y, pl)**2) / (2*11*11)); });
+  return p;
+}
+function isobares(E){
+  const pas = 5, nx = Math.ceil(360/pas)+1, ny = Math.ceil(250/pas)+1, F = [];
+  for(let j=0;j<ny;j++){ F.push([]); for(let i=0;i<nx;i++) F[j].push(pression(E, i*pas, j*pas)); }
+  let s = "";
+  for(let L = 980; L <= 1040; L += 4){
+    let dpath = "";
+    for(let j=0;j<ny-1;j++) for(let i=0;i<nx-1;i++){
+      const v = [F[j][i], F[j][i+1], F[j+1][i+1], F[j+1][i]], P = [[i,j],[i+1,j],[i+1,j+1],[i,j+1]], pts = [];
+      for(let e=0;e<4;e++){ const a = v[e], b = v[(e+1)%4]; if((a-L)*(b-L) < 0){ const t = (L-a)/(b-a), A = P[e], B = P[(e+1)%4]; pts.push([(A[0]+(B[0]-A[0])*t)*pas, (A[1]+(B[1]-A[1])*t)*pas]); } }
+      if(pts.length >= 2) dpath += `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
+      if(pts.length === 4) dpath += `M${pts[2][0].toFixed(1)},${pts[2][1].toFixed(1)}L${pts[3][0].toFixed(1)},${pts[3][1].toFixed(1)}`;
+    }
+    if(dpath) s += `<path d="${dpath}" fill="none" stroke="#8C98A4" stroke-width=".9"/>`;
+  }
+  return s;
+}
+function vents(E){
+  let s = "";
+  for(let y = 22; y < 250; y += 38) for(let x = 20; x < 360; x += 40){
+    if(E.c && Math.hypot(x-E.c[0], y-E.c[1]) < 18) continue;
+    if(Math.hypot(x-A_POS[0], y-A_POS[1]) < 22) continue;
+    const h = 2, gx = (pression(E, x+h, y) - pression(E, x-h, y)) / (2*h), gy = (pression(E, x, y+h) - pression(E, x, y-h)) / (2*h);
+    // repère « maths » (y vers le haut) : gradient (gx, -gy) ; vent géostrophique (hémisphère Nord) = gradient tourné de +90°,
+    // plus une part dirigée vers les basses pressions (frottement en surface)
+    const gmx = gx, gmy = -gy, mag = Math.hypot(gmx, gmy); if(mag < .004) continue;
+    let wx = -gmy, wy = gmx; wx -= .35 * gmx; wy -= .35 * gmy;
+    const n = Math.hypot(wx, wy), L = Math.min(17, 5 + mag * 120), ux = wx / n * L, uy = -wy / n * L;
+    s += `<line x1="${(x-ux/2).toFixed(1)}" y1="${(y-uy/2).toFixed(1)}" x2="${(x+ux/2).toFixed(1)}" y2="${(y+uy/2).toFixed(1)}" stroke="#0E5A8A" stroke-width="1.4" marker-end="url(#fc)"/>`;
+  }
+  return s;
+}
+function ligneFront(pl, type){   // type : chaud, froid, occl, stat
+  const coul = {chaud:"#D9481E", froid:"#1F66C9", occl:"#8A3FB5"};
+  let s = "";
+  if(type === "stat"){
+    for(let i=1;i<pl.length;i++){ const mx = (pl[i-1][0]+pl[i][0])/2, my = (pl[i-1][1]+pl[i][1])/2;
+      s += `<line x1="${pl[i-1][0]}" y1="${pl[i-1][1]}" x2="${mx}" y2="${my}" stroke="${coul.froid}" stroke-width="2.4"/><line x1="${mx}" y1="${my}" x2="${pl[i][0]}" y2="${pl[i][1]}" stroke="${coul.chaud}" stroke-width="2.4"/>`; }
+  } else s += `<polyline points="${pl.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${coul[type]}" stroke-width="2.4"/>`;
+  // symboles régulièrement espacés, du côté vers lequel le front avance (normale « à gauche » du tracé, écran y vers le bas)
+  let acc = 9, k = 0;
+  for(let i=1;i<pl.length;i++){
+    const a = pl[i-1], b = pl[i], L = Math.hypot(b[0]-a[0], b[1]-a[1]), tx = (b[0]-a[0])/L, ty = (b[1]-a[1])/L;
+    let nx = ty, ny = -tx;
+    while(acc < L){
+      const x = a[0] + tx*acc, y = a[1] + ty*acc;
+      let forme = type === "chaud" ? "c" : type === "froid" ? "t" : (k % 2 ? "c" : "t");
+      let c = type === "occl" ? coul.occl : forme === "c" ? coul.chaud : coul.froid;
+      let sx = nx, sy = ny;
+      if(type === "stat"){ if(forme === "t"){ sx = -nx; sy = -ny; } }      // stationnaire : triangles vers l'air chaud, demi-cercles vers l'air froid
+      if(forme === "t") s += `<path d="M${(x-tx*5).toFixed(1)},${(y-ty*5).toFixed(1)} L${(x+tx*5).toFixed(1)},${(y+ty*5).toFixed(1)} L${(x+sx*7).toFixed(1)},${(y+sy*7).toFixed(1)} Z" fill="${c}"/>`;
+      else { const pts = []; for(let a = 0; a <= 12; a++){ const t = Math.PI * a / 12; pts.push([(x + 5.5*Math.cos(t)*tx + 5.5*Math.sin(t)*sx).toFixed(1), (y + 5.5*Math.cos(t)*ty + 5.5*Math.sin(t)*sy).toFixed(1)]); }
+        s += `<polygon points="${pts.map(p=>p.join(",")).join(" ")}" fill="${c}"/>`; }
+      acc += 18; k++;
+    }
+    acc -= L;
+  }
+  return s;
+}
+function dessinerCarte(){
+  const E = ETAPES[etape];
+  let s = `<defs><marker id="fc" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0E5A8A"/></marker></defs>`;
+  s += `<rect width="360" height="250" fill="#F4F7FA"/>`;
+  // masses d'air : froid au nord, secteur chaud
+  s += `<rect width="360" height="250" fill="rgba(60,120,230,.10)"/>`;
+  let chaudPoly = null;
+  if(E.stat) chaudPoly = E.stat.concat([[365,255],[-5,255]]);
+  else { const j = E.chaud[0]; const fin = E.chaud[E.chaud.length-1], finF = E.froid[E.froid.length-1];
+    chaudPoly = E.chaud.concat([[fin[0], 255]].filter(()=>fin[1] < 255), [[365,255]].filter(()=>false), [[finF[0], 255]], E.froid.slice().reverse()); if(fin[0] < 365) chaudPoly.splice(E.chaud.length, 0, [365, fin[1]], [365, 255]); }
+  s += `<polygon points="${chaudPoly.map(p=>p.join(",")).join(" ")}" fill="rgba(255,120,50,.20)"/>`;
+  s += isobares(E);
+  s += vents(E);
+  if(E.stat) s += ligneFront(E.stat, "stat");
+  if(E.occl) s += ligneFront(E.occl, "occl");
+  if(E.chaud) s += ligneFront(E.chaud, "chaud");
+  if(E.froid) s += ligneFront(E.froid, "froid");
+  // centres
+  const pa = pression(E, A_POS[0], A_POS[1]);
+  s += `<text x="${A_POS[0]}" y="${A_POS[1]+6}" font-family="Barlow Condensed,Arial" font-size="24" font-weight="700" text-anchor="middle" fill="#1F66C9">A</text><text x="${A_POS[0]}" y="${A_POS[1]+20}" font-size="10" text-anchor="middle" fill="#1F66C9" font-weight="700">${Math.round(pa)} hPa</text>`;
+  if(E.c){ const pd = pression(E, E.c[0], E.c[1]);
+    s += `<circle cx="${E.c[0]}" cy="${E.c[1]}" r="11" fill="#fff" opacity=".85"/><text x="${E.c[0]}" y="${E.c[1]+7}" font-family="Barlow Condensed,Arial" font-size="22" font-weight="700" text-anchor="middle" fill="#B3261E">D</text><text x="${E.c[0]+16}" y="${E.c[1]-8}" font-size="10" fill="#B3261E" font-weight="700">${Math.round(pd)} hPa</text>`; }
+  s += `<text x="10" y="18" font-size="11" font-weight="700" fill="#174E9C">air froid</text>`;
+  const lab = E.stat ? [280, 200] : etape === 1 ? [300, 170] : etape === 2 ? [250, 200] : etape === 3 ? [280, 215] : [310, 215];
+  s += `<text x="${lab[0]}" y="${lab[1]}" font-size="11" font-weight="700" fill="#A2341A" text-anchor="middle">${E.stat ? "air chaud" : "secteur chaud"}</text>`;
+  s += `<text x="350" y="245" font-size="9" fill="#55626F" text-anchor="end">N ↑ · ouest à gauche</text>`;
+  $("carte").innerHTML = s;
+  $("legende-etape").innerHTML = `<h2>${E.t}</h2><p>${E.txt}</p>`;
+  document.querySelectorAll("#etapes .et").forEach((b, i) => b.classList.toggle("on", i === etape));
+}
+function coupeDA(){
+  let s = `<rect width="360" height="150" fill="none"/>`;
+  s += `<rect x="0" y="120" width="360" height="10" fill="#2E6F96"/>`;
+  // dépression à gauche : convergence + air qui monte + nuages + pluie
+  s += cumulo(95, 70, 46, 70, "#8A949C");
+  s += `<g stroke="#2F6FA8" stroke-width="1.1">` + [70,82,94,106,118].map(x=>`<line x1="${x}" y1="74" x2="${x-3}" y2="84"/><line x1="${x+4}" y1="92" x2="${x+1}" y2="102"/>`).join("") + `</g>`;
+  s += `<path d="M20,112 L70,112" class="s-acc" stroke-width="2" marker-end="url(#fd)"/><path d="M170,112 L120,112" class="s-acc" stroke-width="2" marker-end="url(#fd)"/><path d="M95,112 L95,36" class="s-acc" stroke-width="2" marker-end="url(#fd)"/>`;
+  s += `<text x="95" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#B3261E">D : l'air monte</text>`;
+  // anticyclone à droite : subsidence + divergence + soleil
+  s += `<circle cx="265" cy="34" r="12" fill="#F2C230"/>` + [0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${265+16*Math.cos(r)}" y1="${34+16*Math.sin(r)}" x2="${265+22*Math.cos(r)}" y2="${34+22*Math.sin(r)}" stroke="#F2C230" stroke-width="2"/>`;}).join("");
+  s += `<path d="M265,58 L265,104" class="s-acc" stroke-width="2" marker-end="url(#fd)"/><path d="M255,112 L205,112" class="s-acc" stroke-width="2" marker-end="url(#fd)"/><path d="M275,112 L335,112" class="s-acc" stroke-width="2" marker-end="url(#fd)"/>`;
+  s += `<text x="265" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#1F66C9">A : l'air descend</text>`;
+  s += `<defs><marker id="fd" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" class="c-acc"/></marker></defs>`;
+  s += `<text x="180" y="100" text-anchor="middle" font-size="10" class="c-mu">au sol, l'air va de A vers D</text>`;
+  $("coupe-da").innerHTML = s;
+}
+
+/* ---------- commandes ---------- */
+function choisir(o){
+  document.querySelectorAll("#onglets button").forEach(b => b.setAttribute("aria-pressed", b.dataset.o === o));
+  arreter(); arreterCarte();
+  if(o === "carte"){ $("vue-front").style.display = "none"; $("vue-carte").hidden = false; $("vue-carte").style.display = "flex"; dessinerCarte(); return; }
+  $("vue-carte").hidden = true; $("vue-front").style.display = "flex";
+  cur = o; pos = 0; $("curseur").value = 0;
+  const f = FR[o];
+  $("intro-front").innerHTML = f.intro; $("rappel").innerHTML = f.rappel;
+  $("pieges").innerHTML = "<h2>Pièges à éviter</h2><ul>" + f.pieges.map(p => "<li>" + p + "</li>").join("") + "</ul>";
+  majFront();
+}
+function majFront(){ dessinerCoupe(); instruments(); }
+function boucle(t){
+  if(!enLecture) return;
+  const dt = tPrec ? (t - tPrec) / 1000 : 0; tPrec = t;
+  pos = Math.min(1, pos + dt / 34); $("curseur").value = Math.round(pos * 1000); majFront();
+  if(pos >= 1){ arreter(); return; }
+  requestAnimationFrame(boucle);
+}
+function arreter(){ enLecture = false; $("jouer").textContent = pos >= 1 ? "↺ Recommencer" : "▶ Lecture"; $("jouer").classList.remove("on"); }
+$("jouer").addEventListener("click", () => {
+  if(enLecture){ arreter(); return; }
+  if(pos >= 1){ pos = 0; }
+  enLecture = true; tPrec = 0; $("jouer").textContent = "⏸ Pause"; $("jouer").classList.add("on"); requestAnimationFrame(boucle);
+});
+$("curseur").addEventListener("input", e => { arreter(); pos = e.target.value / 1000; majFront(); });
+document.querySelectorAll("#onglets button").forEach(b => b.addEventListener("click", () => choisir(b.dataset.o)));
+
+ETAPES.forEach((E, i) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn et"; b.textContent = i + 1; b.setAttribute("aria-label", E.t);
+  b.addEventListener("click", () => { arreterCarte(); etape = i; dessinerCarte(); }); $("etapes").appendChild(b); });
+function arreterCarte(){ clearInterval(timerCarte); timerCarte = null; $("jouer-carte").textContent = "▶ Lecture"; $("jouer-carte").classList.remove("on"); }
+$("jouer-carte").addEventListener("click", () => {
+  if(timerCarte){ arreterCarte(); return; }
+  $("jouer-carte").textContent = "⏸ Pause"; $("jouer-carte").classList.add("on");
+  etape = 0; dessinerCarte();
+  timerCarte = setInterval(() => { if(etape >= ETAPES.length - 1){ arreterCarte(); return; } etape++; dessinerCarte(); }, 4500);
+});
+
+coupeDA();
+choisir("chaud");
+</script>
+</body>
+</html>
