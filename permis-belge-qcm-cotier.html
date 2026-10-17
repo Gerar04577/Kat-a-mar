@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.9 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.10 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1494,7 +1494,7 @@ window.KAM_IMG = {};
     var W = Math.max(200, x + 12);
     var out = '<svg viewBox="0 0 ' + W.toFixed(0) + ' 90" class="qz-svg" role="img"><rect x="0" y="0" width="' + W.toFixed(0) + '" height="90" fill="#fff"/>'
             + s
-            + txt(W / 2, 80, o.legende || "court = bref (1 s) · long = prolongé (4 s)", 8);
+            + txt(W / 2, 80, o.legende || "court = bref (environ 1 s) · long = prolongé (4 à 6 s)", 8);
     return out + "</svg>";
   }
 
@@ -3745,7 +3745,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 35 g) : au mouillage, la cloche est obligatoire ; le navire peut en outre émettre bref-prolongé-bref pour avertir un navire qui s'approche.",
+"ex": "Règle 35 g) : au mouillage, le navire sonne la cloche (sous 20 m, la cloche peut être remplacée par un autre signal sonore efficace, règle 35 i et j) ; il peut en outre émettre bref-prolongé-bref pour avertir un navire qui s'approche.",
 "pg": "Cloche = « je suis à l'ancre ». Court-long-court en plus = « attention, tu viens sur moi ». Ralentis et dégage.",
 "ref": "RIPAM règle 35 g) · Manuel : T2 p. 61"
 },
@@ -3801,7 +3801,7 @@ window.KAM_QCM = {
 "id": "R057",
 "cat": "R",
 "res": false,
-"q": "Lequel de ces signaux sonores est un signal de détresse ?",
+"q": "En mer, selon le RIPAM, lequel de ces signaux sonores est un signal de détresse ?",
 "o": [
 {
 "t": "Un son continu produit par un appareil pour signaux de brume",
@@ -3813,7 +3813,7 @@ window.KAM_QCM = {
 },
 {
 "t": "Un son prolongé, répété régulièrement au sifflet ou à la corne de brume",
-"e": "Faux : c'est le signal de brume d'un navire à moteur qui a de l'erre (règle 35 a)."
+"e": "Faux : en mer, c'est le signal de brume d'un navire à moteur qui a de l'erre (règle 35 a). Attention : sur l'Escaut maritime inférieur, des sons prolongés répétés figurent parmi les signaux de détresse (art. 37, 8°)."
 }
 ],
 "b": 0,
@@ -5425,7 +5425,7 @@ window.KAM_QCM = {
 },
 {
 "t": "Il refuse le dépassement",
-"e": "Faux : un doute ou un refus s'exprime par au moins cinq sons brefs."
+"e": "Faux : un doute s'exprime par au moins cinq sons brefs (règle 9 e i)."
 }
 ],
 "b": 1,

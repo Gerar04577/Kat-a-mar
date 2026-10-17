@@ -672,7 +672,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Feux et sons</span></div>
 <main>
 <header>
-  <div class="ver">QCM FEUX ET SONS · v1.8 · côtier · RIPAM et règles belges de la côte · 60 questions sur les feux · 20 sur les signaux sonores</div>
+  <div class="ver">QCM FEUX ET SONS · v1.9 · côtier · RIPAM et règles belges de la côte · 60 questions sur les feux · 20 sur les signaux sonores</div>
   <h1>QCM feux et signaux sonores</h1>
   <p>Entraînement ciblé sur les feux des navires et les signaux sonores du RIPAM, avec quelques règles belges de la côte. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Pour les signaux sonores, touche <b>▶ Écouter</b> pour entendre le signal. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1490,7 +1490,7 @@ window.KAM_IMG = {};
     });
     var W = Math.max(200, x + 12);
     var out = '<svg viewBox="0 0 ' + W.toFixed(0) + ' 90" class="qz-svg" role="img"><rect x="0" y="0" width="' + W.toFixed(0) + '" height="90" fill="#fff"/>'
-            + s + txt(W / 2, 80, o.legende || "court = bref (1 s) · long = prolongé (4 à 6 s)", 8) + "</svg>";
+            + s + txt(W / 2, 80, o.legende || "court = bref · long = prolongé", 8) + "</svg>";
     return out + '<button type="button" class="qz-ecouter" data-seq="' + seq.join("") + '">▶ Écouter le signal</button>';
   }
 
