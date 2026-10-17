@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.1 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.9 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1458,9 +1458,10 @@ window.KAM_IMG = {};
         case "ballon": s += '<circle cx="100" cy="' + (y + 8) + '" r="8" fill="' + c + '" stroke="' + C.trait + '" stroke-width="1.2"/>'; y += 20; break;
         case "cone-bas": s += p("M90 " + y + " L110 " + y + " L100 " + (y + 16) + " Z", c); y += 20; break;
         case "cone-haut": s += p("M100 " + y + " L110 " + (y + 16) + " L90 " + (y + 16) + " Z", c); y += 20; break;
-        case "cylindre": s += rect(93, y, 14, 22, c) + (m.bandes ? rect(93, y, 14, 2.5, C.blanc) + rect(93, y + 2.5, 14, 2.5, C.noir) + rect(93, y + 17, 14, 2.5, C.noir) + rect(93, y + 19.5, 14, 2.5, C.blanc) : ""); y += 26; break;
+        case "cylindre": s += rect(94, y, 12, 24, c) + (m.bandes ? rect(94, y, 12, 2.5, C.blanc) + rect(94, y + 2.5, 12, 2.5, C.noir) + rect(94, y + 19, 12, 2.5, C.noir) + rect(94, y + 21.5, 12, 2.5, C.blanc) : ""); y += 28; break;   /* hauteur = 2 × diamètre (annexe I, 6 a) */
         case "bicone": s += p("M100 " + y + " L109 " + (y + 9) + " L100 " + (y + 18) + " L91 " + (y + 9) + " Z", c); y += 22; break;
         case "pavillon": s += rect(100, y, 26, 18, c); y += 22; break;
+        case "pavillon2": s += rect(100, y, 26, 9, C.rouge) + rect(100, y + 9, 26, 9, C.blanc); y += 22; break;
         case "flamme": s += p("M100 " + y + " L132 " + (y + 7) + " L100 " + (y + 14) + " Z", c); y += 18; break;
         case "panneau-bleu": s += rect(122, 82, 22, 14, "#7fb8e6") + '<circle cx="152" cy="80" r="4" fill="#fffbe6" stroke="' + C.trait + '"/>'; break;
       }
@@ -2609,7 +2610,7 @@ window.KAM_QCM = {
 ],
 "b": 2,
 "ex": "Règles 15 et 16 : il est sur votre tribord, vous êtes le navire non privilégié ; vous vous écartez de bonne heure et franchement, en évitant de croiser sur son avant.",
-"pg": "Repère simple : si tu vois le feu ROUGE d'un navire qui te croise, c'est à toi de t'écarter ; si tu vois son feu VERT, c'est à lui (tu maintiens cap et vitesse en surveillant).",
+"pg": "Repère simple, entre deux navires à moteur : si tu vois le feu ROUGE de celui qui te croise, c'est à toi de t'écarter ; si tu vois son feu VERT, c'est à lui (tu maintiens cap et vitesse en surveillant). Face à un voilier, un pêcheur ou un navire non maître de sa manœuvre, le navire à moteur s'écarte quelle que soit la couleur vue.",
 "ref": "RIPAM règles 15, 16 et 21 b) · Manuel : T2 p. 55"
 },
 {
@@ -2927,7 +2928,7 @@ window.KAM_QCM = {
 "id": "R032",
 "cat": "R",
 "res": false,
-"q": "De nuit, ces feux d'un même navire s'approchent, droit devant vous. Que vous indiquent-ils ?",
+"q": "De nuit, ces feux d'un même navire de moins de 50 m s'approchent, droit devant vous. Que vous indiquent-ils ?",
 "d": {
 "t": "feux",
 "feux": [
@@ -2969,8 +2970,8 @@ window.KAM_QCM = {
 "e": "Faux : ses trois feux superposés seraient rouge, blanc, rouge."
 },
 {
-"t": "Un remorqueur dont le train mesure moins de 200 m",
-"e": "Faux : il ne montrerait que deux feux blancs superposés."
+"t": "Un remorqueur dont le train mesure 200 m au plus",
+"e": "Faux : un remorqueur de moins de 50 m dont le train ne dépasse pas 200 m ne montrerait que deux feux blancs superposés."
 }
 ],
 "b": 0,
@@ -3089,7 +3090,7 @@ window.KAM_QCM = {
 "c": "noir"
 }
 ],
-"legende": "de jour"
+"legende": "de jour · marque placée à l'avant"
 },
 "o": [
 {
@@ -3450,7 +3451,7 @@ window.KAM_QCM = {
 "c": "noir"
 }
 ],
-"legende": "de jour"
+"legende": "de jour · marque placée à l'avant"
 },
 "o": [
 {
@@ -3468,7 +3469,7 @@ window.KAM_QCM = {
 ],
 "b": 2,
 "ex": "Règle 30 a) : au mouillage, de jour, une boule à l'avant ; de nuit, un feu blanc visible sur tout l'horizon à l'avant et un autre plus bas à l'arrière (un seul suffit sous 50 m).",
-"pg": "Une boule = je suis à l'ancre. Tu peux aussi l'entendre par brume : cloche rapide à l'avant.",
+"pg": "Une boule = je suis à l'ancre. Par brume, tu peux aussi l'entendre : cloche sonnée rapidement pendant environ 5 secondes, au moins toutes les minutes (à l'avant, suivie d'un gong à l'arrière, si le navire mesure 100 m ou plus).",
 "ref": "RIPAM règle 30 a) · Absent du manuel"
 },
 {
@@ -3924,7 +3925,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "Tout navire de plus de 20 m",
-"e": "Faux : un bateau de 40 m n'a pas à s'écarter de tout navire de plus de 20 m. Le navire de grandes dimensions est désigné par le service de pilotage, selon sa longueur ou son tirant d'eau (art. 2, § 1er, 4°). Seule une petite embarcation (moins de 20 m) s'écarte de tout bateau de 20 m ou plus (art. 18, § 6)."
+"e": "Faux : un bateau de 40 m n'a pas à s'écarter de tout navire de plus de 20 m. Le navire de grandes dimensions est désigné par le service de pilotage, selon sa longueur ou son tirant d'eau (art. 2, § 1er, 4°). Seule une petite embarcation (moins de 20 m, hors remorqueur et pousseur) doit s'écarter de tout bateau qui n'est pas une petite embarcation (art. 18, § 6)."
 },
 {
 "t": "Le navire de grandes dimensions",
@@ -4057,7 +4058,7 @@ window.KAM_QCM = {
 ],
 "b": 2,
 "ex": "Article 18, § 6 : une petite embarcation (bateau de moins de 20 m, sauf remorqueur et pousseur) faisant route s'écarte de la route de tout bateau autre qu'une petite embarcation.",
-"pg": "Sur l'Escaut, avec moins de 20 m, tu es une « petite embarcation » : tu laisses la route à tous les plus grands.",
+"pg": "Sur l'Escaut, avec moins de 20 m, tu es une « petite embarcation » : tu laisses la route à tout bateau qui n'est pas une petite embarcation (y compris un remorqueur ou un pousseur, même de moins de 20 m).",
 "ref": "Règlement de navigation de l'Escaut maritime inférieur (AR 23/09/1992), art. 2 § 1er, 7° et art. 18 § 6 · Manuel : T2 p. 66 (définition seulement)"
 },
 {
@@ -4215,37 +4216,37 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 97,
-"y": 35,
+"y": 28,
 "c": "blanc"
 },
 {
 "x": 103,
-"y": 15,
+"y": 12,
 "c": "blanc"
 },
 {
-"x": 135,
-"y": 20,
+"x": 100,
+"y": 46,
 "c": "rouge"
 },
 {
-"x": 135,
-"y": 40,
+"x": 100,
+"y": 62,
 "c": "rouge"
 },
 {
-"x": 135,
-"y": 60,
+"x": 100,
+"y": 78,
 "c": "rouge"
 },
 {
-"x": 85,
-"y": 88,
+"x": 80,
+"y": 92,
 "c": "vert"
 },
 {
-"x": 115,
-"y": 88,
+"x": 120,
+"y": 92,
 "c": "rouge"
 }
 ],
@@ -4303,12 +4304,8 @@ window.KAM_QCM = {
 "t": "marques",
 "formes": [
 {
-"f": "pavillon",
+"f": "pavillon2",
 "c": "rouge"
-},
-{
-"f": "pavillon",
-"c": "blanc"
 }
 ],
 "legende": "de jour"
@@ -4328,7 +4325,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Article 31, § 3 : un bateau au mouillage, amarré, échoué ou coulé, exposé aux remous ou à la succion, montre rouge au-dessus de blanc (feux) et un pavillon rouge au-dessus de blanc. Article 6, § 3 : les bateaux à moteur réduisent à temps leur vitesse et, au besoin, s'arrêtent.",
+"ex": "Article 31, § 3 : un bateau au mouillage, amarré, échoué ou coulé, exposé aux remous ou à la succion, montre deux feux, rouge au-dessus de blanc, et un pavillon à deux bandes horizontales, rouge en haut, blanc en bas. Article 6, § 3 : les bateaux à moteur réduisent à temps leur vitesse et, au besoin, s'arrêtent.",
 "pg": "Rouge sur blanc à quai, sur l'Escaut = « attention à ta vague ». Passe au ralenti. Ne confonds pas avec le RIPAM en mer, où rouge sur blanc signale un navire en train de pêcher.",
 "ref": "Règlement de navigation de l'Escaut maritime inférieur (AR 23/09/1992), art. 31 § 3 et art. 6 § 3 · Absent du manuel"
 },
@@ -5143,16 +5140,16 @@ window.KAM_QCM = {
 },
 {
 "t": "Un seul feu blanc visible sur tout l'horizon, sans feux de côté",
-"e": "Faux : cette tolérance est réservée aux moins de 7 m qui ne dépassent pas 7 nœuds (règle 23 d ii)."
+"e": "Faux : cette tolérance est réservée aux bateaux de moins de 7 m dont la vitesse maximale ne dépasse pas 7 nœuds (règle 23 d ii)."
 },
 {
 "t": "Un feu blanc de poupe seul, sans feux de côté",
-"e": "Faux : sous 12 m, le feu blanc doit être visible sur tout l'horizon et les feux de côté restent obligatoires (règle 23 d i)."
+"e": "Faux : un feu de poupe seul ne suffit pas. Sous 12 m, on peut remplacer le feu de tête de mât et le feu de poupe par un feu blanc visible sur tout l'horizon, mais les feux de côté restent obligatoires (règle 23 d i)."
 }
 ],
 "b": 0,
-"ex": "Règle 23 d) i) : moins de 12 m = feu blanc visible sur tout l'horizon + feux de côté. Règle 23 d) ii) : moins de 7 m et 7 nœuds au plus = feu blanc visible sur tout l'horizon, feux de côté si possible.",
-"pg": "Pour les petits bateaux à moteur, le feu blanc tout autour (360°) remplace le feu de mât et le feu de poupe. Les feux de côté restent obligatoires, sauf pour les tout petits et lents (moins de 7 m, 7 nœuds maximum), où ils sont recommandés.",
+"ex": "Règle 23 d) i) : moins de 12 m = feu blanc visible sur tout l'horizon + feux de côté. Règle 23 d) ii) : moins de 7 m et vitesse maximale de 7 nœuds au plus = feu blanc visible sur tout l'horizon, feux de côté si possible.",
+"pg": "Pour les petits bateaux à moteur, le feu blanc tout autour (360°) remplace le feu de mât et le feu de poupe. Les feux de côté restent obligatoires, sauf pour les tout petits et lents (moins de 7 m, dont la vitesse maximale ne dépasse pas 7 nœuds), où ils sont demandés si possible.",
 "ref": "RIPAM règle 23 d) · Absent du manuel"
 },
 {
@@ -5234,22 +5231,22 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 100,
-"y": 25,
+"y": 20,
 "c": "rouge"
 },
 {
 "x": 100,
-"y": 45,
+"y": 38,
 "c": "blanc"
 },
 {
 "x": 80,
-"y": 75,
+"y": 80,
 "c": "vert"
 },
 {
 "x": 120,
-"y": 75,
+"y": 80,
 "c": "rouge"
 }
 ],
@@ -5299,22 +5296,22 @@ window.KAM_QCM = {
 },
 {
 "x": 55,
-"y": 45,
+"y": 65,
 "c": "rouge"
 },
 {
 "x": 55,
-"y": 65,
+"y": 85,
 "c": "rouge"
 },
 {
 "x": 145,
-"y": 45,
+"y": 65,
 "c": "vert"
 },
 {
 "x": 145,
-"y": 65,
+"y": 85,
 "c": "vert"
 }
 ],
@@ -5662,7 +5659,7 @@ window.KAM_QCM = {
 },
 {
 "t": "Le pavillon L (damier jaune et noir) hissé au mât",
-"e": "Faux : sur l'Escaut, c'est l'ordre de s'arrêter (règlement de police, art. 40, ancienne version)."
+"e": "Faux : le pavillon L ne figure pas dans la liste de l'article 37 ; dans le Code international des signaux, il signifie « Stoppez immédiatement votre navire »."
 }
 ],
 "b": 1,
@@ -5714,8 +5711,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Règlement de navigation, art. 44 : le capitaine ou le patron annonce sans délai à la police des eaux qu'il s'est échoué, a coulé, a touché un autre bateau, a endommagé une bouée, a perdu sa cargaison, a un incendie… et prévient les bateaux qui approchent s'il y a danger. Règlement de police, art. 18 (version 2023) : information immédiate de la centrale de trafic de Zandvliet, qui prévient la police des eaux ; signalisation par les feux et marques de l'article 30 du règlement de navigation.",
-"pg": "Échoué, abordage, bouée heurtée, incendie : on prévient tout de suite les autorités, même si on s'en sort seul. Le bateau échoué montre ses feux de mouillage et deux feux rouges superposés (de jour, trois ballons).",
+"ex": "Règlement de navigation, art. 44 : le capitaine ou le patron annonce sans délai à l'autorité de la police fédérale chargée de la police des eaux qu'il s'est échoué, a coulé, a touché un autre bateau en provoquant des dégâts matériels importants ou des dommages corporels, a heurté ou endommagé une bouée, une balise ou un ouvrage d'art, a perdu sa cargaison, a un incendie… et prévient les bateaux qui approchent s'il y a danger. Règlement de police, art. 18 (version 2023) : information immédiate de la centrale de trafic de Zandvliet, qui prévient la police des eaux ; signalisation par les feux et marques de l'article 30 du règlement de navigation.",
+"pg": "Échoué, abordage, bouée heurtée, incendie : on prévient tout de suite les autorités, même si on s'en sort seul. Le bateau échoué montre ses feux de mouillage et deux feux rouges superposés ; de jour, trois ballons, sauf une petite embarcation (moins de 20 m), dispensée des marques de jour (art. 41, § 8).",
 "ref": "Règlement de navigation de l'Escaut maritime inférieur (AR 23/09/1992), art. 44 et art. 30 § 3 ; Règlement de police de l'Escaut maritime inférieur (AR 23/09/1992) — version flamande en vigueur depuis le 8/05/2023, art. 18 · Absent du manuel"
 },
 {
@@ -5802,7 +5799,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
-"ex": "Article 13, § 6 : un bâtiment chargé d'une mission de police porte, de jour comme de nuit, un feu bleu clignotant ; si plusieurs bâtiments le portent, la zone entre eux est interdite à la navigation. Même règle sur l'Escaut (règlement de navigation, art. 31, § 1er).",
+"ex": "Article 13, § 6 : un bâtiment chargé d'une mission de police porte, de jour comme de nuit, un feu bleu clignotant ; si plusieurs bâtiments le portent, la zone entre eux est interdite à la navigation. Même interdiction sur l'Escaut (règlement de navigation, art. 31, § 1er), où le feu bleu est dit « scintillant ».",
 "pg": "Feu bleu = police en mission. Ne passe jamais entre deux bateaux qui montrent un feu bleu.",
 "ref": "Règlement de police et de navigation mer territoriale, ports et plages (AR 4/08/1981), art. 13 § 6 ; Règlement de navigation de l'Escaut maritime inférieur (AR 23/09/1992), art. 31 § 1er · Absent du manuel"
 },

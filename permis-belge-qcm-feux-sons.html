@@ -672,7 +672,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Feux et sons</span></div>
 <main>
 <header>
-  <div class="ver">QCM FEUX ET SONS · v1.0 · côtier · RIPAM et règles belges de la côte · 60 questions sur les feux · 20 sur les signaux sonores</div>
+  <div class="ver">QCM FEUX ET SONS · v1.8 · côtier · RIPAM et règles belges de la côte · 60 questions sur les feux · 20 sur les signaux sonores</div>
   <h1>QCM feux et signaux sonores</h1>
   <p>Entraînement ciblé sur les feux des navires et les signaux sonores du RIPAM, avec quelques règles belges de la côte. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Pour les signaux sonores, touche <b>▶ Écouter</b> pour entendre le signal. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1447,9 +1447,10 @@ window.KAM_IMG = {};
         case "ballon": s += '<circle cx="100" cy="' + (y + 8) + '" r="8" fill="' + c + '" stroke="' + C.trait + '" stroke-width="1.2"/>'; y += 20; break;
         case "cone-bas": s += p("M90 " + y + " L110 " + y + " L100 " + (y + 16) + " Z", c); y += 20; break;
         case "cone-haut": s += p("M100 " + y + " L110 " + (y + 16) + " L90 " + (y + 16) + " Z", c); y += 20; break;
-        case "cylindre": s += rect(93, y, 14, 22, c) + (m.bandes ? rect(93, y, 14, 2.5, C.blanc) + rect(93, y + 2.5, 14, 2.5, C.noir) + rect(93, y + 17, 14, 2.5, C.noir) + rect(93, y + 19.5, 14, 2.5, C.blanc) : ""); y += 26; break;
+        case "cylindre": s += rect(94, y, 12, 24, c) + (m.bandes ? rect(94, y, 12, 2.5, C.blanc) + rect(94, y + 2.5, 12, 2.5, C.noir) + rect(94, y + 19, 12, 2.5, C.noir) + rect(94, y + 21.5, 12, 2.5, C.blanc) : ""); y += 28; break;   /* hauteur = 2 × diamètre (annexe I, 6 a) */
         case "bicone": s += p("M100 " + y + " L109 " + (y + 9) + " L100 " + (y + 18) + " L91 " + (y + 9) + " Z", c); y += 22; break;
         case "pavillon": s += rect(100, y, 26, 18, c); y += 22; break;
+        case "pavillon2": s += rect(100, y, 26, 9, C.rouge) + rect(100, y + 9, 26, 9, C.blanc); y += 22; break;
         case "flamme": s += p("M100 " + y + " L132 " + (y + 7) + " L100 " + (y + 14) + " Z", c); y += 18; break;
         case "panneau-bleu": s += rect(122, 82, 22, 14, "#7fb8e6") + '<circle cx="152" cy="80" r="4" fill="#fffbe6" stroke="' + C.trait + '"/>'; break;
       }
@@ -2113,7 +2114,7 @@ window.KAM_QCM = {
 ],
 "b": 2,
 "ex": "Règle 21 c) : le feu de poupe est un feu blanc placé aussi près que possible de l'arrière, qui éclaire 135° : 67,5° de chaque côté de l'arrière.",
-"pg": "Feu de poupe = 135° vers l'arrière. C'est le seul feu qu'on voit quand on rattrape un navire.",
+"pg": "Feu de poupe = 135° vers l'arrière. Quand vous rattrapez un navire, vous voyez son feu de poupe mais aucun de ses feux de côté (règle 13 b).",
 "ref": "RIPAM règle 21 c)"
 },
 {
@@ -2144,7 +2145,7 @@ window.KAM_QCM = {
 "id": "F05",
 "cat": "F",
 "res": false,
-"q": "Qu'est-ce qu'un feu « scintillant » au sens du RIPAM ?",
+"q": "Qu'est-ce qu'un « feu à éclats » au sens du RIPAM ?",
 "o": [
 {
 "t": "Un feu qui s'allume une fois toutes les 10 secondes",
@@ -2152,7 +2153,7 @@ window.KAM_QCM = {
 },
 {
 "t": "Un feu qui change de couleur",
-"e": "Faux : un feu scintillant garde sa couleur."
+"e": "Faux : un feu à éclats garde sa couleur."
 },
 {
 "t": "Un feu à éclats réguliers, au rythme de 120 éclats ou plus par minute",
@@ -2160,8 +2161,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 21 f) : un feu scintillant émet des éclats réguliers à une fréquence de 120 éclats ou plus par minute.",
-"pg": "Scintillant = très rapide (au moins 2 éclats par seconde). On le retrouve sur l'aéroglisseur (jaune scintillant).",
+"ex": "Règle 21 f) : un feu à éclats est un feu à éclats réguliers dont le rythme est de 120 éclats ou plus par minute.",
+"pg": "Feu à éclats du RIPAM = très rapide (au moins 2 éclats par seconde). On le retrouve sur l'aéroglisseur (feu jaune à éclats). Attention : en balisage, « à éclats » (Fl) désigne au contraire un rythme lent ; les rythmes rapides y sont dits « scintillants » (Q, VQ).",
 "ref": "RIPAM règle 21 f)"
 },
 {
@@ -2256,7 +2257,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Règle 20 b) : les feux sont montrés du coucher au lever du soleil. Règle 20 c) : on les montre aussi du lever au coucher du soleil par visibilité réduite, et dans toutes les autres circonstances où on le juge nécessaire.",
+"ex": "Règle 20 b) : les feux sont montrés du coucher au lever du soleil. Règle 20 c) : ils doivent aussi être montrés du lever au coucher du soleil par visibilité réduite, et peuvent l'être dans toutes les autres circonstances où on le juge nécessaire.",
 "pg": "Brume en plein jour : allume tes feux.",
 "ref": "RIPAM règle 20 b) et c)"
 },
@@ -2309,7 +2310,7 @@ window.KAM_QCM = {
 "id": "F11",
 "cat": "F",
 "res": false,
-"q": "De nuit, droit devant vous, vous voyez ces feux d'un même navire. Qu'est-ce que c'est ?",
+"q": "De nuit, droit devant vous, vous voyez ces feux d'un même navire. Qu'est-ce que c'est le plus probablement ?",
 "d": {
 "t": "feux",
 "feux": [
@@ -2338,8 +2339,8 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "Un navire à moteur de moins de 50 m",
-"e": "Faux : il n'a qu'un seul feu de tête de mât."
+"t": "Un voilier qui fait route",
+"e": "Faux : un voilier ne montre pas de feu de tête de mât (règle 25)."
 },
 {
 "t": "Un navire à moteur de 50 m ou plus, qui vient droit vers vous",
@@ -2351,7 +2352,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
-"ex": "Règle 23 a) : à partir de 50 m, un navire à propulsion mécanique montre deux feux de tête de mât, celui de l'arrière plus haut que celui de l'avant. Vus de face, ils sont alignés, avec ses deux feux de côté.",
+"ex": "Règle 23 a) : à partir de 50 m, un navire à propulsion mécanique montre deux feux de tête de mât, celui de l'arrière plus haut que celui de l'avant. Vus de face, ils sont alignés, avec ses deux feux de côté. Un navire de moins de 50 m peut aussi montrer ce second feu, mais il n'y est pas obligé (règle 23 a) ii).",
 "pg": "Deux feux blancs alignés vus de face : grand navire (50 m ou plus) ou remorqueur. De face, la nuit, on ne peut pas toujours les distinguer : observe-les quand il présente un peu son flanc (décalés, le plus haut en arrière = grand navire ; exactement superposés = remorqueur).",
 "ref": "RIPAM règle 23 a)"
 },
@@ -2374,7 +2375,7 @@ window.KAM_QCM = {
 "c": "blanc"
 },
 {
-"x": 65,
+"x": 78,
 "y": 74,
 "c": "rouge"
 }
@@ -2397,7 +2398,7 @@ window.KAM_QCM = {
 ],
 "b": 0,
 "ex": "Vous voyez son feu rouge (son côté bâbord) : il croise votre route de droite à gauche. Règle 15 : le navire qui voit l'autre sur son tribord s'écarte de sa route, en évitant si possible de passer devant. Règle 16 : manœuvre franche et tôt.",
-"pg": "Tu vois du ROUGE : STOP, c'est à toi de manœuvrer (comme un feu rouge sur la route).",
+"pg": "Entre deux navires à moteur qui se croisent, tu vois son ROUGE : c'est à toi de manœuvrer (comme un feu rouge sur la route).",
 "ref": "RIPAM règles 15 et 16"
 },
 {
@@ -2419,7 +2420,7 @@ window.KAM_QCM = {
 "c": "blanc"
 },
 {
-"x": 140,
+"x": 127,
 "y": 74,
 "c": "vert"
 }
@@ -2429,7 +2430,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "Je viens franchement sur bâbord",
-"e": "Faux : manœuvre interdite au navire privilégié en route de collision avec un navire sur son bâbord (règle 17 c)."
+"e": "Faux : vous devez d'abord garder cap et vitesse (règle 17 a) i). Et si vous devez manœuvrer, vous évitez, si possible, de venir sur bâbord pour un navire qui est sur votre bâbord (règle 17 c)."
 },
 {
 "t": "Je stoppe immédiatement",
@@ -2442,7 +2443,7 @@ window.KAM_QCM = {
 ],
 "b": 2,
 "ex": "Vous voyez son feu vert : il vous montre son côté tribord et vous voit sur sa droite. C'est à lui de s'écarter (règle 15). Vous gardez cap et vitesse (règle 17 a). S'il ne manœuvre pas, vous pouvez agir ; si la collision ne peut plus être évitée par lui seul, vous devez agir (règle 17 b).",
-"pg": "Tu vois du VERT : tu passes, mais garde un œil sur lui.",
+"pg": "Entre deux navires à moteur qui se croisent, tu vois son VERT : tu gardes cap et vitesse, mais garde un œil sur lui.",
 "ref": "RIPAM règles 15 et 17"
 },
 {
@@ -2511,7 +2512,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Règle 30 a) et b) : un navire au mouillage montre un feu blanc visible sur tout l'horizon à l'avant. Sous 50 m, ce seul feu suffit. Un petit bateau à moteur de moins de 12 m peut aussi montrer un feu blanc tout horizon, mais il fait route et montre alors ses feux de côté.",
+"ex": "Règle 30 a) et b) : un navire au mouillage montre à l'avant un feu blanc visible sur tout l'horizon et, à l'arrière, un second feu blanc plus bas. Sous 50 m, il peut les remplacer par un seul feu blanc tout horizon, placé là où on le voit le mieux. Un petit bateau à moteur de moins de 12 m peut aussi montrer un feu blanc tout horizon, mais il fait route et montre alors ses feux de côté (sous 7 m et 7 nœuds, seulement si possible).",
 "pg": "Un feu blanc tout seul, immobile : pense « au mouillage ».",
 "ref": "RIPAM règle 30 a) et b)"
 },
@@ -2593,7 +2594,7 @@ window.KAM_QCM = {
 },
 {
 "t": "Un navire qui n'est pas maître de sa manœuvre et qui fait route",
-"e": "Faux : il montrerait ses feux de côté et pas de feux de mouillage."
+"e": "Faux : il montrerait les deux feux rouges, mais pas de feux de mouillage blancs (et ses feux de côté seulement s'il avait de l'erre)."
 },
 {
 "t": "Un navire de grandes dimensions à l'entrée d'un port",
@@ -2692,7 +2693,7 @@ window.KAM_QCM = {
 ],
 "b": 1,
 "ex": "Règle 18 a) : un navire à propulsion mécanique faisant route doit s'écarter de la route d'un navire qui n'est pas maître de sa manœuvre, d'un navire à capacité de manœuvre restreinte, d'un navire en train de pêcher et d'un voilier.",
-"pg": "Ordre de priorité, du plus prioritaire au moins prioritaire : pas maître de sa manœuvre, capacité restreinte, tirant d'eau, pêche, voilier, moteur.",
+"pg": "Le navire à moteur s'écarte de tous les autres : pas maître de sa manœuvre et capacité restreinte (à égalité), pêche, voilier. Et tous, sauf ces deux-là, évitent de gêner le navire handicapé par son tirant d'eau.",
 "ref": "RIPAM règle 18 a)"
 },
 {
@@ -2755,32 +2756,32 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 100,
-"y": 22,
+"y": 14,
 "c": "blanc"
 },
 {
-"x": 135,
-"y": 30,
+"x": 116,
+"y": 32,
 "c": "rouge"
 },
 {
-"x": 135,
-"y": 48,
+"x": 116,
+"y": 50,
 "c": "blanc"
 },
 {
-"x": 135,
-"y": 66,
+"x": 116,
+"y": 68,
 "c": "rouge"
 },
 {
-"x": 80,
-"y": 75,
+"x": 72,
+"y": 88,
 "c": "vert"
 },
 {
-"x": 120,
-"y": 75,
+"x": 128,
+"y": 88,
 "c": "rouge"
 }
 ],
@@ -2789,7 +2790,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "Un navire à capacité de manœuvre restreinte, qui fait route avec de l'erre",
-"e": "Juste : règle 27 b) ii)."
+"e": "Juste : règle 27 b) iii)."
 },
 {
 "t": "Un navire qui pêche au chalut",
@@ -2801,9 +2802,9 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Règle 27 b) ii) : quand il a de l'erre, le navire à capacité de manœuvre restreinte ajoute aux feux rouge-blanc-rouge son ou ses feux de tête de mât, ses feux de côté et son feu de poupe.",
+"ex": "Règle 27 b) iii) : quand il a de l'erre, le navire à capacité de manœuvre restreinte ajoute aux feux rouge-blanc-rouge son ou ses feux de tête de mât, ses feux de côté et son feu de poupe.",
 "pg": "Repère d'abord le groupe rouge-blanc-rouge : il donne le type de navire. Les autres feux disent s'il avance.",
-"ref": "RIPAM règle 27 b) ii)"
+"ref": "RIPAM règle 27 b) iii)"
 },
 {
 "id": "F22",
@@ -2830,22 +2831,22 @@ window.KAM_QCM = {
 },
 {
 "x": 55,
-"y": 45,
+"y": 65,
 "c": "rouge"
 },
 {
 "x": 55,
-"y": 65,
+"y": 85,
 "c": "rouge"
 },
 {
 "x": 145,
-"y": 45,
+"y": 65,
 "c": "vert"
 },
 {
 "x": 145,
-"y": 65,
+"y": 85,
 "c": "vert"
 }
 ],
@@ -2940,37 +2941,37 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 100,
-"y": 50,
+"y": 30,
 "c": "blanc"
 },
 {
 "x": 101,
-"y": 18,
+"y": 13,
 "c": "blanc"
 },
 {
-"x": 140,
-"y": 22,
+"x": 100,
+"y": 47,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 40,
+"x": 100,
+"y": 63,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 58,
+"x": 100,
+"y": 79,
 "c": "rouge"
 },
 {
-"x": 80,
-"y": 75,
+"x": 78,
+"y": 94,
 "c": "vert"
 },
 {
-"x": 120,
-"y": 75,
+"x": 122,
+"y": 94,
 "c": "rouge"
 }
 ],
@@ -3005,37 +3006,37 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 100,
-"y": 50,
+"y": 30,
 "c": "blanc"
 },
 {
 "x": 101,
-"y": 18,
+"y": 13,
 "c": "blanc"
 },
 {
-"x": 140,
-"y": 22,
+"x": 100,
+"y": 47,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 40,
+"x": 100,
+"y": 63,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 58,
+"x": 100,
+"y": 79,
 "c": "rouge"
 },
 {
-"x": 80,
-"y": 75,
+"x": 78,
+"y": 94,
 "c": "vert"
 },
 {
-"x": 120,
-"y": 75,
+"x": 122,
+"y": 94,
 "c": "rouge"
 }
 ],
@@ -3044,7 +3045,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "Le voilier est privilégié : le navire à moteur doit s'écarter",
-"e": "Faux : ce navire est handicapé par son tirant d'eau."
+"e": "Faux : le voilier doit d'abord éviter de gêner ce navire (règle 18 d) i) ; le navire handicapé par son tirant d'eau reste toutefois tenu par les règles de route s'il y a risque d'abordage (règle 8 f) iii)."
 },
 {
 "t": "Le voilier doit éviter de gêner le passage de ce navire",
@@ -3070,37 +3071,37 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 100,
-"y": 50,
+"y": 30,
 "c": "blanc"
 },
 {
 "x": 101,
-"y": 18,
+"y": 13,
 "c": "blanc"
 },
 {
-"x": 140,
-"y": 22,
+"x": 100,
+"y": 47,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 40,
+"x": 100,
+"y": 63,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 58,
+"x": 100,
+"y": 79,
 "c": "rouge"
 },
 {
-"x": 80,
-"y": 75,
+"x": 78,
+"y": 94,
 "c": "vert"
 },
 {
-"x": 120,
-"y": 75,
+"x": 122,
+"y": 94,
 "c": "rouge"
 }
 ],
@@ -3129,7 +3130,7 @@ window.KAM_QCM = {
 "id": "F27",
 "cat": "F",
 "res": false,
-"q": "Dans les eaux belges, un navire montre de jour un cylindre noir et de nuit trois feux rouges superposés. Quel est l'élément qui compte surtout pour lui ?",
+"q": "Dans un port belge ou son chenal d'accès, un navire montre de jour un cylindre noir et de nuit trois feux rouges superposés. Pourquoi ?",
 "d": {
 "t": "marques",
 "formes": [
@@ -3142,22 +3143,22 @@ window.KAM_QCM = {
 },
 "o": [
 {
-"t": "Sa vitesse, trop élevée pour manœuvrer",
-"e": "Faux : c'est sa profondeur qui le limite."
+"t": "Sa vitesse est trop élevée pour manœuvrer",
+"e": "Faux : ce sont ses dimensions par rapport au chenal qui le limitent."
 },
 {
-"t": "Son tirant d'eau, qui l'oblige à rester dans le chenal",
-"e": "Juste : c'est le « navire hors gabarit » (bovenmaats zeeschip)."
+"t": "Ses dimensions (longueur ou tirant d'eau) par rapport à l'état du chenal : le Service du pilotage le considère comme navire de grandes dimensions",
+"e": "Juste : c'est le « navire de grandes dimensions » (AR 4/08/1981, art. 3, 3° et art. 13 § 2)."
 },
 {
-"t": "Sa cargaison dangereuse",
+"t": "Il transporte une cargaison dangereuse",
 "e": "Faux : une cargaison dangereuse n'est pas signalée ainsi."
 }
 ],
 "b": 1,
-"ex": "Ces signaux sont ceux du RIPAM pour le navire handicapé par son tirant d'eau (règle 28). En Belgique, le navire qui les porte est appelé navire de grandes dimensions (règlement de 1981) ou, en néerlandais, « bovenmaats zeeschip » : il est limité dans sa manœuvre par sa profondeur.",
-"pg": "Cylindre de jour, trois rouges de nuit : grande profondeur, chenal obligatoire. Laisse-lui la place.",
-"ref": "RIPAM règle 28 ; Règlement de police et de navigation mer territoriale, ports et plages (AR 4/08/1981), art. 13 § 2"
+"ex": "Ces signaux sont aussi ceux du RIPAM pour le navire handicapé par son tirant d'eau (règle 28). Dans les ports belges, leurs rades et chenaux d'accès, le navire qui les porte, sur indication du pilote, est appelé navire de grandes dimensions : le Service du pilotage le considère comme tel en raison de sa longueur ou de son tirant d'eau par rapport à l'état du chenal. Les autres bâtiments doivent éviter sa route (art. 10 § 2).",
+"pg": "Cylindre de jour, trois rouges de nuit : navire de grandes dimensions. Évitez sa route.",
+"ref": "RIPAM règle 28 ; Règlement de police et de navigation mer territoriale, ports et plages (AR 4/08/1981), art. 3, 3°, art. 10 § 2 et art. 13 § 2"
 },
 {
 "id": "F28",
@@ -3188,7 +3189,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "Un navire qui pêche, au mouillage",
-"e": "Faux : un pêcheur montre le rouge AU-DESSUS du blanc."
+"e": "Faux : un navire qui pêche (autrement qu'au chalut) montre le rouge AU-DESSUS du blanc."
 },
 {
 "t": "Un bateau-pilote en service de pilotage, au mouillage",
@@ -3201,7 +3202,7 @@ window.KAM_QCM = {
 ],
 "b": 1,
 "ex": "Règle 29 a) : le bateau-pilote en service montre en tête de mât un feu blanc au-dessus d'un feu rouge, tout horizon. Au mouillage, il ajoute ses feux de mouillage.",
-"pg": "Pilote : « blanc sur rouge » (comme « le blanc couvre la tête »). Pêche : « rouge sur blanc ».",
+"pg": "Pilote : « blanc sur rouge » (comme « le blanc couvre la tête »). Pêche autre qu'au chalut : « rouge sur blanc » (chalutier : vert sur blanc).",
 "ref": "RIPAM règle 29 a)"
 },
 {
@@ -3307,22 +3308,22 @@ window.KAM_QCM = {
 "feux": [
 {
 "x": 100,
-"y": 25,
+"y": 20,
 "c": "vert"
 },
 {
 "x": 100,
-"y": 45,
+"y": 38,
 "c": "blanc"
 },
 {
 "x": 80,
-"y": 75,
+"y": 80,
 "c": "vert"
 },
 {
 "x": 120,
-"y": 75,
+"y": 80,
 "c": "rouge"
 }
 ],
@@ -3585,8 +3586,8 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règles 3 b) et c) : un voilier dont l'appareil propulsif est utilisé n'est plus un navire à voile, mais un navire à propulsion mécanique. Il montre donc les feux de la règle 23 : feu de tête de mât, feux de côté, feu de poupe. Le feu tricolore ne convient plus, car il n'y a pas de feu de mât en dessous.",
-"pg": "Moteur en route = navire à moteur, même avec les voiles. Allume ton feu de mât.",
+"ex": "Règles 3 b) et c) : un voilier dont l'appareil propulsif est utilisé n'est plus un navire à voile, mais un navire à propulsion mécanique. Il montre donc les feux de la règle 23 : feu de tête de mât, feux de côté, feu de poupe. Le feu tricolore ne convient plus : il est réservé aux voiliers (règle 25 b), et un navire à moteur doit avoir ses feux de côté plus bas que son feu de tête de mât (annexe I).",
+"pg": "Propulsé par le moteur = navire à moteur, même avec les voiles. Allume ton feu de mât.",
 "ref": "RIPAM règles 3 b) et c), et 23 a)"
 },
 {
@@ -3620,7 +3621,7 @@ window.KAM_QCM = {
 "q": "Par quoi un bateau à moteur de moins de 12 m peut-il remplacer son feu de tête de mât et son feu de poupe ?",
 "o": [
 {
-"t": "Par un feu jaune scintillant",
+"t": "Par un feu jaune à éclats",
 "e": "Faux : c'est le feu de l'aéroglisseur."
 },
 {
@@ -3665,7 +3666,7 @@ window.KAM_QCM = {
 "id": "F43",
 "cat": "F",
 "res": false,
-"q": "De nuit, ces feux d'un même navire viennent droit vers vous. Qu'est-ce que c'est ?",
+"q": "De nuit, ces feux d'un même navire de moins de 50 m viennent droit vers vous. Qu'est-ce que c'est ?",
 "d": {
 "t": "feux",
 "feux": [
@@ -3698,8 +3699,8 @@ window.KAM_QCM = {
 "e": "Faux : il montrerait deux feux rouges superposés, sans feu de mât."
 },
 {
-"t": "Un navire qui remorque, train de remorque de 200 m ou moins",
-"e": "Juste : règle 24 a) i)."
+"t": "Un navire qui remorque (train de remorque de 200 m ou moins), ou qui pousse ou remorque à couple",
+"e": "Juste : règle 24 a) i) et c) i)."
 },
 {
 "t": "Un navire qui remorque, train de remorque de plus de 200 m",
@@ -3708,7 +3709,7 @@ window.KAM_QCM = {
 ],
 "b": 1,
 "ex": "Règle 24 a) : un navire qui remorque montre deux feux de tête de mât superposés (trois si le train de remorque dépasse 200 m), ses feux de côté, son feu de poupe et, au-dessus de ce dernier, un feu de remorquage jaune.",
-"pg": "Compte les feux blancs superposés : deux = remorque courte, trois = remorque de plus de 200 m.",
+"pg": "Deux feux de mât serrés l'un au-dessus de l'autre (avec un feu jaune à l'arrière) = remorque de 200 m ou moins ; trois = plus de 200 m. Attention : un navire à moteur qui porte deux feux de mât (obligatoire à partir de 50 m, permis en dessous) les aligne aussi quand il vient droit sur vous, et le pousseur ou le navire qui remorque à couple montre aussi deux feux de mât superposés (règle 24 c), mais sans feu jaune.",
 "ref": "RIPAM règle 24 a)"
 },
 {
@@ -3731,7 +3732,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 24 e) : un navire ou objet remorqué montre ses feux de côté et son feu de poupe. Si le train de remorque dépasse 200 m, il montre de jour une marque bicône.",
+"ex": "Règle 24 e) : un navire ou objet remorqué (sauf un objet partiellement submergé et difficile à apercevoir, qui a ses propres feux, règle 24 g) montre ses feux de côté et son feu de poupe. Si le train de remorque dépasse 200 m, il montre de jour une marque bicône.",
 "pg": "Remorqué = comme un voilier : feux de côté et de poupe, sans feu de mât.",
 "ref": "RIPAM règle 24 e)"
 },
@@ -3768,38 +3769,38 @@ window.KAM_QCM = {
 "t": "feux",
 "feux": [
 {
-"x": 100,
-"y": 22,
+"x": 86,
+"y": 10,
 "c": "blanc"
 },
 {
-"x": 100,
-"y": 39,
+"x": 86,
+"y": 26,
 "c": "blanc"
 },
 {
-"x": 140,
-"y": 30,
+"x": 116,
+"y": 42,
 "c": "rouge"
 },
 {
-"x": 140,
-"y": 48,
+"x": 116,
+"y": 58,
 "c": "blanc"
 },
 {
-"x": 140,
-"y": 66,
+"x": 116,
+"y": 74,
 "c": "rouge"
 },
 {
-"x": 80,
-"y": 75,
+"x": 68,
+"y": 94,
 "c": "vert"
 },
 {
-"x": 120,
-"y": 75,
+"x": 132,
+"y": 94,
 "c": "rouge"
 }
 ],
@@ -3816,7 +3817,7 @@ window.KAM_QCM = {
 },
 {
 "t": "Qu'il cherche un pilote",
-"e": "Faux : il n'existe pas de feu pour demander un pilote."
+"e": "Faux : le RIPAM ne prévoit aucun feu pour demander un pilote."
 }
 ],
 "b": 1,
@@ -3835,13 +3836,13 @@ window.KAM_QCM = {
 {
 "x": 100,
 "y": 15,
-"c": "jaune",
-"s": true
+"c": "blanc"
 },
 {
 "x": 100,
 "y": 38,
-"c": "blanc"
+"c": "jaune",
+"s": true
 },
 {
 "x": 80,
@@ -3871,18 +3872,18 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
-"ex": "Règle 23 b) : un aéroglisseur utilisé en mode sans tirant d'eau montre, en plus des feux d'un navire à propulsion mécanique, un feu jaune scintillant visible sur tout l'horizon.",
-"pg": "Jaune scintillant = aéroglisseur : très rapide, attention.",
+"ex": "Règle 23 b) : un aéroglisseur utilisé en mode sans tirant d'eau montre, en plus des feux d'un navire à propulsion mécanique, un feu jaune à éclats (120 éclats ou plus par minute) visible sur tout l'horizon.",
+"pg": "Jaune à éclats = aéroglisseur : très rapide, attention.",
 "ref": "RIPAM règle 23 b)"
 },
 {
 "id": "F48",
 "cat": "F",
 "res": false,
-"q": "Quel feu montre un navire à effet de surface (de type « wing in ground ») au décollage, à l'atterrissage et en vol près de la surface ?",
+"q": "Quel feu montre un navion (navire à effet de surface, de type « wing in ground ») au décollage, à l'atterrissage et en vol près de la surface ?",
 "o": [
 {
-"t": "Un feu jaune scintillant",
+"t": "Un feu jaune à éclats",
 "e": "Faux : c'est l'aéroglisseur."
 },
 {
@@ -3890,12 +3891,12 @@ window.KAM_QCM = {
 "e": "Faux : c'est le déminage."
 },
 {
-"t": "Un feu rouge à éclats de haute intensité, visible sur tout l'horizon",
+"t": "Un feu rouge à éclats de forte intensité, visible sur tout l'horizon",
 "e": "Juste : règle 23 c)."
 }
 ],
 "b": 2,
-"ex": "Règle 23 c) : un navire à effet de surface montre, au décollage, à l'atterrissage et en vol près de la surface, en plus des feux de la règle 23 a), un feu rouge à éclats de haute intensité visible sur tout l'horizon.",
+"ex": "Règle 23 c) : un navion (navire à effet de surface) montre, au décollage, à l'atterrissage et en vol près de la surface, en plus des feux de la règle 23 a), un feu rouge à éclats de forte intensité visible sur tout l'horizon.",
 "pg": "Rouge à éclats puissant = engin qui « vole » au ras de l'eau.",
 "ref": "RIPAM règle 23 c)"
 },
@@ -3955,7 +3956,7 @@ window.KAM_QCM = {
 "o": [
 {
 "t": "5 milles",
-"e": "Juste : règle 34 b) iii) et annexe I."
+"e": "Juste : règle 34 b) iii)."
 },
 {
 "t": "1 mille",
@@ -3969,7 +3970,7 @@ window.KAM_QCM = {
 "b": 0,
 "ex": "Règle 34 b) : le feu utilisé pour ces signaux est un feu blanc visible sur tout l'horizon, à une distance d'au moins 5 milles. Entre deux signaux successifs, il faut au moins 10 secondes.",
 "pg": "Feu de manœuvre : blanc, tout horizon, 5 milles.",
-"ref": "RIPAM règle 34 b) et annexe I"
+"ref": "RIPAM règle 34 b) (emplacement du feu : annexe I, section 12)"
 },
 {
 "id": "F52",
@@ -3999,7 +4000,7 @@ window.KAM_QCM = {
 "id": "F53",
 "cat": "F",
 "res": false,
-"q": "Pour attirer l'attention d'un autre navire de nuit, pouvez-vous braquer votre projecteur sur lui ?",
+"q": "Pour attirer l'attention d'un autre navire de nuit, pouvez-vous braquer votre projecteur dans les yeux de sa passerelle ?",
 "o": [
 {
 "t": "Oui, en le visant à la passerelle",
@@ -4087,7 +4088,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 30 e) : un navire de moins de 7 m au mouillage n'est pas tenu de montrer les feux de mouillage s'il n'est pas dans un chenal étroit, un chenal d'accès, une zone de mouillage ou un endroit où naviguent habituellement d'autres navires.",
+"ex": "Règle 30 e) : un navire de moins de 7 m au mouillage n'est pas tenu de montrer les feux de mouillage s'il n'est pas dans un chenal étroit, un chenal d'accès ou une zone de mouillage, ni à proximité, ni à un endroit où naviguent habituellement d'autres navires.",
 "pg": "Dispense limitée : dès qu'il y a du passage ou un mouillage, allume le feu.",
 "ref": "RIPAM règle 30 e)"
 },
@@ -4110,7 +4111,7 @@ window.KAM_QCM = {
 "c": "blanc"
 },
 {
-"x": 55,
+"x": 68,
 "y": 74,
 "c": "rouge"
 }
@@ -4225,7 +4226,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
-"ex": "Règle 20 b) : pendant que les feux prescrits sont allumés, aucun autre feu ne doit être montré, sauf des feux qui ne peuvent pas être confondus avec eux, ne diminuent pas leur visibilité ou leur caractère distinctif et ne gênent pas la veille.",
+"ex": "Règle 20 b) : du coucher au lever du soleil, aucun autre feu ne doit être montré, sauf des feux qui ne peuvent pas être confondus avec eux, ne diminuent pas leur visibilité ou leur caractère distinctif et ne gênent pas la veille.",
 "pg": "Éclairage de cockpit ou de pont : oui, s'il n'éblouit pas et ne ressemble pas à un feu de navigation.",
 "ref": "RIPAM règle 20 b)"
 },
