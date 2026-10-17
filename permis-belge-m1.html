@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v14 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v15 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -4095,7 +4095,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   </table>
   <div class="def">
     <p class="term">Avec quoi, et quand</p>
-    <p>Avec un <b>avertisseur mécanique</b> placé assez haut sur un grand bateau motorisé, ou sur une menue embarcation motorisée équipée d'un radar ; avec une <b>trompe ou une corne</b> sur un grand bateau non motorisé et sur une menue embarcation motorisée sans radar. <b>Uniquement dans les cas prévus par le règlement</b> : les autres signaux sonores sont <b>interdits</b>, sauf pour communiquer entre bateaux ou avec la terre, et à condition qu'ils ne prêtent pas à confusion.</p>
+    <p>Avec un <b>avertisseur mécanique</b> placé assez haut sur un grand bateau motorisé, ou sur une menue embarcation motorisée équipée d'un radar ; avec une <b>trompe ou une corne</b> appropriée sur un bateau non motorisé et sur une menue embarcation motorisée qui n'a pas d'avertisseur mécanique. <b>Uniquement dans les cas prévus par le règlement</b> : les autres signaux sonores sont <b>interdits</b>, sauf pour communiquer entre bateaux ou avec la terre, et à condition qu'ils ne prêtent pas à confusion.</p>
     <p class="why">Un grand bateau motorisé qui émet un signal sonore doit en même temps montrer un <b>feu jaune clair</b> visible de tous les côtés — sauf pour les coups de cloche. Une menue embarcation en est dispensée.</p>
   </div>
   <div class="keep">
@@ -4407,7 +4407,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 
   <div class="qcm" data-cat="Signaux de manœuvre" data-bonne="C" data-hors>
     <p class="qn">QCM 129</p>
-    <p class="qt">Tu sors d'un port et tu vas te diriger vers tribord. Tu émets :</p>
+    <p class="qt">Tu conduis un grand bateau. Tu sors d'un port et tu vas te diriger vers tribord. Tu émets :</p>
     <div class="choix">
       <button type="button" data-l="A"><span class="l">A</span><span>un son bref</span></button>
       <button type="button" data-l="B"><span class="l">B</span><span>un son prolongé et un son bref</span></button>
@@ -6463,8 +6463,8 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     images: [
       { cap: "Tu quittes ton poste <b>sans virer</b>, en venant sur tribord : le signal de manœuvre ordinaire suffit — <b>un son bref</b>.",
         d: 1300, etat: { x: 150, y: 100, son: "·", dire: "je quitte mon poste vers tribord" } },
-      { cap: "Un bateau vient en face et ta route va le gêner : tu annonces un <b>virage sur tribord</b> — <b>un prolongé, un bref</b>.",
-        d: 1400, etat: { x: 230, y: 118, r: 20, son: "— ·", dire: "je vais virer sur tribord" } },
+      { cap: "Un bateau vient en face et tu dois t'écarter : tu viens sur tribord — <b>un son bref</b>. (Virer, au sens du règlement, c'est faire demi-tour : un prolongé, un bref pour tribord.)",
+        d: 1400, etat: { x: 230, y: 118, r: 20, son: "·", dire: "je viens sur tribord" } },
       { cap: "Le port s'ouvre à ta droite. Pour y entrer en tournant vers tribord : <b>trois prolongés, un bref</b>. Et si tu étais avalant, tu céderais la priorité au montant qui veut entrer dans le même port.",
         d: 1700, etat: { x: 330, y: 150, r: 60, son: "— — — ·", dire: "j'entre vers tribord" } },
       { cap: "Tu es dans le port.",
@@ -6491,7 +6491,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     var barres = fig.querySelector("#br-barres");
     var txt = fig.querySelector("#br-txt");
     var cap = document.getElementById("br-cap");
-    var X0 = 130, LARG = 280, ECH = LARG / 60;   /* soixante secondes sur la ligne */
+    var X0 = 130, LARG = 260, ECH = LARG / 60;   /* soixante secondes sur la ligne */
     function barre(t, d, cls){
       return '<rect class="' + (cls || "sn-bar on") + '" x="' + (X0 + t * ECH).toFixed(1) + '" y="40" width="'
            + Math.max(2, d * ECH).toFixed(1) + '" height="26" rx="2"/>';
@@ -6506,13 +6506,13 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         svg: [0, 0.6, 1.2, 1.8, 2.4, 3.0].map(function(t){ return barre(t, 0.3); }).join("")
            + [60, 60.6, 61.2].map(function(t){ return barre(t, 0.3, "sn-bar"); }).join("")
            + '<line x1="' + X0 + '" y1="74" x2="' + (X0 + LARG) + '" y2="74" class="s-axe"/>',
-        txt: "cloche (ou radio), silence… et ainsi de suite",
+        txt: "cloche (ou radio), puis silence…",
         t: "<b>À l'arrêt dans le chenal ou près de lui</b>, hors des ports — ou échoué à un endroit dangereux. À l'écoute sur la voie de bateau à bateau ; dès qu'un bateau s'approche, ta <b>position par radio</b> ou une <b>volée de cloche</b>, répétée à intervalles d'une minute au plus."
       },
       radar: {
         svg: (function(){
           var s = "";
-          for(var t = 0; t < 60; t += 15){ s += barre(t, 4); }
+          s += barre(0, 4);
           return s + '<line x1="' + X0 + '" y1="74" x2="' + (X0 + LARG) + '" y2="74" class="s-axe"/>';
         })(),
         txt: "un prolongé, aussi souvent que nécessaire",
