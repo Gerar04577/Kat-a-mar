@@ -647,7 +647,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v21 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v22 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -4673,7 +4673,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <div class="corr" hidden><p class="verdict"></p><ul>
       <li class="ok"><b>A</b> — juste : au moins six sons d'un quart de seconde, comme le dit le manuel et l'appendice 6.</li>
       <li class="ko"><b>B</b> — la détresse, ce sont des prolongés.</li>
-      <li class="ko"><b>C</b> — « N'approchez pas », c'est bref-prolongé répétés, un quart d'heure durant.</li>
+      <li class="ko"><b>C</b> — « N'approchez pas », c'est bref-prolongé répétés sans interruption pendant au moins 15 minutes.</li>
     </ul></div>
     <p class="cat">Catégorie : brume et avertissement</p>
   </div>
@@ -6356,10 +6356,10 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     { k:"arriere",    l:"· · · Je bats en arrière",    s:"BBB",   t:"<b>Je bats en arrière.</b> Trois brefs : a<b>rr</b>iè<b>r</b>e, trois « r »." },
     { k:"incapable",  l:"· · · · Incapable de manœuvrer", s:"BBBB", t:"<b>Je suis incapable de manœuvrer.</b> IN-CA-PA-BLE, quatre syllabes. C'est un signal général : une menue embarcation peut l'émettre si nécessaire." },
     { k:"danger",     l:"Série de très brefs — danger", s:"TTTTTTTT", t:"<b>Danger imminent d'abordage.</b> Une série d'<b>au moins six</b> sons très brefs, d'un quart de seconde chacun. Tout conducteur qui constate un danger d'abordage doit l'émettre." },
-    { k:"virert",     l:"— · Je vire sur tribord",     s:"PB",    t:"<b>Je vais virer sur tribord.</b> Un prolongé pour le virage, un bref pour le côté. Interdit aux menues embarcations." },
-    { k:"virerb",     l:"— · · Je vire sur bâbord",    s:"PBB",   t:"<b>Je vais virer sur bâbord.</b> Un prolongé, deux brefs. Interdit aux menues embarcations." },
-    { k:"depb",       l:"— — · · Je dépasse à bâbord", s:"PPBB",  t:"<b>Je veux dépasser à votre bâbord.</b> Deux prolongés pour le dépassement, deux brefs pour bâbord. Entre grands bateaux seulement — hors examen." },
-    { k:"dept",       l:"— — · Je dépasse à tribord",  s:"PPB",   t:"<b>Je veux dépasser à votre tribord.</b> Deux prolongés, un bref. Entre grands bateaux seulement — hors examen." },
+    { k:"virert",     l:"— · Je vais virer sur tribord",     s:"PB",    t:"<b>Je vais virer sur tribord.</b> Un prolongé pour le virage, un bref pour le côté. Interdit aux menues embarcations." },
+    { k:"virerb",     l:"— · · Je vais virer sur bâbord",    s:"PBB",   t:"<b>Je vais virer sur bâbord.</b> Un prolongé, deux brefs. Interdit aux menues embarcations." },
+    { k:"depb",       l:"— — · · Je veux dépasser à votre bâbord", s:"PPBB",  t:"<b>Je veux dépasser à votre bâbord.</b> Deux prolongés pour le dépassement, deux brefs pour bâbord. Entre grands bateaux seulement — hors examen." },
+    { k:"dept",       l:"— — · Je veux dépasser à votre tribord",  s:"PPB",   t:"<b>Je veux dépasser à votre tribord.</b> Deux prolongés, un bref. Entre grands bateaux seulement — hors examen." },
     { k:"refus",      l:"· · · · · Dépassement impossible", s:"BBBBB", t:"<b>On ne peut pas me dépasser.</b> Cinq brefs : le refus du rattrapé. Entre grands bateaux seulement — hors examen." },
     { k:"entret",     l:"— — — · J'entre / je sors vers tribord", s:"PPPB", t:"<b>Pour entrer, ou après la sortie, je me dirige sur tribord.</b> Trois prolongés, un bref. Hors examen ; interdit aux menues embarcations." },
     { k:"entreb",     l:"— — — · · J'entre / je sors vers bâbord", s:"PPPBB", t:"<b>Pour entrer, ou après la sortie, je me dirige sur bâbord.</b> Trois prolongés, deux brefs. Hors examen ; interdit aux menues embarcations." },
@@ -6394,7 +6394,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         sons.push([t, d, s.charAt(i)]);
         t += d + (i + 1 < s.length ? silence(s.charAt(i)) : 0);
       }
-      return { sons: sons, total: Math.max(t, 1) };
+      return { sons: sons, total: Math.max(t, 4) };
     }
     function bip(debut, duree){
       /* Un son, par WebAudio — seulement si le navigateur le permet. */
