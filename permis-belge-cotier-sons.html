@@ -90,7 +90,7 @@ h3{font-size:15px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Signaux sonores qui se ressemblent</h1>
-  <span class="ver">version 2.7 · permis côtier · RIPAM</span>
+  <span class="ver">version 2.8 · permis côtier · RIPAM</span>
 </header>
 
 <div class="bar" role="group" aria-label="Mode">
@@ -142,7 +142,7 @@ var FAM = [
    key:["Compte les brefs : <b>1 = tribord, 2 = bâbord, 3 = machine arrière</b>.","<b>5 brefs ou plus, rapides</b> = doute : « je ne comprends pas vos intentions », ou « je doute que vous manœuvriez assez pour éviter l'abordage », quel que soit le navire en vue qui l'émet."],
    rows:[ {c:"b", s:"Je viens sur tribord", q:"navire à moteur en vue qui manœuvre", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
           {c:"bb", s:"Je viens sur bâbord", q:"navire à moteur en vue qui manœuvre", hl:[1], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
-          {c:"bbb", s:"Je bats en arrière (machine en arrière)", q:"il peut encore avancer sur son erre", hl:[2], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
+          {c:"bbb", s:"Je bats en arrière (machine en arrière)", q:"navire à moteur en vue qui manœuvre ; il peut encore avancer sur son erre", hl:[2], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
           {c:"qqqqq", s:"Doute : je ne comprends pas vos intentions, ou je doute que vous manœuvriez assez", q:"au moins 5 brefs, rapides (plus serrés que les brefs de manœuvre) ; tout navire en vue qui en approche un autre", hl:[0,1,2,3,4], tag:"5 ou plus, rapides", quiz:"Un navire en vue qui s'approche de vous émet ce signal. Que veut-il dire ?"} ],
    pieges:["Au RIPAM, il n'y a pas de signal de manœuvre à 4 brefs (règle 34). Sur l'Escaut maritime inférieur (règlement belge), si : un bateau en route qui manœuvre pour éviter un bateau en vue annonce par 4 brefs « je ne suis pas maître de ma manœuvre » (art. 34 § 1 ; les petites embarcations, moins de 20 m sauf remorqueurs et pousseurs, ne sont pas tenues de faire ces signaux de manœuvre, mais peuvent les faire). Par visibilité réduite, un bateau-pilote en service peut ajouter 4 brefs d'identité à son signal de brume (fiche Brume).","3 brefs ne sont pas SOS : SOS, c'est 3 courts, puis 3 longs, puis 3 courts.","2 brefs seuls = « je viens sur bâbord » ; 2 prolongés suivis de 2 brefs = « je compte vous rattraper par VOTRE bâbord » (fiche Chenal étroit)."],
    src:"RIPAM règle 34 a), c) et d), 35 k) et annexe IV ; Escaut maritime inférieur, art. 34 § 1" },
@@ -153,7 +153,7 @@ var FAM = [
           {c:"L", s:"Brume : navire à moteur qui a de l'erre", q:"répété au moins une fois toutes les 2 minutes", tag:"même son, autre contexte", quiz:"Par brume, vous entendez ce signal au moins une fois toutes les 2 minutes. Qui l'émet ?"},
           {c:"LPL", s:"Brume : navire à moteur stoppé, sans erre", q:"répété au moins une fois toutes les 2 minutes ; environ 2 s entre les deux prolongés", hl:[1], tag:"+1 prolongé", quiz:"Par brume, vous entendez ce signal au moins une fois toutes les 2 minutes. Qui l'émet ?"} ],
    pieges:["Stoppé n'est pas au mouillage : au mouillage, c'est en principe la cloche (fiche Mouillage ; exceptions : navire en train de pêcher ou à capacité restreinte qui travaille au mouillage = prolongé + 2 brefs).","Un voilier qui utilise son moteur (même voiles hissées) compte comme un navire à moteur : par brume, un prolongé (deux s'il est stoppé, sans erre), pas « prolongé + 2 brefs ».","Un pousseur et le bateau qu'il pousse devant lui, accouplés de façon rigide (unité composite), comptent aussi comme un navire à moteur."],
-   src:"RIPAM règles 3 b) et c), 34 e), 35 a), b) et f)" },
+   src:"RIPAM règles 3 b) et c), 34 e), 35 a), b), d), f) et g)" },
 
  { id:"brume", nom:"Brume : un prolongé suivi de brefs", intro:"Par visibilité réduite (dans la brume ou près d'elle), au moins une fois toutes les 2 minutes : compte les brefs qui suivent le prolongé (les 4 brefs du pilote sont un signal à part, facultatif).",
    key:["<b>Prolongé + 2 brefs</b> : voilier sous voiles, navire en train de pêcher, pas maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, navire qui remorque ou qui pousse (sauf pousseur et bateau poussé devant lui, accouplés de façon rigide : signal d'un navire à moteur).","<b>Prolongé + 3 brefs</b> : le navire remorqué (le dernier du train, s'il a un équipage), si possible juste après le signal du remorqueur.","<b>4 brefs</b>, en plus de son signal normal (le RIPAM ne fixe pas le moment) : identité du bateau-pilote en service (facultatif)."],
@@ -169,7 +169,7 @@ var FAM = [
           {c:"LLbb", s:"Je compte vous rattraper par votre bâbord", q:"le navire qui veut dépasser", hl:[3], tag:"+1 bref", quiz:"Dans un chenal étroit, un navire qui vous suit émet ce signal. Que veut-il ?"},
           {c:"LbLb", s:"D'accord, vous pouvez me dépasser", q:"le navire rattrapé", hl:[1,2], tag:"prolongé et bref alternés", quiz:"Dans un chenal étroit, le navire que vous voulez dépasser répond par ce signal. Que dit-il ?"},
           {c:"qqqqq", s:"Je doute", q:"le navire rattrapé peut l'émettre s'il a un doute", tag:"5 brefs ou plus", hl:[0,1,2,3,4]} ],
-   pieges:["Même avec l'accord, le navire qui dépasse reste tenu de s'écarter de la route du navire dépassé (règle 13). Le navire dépassé, s'il est d'accord, manœuvre pour permettre un dépassement sans danger (règle 9 e).","2 prolongés + 2 brefs ≠ 2 brefs seuls (« je viens sur bâbord »)."],
+   pieges:["Même avec l'accord, le navire qui dépasse reste tenu de s'écarter de la route du navire dépassé (règles 9 e) ii) et 13). Le navire dépassé, s'il est d'accord, manœuvre pour permettre un dépassement sans danger (règle 9 e).","2 prolongés + 2 brefs ≠ 2 brefs seuls (« je viens sur bâbord »)."],
    src:"RIPAM règles 34 c) et d), 9 e) et 13" },
 
  { id:"cloche", nom:"Mouillage ou échoué (brume)", intro:"La cloche veut dire : ce navire est au mouillage ou échoué. Elle sonne au moins une fois par minute.",
@@ -177,7 +177,7 @@ var FAM = [
    rows:[ {c:"C", s:"Brume : navire au mouillage (moins de 100 m)", q:"tintement rapide environ 5 s, au moins une fois par minute", quiz:"Par brume, vous entendez ce signal au moins une fois par minute. Qui est-ce ?", sans:["Signal au sifflet « · — · » : « attention, je suis là, risque d'abordage »"]},
           {c:"CG", s:"Brume : navire de 100 m ou plus au mouillage", q:"cloche à l'avant, puis aussitôt gong à l'arrière", hl:[1], tag:"+ gong", quiz:"Par brume, vous entendez la cloche, puis aussitôt ce gong. Qui est-ce ?", sans:["Signal au sifflet « · — · » : « attention, je suis là, risque d'abordage »"]},
           {c:"xxxCxxx", s:"Brume : navire échoué (moins de 100 m)", q:"3 coups distincts juste avant et juste après la cloche (sans gong : moins de 100 m)", hl:[0,1,2,4,5,6], tag:"3 coups avant et après", quiz:"Par brume, vous entendez ce signal. Que signale-t-il ?", sans:["Signal au sifflet « · — · » : « attention, je suis là, risque d'abordage »"]},
-          {c:"bLb", s:"Signal au sifflet « · — · » : « attention, je suis là, risque d'abordage »", q:"facultatif : donné par un navire au mouillage : au sifflet, en plus de la cloche, quand un navire approche", hl:[0,1,2], tag:"au sifflet", quiz:"Par brume, un navire au mouillage, dont vous entendez déjà la cloche, vous lance ce signal au sifflet quand vous approchez. Que veut dire ce signal au sifflet ?", sans:["Brume : navire au mouillage (moins de 100 m)"]} ],
+          {c:"bLb", s:"Signal au sifflet « · — · » : « attention, je suis là, risque d'abordage »", q:"facultatif : un navire au mouillage peut le donner au sifflet, en plus de la cloche, quand un navire approche", hl:[0,1,2], tag:"au sifflet", quiz:"Par brume, un navire au mouillage, dont vous entendez déjà la cloche, vous lance ce signal au sifflet quand vous approchez. Que veut dire ce signal au sifflet ?", sans:["Brume : navire au mouillage (moins de 100 m)"]} ],
    pieges:["De 12 m à moins de 20 m, un navire n'est pas tenu de sonner la cloche ; sous 12 m, il n'est tenu à aucun des signaux de brume de la règle 35. Dans les deux cas, s'il ne les fait pas, il émet un autre signal sonore efficace au moins une fois toutes les 2 minutes.","« · — · » (au mouillage) ressemble à l'accord de dépassement « — · — · » : compte bien.","Le navire en train de pêcher au mouillage et le navire à capacité restreinte qui travaille au mouillage ne sonnent pas la cloche : prolongé + 2 brefs."],
    src:"RIPAM règle 35 d), g), h), i) et j)" },
 
@@ -188,7 +188,7 @@ var FAM = [
           {c:"X~X", s:"Détresse : coup de canon toutes les minutes environ", q:"ou autre signal explosif", quiz:"Vous entendez une détonation, puis une autre environ une minute plus tard. Quel est ce signal ?"},
           {c:"L", s:"Un prolongé : PAS de la détresse", q:"il s'arrête au bout de 4 à 6 s", non:true},
           {c:"bbb", s:"Trois brefs : PAS SOS (machine en arrière)", q:"sans les trois longs du milieu", non:true},
-          {c:"qqqqq", s:"Cinq brefs rapides : PAS de la détresse (doute)", q:"« je ne comprends pas vos intentions » ou « je doute que vous manœuvriez assez »", non:true} ],
+          {c:"qqqqq", s:"Au moins cinq brefs rapides : PAS de la détresse (doute)", q:"« je ne comprends pas vos intentions » ou « je doute que vous manœuvriez assez »", non:true} ],
    pieges:["Ne confondez pas un prolongé (4 à 6 s) avec le son continu.","Ces signaux ne s'emploient que pour demander du secours. Il est aussi interdit d'émettre un signal qui pourrait être confondu avec eux."],
    src:"RIPAM règle 37 et annexe IV" },
 
@@ -196,7 +196,7 @@ var FAM = [
    key:["Écoutez d'abord <b>par quoi le signal commence</b> (bref ou prolongé), puis <b>comptez</b>."],
    rows:[ {c:"bb", s:"Je viens sur bâbord", q:"2 brefs seuls", paire:"2 brefs, ou 2 prolongés + 2 brefs ?"},
           {c:"LLbb", s:"Je compte vous rattraper par votre bâbord", q:"commence par 2 prolongés", hl:[0,1], tag:"2 prolongés devant"},
-          {c:"bLb", s:"Au mouillage : « attention, je suis là »", q:"commence par un bref", paire:"· — · ou — · — · ?"},
+          {c:"bLb", s:"Au mouillage, par brume : « attention, je suis là, risque d'abordage »", q:"commence par un bref", paire:"· — · ou — · — · ?"},
           {c:"LbLb", s:"D'accord pour être dépassé", q:"commence par un prolongé, 4 sons", hl:[0], tag:"+1 prolongé devant"},
           {c:"bbb", s:"Machine en arrière", q:"3 brefs, puis rien", paire:"3 brefs ou SOS ?"},
           {c:"TTTDDDTTT", s:"SOS", q:"morse : 3 courts, 3 longs, 3 courts, d'un seul groupe ; ce sont les 3 longs du milieu qui le distinguent de 3 brefs", hl:[3,4,5], tag:"morse : 3 longs au milieu"},
@@ -233,7 +233,7 @@ function svgLigne(code, hl, id, chiffres){
   var p = plan(code), s = "", n = 0, W = TMAX * U;
   for(var g = 0; g <= TMAX; g++) s += '<line x1="' + g*U + '" y1="22" x2="' + g*U + '" y2="' + (g % 5 === 0 ? 27 : 25) + '" class="s-rule" stroke-width="' + (g % 5 === 0 ? 1.2 : .7) + '"/>';
   s += '<line x1="0" y1="22" x2="' + W + '" y2="22" class="s-rule" stroke-width=".7"/>';
-  if(chiffres) s += '<text x="0" y="34" font-size="6" class="f-mu">0 s</text><text x="' + 5*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">5 s</text><text x="' + 10*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">10 s</text><text x="' + W + '" y="34" font-size="6" text-anchor="end" class="f-mu">16 s</text>';
+  if(chiffres) s += '<text x="0" y="34" font-size="6" class="f-mu">0 s</text><text x="' + 5*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">5 s</text><text x="' + 10*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">10 s</text><text x="' + 15*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">15 s</text>';
   p.seq.forEach(function(e, i){
     var x = e.s * U, w = e.d * U, h = (hl || []).indexOf(i) >= 0;
     var cl = h ? "f-hl" : "f-horn";
