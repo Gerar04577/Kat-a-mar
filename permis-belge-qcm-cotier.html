@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.20 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.21 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -2035,6 +2035,73 @@ window.KAM_IMG = {};
     return s + "</svg>";
   }
 
+
+  /* ---------------------------------------------- schéma des trois nords
+     d = { t:"nords", cc: cap (ou relèvement, z:true) compas, dev: déviation (E = +), dm: déclinaison (E = +), der: dérive (tribord = +) }
+     dev, dm et der sont facultatifs. Les petits angles sont exagérés pour être visibles. */
+  function nords(d){
+    var cx = 170, cy = 150, R = 112, s = "";
+    function vis(v){ return v ? (v > 0 ? 1 : -1) * Math.min(Math.max(Math.abs(v) * 5, 8), 25) : 0; }
+    function pt(a, r){ var k = a * Math.PI / 180; return [(cx + r * Math.sin(k)).toFixed(1), (cy - r * Math.cos(k)).toFixed(1)]; }
+    function arc(a1, a2, r, coul, w){
+      var p1 = pt(a1, r), p2 = pt(a2, r), dd = ((a2 - a1) % 360 + 360) % 360, sweep = 1;
+      if(dd > 180 && Math.abs(a2 - a1) < 90){ dd = 360 - dd; sweep = 0; }
+      return '<path d="M' + p1[0] + " " + p1[1] + " A" + r + " " + r + " 0 " + (dd > 180 ? 1 : 0) + " " + sweep + " " + p2[0] + " " + p2[1]
+           + '" fill="none" stroke="' + coul + '" stroke-width="' + (w || 2.4) + '"/>';
+    }
+    function ligne(a, r, coul, tiret, w){ var p = pt(a, r); return '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="' + coul + '" stroke-width="' + (w || 2) + '"' + (tiret ? ' stroke-dasharray="6 4"' : "") + "/>"; }
+    function t3(x, y, txt, coul, anc, taille){ return '<text x="' + x + '" y="' + y + '" font-size="' + (taille || 12) + '" text-anchor="' + (anc || "middle") + '" fill="' + coul + '" style="fill:' + coul + '" font-family="Source Sans 3, Arial, sans-serif" font-weight="700">' + txt + "</text>"; }
+    function deg(v){ v = ((v % 360) + 360) % 360; return ("00" + v).slice(-3) + "°"; }
+    function sg(v, e, w){ return (v > 0 ? "+" : "−") + Math.abs(v) + "° (" + (v > 0 ? e : w) + ")"; }
+    var BLEU = "#1f5fbf", VERT = "#1e8a3a", NOIR = "#000", ROUGE = "#d0021b", ORANGE = "#d97a00";
+    var aNv = 0, aNm = vis(d.dm || 0), aNc = aNm + vis(d.dev || 0);
+    if(d.dm === undefined){ aNm = 0; aNc = vis(d.dev || 0); }
+    var aCap = aNc + d.cc, aRs = aCap + vis(d.der || 0);
+    var cm = d.cc + (d.dev || 0), cv = cm + (d.dm || 0), rs = cv + (d.der || 0);
+    var L = d.z ? "Z" : "C", quoi = d.z ? "relèvement" : "cap";
+    var capEst = (((aCap % 360) + 360) % 360) < 180;
+    /* rose discrète */
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="none" stroke="#bbb" stroke-width="1" stroke-dasharray="2 4"/>';
+    /* les nords */
+    var N = [];
+    if(d.dm !== undefined) N.push({ a:aNv, c:NOIR, n:"Nv", l:"Nord vrai" });
+    N.push({ a:aNm, c:VERT, n:"Nm", l:"Nord magnétique" });
+    if(d.dev !== undefined) N.push({ a:aNc, c:BLEU, n:"Nc", l:"Nord compas" });
+    N.forEach(function(o){ s += ligne(o.a, R + 6, o.c, false, 2.2); o.x = Number(pt(o.a, R + 18)[0]); o.y = Number(pt(o.a, R + 18)[1]) + 4; });
+    /* étiquettes écartées quand deux nords sont proches */
+    var tri = N.slice().sort(function(a, b){ return a.x - b.x; });
+    for(var it = 0; it < 6; it++) for(var j = 1; j < tri.length; j++){
+      var g = tri[j].x - tri[j - 1].x; if(g < 26){ tri[j].x += (26 - g) / 2; tri[j - 1].x -= (26 - g) / 2; }
+    }
+    N.forEach(function(o){ s += t3(o.x.toFixed(1), Math.min(o.y, cy - R - 10), o.n, o.c, "middle", 13); });
+    /* les écarts entre nords, près du haut */
+    var mins = Math.min.apply(null, N.map(function(o){ return o.a; })), maxs = Math.max.apply(null, N.map(function(o){ return o.a; }));
+    function ecart(a1, a2, r, txt, coul){
+      var y = Number(pt((a1 + a2) / 2, r)[1]) + 4, x = capEst ? Number(pt(mins, r)[0]) - 8 : Number(pt(maxs, r)[0]) + 8;
+      return arc(Math.min(a1, a2), Math.max(a1, a2), r, coul, 3) + t3(x, y, txt, coul, capEst ? "end" : "start", 12);
+    }
+    if(d.dm !== undefined && d.dm) s += ecart(aNv, aNm, 72, "D " + sg(d.dm, "E", "W"), VERT);
+    if(d.dev) s += ecart(aNm, aNc, 96, "Dév " + sg(d.dev, "E", "W"), BLEU);
+    /* le cap, et les angles mesurés depuis chaque nord */
+    var arcs = [];
+    if(d.dev !== undefined) arcs.push({ a:aNc, r:26, c:BLEU, l:L + "c = " + deg(d.cc) + " : lu au compas (compté depuis Nc)" });
+    arcs.push({ a:aNm, r:38, c:VERT, l:L + "m = " + deg(cm) + " : compté depuis le Nord magnétique" });
+    if(d.dm !== undefined) arcs.push({ a:aNv, r:50, c:NOIR, l:L + "v = " + deg(cv) + " : compté depuis le Nord vrai" });
+    arcs.forEach(function(o){ s += arc(o.a, aCap, o.r, o.c, 2.4); });
+    if(d.der){ s += ligne(aRs, R, ORANGE, true, 2.4) + arc(Math.min(aCap, aRs), Math.max(aCap, aRs), R - 14, ORANGE, 3);
+      var pr = pt(aRs, R + 14); s += t3(pr[0], Number(pr[1]) + 4, "Rs", ORANGE, "middle", 13); }
+    var tip = pt(aCap, R), b1 = pt(aCap - 4, R - 14), b2 = pt(aCap + 4, R - 14);
+    s += ligne(aCap, R - 10, ROUGE, false, 3.4) + '<path d="M' + tip[0] + " " + tip[1] + " L" + b1[0] + " " + b1[1] + " L" + b2[0] + " " + b2[1] + ' Z" fill="' + ROUGE + '"/>';
+    var pc = pt(aCap, R + 16); s += t3(pc[0], Number(pc[1]) + 4, d.z ? "amer" : "cap", ROUGE, "middle", 13);
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#000"/>';
+    /* légende */
+    var y = cy + R + 34;
+    arcs.forEach(function(o){ s += '<line x1="14" y1="' + (y - 4) + '" x2="34" y2="' + (y - 4) + '" stroke="' + o.c + '" stroke-width="3"/>' + t3(40, y, o.l, o.c, "start", 11.5); y += 18; });
+    if(d.der){ s += '<line x1="14" y1="' + (y - 4) + '" x2="34" y2="' + (y - 4) + '" stroke="' + ORANGE + '" stroke-width="3" stroke-dasharray="6 4"/>'
+                 + t3(40, y, "Rs = " + deg(rs) + " : route surface, dérive " + sg(d.der, "tribord", "bâbord"), ORANGE, "start", 11.5); y += 18; }
+    s += t3(170, y + 4, "Les petits angles sont agrandis pour être visibles.", "#555", "middle", 10.5);
+    return '<svg viewBox="0 0 340 ' + (y + 14) + '" class="qz-svg qz-off" role="img"><rect width="340" height="' + (y + 14) + '" fill="#fff"/>' + s + "</svg>";
+  }
   function dessiner(d){
     if(!d) return "";
     switch(d.t){
@@ -2065,6 +2132,7 @@ window.KAM_IMG = {};
       case "hom":    return hom(d);
       case "vhf":    return vhf(d);
       case "trianglefeu":return triangleFeu(d);
+      case "nords":  return nords(d);
       default: return "";
     }
   }
@@ -7891,6 +7959,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
+"dex": {"t":"nords","cc":230,"dev":-4,"dm":1},
 "ex": "Dév = −4° (Ouest), D = +1° (Est). Cm = 230 − 4 = 226° ; Cv = 226 + 1 = 227°.",
 "pg": "Est = plus, Ouest = moins (« Est-ce plus ? Ouest-ce moins ? »). Du compas vers le vrai, on applique les corrections avec leur signe : Cv = Cc + Dév + D.",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Navigation de base : Cc, Cm, Cv ; déclinaison (D) et déviation (Dév) » · Manuel : T2 p. 21"
@@ -7915,6 +7984,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
+"dex": {"t":"nords","cc":89,"dev":3,"dm":-2},
 "ex": "Du vrai vers le compas, on inverse les signes : Cm = Cv − D = 090 − (−2) = 092° ; Cc = Cm − Dév = 092 − 3 = 089°.",
 "pg": "Vérifie toujours dans l'autre sens : 089 + 3 (Dév) = 092 ; 092 − 2 (D) = 090 ✓. Le manuel dit : du vrai au compas, « inverser le signe ».",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Navigation de base : Cc, Cm, Cv ; déclinaison (D) et déviation (Dév) » ; Matière d'examen, Navigation (complément brevet général) : « Navigation de base – planning du voyage » : « déterminer le cap compas » · Manuel : T2 p. 21"
@@ -7939,6 +8009,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
+"dex": {"t":"nords","cc":45,"dev":3},
 "ex": "Cm = Cc + Dév = 045° + 3° = 048°.",
 "pg": "La déviation relie le Nord compas au Nord magnétique. Est = +, Ouest = −. On la lit dans la table de déviation, à la ligne du cap du bateau.",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Navigation de base : Cc, Cm, Cv ; déclinaison (D) et déviation (Dév) » · Manuel : T2 p. 20"
@@ -8035,6 +8106,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
+"dex": {"t":"nords","cc":250,"dev":3,"dm":-4,"der":5},
 "ex": "Cm = Cc + Dév = 253° ; Cv = Cm + D = 249° ; Rs = Cv + dér = 254°.",
 "pg": "Chaîne complète : Cc → (+Dév) → Cm → (+D) → Cv → (+dér) → Rs → (+courant, par vecteur) → Rv. Toujours avec les signes : Est et tribord = +, Ouest et bâbord = −.",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Navigation de base : Rs, courant, Rv, dérive due au vent (dér) ; notions vectorielles » · Manuel : T2 p. 28"
@@ -8299,6 +8371,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 0,
+"dex": {"t":"nords","cc":200,"dev":4,"dm":-1,"z":true},
 "ex": "La déviation dépend de l'orientation du bateau, pas de celle de l'amer. Cap 090° → Dév +4°. Zv = Zc + Dév + D = 200 + 4 − 1 = 203°.",
 "pg": "Piège classique : avec le compas de route, on applique la déviation du CAP du bateau au moment du relèvement. Avec un compas à main loin des masses, Dév ≈ 0.",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Relèvements » · Manuel : T2 p. 30"
@@ -8371,6 +8444,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 2,
+"dex": {"t":"nords","cc":128,"dev":-2,"dm":-1,"z":true},
 "ex": "Zm = Zv − D = 125 − (−1) = 126°. Dév = Zm − Zc = 126 − 128 = −2°, soit 2° W.",
 "pg": "Un alignement donne une direction vraie connue sans aucun instrument. C'est le meilleur moyen de contrôler la déviation de son compas : on compare la lecture du compas et la direction de la carte.",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Relèvements » : « en suivant un alignement » ; Matière d'examen, Navigation (complément brevet général) : « Navigation de base : Cc, Cm, Cv ; déclinaison (D) et déviation (Dév) » · Absent du manuel"
@@ -8443,6 +8517,7 @@ window.KAM_QCM = {
 }
 ],
 "b": 1,
+"dex": {"t":"nords","cc":315,"dev":2,"dm":-3,"z":true},
 "ex": "Zv = Zc + Dév + D = 315 + 2 − 3 = 314°.",
 "pg": "Du compas vers le vrai : on ajoute avec le signe (Est +, Ouest −). On trace ensuite Zv sur la carte, depuis l'amer, dans la direction opposée (314 − 180 = 134°).",
 "ref": "Matière d'examen, Navigation (complément brevet général) : « Relèvements » · Manuel : T2 p. 30"
@@ -12739,6 +12814,7 @@ window.KAM_QCM = {
   function correction(q, juste){
     return '<p class="qz-verdict ' + (juste ? "ok" : "ko") + '">' + (juste ? "✔ Juste." : "✘ Faux. La bonne réponse : « " + q.o[q.b].t + " ».") + "</p>"
          + '<p class="qz-ex">' + q.ex + "</p>"
+         + (q.dex ? '<div class="qz-dessin">' + dessiner(q.dex) + "</div>" : "")
          + (!juste && q.pg ? '<div class="qz-piege"><b>📘 Rappel théorique</b><p>' + q.pg + "</p></div>" : "")
          + (q.ref ? '<p class="qz-ref">📖 ' + q.ref + "</p>" : "");
   }
