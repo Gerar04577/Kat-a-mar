@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.19 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.20 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1725,25 +1725,73 @@ window.KAM_IMG = {};
     cols.forEach(function(c, i){ s += '<rect x="' + (x + i * k) + '" y="' + y + '" width="' + (k + .4) + '" height="' + h + '" fill="' + O[c] + '"/>'; });
     return s + '</g><path d="' + clipPath + '" fill="none" stroke="#000" stroke-width=".6"/>';
   }
-  /* bouée ou espar flottant (appendice 8, II et IV.B) */
+  /* relief : un dégradé horizontal (ombre à gauche et à droite, reflet clair) posé sur une forme, pour qu'on la lise en volume */
+  function relief(d){
+    var id = "rl" + (++ZZ);
+    return '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="0">'
+         + '<stop offset="0" stop-color="#000" stop-opacity=".30"/><stop offset=".32" stop-color="#fff" stop-opacity=".38"/>'
+         + '<stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></linearGradient></defs>'
+         + '<path d="' + d + '" fill="url(#' + id + ')"/>';
+  }
+  function boule(x, y, r, coul){
+    var id = "rb" + (++ZZ);
+    return '<defs><radialGradient id="' + id + '" cx=".35" cy=".32" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".55"/>'
+         + '<stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient></defs>'
+         + '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + coul + '" stroke="#000" stroke-width="1"/>'
+         + '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="url(#' + id + ')"/>';
+  }
+  /* dessus d'un cylindre (ellipse claire) */
+  function dessus(x, y, rx, ry, coul){
+    return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" fill="' + coul + '" stroke="#000" stroke-width="1"/>'
+         + '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" fill="#fff" fill-opacity=".35"/>';
+  }
+  /* corps peint (bandes horizontales ou rayures verticales), avec relief et contour */
+  function corps(d, cols, x, y, w, h, ray){
+    return (ray ? vbandes : bandes)(d, cols, x, y, w, h).replace(/<path d="[^"]*" fill="none" stroke="#000" stroke-width=".6"\/>$/, "")
+         + relief(d) + '<path d="' + d + '" fill="none" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/>';
+  }
+  /* voyant en volume, posé avec sa base à y */
+  function ovoyant3d(type, x, y){
+    switch(type){
+      case "cyl-rouge": {
+        var d = "M" + (x - 11) + " " + (y - 20) + " L" + (x - 11) + " " + y + " A11 3 0 0 0 " + (x + 11) + " " + y + " L" + (x + 11) + " " + (y - 20) + " Z";
+        return corps(d, ["rouge"], x - 11, y - 24, 22, 28) + dessus(x, y - 20, 11, 3, O.rouge);
+      }
+      case "cone-vert": {
+        var d2 = "M" + (x - 13) + " " + y + " L" + x + " " + (y - 22) + " L" + (x + 13) + " " + y + " A13 3 0 0 1 " + (x - 13) + " " + y + " Z";
+        return corps(d2, ["vert"], x - 13, y - 22, 26, 26);
+      }
+      case "boule-rouge": return boule(x, y - 11, 11, O.rouge);
+      case "deux-boules": return boule(x, y - 9, 9, "#000") + boule(x, y - 29, 9, "#000");
+      default: return ovoyant(type, x, y);
+    }
+  }
+  /* bouée ou espar flottant — balisage maritime AISM : la forme de la bouée compte (cylindrique, conique, sphérique, charpente, espar) */
   function bouee(o){
     var x = 100, eau = 104, s = osvg(200, 150);
-    var cols = o.bandes || [o.couleur || "rouge"], sommet;
+    var cols = o.bandes || [o.couleur || "rouge"], sommet, ray = !!o.rayures, bas = eau + 6;
     s += zig(20, eau, 160, 22);
-    /* balisage maritime AISM : la forme de la bouée compte (cylindrique, conique, sphérique, espar) */
-    if(o.forme === "cyl"){ var P = "M" + (x - 20) + " " + (eau + 8) + " L" + (x - 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau + 8) + " Z"; s += (o.rayures ? vbandes : bandes)(P, cols, x - 20, eau - 34, 40, 42); sommet = eau - 34; }
-    else if(o.forme === "cone"){ var Q = "M" + (x - 24) + " " + (eau + 8) + " L" + (x - 3) + " " + (eau - 40) + " L" + (x + 3) + " " + (eau - 40) + " L" + (x + 24) + " " + (eau + 8) + " Z"; s += bandes(Q, cols, x - 24, eau - 40, 48, 48); sommet = eau - 40; }
+    if(o.forme === "cyl"){ /* bouée cylindrique (« boîte de conserve ») */
+      var P = "M" + (x - 20) + " " + (eau - 34) + " L" + (x - 20) + " " + bas + " A20 5 0 0 0 " + (x + 20) + " " + bas + " L" + (x + 20) + " " + (eau - 34) + " Z";
+      s += corps(P, cols, x - 20, eau - 40, 40, 52, ray) + dessus(x, eau - 34, 20, 5, O[cols[0]]); sommet = eau - 36;
+    }
+    else if(o.forme === "cone"){ /* bouée conique */
+      var Q = "M" + (x - 24) + " " + bas + " L" + (x - 3) + " " + (eau - 40) + " L" + (x + 3) + " " + (eau - 40) + " L" + (x + 24) + " " + bas + " A24 6 0 0 1 " + (x - 24) + " " + bas + " Z";
+      s += corps(Q, cols, x - 24, eau - 40, 48, 54, ray); sommet = eau - 40;
+    }
     else if(o.forme === "charpente"){ /* bouée charpente : une tour qui s'affine vers le haut */
-      var H = "M" + (x - 16) + " " + (eau + 8) + " L" + (x - 12) + " " + (eau - 52) + " L" + (x + 12) + " " + (eau - 52) + " L" + (x + 16) + " " + (eau + 8) + " Z";
-      s += (o.rayures ? vbandes : bandes)(H, cols, x - 16, eau - 52, 32, 60); sommet = eau - 52;
+      var H = "M" + (x - 16) + " " + bas + " L" + (x - 12) + " " + (eau - 52) + " L" + (x + 12) + " " + (eau - 52) + " L" + (x + 16) + " " + bas + " A16 4 0 0 1 " + (x - 16) + " " + bas + " Z";
+      s += corps(H, cols, x - 16, eau - 56, 32, 70, ray) + dessus(x, eau - 52, 12, 3, O[ray ? cols[Math.floor(cols.length / 2)] : cols[0]]); sommet = eau - 54;
     }
-    else if(o.forme === "sphere"){ var R = "M" + (x - 22) + " " + (eau - 12) + " a22 22 0 1 0 44 0 a22 22 0 1 0 -44 0"; s += (o.rayures ? vbandes : bandes)(R, cols, x - 22, eau - 34, 44, 44); sommet = eau - 34; }
-    else { /* espar */
-      var E = "M" + (x - 7) + " " + (eau + 8) + " L" + (x - 7) + " " + (eau - 62) + " L" + (x + 7) + " " + (eau - 62) + " L" + (x + 7) + " " + (eau + 8) + " Z";
-      var c2 = cols.length > 1 ? cols : [cols[0]];
-      s += (o.rayures ? vbandes : bandes)(E, c2, x - 7, eau - 62, 14, 70); sommet = eau - 62;
+    else if(o.forme === "sphere"){
+      var R = "M" + (x - 22) + " " + (eau - 12) + " a22 22 0 1 0 44 0 a22 22 0 1 0 -44 0";
+      s += corps(R, cols, x - 22, eau - 34, 44, 44, ray); sommet = eau - 34;
     }
-    if(o.voyant){ s += '<line x1="' + x + '" y1="' + sommet + '" x2="' + x + '" y2="' + (sommet - 8) + '" stroke="#000" stroke-width="2"/>'; sommet -= 8; s += ovoyant(o.voyant, x, sommet); sommet -= (/^card|deux/.test(o.voyant) ? 50 : 26); }
+    else { /* espar : un long mât flottant */
+      var E = "M" + (x - 7) + " " + (eau - 62) + " L" + (x - 7) + " " + bas + " A7 2 0 0 0 " + (x + 7) + " " + bas + " L" + (x + 7) + " " + (eau - 62) + " Z";
+      s += corps(E, cols, x - 7, eau - 64, 14, 74, ray) + dessus(x, eau - 62, 7, 2, O[cols[0]]); sommet = eau - 63;
+    }
+    if(o.voyant){ s += '<line x1="' + x + '" y1="' + sommet + '" x2="' + x + '" y2="' + (sommet - 8) + '" stroke="#000" stroke-width="2"/>'; sommet -= 8; s += ovoyant3d(o.voyant, x, sommet); sommet -= (/^card|deux/.test(o.voyant) ? 50 : 26); }
     if(o.reflecteur){
       s += '<line x1="' + x + '" y1="' + sommet + '" x2="' + x + '" y2="' + (sommet - 6) + '" stroke="#000" stroke-width="1.5"/>'
          + '<path d="M' + x + " " + (sommet - 26) + " L" + (x + 10) + " " + (sommet - 16) + " L" + x + " " + (sommet - 6) + " L" + (x - 10) + " " + (sommet - 16) + ' Z" fill="#d9d9d9" stroke="#000" stroke-width="1"/>'
