@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.18 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.19 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -1733,6 +1733,10 @@ window.KAM_IMG = {};
     /* balisage maritime AISM : la forme de la bouée compte (cylindrique, conique, sphérique, espar) */
     if(o.forme === "cyl"){ var P = "M" + (x - 20) + " " + (eau + 8) + " L" + (x - 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau - 34) + " L" + (x + 20) + " " + (eau + 8) + " Z"; s += (o.rayures ? vbandes : bandes)(P, cols, x - 20, eau - 34, 40, 42); sommet = eau - 34; }
     else if(o.forme === "cone"){ var Q = "M" + (x - 24) + " " + (eau + 8) + " L" + (x - 3) + " " + (eau - 40) + " L" + (x + 3) + " " + (eau - 40) + " L" + (x + 24) + " " + (eau + 8) + " Z"; s += bandes(Q, cols, x - 24, eau - 40, 48, 48); sommet = eau - 40; }
+    else if(o.forme === "charpente"){ /* bouée charpente : une tour qui s'affine vers le haut */
+      var H = "M" + (x - 16) + " " + (eau + 8) + " L" + (x - 12) + " " + (eau - 52) + " L" + (x + 12) + " " + (eau - 52) + " L" + (x + 16) + " " + (eau + 8) + " Z";
+      s += (o.rayures ? vbandes : bandes)(H, cols, x - 16, eau - 52, 32, 60); sommet = eau - 52;
+    }
     else if(o.forme === "sphere"){ var R = "M" + (x - 22) + " " + (eau - 12) + " a22 22 0 1 0 44 0 a22 22 0 1 0 -44 0"; s += (o.rayures ? vbandes : bandes)(R, cols, x - 22, eau - 34, 44, 44); sommet = eau - 34; }
     else { /* espar */
       var E = "M" + (x - 7) + " " + (eau + 8) + " L" + (x - 7) + " " + (eau - 62) + " L" + (x + 7) + " " + (eau - 62) + " L" + (x + 7) + " " + (eau + 8) + " Z";
@@ -6821,12 +6825,13 @@ window.KAM_QCM = {
 "q": "À quoi sert cette marque à rayures verticales ?",
 "d": {
 "t": "bouee",
-"forme": "sphere",
+"forme": "charpente",
 "bandes": [
 "rouge",
 "blanc",
 "rouge",
-"blanc"
+"blanc",
+"rouge"
 ],
 "rayures": true,
 "voyant": "boule-rouge"
