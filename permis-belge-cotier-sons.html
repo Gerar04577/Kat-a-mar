@@ -90,7 +90,7 @@ h3{font-size:15px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Signaux sonores qui se ressemblent</h1>
-  <span class="ver">version 2.3 · permis côtier · RIPAM</span>
+  <span class="ver">version 2.4 · permis côtier · RIPAM</span>
 </header>
 
 <div class="bar" role="group" aria-label="Mode">
@@ -102,10 +102,10 @@ h3{font-size:15px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
 
 <div id="vue-comp">
   <div class="card" style="gap:8px">
-    <p>Chaque fiche réunit des signaux qui se ressemblent, <b>dessinés sur la même échelle de temps</b> (une graduation = 1 seconde). <b>En orange : ce qui change</b> par rapport à la ligne du dessus. Touchez ▶ pour écouter (sur iPhone, coupez le mode silencieux).</p>
+    <p>Chaque fiche réunit des signaux qui se ressemblent, <b>dessinés sur la même échelle de temps</b> (une graduation = 1 seconde). <b>En orange : ce qui change</b> par rapport à la ligne du dessus (la cloche, le gong et le morse gardent leur couleur : ce qui change est alors souligné en orange). Touchez ▶ pour écouter (sur iPhone, coupez le mode silencieux).</p>
     <div class="legende">
       <span><i class="lg" style="background:var(--horn)"></i>sifflet</span>
-      <span><i style="background:var(--hl)"></i>la différence</span>
+      <span><i style="background:var(--hl)"></i>la différence (en orange, ou soulignée en orange)</span>
       <span><i style="background:var(--bell)"></i>cloche</span>
       <span><i style="background:var(--gong)"></i>gong</span>
       <span><i style="background:var(--sos)"></i>détresse</span>
@@ -144,22 +144,22 @@ var FAM = [
           {c:"bb", s:"Je viens sur bâbord", q:"navire à moteur en vue qui manœuvre", hl:[1], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
           {c:"bbb", s:"Je bats en arrière (machine en arrière)", q:"il peut encore avancer sur son erre", hl:[2], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
           {c:"qqqqq", s:"Doute : je ne comprends pas vos intentions, ou je doute que vous manœuvriez assez", q:"au moins 5 brefs, rapides (plus serrés que les brefs de manœuvre) ; tout navire en vue qui en approche un autre", hl:[0,1,2,3,4], tag:"5 ou plus, rapides", quiz:"Un navire en vue qui s'approche de vous émet ce signal. Que veut-il dire ?"} ],
-   pieges:["Au RIPAM, il n'y a pas de signal à 4 brefs entre navires en vue. Sur l'Escaut maritime inférieur (règlement belge), si : entre bateaux en vue qui manœuvrent, 4 brefs = « je ne suis pas maître de ma manœuvre » (art. 34 § 1). En mer, 4 brefs par brume, c'est l'identité du bateau-pilote.","3 brefs ne sont pas SOS : SOS, c'est 3 courts, puis 3 longs, puis 3 courts.","2 brefs seuls = « je viens sur bâbord » ; 2 prolongés suivis de 2 brefs = « je compte vous rattraper par VOTRE bâbord » (fiche Chenal étroit)."],
+   pieges:["Au RIPAM, il n'y a pas de signal de manœuvre à 4 brefs (règle 34). Sur l'Escaut maritime inférieur (règlement belge), si : entre bateaux en vue qui manœuvrent, 4 brefs = « je ne suis pas maître de ma manœuvre » (art. 34 § 1). En mer, par visibilité réduite, 4 brefs = identité du bateau-pilote.","3 brefs ne sont pas SOS : SOS, c'est 3 courts, puis 3 longs, puis 3 courts.","2 brefs seuls = « je viens sur bâbord » ; 2 prolongés suivis de 2 brefs = « je compte vous rattraper par VOTRE bâbord » (fiche Chenal étroit)."],
    src:"RIPAM règle 34 a) et d)" },
 
  { id:"prol", nom:"Un prolongé ou deux", intro:"Le même prolongé a deux usages : c'est le contexte qui le dit.",
-   key:["<b>Un prolongé isolé</b>, par n'importe quelle visibilité, à l'approche d'un coude où l'on ne voit pas : « j'arrive ». Un navire qui arrive de l'autre côté et l'entend répond par un prolongé.","<b>Un prolongé répété</b> au moins une fois toutes les 2 minutes, <b>par visibilité réduite</b> : navire à moteur qui a de l'erre (il avance encore dans l'eau).","<b>Deux prolongés</b> (environ 2 s entre eux), répétés par visibilité réduite : navire à moteur en route, mais stoppé, sans erre (il n'avance plus dans l'eau)."],
-   rows:[ {c:"L", s:"J'approche d'un coude (ou d'un endroit où la vue est masquée)", q:"toute visibilité ; un navire qui arrive en sens inverse et l'entend de l'autre côté répond par un prolongé", quiz:"Par bonne visibilité, un navire caché derrière le coude d'un chenal émet ce signal. Que signifie-t-il ?"},
+   key:["<b>Un prolongé isolé</b>, par n'importe quelle visibilité, à l'approche d'un coude où l'on ne voit pas : « j'arrive ». Tout navire qui approche de l'autre côté et l'entend répond par un prolongé.","<b>Un prolongé répété</b> au moins une fois toutes les 2 minutes, <b>par visibilité réduite</b> : navire à moteur qui a de l'erre (il avance encore dans l'eau).","<b>Deux prolongés</b> (environ 2 s entre eux), répétés par visibilité réduite : navire à moteur en route, mais stoppé, sans erre (il n'avance plus dans l'eau)."],
+   rows:[ {c:"L", s:"J'approche d'un coude (ou d'un endroit où la vue est masquée)", q:"toute visibilité ; tout navire qui approche de l'autre côté et l'entend répond par un prolongé", quiz:"Par bonne visibilité, un navire caché derrière le coude d'un chenal émet ce signal. Que signifie-t-il ?"},
           {c:"L", s:"Brume : navire à moteur qui a de l'erre", q:"répété au moins une fois toutes les 2 minutes", tag:"même son, autre contexte", quiz:"Par brume, vous entendez ce signal au moins une fois toutes les 2 minutes. Qui l'émet ?"},
           {c:"LPL", s:"Brume : navire à moteur stoppé, sans erre", q:"répété au moins une fois toutes les 2 minutes ; environ 2 s entre les deux prolongés", hl:[1], tag:"+1 prolongé", quiz:"Par brume, vous entendez ce signal au moins une fois toutes les 2 minutes. Qui l'émet ?"} ],
-   pieges:["Stoppé n'est pas au mouillage : au mouillage, c'est la cloche (fiche Mouillage).","Un voilier qui avance au moteur compte comme un navire à moteur : par brume, un prolongé (ou deux s'il est stoppé), pas « prolongé + 2 brefs ».","Un pousseur et le bateau poussé, accouplés de façon rigide (unité composite), comptent aussi comme un navire à moteur."],
+   pieges:["Stoppé n'est pas au mouillage : au mouillage, c'est la cloche (fiche Mouillage).","Un voilier qui utilise son moteur (même voiles hissées) compte comme un navire à moteur : par brume, un prolongé (deux s'il est stoppé, sans erre), pas « prolongé + 2 brefs ».","Un pousseur et le bateau poussé, accouplés de façon rigide (unité composite), comptent aussi comme un navire à moteur."],
    src:"RIPAM règles 3 c), 34 e), 35 a), b) et f)" },
 
  { id:"brume", nom:"Brume : un prolongé suivi de brefs", intro:"Par visibilité réduite (dans la brume ou près d'elle), au moins une fois toutes les 2 minutes : compte les brefs qui suivent le prolongé.",
-   key:["<b>Prolongé + 2 brefs</b> : voilier sous voiles, navire en train de pêcher, pas maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, navire qui remorque ou qui pousse (sauf pousseur et poussé accouplés de façon rigide : signal d'un navire à moteur).","<b>Prolongé + 3 brefs</b> : le navire remorqué (le dernier du train, s'il a un équipage), si possible juste après le signal du remorqueur.","<b>4 brefs</b>, en plus de son signal normal (souvent juste après ; le RIPAM ne fixe pas le moment) : identité du bateau-pilote en service (facultatif)."],
-   rows:[ {c:"Lbb", s:"Brume : voilier, navire en train de pêcher, remorqueur ou pousseur, pas maître, capacité restreinte ou tirant d'eau", q:"aussi, à la place de la cloche : navire en train de pêcher au mouillage, et navire à capacité de manœuvre restreinte qui travaille au mouillage ; sauf pousseur et poussé accouplés de façon rigide (unité composite) : signal d'un navire à moteur", quiz:"Par brume, vous entendez ce signal au moins une fois toutes les 2 minutes. Qui peut l'émettre ?"},
+   key:["<b>Prolongé + 2 brefs</b> : voilier sous voiles, navire en train de pêcher, pas maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, navire qui remorque ou qui pousse (sauf pousseur et poussé accouplés de façon rigide : signal d'un navire à moteur).","<b>Prolongé + 3 brefs</b> : le navire remorqué (le dernier du train, s'il a un équipage), si possible juste après le signal du remorqueur.","<b>4 brefs</b>, en plus de son signal normal (le RIPAM ne fixe pas le moment) : identité du bateau-pilote en service (facultatif)."],
+   rows:[ {c:"Lbb", s:"Brume : voilier sous voiles, navire en train de pêcher, remorqueur ou pousseur, pas maître, capacité restreinte ou tirant d'eau", q:"aussi, à la place de la cloche : navire en train de pêcher au mouillage, et navire à capacité de manœuvre restreinte qui travaille au mouillage ; sauf pousseur et poussé accouplés de façon rigide (unité composite) : signal d'un navire à moteur", quiz:"Par brume, vous entendez ce signal au moins une fois toutes les 2 minutes. Qui peut l'émettre ?"},
           {c:"Lbbb", s:"Brume : navire remorqué (le dernier, s'il a un équipage)", q:"si possible juste après le « — · · » du remorqueur", hl:[3], tag:"+1 bref", quiz:"Par brume, juste après le signal d'un remorqueur, vous entendez ce signal. Qui l'émet ?"},
-          {c:"L|bbbb", s:"Brume : bateau-pilote en service (navire à moteur avec de l'erre)", q:"son signal de navire à moteur, et en plus (souvent juste après) 4 brefs d'identité, facultatifs", hl:[1,2,3,4], tag:"4 brefs à part", quiz:"Par brume, après un prolongé, vous entendez à part ces quatre brefs. Qui est-ce ?"} ],
+          {c:"L|bbbb", s:"Brume : bateau-pilote en service (navire à moteur avec de l'erre)", q:"son signal de navire à moteur, et en plus 4 brefs d'identité, facultatifs", hl:[1,2,3,4], tag:"4 brefs à part", quiz:"Par brume, après un prolongé, vous entendez à part ces quatre brefs. Qui est-ce ?"} ],
    pieges:["Remorqueur « — · · », remorqué « — · · · » juste derrière : un bref de plus.","Un navire de moins de 12 m n'est tenu à aucun de ces signaux, à condition d'émettre un autre signal sonore efficace au moins une fois toutes les 2 minutes (règle 35 j).","Le pilote stoppé sans erre fait deux prolongés et peut y ajouter ses 4 brefs ; au mouillage, la cloche, et il peut y ajouter ses 4 brefs.","Les 4 brefs « je ne suis pas maître de ma manœuvre » de l'Escaut maritime inférieur ne sont pas un signal de brume : ils servent entre bateaux EN VUE (fiche Navires en vue)."],
    src:"RIPAM règle 35 c), d), e), f), j) et k)" },
 
@@ -169,7 +169,7 @@ var FAM = [
           {c:"LLbb", s:"Je compte vous rattraper par votre bâbord", q:"le navire qui veut dépasser", hl:[3], tag:"+1 bref", quiz:"Dans un chenal étroit, un navire qui vous suit émet ce signal. Que veut-il ?"},
           {c:"LbLb", s:"D'accord, vous pouvez me dépasser", q:"le navire rattrapé", hl:[1,2], tag:"prolongé et bref alternés", quiz:"Dans un chenal étroit, le navire que vous voulez dépasser répond par ce signal. Que dit-il ?"},
           {c:"qqqqq", s:"Je doute", q:"le navire rattrapé peut l'émettre s'il a un doute", tag:"5 brefs ou plus", hl:[0,1,2,3,4]} ],
-   pieges:["Même avec l'accord, le navire qui dépasse reste tenu de s'écarter de la route du navire dépassé (règle 13). Le navire dépassé, lui, manœuvre pour permettre un dépassement sans danger (règle 9 e).","2 prolongés + 2 brefs ≠ 2 brefs seuls (« je viens sur bâbord »)."],
+   pieges:["Même avec l'accord, le navire qui dépasse reste tenu de s'écarter de la route du navire dépassé (règle 13). Le navire dépassé, s'il est d'accord, manœuvre pour permettre un dépassement sans danger (règle 9 e).","2 prolongés + 2 brefs ≠ 2 brefs seuls (« je viens sur bâbord »)."],
    src:"RIPAM règles 34 c) et d), 9 e) et 13" },
 
  { id:"cloche", nom:"Mouillage ou échoué (brume)", intro:"La cloche veut dire : ce navire est au mouillage ou échoué. Elle sonne au moins une fois par minute.",
@@ -184,7 +184,7 @@ var FAM = [
  { id:"detresse", nom:"Détresse ou pas ?", intro:"Ces trois signaux sonores demandent du secours. Les lignes en gris leur ressemblent mais ne sont PAS de la détresse.",
    key:["<b>Son continu</b> de l'appareil de brume : il ne s'arrête pas.","<b>SOS en morse</b> : 3 courts, 3 longs, 3 courts.","<b>Coup de canon</b> (ou autre explosion) à intervalles d'environ une minute."],
    rows:[ {c:"K", s:"Détresse : son continu de l'appareil de brume", q:"il ne s'arrête pas", quiz:"Un navire fait retentir ce signal. Quel est ce signal ?"},
-          {c:"TTTDDDTTT", s:"Détresse : SOS en morse", q:"··· — — — ···", quiz:"Vous entendez ce signal. Quel est ce signal ?"},
+          {c:"TTTDDDTTT", s:"Détresse : SOS en morse", q:"··· — — — ··· ; ses « longs » sont des traits de morse, pas des prolongés de 4 à 6 s", quiz:"Vous entendez ce signal. Quel est ce signal ?"},
           {c:"X~X", s:"Détresse : coup de canon toutes les minutes environ", q:"ou autre signal explosif", quiz:"Vous entendez une détonation, puis une autre environ une minute plus tard. Quel est ce signal ?"},
           {c:"L", s:"Un prolongé : PAS de la détresse", q:"il s'arrête au bout de 4 à 6 s", non:true},
           {c:"bbb", s:"Trois brefs : PAS SOS (machine en arrière)", q:"sans les trois longs du milieu", non:true},
@@ -199,9 +199,9 @@ var FAM = [
           {c:"bLb", s:"Au mouillage : « attention, je suis là »", q:"commence par un bref", paire:"· — · ou — · — · ?"},
           {c:"LbLb", s:"D'accord pour être dépassé", q:"commence par un prolongé, 4 sons", hl:[0], tag:"+1 prolongé devant"},
           {c:"bbb", s:"Machine en arrière", q:"3 brefs, puis rien", paire:"3 brefs ou SOS ?"},
-          {c:"TTTDDDTTT", s:"SOS", q:"morse : 3 courts, 3 longs, 3 courts, d'un seul groupe ; ce sont les 3 longs du milieu qui le distinguent de 3 brefs", hl:[0,1,2,3,4,5,6,7,8], tag:"morse : 3 longs au milieu"},
-          {c:"L|bbbb", s:"Identité du pilote (brume)", q:"4 brefs, en plus de son signal de brume (souvent juste après)", paire:"4 brefs du pilote ou 5 brefs du doute ?"},
-          {c:"qqqqq", s:"Doute", q:"5 brefs ou plus, rapides, sans prolongé", hl:[4], tag:"5 et plus, sans prolongé"} ],
+          {c:"TTTDDDTTT", s:"SOS", q:"morse : 3 courts, 3 longs, 3 courts, d'un seul groupe ; ce sont les 3 longs du milieu qui le distinguent de 3 brefs", hl:[3,4,5], tag:"morse : 3 longs au milieu"},
+          {c:"L|bbbb", s:"Identité du pilote (brume)", q:"4 brefs, en plus de son signal de brume (le RIPAM ne fixe pas le moment)", paire:"4 brefs du pilote ou 5 brefs du doute ?"},
+          {c:"qqqqq", s:"Doute", q:"5 brefs ou plus, rapides, sans prolongé", hl:[0,1,2,3,4], tag:"5 et plus, rapides, sans prolongé"} ],
    pieges:[], src:"RIPAM règles 34, 35 et annexe IV" }
 ];
 
@@ -215,8 +215,8 @@ function plan(code){
     else if(ch === "L"){ seq.push({k:"h", s:t, d:5}); t += 6; }
     else if(ch === "P"){ t += 1; }
     else if(ch === "|"){ t += 2; }
-    else if(ch === "T"){ seq.push({k:"m", s:t, d:.3}); t += .6; }
-    else if(ch === "D"){ seq.push({k:"m", s:t, d:.9}); t += 1.2; }
+    else if(ch === "T"){ seq.push({k:"m", s:t, d:.4}); t += .8; }
+    else if(ch === "D"){ seq.push({k:"m", s:t, d:1.2}); t += 1.6; }
     else if(ch === " "){ t += .6; }
     else if(ch === "C"){ seq.push({k:"C", s:t, d:5}); t += 5.5; }
     else if(ch === "G"){ seq.push({k:"G", s:t, d:5}); t += 5.5; }
@@ -238,18 +238,20 @@ function svgLigne(code, hl, id, chiffres){
     var x = e.s * U, w = e.d * U, h = (hl || []).indexOf(i) >= 0;
     var cl = h ? "f-hl" : "f-horn";
     if(e.k === "h") s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="6" class="' + cl + '"/>';
-    else if(e.k === "m") s += '<rect x="' + x + '" y="8" width="' + w + '" height="8" rx="3" class="' + (h ? "f-hl" : "f-sos") + '"/>';
-    else if(e.k === "C"){ s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="3" class="' + (h ? "f-hl" : "f-bell") + '" opacity=".35"/>';
-      for(var k = 0; k < 10; k++) s += '<circle cx="' + (x + 2.5 + k*5) + '" cy="12" r="2.2" class="' + (h ? "f-hl" : "f-bell") + '"/>';
+    else if(e.k === "m"){ s += '<rect x="' + x + '" y="9" width="' + w + '" height="6" rx="1.5" class="f-sos"/>';
+      if(i === 0 || p.seq[i-1].k !== "m") s += '<text x="' + x + '" y="3.5" font-size="5.5" class="f-mu">morse</text>'; }
+    else if(e.k === "C"){ s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="3" class="f-bell" opacity=".35"/>';
+      for(var k = 0; k < 10; k++) s += '<circle cx="' + (x + 2.5 + k*5) + '" cy="12" r="2.2" class="f-bell"/>';
       s += '<text x="' + (x + w/2) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">cloche</text>'; }
-    else if(e.k === "G"){ s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="3" class="' + (h ? "f-hl" : "f-gong") + '" opacity=".35"/>';
-      for(var k2 = 0; k2 < 8; k2++) s += '<rect x="' + (x + 2 + k2*6) + '" y="8" width="3.5" height="8" rx="1.5" class="' + (h ? "f-hl" : "f-gong") + '"/>';
+    else if(e.k === "G"){ s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="3" class="f-gong" opacity=".35"/>';
+      for(var k2 = 0; k2 < 8; k2++) s += '<rect x="' + (x + 2 + k2*6) + '" y="8" width="3.5" height="8" rx="1.5" class="f-gong"/>';
       s += '<text x="' + (x + w/2) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">gong</text>'; }
-    else if(e.k === "x"){ s += '<rect x="' + (x + .2) + '" y="4" width="2.6" height="16" rx="1" class="' + (h ? "f-hl" : "f-bell") + '"/>';
-      if(i === 0 || p.seq[i-1].k !== "x") s += '<text x="' + (x + 10) + '" y="2.5" font-size="5.5" text-anchor="middle" class="f-mu">3 coups</text>'; }
+    else if(e.k === "x"){ s += '<rect x="' + (x + .2) + '" y="5" width="2.6" height="14" rx="1" class="f-bell"/>';
+      if(i === 0 || p.seq[i-1].k !== "x") s += '<text x="' + x + '" y="2.5" font-size="4.4" class="f-mu">3 coups de cloche</text>'; }
     else if(e.k === "K") s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="6" class="f-sos"/><path d="M' + (x + w + 1) + ' 5 L' + (x + w + 7) + ' 12 L' + (x + w + 1) + ' 19 Z" class="f-sos"/>' + (chiffres === "quiz" ? "" : '<text x="' + (x + w/2) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">continu, sans s\'arrêter</text>');
     else if(e.k === "X") s += '<path d="M' + (x+2.5) + ' 3 L' + (x+4) + ' 9 L' + (x+9) + ' 7 L' + (x+5) + ' 12 L' + (x+9) + ' 17 L' + (x+3.5) + ' 15 L' + (x+2.5) + ' 21 L' + (x+1.5) + ' 15 L' + (x-4) + ' 17 L' + x + ' 12 L' + (x-4) + ' 7 L' + (x+1) + ' 9 Z" class="f-sos"/>';
-    else if(e.k === "~") s += '<path d="M' + (x+2) + ' 18 l4 -12 M' + (x+8) + ' 18 l4 -12" class="s-rule" stroke-width="1.2"/><text x="' + (x + 10) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">≈ 1 minute</text>';
+    if(h && e.k !== "h") s += '<rect x="' + (x - .5) + '" y="19.4" width="' + (Math.max(w, 3) + 1) + '" height="2.2" rx="1" class="f-hl"/>';
+    if(e.k === "~") s += '<path d="M' + (x+2) + ' 18 l4 -12 M' + (x+8) + ' 18 l4 -12" class="s-rule" stroke-width="1.2"/><text x="' + (x + 10) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">≈ 1 minute</text>';
   });
   s += '<line id="cur-' + id + '" x1="-5" y1="2" x2="-5" y2="22" class="s-acc" stroke-width="1.2" opacity="0"/>';
   return '<svg viewBox="-2 -1 ' + (W + 10) + (chiffres ? ' 37' : ' 29') + '" role="img" aria-label="Dessin du signal sonore">' + s + "</svg>";
