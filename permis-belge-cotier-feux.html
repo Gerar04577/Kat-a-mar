@@ -114,7 +114,7 @@ h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spa
 
 
 <div class="wrap">
-  <header><h1>Feux et marques qui se ressemblent</h1><span class="ver">version 1.9 · permis côtier · RIPAM</span></header>
+  <header><h1>Feux et marques qui se ressemblent</h1><span class="ver">version 1.10 · permis côtier · RIPAM</span></header>
   <div class="row seg" id="tabs"></div>
   <div class="row seg" role="group" aria-label="Mode">
     <button id="mDef" aria-pressed="true">Défilé</button><button id="mQuiz" aria-pressed="false">Quiz</button>
@@ -175,7 +175,7 @@ function plan(p){ const B=fast?.5:1, L=fast?2:4, G=fast?.5:1; let t=0, seq=[], i
     else if(ch==='b'){ seq.push({s:t,d:B,k:'b',i:idx++}); t+=B+G; }
     else if(ch==='L'){ seq.push({s:t,d:L,k:'L',i:idx++}); t+=L+G; }
     else if(ch==='_'){ t+=fast?1:2.5; seq.push({s:t,d:L,k:'L',i:idx++}); t+=L+G; }
-    else if(ch==='c'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.8,k:'c',i:idx++}); t+=2.3; } }
+    else if(ch==='c'){ for(let r=0;r<2;r++){ const d=fast?2:4; seq.push({s:t,d:d,k:'c',i:idx++}); t+=d+(fast?.5:1); } }
     else if(ch==='t'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.5,k:'tri',i:idx++}); t+=2; } }
     else if(ch==='p'){ t+=fast?.5:1; }
     else if(ch==='D'){ const d=fast?.4:.75; seq.push({s:t,d:d,k:'D',i:idx++}); t+=d+(fast?.15:.25); }
@@ -188,7 +188,7 @@ function blastsHTML(p){ const {seq}=plan(p); return seq.map(x=>`<span class="bl 
 function play(p){ stopPlay(); const a=audio(); const {seq,total}=plan(p); if(!a){ return total; }
   const t0=a.currentTime+.15;
   seq.forEach(x=>{ if(x.k==='b'||x.k==='L'||x.k==='T') horn(t0+x.s,Math.max(.12,x.d));
-    else if(x.k==='c'){ for(let r=0;r<5;r++) bell(t0+x.s+r*.36); }
+    else if(x.k==='c'){ for(let r=0;r*.3<x.d;r++) bell(t0+x.s+r*.3); }
     else if(x.k==='K'||x.k==='D') horn(t0+x.s,x.d);
     else if(x.k==='C'){ for(let r=0;r*.2<x.d;r++) bell(t0+x.s+r*.2); }
     else if(x.k==='G'){ for(let r=0;r*.25<x.d;r++) gong(t0+x.s+r*.25); }
@@ -213,7 +213,7 @@ function filtered(){ const t=curTab(); return t.items.filter(x=>cat==='Tous'||x.
 function panelSVG(p){
   const dark=p.day?'#3A4654':'#26313C', st=p.day?'#22303C':'#56636F';
   let h='';
-  if(p.v==='side'){ h+=`<line x1="78" y1="10" x2="78" y2="100" stroke="${st}" stroke-width="1.5"/><line x1="28" y1="4" x2="28" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="6,100 94,100 86,117 14,117" fill="${dark}" stroke="${st}"/><polygon points="94,100 99,96 99,100" fill="${dark}"/>`; }
+  if(p.v==='side'){ h+=`<line x1="78" y1="10" x2="78" y2="100" stroke="${st}" stroke-width="1.5"/><line x1="28" y1="4" x2="28" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="6,100 94,100 86,117 14,117" fill="${dark}" stroke="${st}"/><polygon points="94,100 99,96 99,100" fill="${dark}"/><text x="4" y="129" font-size="7.5" font-weight="700" fill="${st}" font-family="Source Sans 3, Arial, sans-serif">◀ arrière</text><text x="96" y="129" font-size="7.5" font-weight="700" text-anchor="end" fill="${st}" font-family="Source Sans 3, Arial, sans-serif">avant ▶</text>`; }
   else if(p.v==='stern'){ h+=`<line x1="50" y1="8" x2="50" y2="96" stroke="${st}" stroke-width="1.5"/><rect x="30" y="96" width="40" height="21" fill="${dark}" stroke="${st}"/>`; }
   else { h+=`<line x1="50" y1="4" x2="50" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="30,100 70,100 60,118 40,118" fill="${dark}" stroke="${st}"/><polygon points="44,100 56,100 50,88" fill="${dark}"/>`; }
   const C={W:'#FFFFFF',R:'#FF3B30',G:'#34C759',Y:'#FFCC00',B:'#2F7BFF',K:'#111'};
@@ -238,7 +238,7 @@ function panelSVG(p){
     if(dif) rings.push(`<circle class="dif" cx="${x}" cy="${y}" r="11"/>`);
   }
   if(p.box) rings.push(`<rect class="dif" x="${p.box[0]}" y="${p.box[1]}" width="${p.box[2]}" height="${p.box[3]}" rx="6"/>`);
-  const vb=p.v==='side'?'0 -4 100 126':'16 -4 68 126'; return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${h}${rings.join('')}</svg>`;
+  const vb=p.v==='side'?'0 -4 100 136':'16 -4 68 126'; return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${h}${rings.join('')}</svg>`;
 }
 function cmpHTML(panels,solo){ return panels.map(p=>`<div class="pan ${p.day?'day':'night'}${solo?' solo':''}">${p.img?`<img class="cq" alt="" src="${p.img}">`:panelSVG(p)}<div class="lab">${solo?'?':esc(p.lab)}</div></div>`).join(''); }
 function setStage(x,anim){
