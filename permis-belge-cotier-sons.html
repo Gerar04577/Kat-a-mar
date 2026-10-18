@@ -4,326 +4,342 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Signaux sonores côtier</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
 <style>
-/* Layout : colonne unique — scène animée, fiche (titre, explication, piège), commandes ; mode Quiz dans la même colonne. */
+/* Signaux sonores qui se ressemblent (permis côtier, RIPAM) — familles de signaux sur une même échelle de temps, différences surlignées, écoute et quiz. */
 :root{
   --bg:#EEF1F4; --fg:#16202A; --muted:#55626F; --panel:#FFFFFF; --line:#CBD3DC;
   --accent:#0E5A8A; --accent-fg:#FFFFFF; --trap-bg:#FFF4D6; --trap-fg:#6A4A00; --trap-line:#E0B43A;
-  --ok:#2C7A35; --ok-bg:#E5F3E6; --ko:#B3261E; --ko-bg:#FBE7E5;
+  --key-bg:#E3F3E8; --key-fg:#14532D; --key-line:#6FBF8A;
+  --horn:#24435E; --hl:#E8590C; --bell:#C99A06; --gong:#8A5A2B; --sos:#B42318; --rule:#A9B4BF;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
   --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
-  --ok:#7FCB86; --ok-bg:#16301A; --ko:#F28B82; --ko-bg:#3A1714; color-scheme:dark}}
+  --key-bg:#12301E; --key-fg:#A7E3BC; --key-line:#2F7A4A;
+  --horn:#9CC3E4; --hl:#FF8A3D; --bell:#F2C94C; --gong:#D49A62; --sos:#FF6B5E; --rule:#4A5866; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
   --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
-  --ok:#7FCB86; --ok-bg:#16301A; --ko:#F28B82; --ko-bg:#3A1714; color-scheme:dark}
+  --key-bg:#12301E; --key-fg:#A7E3BC; --key-line:#2F7A4A;
+  --horn:#9CC3E4; --hl:#FF8A3D; --bell:#F2C94C; --gong:#D49A62; --sos:#FF6B5E; --rule:#4A5866; color-scheme:dark}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45}
-.wrap{max-width:600px;margin:0 auto;padding-block:12px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:10px}
-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
-h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spacing:.02em;text-wrap:balance}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:680px;margin:0 auto;padding-block:12px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px}
+.retour{color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+header{display:flex;flex-direction:column;gap:2px}
+h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spacing:.02em;line-height:1.1}
+h2{font-family:var(--display);font-weight:700;font-size:23px;margin:0;letter-spacing:.02em;line-height:1.15}
+h3{font-size:15px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
 .ver{font-size:12px;color:var(--muted)}
-.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.seg button,.chip{font:600 14px var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
-.seg button[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn{font:600 14px var(--body);padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;white-space:nowrap}
+.btn[aria-pressed="true"],.btn.pri{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.chip{font-size:13px;padding:5px 10px;white-space:nowrap}
-.stage{position:relative;height:min(38vh,300px);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
-.stage.day{background:linear-gradient(#BFE0F5 0 46%,#7FB5D9 46% 100%)}
-.stage.night{background:radial-gradient(ellipse at 50% 120%,#13324B 0,#071420 60%,#03080D 100%)}
-.bank{position:absolute;left:0;right:0;top:40%;height:8%;background:#8FBF5A}
-.night .bank{background:#0E2216}
-.bank,.post{display:none}
-.post{position:absolute;right:27%;top:60%;width:5px;height:18%;background:#6B6B63}
-.night .post{display:none}
-.sign{position:absolute;right:5%;top:6%;width:44%;height:62%;transform-origin:85% 100%;display:flex;align-items:center;justify-content:center;transform:scale(.15);opacity:0;transition:transform 1.4s cubic-bezier(.2,.8,.2,1),opacity .6s}
-.sign img{max-width:100%;max-height:100%;border-radius:6px;background:#fff}
-.night .sign{right:5%;left:5%;width:auto;height:auto;top:8%;bottom:8%;transform-origin:50% 50%}
-.night .sign img{box-shadow:0 0 28px rgba(255,255,255,.18);background:transparent}
-.sign.in{transform:scale(1);opacity:1}
-.sign.wide{left:4%;right:4%;width:auto;top:6%;height:70%;transform-origin:50% 100%}
-.stage.wd .post{display:none}
-.boat{position:absolute;left:-60px;bottom:18%;width:64px;transition:left 1.8s ease-out}
-.boat.in{left:18%}
-.night .boat{display:none}
-.blasts{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 12px}
-.bl{height:14px;border-radius:7px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5)}
-.bl.T{width:6px}.bl.b{width:16px}.bl.L{width:64px}.bl.c{width:28px;border-radius:3px}.bl.tri{width:40px;border-style:dashed}
-.bl.C{width:46px;border-radius:3px;background:rgba(242,194,48,.35)}.bl.G{width:46px;border-radius:3px;background:rgba(176,141,87,.45)}.bl.x{width:12px;border-radius:50%}.bl.K{width:110px}.bl.D{width:12px}
-.bl.on{background:#FFD23F;border-color:#FFD23F;box-shadow:0 0 12px #FFD23F}
-.horn{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-family:var(--display);font-size:22px;color:#fff;letter-spacing:.06em;text-align:center}
-.stage.tall{height:auto}
-.stage.tall .bank,.stage.tall .post,.stage.tall .boat{display:none}
-.cmp{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px;padding:10px}
-.pan{display:flex;flex-direction:column;align-items:center;min-width:0;border-radius:8px;padding:4px 2px}
-.pan.day{background:#BFE0F5}.pan.night{background:rgba(255,255,255,.04)}
-.pan svg{width:100%;height:auto;max-height:190px}
-.pan.solo svg{max-height:260px}
-.pan.solo .dif{display:none}
-.pan .lab{font:600 12.5px/1.15 var(--body);color:#fff;text-align:center;padding:2px}
-.pan.day .lab{color:#0B2236}
-.pan.solo{grid-column:1/-1}
-.pan img.cq{width:100%;height:auto;display:block;border-radius:6px}
-.dif{fill:none;stroke:#FFD23F;stroke-width:2.2;stroke-dasharray:4 3;animation:difb 1.1s ease-in-out infinite}
-@keyframes difb{0%,100%{opacity:.25}50%{opacity:1}}
-.blk{animation:blk .5s steps(1) infinite}@keyframes blk{50%{opacity:.08}}
-@media (prefers-reduced-motion: reduce){.dif,.blk{animation:none}}
-.theory{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:var(--display);font-size:26px;color:#0B2236;background:rgba(255,255,255,.55)}
-.night .theory{color:#fff;background:rgba(0,0,0,.35)}
-.theory{flex-direction:column;gap:10px}
-.theory .tt{font-size:22px;line-height:1.15}
-.theory .ex{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:100%}
-.theory .ex figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:3px;width:78px}
-.theory .ex img{width:72px;height:72px;object-fit:contain;background:#fff;border-radius:6px;padding:2px}
-.theory .ex figcaption{font:600 11.5px/1.15 var(--body);color:inherit}
-.theory .bls{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;justify-content:center}
-.stage.th .post,.stage.th .boat{display:none}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-height:170px}
-.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;gap:8px}
-.cat{font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.card h2{font-family:var(--display);font-weight:700;font-size:24px;margin:0;text-wrap:balance}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
 .card p{margin:0}
-.lbl{font-weight:600}
-.trap{background:var(--trap-bg);color:var(--trap-fg);border-left:4px solid var(--trap-line);padding:7px 10px;border-radius:0}
-.ref{font-size:13px;color:var(--accent)}
-.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--trap-line)}
-.controls{display:flex;flex-wrap:wrap;gap:8px}
-.btn{font:600 15px var(--body);padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
-.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,.opt:focus-visible{outline:3px solid var(--trap-line);outline-offset:2px}
-.opts{display:flex;flex-direction:column;gap:8px}
-.opt{text-align:left;font:600 16px var(--body);padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
-.opt.good{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
-.opt.bad{background:var(--ko-bg);border-color:var(--ko);color:var(--ko)}
-.verdict{font-family:var(--display);font-size:22px;font-weight:700}
-.verdict.good{color:var(--ok)}.verdict.bad{color:var(--ko)}
-.note{font-size:13px;color:var(--muted)}
-@media (prefers-reduced-motion: reduce){.sign,.boat{transition:none}}
+.intro{color:var(--muted);font-size:15px}
+.key{background:var(--key-bg);color:var(--key-fg);border:1px solid var(--key-line);border-radius:10px;padding:10px 12px;font-size:15px}
+.trap{background:var(--trap-bg);color:var(--trap-fg);border:1px solid var(--trap-line);border-radius:10px;padding:10px 12px;font-size:15px}
+.trap ul,.key ul{margin:4px 0 0;padding-left:18px}.trap li,.key li{margin-bottom:4px}
+.src{font-size:12px;color:var(--muted)}
+.rows{display:flex;flex-direction:column;gap:0}
+.row{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:none}
+.row.non .sens{color:var(--muted)}
+.play{width:44px;height:44px;border-radius:50%;border:2px solid var(--accent);background:var(--panel);color:var(--accent);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;grid-row:span 2}
+.play.on{background:var(--accent);color:var(--accent-fg)}
+.sens{font-weight:700;font-size:16px;line-height:1.25}
+.sens .tag{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;color:#fff;background:var(--hl);border-radius:999px;padding:1px 8px;vertical-align:2px}
+.sens .pas{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 8px;vertical-align:2px}
+.qui{font-size:14px;color:var(--muted);grid-column:2}
+.tl{grid-column:1/-1}
+.tl svg{display:block;width:100%;height:auto;overflow:visible}
+.code{display:inline-block;font-weight:700;letter-spacing:.06em;font-size:17px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:1px 9px;white-space:pre-wrap}
+/* dessins */
+.f-horn{fill:var(--horn)}.f-hl{fill:var(--hl)}.f-bell{fill:var(--bell)}.f-gong{fill:var(--gong)}.f-sos{fill:var(--sos)}
+.s-rule{stroke:var(--rule)}.f-mu{fill:var(--muted)}.f-fg{fill:var(--fg)}.s-hl{stroke:var(--hl)}.s-acc{stroke:var(--accent)}
+.legende{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
+.legende i{display:inline-block;width:18px;height:9px;border-radius:5px;vertical-align:middle;margin-right:5px}
+/* quiz */
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qopt{text-align:left;font:600 15px var(--body);padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.qopt.ok{border-color:#2F9E5B;background:color-mix(in srgb,#2F9E5B 14%,var(--panel))}
+.qopt.ko{border-color:#C0392B;background:color-mix(in srgb,#C0392B 14%,var(--panel))}
+.score{font-size:14px;color:var(--muted)}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
 </style>
-
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%}</style>
 </head>
 <body>
-<a href="#" id="katBack" onclick="if(history.length>1){history.back();}else{location.href='index.html';}return false;" style="position:sticky;top:0;z-index:5;display:inline-block;margin:8px max(16px,env(safe-area-inset-left,0px)) 0;padding:8px 14px;border-radius:8px;background:#0E5A8A;color:#fff;font:600 15px 'Source Sans 3',Arial,sans-serif;text-decoration:none">‹ Retour</a>
-
-
 <div class="wrap">
-  <header><h1>Signaux sonores qui se ressemblent</h1><span class="ver">version 1.8 · permis côtier · RIPAM</span></header>
-  <div class="row seg" id="tabs"></div>
-  <div class="row seg" role="group" aria-label="Mode">
-    <button id="mDef" aria-pressed="true">Défilé</button><button id="mQuiz" aria-pressed="false">Quiz</button>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<header>
+  <h1>Signaux sonores qui se ressemblent</h1>
+  <span class="ver">version 2.0 · permis côtier · RIPAM</span>
+</header>
+
+<div class="bar" role="group" aria-label="Mode">
+  <button type="button" class="btn" id="m-comp" aria-pressed="true">Comparer</button>
+  <button type="button" class="btn" id="m-quiz" aria-pressed="false">Quiz</button>
+  <span style="flex:1"></span>
+  <button type="button" class="btn" id="vitesse">Sons : durée réelle</button>
+</div>
+
+<div id="vue-comp">
+  <div class="card" style="gap:8px">
+    <p>Chaque fiche réunit des signaux qui se ressemblent, <b>dessinés sur la même échelle de temps</b> (une graduation = 1 seconde). <b>En orange : ce qui change</b> par rapport à la ligne du dessus. Touchez ▶ pour écouter (sur iPhone, coupez le mode silencieux).</p>
+    <div class="legende">
+      <span><i class="lg" style="background:var(--horn)"></i>sifflet</span>
+      <span><i style="background:var(--hl)"></i>la différence</span>
+      <span><i style="background:var(--bell)"></i>cloche</span>
+      <span><i style="background:var(--gong)"></i>gong</span>
+      <span><i style="background:var(--sos)"></i>détresse</span>
+    </div>
   </div>
-  <div class="chips" id="cats"></div>
-  <div class="stage" id="stage">
-    <div class="bank"></div><div class="post"></div>
-    <div class="sign" id="sign"></div>
-    <svg class="boat" id="boat" viewBox="0 0 64 26" aria-hidden="true"><path d="M2 12 L44 12 L62 16 L46 24 L6 24 Z" fill="#F08A24" stroke="#7A3E06"/><rect x="14" y="5" width="16" height="7" rx="1.5" fill="#FFF6E8" stroke="#7A3E06"/></svg>
-    <div class="horn" id="horn"></div>
-    <div class="blasts" id="blasts"></div>
-    <div class="theory" id="theory" hidden></div>
-    <div class="cmp" id="cmp" hidden></div>
-  </div>
-  <section class="card" id="card" aria-live="polite"></section>
-  <div class="controls" id="ctrlDef">
-    <button class="btn primary" id="bPlay">Démarrer</button>
-    <button class="btn" id="bPrev">Précédent</button>
-    <button class="btn" id="bNext">Suivant</button>
-    <button class="btn" id="bRestart">Recommencer</button>
-    <button class="btn" id="bSpeed" hidden>Sons : durée réelle</button>
-  </div>
-  <div class="controls" id="ctrlQuiz" hidden>
-    <button class="btn primary" id="qNext">Question suivante</button>
-    <button class="btn" id="qRestart">Recommencer le quiz</button>
-    <button class="btn" id="qListen" hidden>Réécouter</button>
-  </div>
-  <p class="note" id="note">Signaux du RIPAM (règles 32 à 35, 37 et annexe IV), groupés par ressemblance : chaque groupe commence par un rappel théorique. Sur iPhone, coupez le mode silencieux pour entendre les sons. Bref ≈ 1 s, prolongé ≈ 4 à 6 s, cloche ou gong ≈ 5 s. Le bouton « Sons : accélérés » raccourcit l'écoute. Dans le Quiz, les mauvaises réponses proposées sont choisies parmi les signaux qui ressemblent le plus.</p>
+  <div class="chips" id="chips" style="margin-top:12px"></div>
+  <div id="fiches" style="display:flex;flex-direction:column;gap:12px;margin-top:12px"></div>
+</div>
+
+<div id="vue-quiz" hidden>
+  <div class="card" id="quiz"></div>
+</div>
+
+<p class="src">Signaux du RIPAM (règles 32 à 35 et 37, annexe IV). Bref : environ 1 seconde ; prolongé : 4 à 6 secondes (dessiné et joué ici sur 5 s) ; cloche et gong : environ 5 secondes. Le bouton « Sons : accélérés » joue deux fois plus vite, sans changer les dessins.</p>
 </div>
 
 <script>
-const DATA = {"tabs": [{"key": "sons", "label": "Signaux sonores", "scene": "night", "items": [{"kind": "theory", "cat": "Bases", "t": "Bref et prolongé", "a": "Un son bref dure environ 1 seconde. Un son prolongé dure de 4 à 6 secondes.", "p": "Compte dans ta tête : « un » pour le bref, « un-deux-trois-quatre-cinq » pour le prolongé.", "snd": [["b", "bref ≈ 1 s"], ["L", "prolongé 4 à 6 s"]]}, {"kind": "theory", "cat": "Compter les brefs", "t": "Navires en vue : compter les brefs", "a": "Entre navires qui se voient, le navire à moteur qui manœuvre l'annonce : 1, 2 ou 3 brefs. Au moins 5 brefs = le doute.", "p": "1 = tribord, 2 = bâbord, 3 = arrière. 5 ou plus = « je ne comprends pas ce que tu fais ».", "snd": [["b", "1"], ["bb", "2"], ["bbb", "3"], ["bbbbb", "5"]]}, {"kind": "sound", "cat": "Compter les brefs", "g": "brefs", "snd": "b", "t": "Je viens sur tribord", "q": "Un navire en vue émet ce signal en manœuvrant. Que signifie-t-il ?", "a": "Un son bref = « je viens sur tribord ».", "p": "Ne confonds pas avec 2 brefs (bâbord). Il peut l'accompagner d'un éclat blanc.", "r": "RIPAM règle 34 a) et b)"}, {"kind": "sound", "cat": "Compter les brefs", "g": "brefs", "snd": "bb", "t": "Je viens sur bâbord", "q": "Un navire en vue émet ce signal en manœuvrant. Que signifie-t-il ?", "a": "Deux sons brefs = « je viens sur bâbord ».", "p": "Deux brefs SEULS = bâbord. Deux PROLONGÉS suivis de deux brefs = « je veux te dépasser par ton bâbord » (chenal étroit).", "r": "RIPAM règle 34 a)"}, {"kind": "sound", "cat": "Compter les brefs", "g": "brefs", "snd": "bbb", "t": "Je bats en arrière (machines en arrière)", "q": "Un navire en vue émet ce signal. Que signifie-t-il ?", "a": "Trois sons brefs = « je bats en arrière ».", "p": "Il ne recule pas forcément déjà : il peut encore avancer sur son erre.", "r": "RIPAM règle 34 a)"}, {"kind": "sound", "cat": "Compter les brefs", "g": "brefs", "snd": "bbbbb", "t": "Je doute de vos intentions ou de votre manœuvre", "q": "Un navire qui s'approche émet ce signal. Que veut-il dire ?", "a": "Au moins cinq sons brefs et rapides = doute sur tes intentions ou sur ta manœuvre.", "p": "Ce n'est PAS la détresse. Réagis tout de suite : montre clairement ta manœuvre.", "r": "RIPAM règle 34 d)"}, {"kind": "theory", "cat": "Un ou deux prolongés", "t": "Un prolongé, deux prolongés", "a": "Un seul prolongé a deux usages : au coude d'un chenal, et par brume pour un navire à moteur qui avance. Deux prolongés par brume = navire à moteur arrêté.", "p": "Le contexte décide : un prolongé isolé à l'approche d'un coude (par toute visibilité), ou un prolongé répété toutes les 2 minutes au plus par visibilité réduite (navire à moteur qui a de l'erre).", "snd": [["L", "un prolongé"], ["LpL", "deux prolongés"]]}, {"kind": "sound", "cat": "Un ou deux prolongés", "g": "prolonges", "snd": "L", "t": "Je m'approche d'un coude caché", "q": "Par bonne visibilité, un navire caché derrière le coude d'un chenal émet ce signal. Que signifie-t-il ?", "a": "Un prolongé = « j'approche d'un coude où je ne vois pas ». Tout navire qui l'entend de l'autre côté répond par un prolongé.", "p": "On répond par le MÊME signal : un prolongé.", "r": "RIPAM règle 34 e)"}, {"kind": "sound", "cat": "Un ou deux prolongés", "g": "prolonges", "snd": "L", "t": "Brume : navire à moteur qui a de l'erre", "q": "Par brume, vous entendez ce signal toutes les 2 minutes au plus. Qui l'émet ?", "a": "Un prolongé, au moins toutes les 2 minutes = navire à moteur qui avance.", "p": "Le voilier sous voiles, lui, n'émet PAS un prolongé seul mais « prolongé + 2 brefs ». Au moteur, il compte comme navire à moteur : un prolongé s'il a de l'erre, deux prolongés s'il est stoppé sans erre.", "r": "RIPAM règle 35 a)"}, {"kind": "sound", "cat": "Un ou deux prolongés", "g": "prolonges", "snd": "LpL", "t": "Brume : navire à moteur stoppé, sans erre", "q": "Par brume, vous entendez ce signal toutes les 2 minutes au plus. Qui l'émet ?", "a": "Deux prolongés séparés d'environ 2 secondes = navire à moteur qui fait route mais est stoppé, sans erre.", "p": "Stoppé ne veut pas dire au mouillage : au mouillage, c'est en principe la cloche (sauf le navire en pêche et le navire à capacité de manœuvre restreinte qui travaille au mouillage : prolongé + 2 brefs).", "r": "RIPAM règle 35 b)"}, {"kind": "theory", "cat": "Prolongé + brefs (brume)", "t": "Par brume : un prolongé puis des brefs", "a": "1 prolongé + 2 brefs = voilier, pêche, remorqueur ou pousseur, et navires à manœuvre limitée (pas maître, capacité restreinte, tirant d'eau). 1 prolongé + 3 brefs = le navire remorqué. Le bateau-pilote peut ajouter, à part, 4 brefs d'identité.", "p": "2 brefs collés au prolongé = « — · · » ; 3 brefs = remorqué ; 4 brefs À PART, après son signal normal = identité du pilote.", "snd": [["Lbb", "— · ·"], ["Lbbb", "— · · ·"], ["Lppbbbb", "pilote : signal normal, puis · · · ·"]]}, {"kind": "sound", "cat": "Prolongé + brefs (brume)", "g": "brume", "snd": "Lbb", "t": "Brume : voilier, pêche, remorqueur, pas maître, capacité restreinte ou tirant d'eau", "q": "Par brume, vous entendez ce signal toutes les 2 minutes au plus. Qui peut l'émettre ?", "a": "Prolongé + 2 brefs = voilier, navire en pêche, pas maître de sa manœuvre, à capacité restreinte, handicapé par son tirant d'eau, qui remorque ou qui pousse (sauf l'unité rigide pousseur-poussé, traitée comme un navire à moteur : règle 35 f). Le navire en pêche au mouillage, et le navire à capacité de manœuvre restreinte qui effectue son travail au mouillage, l'émettent aussi à la place de la cloche.", "p": "Ton voilier SOUS VOILES par brume : prolongé + 2 brefs. Au moteur, il compte comme navire à moteur : un prolongé s'il a de l'erre, deux prolongés s'il est stoppé sans erre. De même, un pousseur et le navire qu'il pousse, accouplés de façon rigide, comptent comme un navire à moteur (règle 35 f).", "r": "RIPAM règle 35 c), d) et f), règle 3 b) et c)"}, {"kind": "sound", "cat": "Prolongé + brefs (brume)", "g": "brume", "snd": "Lbbb", "t": "Brume : navire remorqué avec équipage", "q": "Par brume, juste après le signal d'un remorqueur, vous entendez ce signal. Qui l'émet ?", "a": "Prolongé + 3 brefs = le navire remorqué (le dernier du train), s'il a un équipage, si possible juste après le signal du remorqueur.", "p": "Le remorqueur émet « — · · », le remorqué « — · · · » juste derrière : un bref de plus.", "r": "RIPAM règle 35 e)"}, {"kind": "sound", "cat": "Prolongé + brefs (brume)", "g": "brume", "snd": "Lppbbbb", "t": "Brume : bateau-pilote en service", "q": "Par brume, après le signal d'un navire à moteur, vous entendez quatre brefs. Qui est-ce ?", "a": "Le bateau-pilote en service peut ajouter à son signal de brume un signal d'identité de quatre sons brefs.", "p": "En mer (RIPAM) : 4 brefs = pilote (identité, par brume) ; 5 brefs ou plus = doute. Attention : sur l'Escaut maritime inférieur, 4 brefs = « je ne suis pas maître de ma manœuvre » (art. 34 § 1).", "r": "RIPAM règle 35 k)"}, {"kind": "theory", "cat": "Dépassement en chenal", "t": "Chenal étroit : demander à dépasser, accepter", "a": "Deux prolongés = « je veux te dépasser ». Ensuite 1 bref = par ton tribord, 2 brefs = par ton bâbord. Accord : prolongé-bref-prolongé-bref.", "p": "Après les deux prolongés, même logique que la manœuvre : 1 bref tribord, 2 brefs bâbord.", "snd": [["LLb", "par tribord"], ["LLbb", "par bâbord"], ["LbLb", "accord"]]}, {"kind": "sound", "cat": "Dépassement en chenal", "g": "depasser", "snd": "LLb", "t": "Je compte vous rattraper par votre tribord", "q": "Dans un chenal étroit, un navire qui vous suit émet ce signal. Que veut-il ?", "a": "Deux prolongés + un bref = « je compte vous rattraper sur votre tribord ».", "p": "Le côté se dit par rapport au navire DÉPASSÉ (toi), pas par rapport à celui qui dépasse.", "r": "RIPAM règle 34 c) i)"}, {"kind": "sound", "cat": "Dépassement en chenal", "g": "depasser", "snd": "LLbb", "t": "Je compte vous rattraper par votre bâbord", "q": "Dans un chenal étroit, un navire qui vous suit émet ce signal. Que veut-il ?", "a": "Deux prolongés + deux brefs = « je compte vous rattraper sur votre bâbord ».", "p": "Ne confonds pas avec deux brefs seuls (« je viens sur bâbord »).", "r": "RIPAM règle 34 c) i)"}, {"kind": "sound", "cat": "Dépassement en chenal", "g": "depasser", "snd": "LbLb", "t": "D'accord, vous pouvez me dépasser", "q": "Dans un chenal étroit, le navire que vous voulez dépasser répond par ce signal. Que dit-il ?", "a": "Prolongé, bref, prolongé, bref = accord du navire rattrapé.", "p": "S'il a un doute, il peut répondre par au moins 5 brefs (règle 9 e). Même d'accord, c'est toujours à toi, le rattrapant, de t'écarter.", "r": "RIPAM règle 34 c) ii), règle 9 e) et règle 13"}, {"kind": "theory", "cat": "Cloche et gong", "t": "Au mouillage ou échoué : cloche et gong", "a": "Au mouillage : la cloche ~5 s au moins toutes les minutes ; à partir de 100 m, cloche à l'avant puis gong à l'arrière. Échoué : 3 coups distincts avant et après la cloche.", "p": "Cloche = navire au mouillage ou échoué (le navire stoppé sans erre, lui, émet deux prolongés ; le navire en pêche, ou à capacité de manœuvre restreinte qui travaille au mouillage, émet prolongé + 2 brefs au lieu de la cloche). La cloche : 1 minute au plus entre deux signaux (et non 2 minutes). Exception : un navire de moins de 20 m n'est pas tenu de sonner la cloche ; s'il ne le fait pas, il émet un autre signal sonore efficace toutes les 2 minutes au plus.", "snd": [["C", "cloche"], ["CG", "cloche + gong"], ["xxxCxxx", "échoué"], ["bLb", "avertissement"]]}, {"kind": "sound", "cat": "Cloche et gong", "g": "cloche", "snd": "C", "t": "Brume : navire au mouillage (moins de 100 m)", "q": "Par brume, vous entendez ce signal au moins toutes les minutes. Qui est-ce ?", "a": "Tintement rapide de la cloche pendant environ 5 secondes = navire au mouillage.", "p": "Au mouillage, la cloche sonne au moins une fois par MINUTE (les signaux au sifflet des navires en route, eux, sont répétés toutes les 2 minutes au plus). Un navire de moins de 20 m n'est pas tenu de sonner la cloche : s'il ne le fait pas, il émet un autre signal sonore efficace toutes les 2 minutes au plus.", "r": "RIPAM règle 35 g), i) et j)"}, {"kind": "sound", "cat": "Cloche et gong", "g": "cloche", "snd": "CG", "t": "Brume : navire de 100 m ou plus au mouillage", "q": "Par brume, vous entendez la cloche à l'avant, puis aussitôt ce gong à l'arrière. Qui est-ce ?", "a": "Un navire de 100 m ou plus au mouillage sonne la cloche à l'avant puis le gong à l'arrière.", "p": "Ce n'est pas deux navires : c'est UN très grand navire.", "r": "RIPAM règle 35 g)"}, {"kind": "sound", "cat": "Cloche et gong", "g": "cloche", "snd": "xxxCxxx", "t": "Brume : navire échoué", "q": "Par brume, vous entendez ce signal. Que signale-t-il ?", "a": "Trois coups distincts, tintement rapide, trois coups distincts = navire échoué.", "p": "Les 3 coups isolés avant ET après font la différence avec le simple mouillage. Haut-fond tout près !", "r": "RIPAM règle 35 h)"}, {"kind": "sound", "cat": "Cloche et gong", "g": "depasser", "snd": "bLb", "t": "Au mouillage : « attention, je suis là »", "q": "Par brume, vous approchez d'un navire au mouillage ; en plus de sa cloche, il fait entendre ce signal. Que veut-il dire ?", "a": "Bref, prolongé, bref = le navire au mouillage signale sa position et le risque d'abordage à un navire qui approche.", "p": "« · — · » ressemble à l'accord de dépassement « — · — · » : compte bien, ce n'est pas le même.", "r": "RIPAM règle 35 g)"}, {"kind": "theory", "cat": "Détresse", "t": "Détresse : continu et SOS", "a": "Un son continu avec l'appareil de brume, ou SOS en morse (··· — — — ···), sont des signaux de détresse.", "p": "Continu = il ne s'arrête pas. Un prolongé, lui, dure 4 à 6 s.", "snd": [["K", "son continu"], ["TTTpDDDpTTT", "SOS"]]}, {"kind": "sound", "cat": "Détresse", "g": "detresse", "snd": "K", "t": "Détresse : son continu de l'appareil de brume", "q": "Un navire fait retentir ce son sans s'arrêter. Quel est ce signal ?", "a": "Un son continu produit par un appareil de signalisation de brume = signal de détresse.", "p": "Ne confonds pas avec un prolongé (4 à 6 s) : le son continu ne s'arrête pas.", "r": "RIPAM règle 37 et annexe IV"}, {"kind": "sound", "cat": "Détresse", "g": "detresse", "snd": "TTTpDDDpTTT", "t": "Détresse : SOS en morse", "q": "Vous entendez ce signal. Quel est ce signal ?", "a": "Trois courts, trois longs, trois courts = SOS en morse : détresse.", "p": "Trois brefs seuls = « je bats en arrière ». SOS, c'est trois courts PUIS trois longs PUIS trois courts.", "r": "RIPAM annexe IV"}]}]};
 (function(){
-const $=id=>document.getElementById(id);
-const READ=10;
-let tab=DATA.tabs[0].key, mode='def', cat='Tous', list=[], i=0, running=false, timer=0, last=null, playing=null;
-let fast=false, quiz={q:[],k:0,score:0,done:0,answered:false};
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+"use strict";
+/* ---------------------------------------------------------------- codes
+   b bref 1 s (puis 1 s de silence) · q bref rapide (1 s, puis 0,5 s) · L prolongé 5 s (puis 1 s)
+   P silence de 1 s en plus · | silence de 2 s (« puis ») · T point morse · D trait morse · espace = entre deux lettres morse
+   C cloche 5 s · G gong 5 s · x coup de cloche isolé · K son continu · X coup de canon · ~ environ une minute (coupé)
+   Majuscule entre crochets dans hl : indices des éléments à surligner (orange). */
+var FAM = [
+ { id:"bases", nom:"Bref ou prolongé", intro:"Toute la suite repose sur deux durées de coup de sifflet.",
+   key:["<b>Bref</b> : environ 1 seconde. Compte « un ».","<b>Prolongé</b> : de 4 à 6 secondes. Compte « un, deux, trois, quatre, cinq »."],
+   rows:[ {c:"b", s:"Son bref", q:"environ 1 seconde"},
+          {c:"L", s:"Son prolongé", q:"4 à 6 secondes", hl:[0], tag:"4 à 6 fois plus long"} ],
+   pieges:["Un son continu, qui ne s'arrête pas, n'est pas un prolongé : c'est un signal de détresse (fiche Détresse)."],
+   src:"RIPAM règle 32" },
 
-/* ---------- audio ---------- */
-let ac=null, nodes=[];
-function audio(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(ac&&ac.state==='suspended') ac.resume(); return ac; }
-function horn(t0,dur){ const a=audio(); if(!a) return; const g=a.createGain(); const f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1100;
-  const o1=a.createOscillator(), o2=a.createOscillator(); o1.type='sawtooth'; o2.type='sawtooth'; o1.frequency.value=165; o2.frequency.value=247;
+ { id:"brefs", nom:"Navires en vue : compter les brefs", intro:"Entre navires qui se voient, le navire à moteur en route annonce sa manœuvre par des brefs.",
+   key:["Compte les brefs : <b>1 = tribord, 2 = bâbord, 3 = machine arrière</b>.","<b>5 brefs ou plus, rapides</b> = « je ne comprends pas ce que vous faites » (doute), quel que soit le navire qui l'émet."],
+   rows:[ {c:"b", s:"Je viens sur tribord", q:"navire à moteur en vue qui manœuvre", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
+          {c:"bb", s:"Je viens sur bâbord", q:"navire à moteur en vue qui manœuvre", hl:[1], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
+          {c:"bbb", s:"Je bats en arrière (machine en arrière)", q:"il peut encore avancer sur son erre", hl:[2], tag:"+1 bref", quiz:"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?"},
+          {c:"qqqqq", s:"Doute : je ne comprends pas vos intentions", q:"au moins 5 brefs, rapides ; tout navire en vue qui en approche un autre", hl:[3,4], tag:"5 ou plus, rapides", quiz:"Un navire qui s'approche de vous émet ce signal. Que veut-il dire ?"} ],
+   pieges:["Il n'y a pas de signal à 4 brefs entre navires en vue. En mer, 4 brefs à part, par brume, c'est l'identité du bateau-pilote.","3 brefs ne sont pas SOS : SOS, c'est 3 courts, puis 3 longs, puis 3 courts.","2 brefs seuls = bâbord ; 2 prolongés suivis de 2 brefs = demande de dépassement par bâbord (fiche Chenal étroit)."],
+   src:"RIPAM règle 34 a) et d)" },
+
+ { id:"prol", nom:"Un prolongé ou deux", intro:"Le même prolongé a deux usages : c'est le contexte qui le dit.",
+   key:["<b>Un prolongé isolé</b>, par n'importe quelle visibilité, à l'approche d'un coude où l'on ne voit pas : « j'arrive ». On répond par un prolongé.","<b>Un prolongé répété</b> au moins toutes les 2 minutes, <b>par visibilité réduite</b> : navire à moteur qui a de l'erre.","<b>Deux prolongés</b> (environ 2 s entre eux), répétés par visibilité réduite : navire à moteur en route, mais stoppé, sans erre."],
+   rows:[ {c:"L", s:"J'approche d'un coude (ou d'un endroit où la vue est masquée)", q:"toute visibilité ; celui qui l'entend de l'autre côté répond par un prolongé", quiz:"Par bonne visibilité, un navire caché derrière le coude d'un chenal émet ce signal. Que signifie-t-il ?"},
+          {c:"L", s:"Brume : navire à moteur qui a de l'erre", q:"répété au moins toutes les 2 minutes", tag:"même son, autre contexte", quiz:"Par brume, vous entendez ce signal au moins toutes les 2 minutes. Qui l'émet ?"},
+          {c:"LPL", s:"Brume : navire à moteur stoppé, sans erre", q:"répété au moins toutes les 2 minutes ; environ 2 s entre les deux prolongés", hl:[1], tag:"+1 prolongé", quiz:"Par brume, vous entendez ce signal au moins toutes les 2 minutes. Qui l'émet ?"} ],
+   pieges:["Stoppé n'est pas au mouillage : au mouillage, c'est la cloche (fiche Mouillage).","Un voilier qui avance au moteur compte comme un navire à moteur : par brume, un prolongé (ou deux s'il est stoppé), pas « prolongé + 2 brefs ».","Un pousseur et le bateau poussé, accouplés de façon rigide (unité composite), comptent aussi comme un navire à moteur."],
+   src:"RIPAM règles 34 e), 35 a), b) et f)" },
+
+ { id:"brume", nom:"Brume : un prolongé suivi de brefs", intro:"Par visibilité réduite, au moins toutes les 2 minutes : compte les brefs qui suivent le prolongé.",
+   key:["<b>Prolongé + 2 brefs</b> : voilier sous voiles, navire en pêche, pas maître de sa manœuvre, à capacité de manœuvre restreinte, handicapé par son tirant d'eau, navire qui remorque ou qui pousse.","<b>Prolongé + 3 brefs</b> : le navire remorqué (le dernier du train, s'il a un équipage), si possible juste après le signal du remorqueur.","<b>4 brefs à part</b>, après le signal normal : identité du bateau-pilote en service (facultatif)."],
+   rows:[ {c:"Lbb", s:"Brume : voilier, pêche, remorqueur, pousseur, pas maître, capacité restreinte ou tirant d'eau", q:"aussi, à la place de la cloche : navire en pêche au mouillage, et navire à capacité de manœuvre restreinte qui travaille au mouillage", quiz:"Par brume, vous entendez ce signal au moins toutes les 2 minutes. Qui peut l'émettre ?"},
+          {c:"Lbbb", s:"Brume : navire remorqué (avec équipage)", q:"juste après le « — · · » du remorqueur", hl:[3], tag:"+1 bref", quiz:"Par brume, juste après le signal d'un remorqueur, vous entendez ce signal. Qui l'émet ?"},
+          {c:"L|bbbb", s:"Brume : bateau-pilote en service (navire à moteur avec de l'erre)", q:"son signal de navire à moteur, puis 4 brefs d'identité, à part", hl:[1,2,3,4], tag:"4 brefs à part", quiz:"Par brume, après un prolongé, vous entendez à part ces quatre brefs. Qui est-ce ?"} ],
+   pieges:["Remorqueur « — · · », remorqué « — · · · » juste derrière : un bref de plus.","Le pilote stoppé sans erre fait deux prolongés, puis ses 4 brefs ; au mouillage, la cloche, puis ses 4 brefs.","Sur l'Escaut maritime inférieur (règlement belge), 4 brefs signifient « je ne suis pas maître de ma manœuvre » (art. 34 § 1) : ce n'est pas le RIPAM."],
+   src:"RIPAM règle 35 c), d), e) et k)" },
+
+ { id:"depasser", nom:"Chenal étroit : demander à dépasser", intro:"Deux prolongés annoncent « je veux vous dépasser » ; les brefs qui suivent disent par quel côté.",
+   key:["<b>2 prolongés + 1 bref</b> : par votre tribord ; <b>+ 2 brefs</b> : par votre bâbord (le côté du navire dépassé).","<b>Prolongé, bref, prolongé, bref</b> : le navire dépassé est d'accord.","Pas d'accord ou doute : <b>au moins 5 brefs rapides</b>."],
+   rows:[ {c:"LLb", s:"Je compte vous rattraper par votre tribord", q:"le navire qui veut dépasser", quiz:"Dans un chenal étroit, un navire qui vous suit émet ce signal. Que veut-il ?"},
+          {c:"LLbb", s:"Je compte vous rattraper par votre bâbord", q:"le navire qui veut dépasser", hl:[3], tag:"+1 bref", quiz:"Dans un chenal étroit, un navire qui vous suit émet ce signal. Que veut-il ?"},
+          {c:"LbLb", s:"D'accord, vous pouvez me dépasser", q:"le navire rattrapé", hl:[1,3], tag:"prolongé et bref alternés", quiz:"Dans un chenal étroit, le navire que vous voulez dépasser répond par ce signal. Que dit-il ?"},
+          {c:"qqqqq", s:"Je doute (pas d'accord)", q:"le navire rattrapé, s'il a un doute", tag:"5 brefs ou plus", hl:[0,1,2,3,4]} ],
+   pieges:["Même avec l'accord, c'est toujours le navire qui dépasse qui doit s'écarter.","2 prolongés + 2 brefs ≠ 2 brefs seuls (« je viens sur bâbord »)."],
+   src:"RIPAM règles 34 c) et d), 9 e)" },
+
+ { id:"cloche", nom:"Mouillage ou échoué (brume)", intro:"La cloche veut dire : ce navire ne bouge pas. Elle sonne au moins une fois par minute.",
+   key:["<b>Cloche</b> environ 5 s : navire au mouillage.","<b>Cloche à l'avant puis gong à l'arrière</b> : navire de 100 m ou plus au mouillage (un seul navire).","<b>3 coups isolés, cloche, 3 coups isolés</b> : navire échoué.","<b>Bref, prolongé, bref</b> (en plus de la cloche) : le navire au mouillage avertit qu'on s'approche trop."],
+   rows:[ {c:"C", s:"Brume : navire au mouillage (moins de 100 m)", q:"tintement rapide environ 5 s, au moins toutes les minutes", quiz:"Par brume, vous entendez ce signal au moins toutes les minutes. Qui est-ce ?"},
+          {c:"CG", s:"Brume : navire de 100 m ou plus au mouillage", q:"cloche à l'avant, puis aussitôt gong à l'arrière", hl:[1], tag:"+ gong", quiz:"Par brume, vous entendez la cloche, puis aussitôt ce gong. Qui est-ce ?"},
+          {c:"xxxCxxx", s:"Brume : navire échoué", q:"3 coups distincts juste avant et juste après la cloche", hl:[0,1,2,4,5,6], tag:"3 coups avant et après", quiz:"Par brume, vous entendez ce signal. Que signale-t-il ?"},
+          {c:"bLb", s:"Au mouillage : « attention, je suis là »", q:"au sifflet, en plus de la cloche, quand un navire approche", tag:"au sifflet", quiz:"Par brume, un navire au mouillage fait entendre, en plus de sa cloche, ce signal. Que veut-il dire ?"} ],
+   pieges:["Un navire de moins de 20 m n'est pas tenu de sonner la cloche ; s'il ne le fait pas, il émet un autre signal sonore efficace au moins toutes les 2 minutes.","« · — · » (au mouillage) ressemble à l'accord de dépassement « — · — · » : compte bien.","Le navire en pêche au mouillage et le navire à capacité restreinte qui travaille au mouillage ne sonnent pas la cloche : prolongé + 2 brefs."],
+   src:"RIPAM règle 35 d), g), h), i) et j)" },
+
+ { id:"detresse", nom:"Détresse ou pas ?", intro:"Ces trois signaux sonores demandent du secours. Les lignes en gris leur ressemblent mais ne sont PAS de la détresse.",
+   key:["<b>Son continu</b> de l'appareil de brume : il ne s'arrête pas.","<b>SOS en morse</b> : 3 courts, 3 longs, 3 courts.","<b>Coup de canon</b> (ou autre explosion) à intervalles d'environ une minute."],
+   rows:[ {c:"K", s:"Détresse : son continu de l'appareil de brume", q:"il ne s'arrête pas", quiz:"Un navire fait retentir ce signal. Que signifie-t-il ?"},
+          {c:"TTT DDD TTT", s:"Détresse : SOS en morse", q:"··· — — — ···", quiz:"Vous entendez ce signal. Quel est ce signal ?"},
+          {c:"X~X", s:"Détresse : coup de canon toutes les minutes environ", q:"ou autre signal explosif", quiz:"Vous entendez une détonation, puis une autre environ une minute plus tard. Quel est ce signal ?"},
+          {c:"L", s:"Un prolongé : PAS de la détresse", q:"il s'arrête au bout de 4 à 6 s", non:true},
+          {c:"bbb", s:"Trois brefs : PAS SOS (machine en arrière)", q:"sans les trois longs du milieu", non:true},
+          {c:"qqqqq", s:"Cinq brefs rapides : PAS de la détresse (doute)", q:"« je ne comprends pas vos intentions »", non:true} ],
+   pieges:["Ne confondez pas un prolongé (4 à 6 s) avec le son continu.","Ces signaux ne s'emploient que pour demander du secours : ne les utilisez jamais pour autre chose."],
+   src:"RIPAM règle 37 et annexe IV" },
+
+ { id:"confondre", nom:"Ne pas confondre", intro:"Les paires les plus trompeuses, l'une sous l'autre.",
+   key:["Écoutez d'abord <b>par quoi le signal commence</b> (bref ou prolongé), puis <b>comptez</b>."],
+   rows:[ {c:"bb", s:"Je viens sur bâbord", q:"2 brefs seuls"},
+          {c:"LLbb", s:"Je compte vous rattraper par votre bâbord", q:"commence par 2 prolongés", hl:[0,1], tag:"2 prolongés devant"},
+          {c:"bLb", s:"Au mouillage : « attention, je suis là »", q:"commence par un bref"},
+          {c:"LbLb", s:"D'accord pour être dépassé", q:"commence par un prolongé, 4 sons", hl:[0,3], tag:"prolongé devant, 4 sons"},
+          {c:"bbb", s:"Machine en arrière", q:"3 brefs, puis rien"},
+          {c:"TTT DDD TTT", s:"SOS", q:"3 courts puis 3 longs puis 3 courts", hl:[3,4,5,6,7,8], tag:"3 longs + 3 courts en plus"},
+          {c:"L|bbbb", s:"Identité du pilote (brume)", q:"4 brefs, à part, après son signal"},
+          {c:"qqqqq", s:"Doute", q:"5 brefs ou plus, rapides, sans prolongé", hl:[4], tag:"5 et plus"} ],
+   pieges:[], src:"RIPAM règles 34, 35 et annexe IV" }
+];
+
+/* ---------------------------------------------------------------- temps */
+function plan(code){
+  var t = 0, seq = [], i, ch;
+  for(i = 0; i < code.length; i++){
+    ch = code[i];
+    if(ch === "b"){ seq.push({k:"h", s:t, d:1}); t += 2; }
+    else if(ch === "q"){ seq.push({k:"h", s:t, d:1}); t += 1.5; }
+    else if(ch === "L"){ seq.push({k:"h", s:t, d:5}); t += 6; }
+    else if(ch === "P"){ t += 1; }
+    else if(ch === "|"){ t += 2; }
+    else if(ch === "T"){ seq.push({k:"m", s:t, d:.3}); t += .6; }
+    else if(ch === "D"){ seq.push({k:"m", s:t, d:.9}); t += 1.2; }
+    else if(ch === " "){ t += .6; }
+    else if(ch === "C"){ seq.push({k:"C", s:t, d:5}); t += 5.5; }
+    else if(ch === "G"){ seq.push({k:"G", s:t, d:5}); t += 5.5; }
+    else if(ch === "x"){ seq.push({k:"x", s:t, d:.3}); t += 1; }
+    else if(ch === "K"){ seq.push({k:"K", s:t, d:13}); t += 13; }
+    else if(ch === "X"){ seq.push({k:"X", s:t, d:.5}); t += 1; }
+    else if(ch === "~"){ seq.push({k:"~", s:t, d:2}); t += 3; }
+  }
+  var fin = 0; seq.forEach(function(e){ fin = Math.max(fin, e.s + e.d); });
+  return {seq:seq, total:fin};
+}
+var TMAX = 16, U = 10;   /* échelle commune : 16 s de large, 10 unités par seconde */
+function svgLigne(code, hl, id, chiffres){
+  var p = plan(code), s = "", n = 0, W = TMAX * U;
+  for(var g = 0; g <= TMAX; g++) s += '<line x1="' + g*U + '" y1="22" x2="' + g*U + '" y2="' + (g % 5 === 0 ? 27 : 25) + '" class="s-rule" stroke-width="' + (g % 5 === 0 ? 1.2 : .7) + '"/>';
+  s += '<line x1="0" y1="22" x2="' + W + '" y2="22" class="s-rule" stroke-width=".7"/>';
+  if(chiffres) s += '<text x="0" y="34" font-size="6" class="f-mu">0 s</text><text x="' + 5*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">5 s</text><text x="' + 10*U + '" y="34" font-size="6" text-anchor="middle" class="f-mu">10 s</text><text x="' + W + '" y="34" font-size="6" text-anchor="end" class="f-mu">16 s</text>';
+  p.seq.forEach(function(e, i){
+    var x = e.s * U, w = e.d * U, h = (hl || []).indexOf(i) >= 0;
+    var cl = h ? "f-hl" : "f-horn";
+    if(e.k === "h") s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="6" class="' + cl + '"/>';
+    else if(e.k === "m") s += '<rect x="' + x + '" y="8" width="' + w + '" height="8" rx="3" class="' + (h ? "f-hl" : "f-sos") + '"/>';
+    else if(e.k === "C"){ s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="3" class="' + (h ? "f-hl" : "f-bell") + '" opacity=".35"/>';
+      for(var k = 0; k < 10; k++) s += '<circle cx="' + (x + 2.5 + k*5) + '" cy="12" r="2.2" class="' + (h ? "f-hl" : "f-bell") + '"/>';
+      s += '<text x="' + (x + w/2) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">cloche</text>'; }
+    else if(e.k === "G"){ s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="3" class="' + (h ? "f-hl" : "f-gong") + '" opacity=".35"/>';
+      for(var k2 = 0; k2 < 8; k2++) s += '<rect x="' + (x + 2 + k2*6) + '" y="8" width="3.5" height="8" rx="1.5" class="' + (h ? "f-hl" : "f-gong") + '"/>';
+      s += '<text x="' + (x + w/2) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">gong</text>'; }
+    else if(e.k === "x") s += '<circle cx="' + (x + 1.5) + '" cy="12" r="3.4" class="' + (h ? "f-hl" : "f-bell") + '"/>';
+    else if(e.k === "K") s += '<rect x="' + x + '" y="6" width="' + w + '" height="12" rx="6" class="f-sos"/><path d="M' + (x + w + 1) + ' 5 L' + (x + w + 7) + ' 12 L' + (x + w + 1) + ' 19 Z" class="f-sos"/>' + (chiffres === "quiz" ? "" : '<text x="' + (x + w/2) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">continu, sans s\'arrêter</text>');
+    else if(e.k === "X") s += '<path d="M' + (x+2.5) + ' 3 L' + (x+4) + ' 9 L' + (x+9) + ' 7 L' + (x+5) + ' 12 L' + (x+9) + ' 17 L' + (x+3.5) + ' 15 L' + (x+2.5) + ' 21 L' + (x+1.5) + ' 15 L' + (x-4) + ' 17 L' + x + ' 12 L' + (x-4) + ' 7 L' + (x+1) + ' 9 Z" class="f-sos"/>';
+    else if(e.k === "~") s += '<path d="M' + (x+2) + ' 18 l4 -12 M' + (x+8) + ' 18 l4 -12" class="s-rule" stroke-width="1.2"/><text x="' + (x + 10) + '" y="3.5" font-size="5.5" text-anchor="middle" class="f-mu">≈ 1 minute</text>';
+  });
+  s += '<line id="cur-' + id + '" x1="-5" y1="2" x2="-5" y2="22" class="s-acc" stroke-width="1.2" opacity="0"/>';
+  return '<svg viewBox="-2 -1 ' + (W + 10) + (chiffres ? ' 37' : ' 29') + '" role="img" aria-label="Dessin du signal sonore">' + s + "</svg>";
+}
+function codeTexte(code){
+  var m = {b:"•", q:"•", L:"▬▬", T:"•", D:"▬", C:"cloche", G:"gong", x:"|", K:"▬▬▬▬▬▬ →", X:"boum", "~":"… 1 min …", "|":"  puis ", P:"", " ":"  "};
+  var out = [], i, c;
+  for(i = 0; i < code.length; i++){ c = code[i]; if(c === "T" || c === "D"){ var w = ""; while(i < code.length && (code[i] === "T" || code[i] === "D")){ w += m[code[i]]; i++; } i--; out.push(w); } else if(m[c]) out.push(m[c]); }
+  return out.join(" ").replace(/\s+puis\s+/g, "   puis   ");
+}
+
+/* ---------------------------------------------------------------- son */
+var ac = null, nodes = [], fast = false, anim = null;
+function audio(){ if(!ac){ try{ ac = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} } if(ac && ac.state === "suspended") ac.resume(); return ac; }
+function horn(t0, dur){ var a = audio(); if(!a) return; var g = a.createGain(), f = a.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1100;
+  var o1 = a.createOscillator(), o2 = a.createOscillator(); o1.type = "sawtooth"; o2.type = "sawtooth"; o1.frequency.value = 165; o2.frequency.value = 247;
   o1.connect(f); o2.connect(f); f.connect(g); g.connect(a.destination);
-  g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(.22,t0+.06); g.gain.setValueAtTime(.22,t0+dur-.08); g.gain.linearRampToValueAtTime(0,t0+dur);
-  o1.start(t0); o2.start(t0); o1.stop(t0+dur+.05); o2.stop(t0+dur+.05); nodes.push(o1,o2); }
-function bell(t0){ const a=audio(); if(!a) return; [880,1320,2210].forEach((fq,k)=>{ const o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.value=fq; o.connect(g); g.connect(a.destination);
-  g.gain.setValueAtTime(.18/(k+1),t0); g.gain.exponentialRampToValueAtTime(.0001,t0+.9); o.start(t0); o.stop(t0+1); nodes.push(o); }); }
-function gong(t0){ const a=audio(); if(!a) return; [196,293,415].forEach((fq,k)=>{ const o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.value=fq; o.connect(g); g.connect(a.destination);
-  g.gain.setValueAtTime(.25/(k+1),t0); g.gain.exponentialRampToValueAtTime(.0001,t0+.9); o.start(t0); o.stop(t0+1); nodes.push(o); }); }
-function tone(t0,fq,dur){ const a=audio(); if(!a) return; const o=a.createOscillator(), g=a.createGain(); o.type='triangle'; o.frequency.value=fq; o.connect(g); g.connect(a.destination);
-  g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(.25,t0+.03); g.gain.setValueAtTime(.25,t0+dur-.05); g.gain.linearRampToValueAtTime(0,t0+dur); o.start(t0); o.stop(t0+dur+.02); nodes.push(o); }
-/* séquence : renvoie [{start,dur,idx}] en secondes */
-function plan(p){ const B=fast?.5:1, L=fast?2:4, G=fast?.5:1; let t=0, seq=[], idx=0;
-  for(const ch of p){
-    if(ch==='T'){ const d=fast?.15:.25; seq.push({s:t,d:d,k:'T',i:idx++}); t+=2*d; }
-    else if(ch==='b'){ seq.push({s:t,d:B,k:'b',i:idx++}); t+=B+G; }
-    else if(ch==='L'){ seq.push({s:t,d:L,k:'L',i:idx++}); t+=L+G; }
-    else if(ch==='_'){ t+=fast?1:2.5; seq.push({s:t,d:L,k:'L',i:idx++}); t+=L+G; }
-    else if(ch==='c'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.8,k:'c',i:idx++}); t+=2.3; } }
-    else if(ch==='t'){ for(let r=0;r<2;r++){ seq.push({s:t,d:1.5,k:'tri',i:idx++}); t+=2; } }
-    else if(ch==='p'){ t+=fast?.5:1; }
-    else if(ch==='D'){ const d=fast?.4:.75; seq.push({s:t,d:d,k:'D',i:idx++}); t+=d+(fast?.15:.25); }
-    else if(ch==='C'){ const d=fast?2.5:5; seq.push({s:t,d:d,k:'C',i:idx++}); t+=d+G; }
-    else if(ch==='G'){ const d=fast?2.5:5; seq.push({s:t,d:d,k:'G',i:idx++}); t+=d+G; }
-    else if(ch==='x'){ seq.push({s:t,d:.5,k:'x',i:idx++}); t+=fast?.7:1.2; }
-    else if(ch==='K'){ const d=fast?5:10; seq.push({s:t,d:d,k:'K',i:idx++}); t+=d+G; }
-  } return {seq,total:t}; }
-function blastsHTML(p){ const {seq}=plan(p); return seq.map(x=>`<span class="bl ${x.k}" data-i="${x.i}"></span>`).join(''); }
-function play(p){ stopPlay(); const a=audio(); const {seq,total}=plan(p); if(!a){ return total; }
-  const t0=a.currentTime+.15;
-  seq.forEach(x=>{ if(x.k==='b'||x.k==='L'||x.k==='T') horn(t0+x.s,Math.max(.12,x.d));
-    else if(x.k==='c'){ for(let r=0;r<5;r++) bell(t0+x.s+r*.36); }
-    else if(x.k==='K'||x.k==='D') horn(t0+x.s,x.d);
-    else if(x.k==='C'){ for(let r=0;r*.2<x.d;r++) bell(t0+x.s+r*.2); }
-    else if(x.k==='G'){ for(let r=0;r*.25<x.d;r++) gong(t0+x.s+r*.25); }
-    else if(x.k==='x') bell(t0+x.s);
-    else if(x.k==='tri'){ tone(t0+x.s,330,.5); tone(t0+x.s+.5,415,.5); tone(t0+x.s+1,495,.5); } });
-  playing={t0,seq,total}; return total; }
-function stopPlay(){ nodes.forEach(n=>{ try{ n.stop(); }catch(e){} }); nodes=[]; playing=null; document.querySelectorAll('#blasts .bl.on').forEach(e=>e.classList.remove('on')); }
-function lightBlasts(){ if(!playing||!ac) return; const now=ac.currentTime-playing.t0;
-  document.querySelectorAll('#blasts .bl').forEach(el=>{ const x=playing.seq[+el.dataset.i]; el.classList.toggle('on',x&&now>=x.s&&now<=x.s+x.d); }); }
-
-/* ---------- construction de l'interface ---------- */
-function curTab(){ return DATA.tabs.find(t=>t.key===tab); }
-function buildTabs(){ const el=$('tabs'); if(DATA.tabs.length<2){ el.hidden=true; return; }
-  el.innerHTML=DATA.tabs.map(t=>`<button data-k="${t.key}" aria-pressed="${t.key===tab}">${esc(t.label)}</button>`).join('');
-  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ tab=b.dataset.k; cat='Tous'; buildTabs(); buildCats(); reset(); }); }
-function buildCats(){ const t=curTab(); const cats=['Tous',...new Set(t.items.filter(x=>x.cat).map(x=>x.cat))];
-  $('cats').innerHTML=cats.length>2?cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join(''):'';
-  $('cats').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ cat=b.dataset.c; buildCats(); reset(); }); }
-function filtered(){ const t=curTab(); return t.items.filter(x=>cat==='Tous'||x.cat===cat||(x.kind==='theory'&&cat==='Tous')); }
-
-
-function panelSVG(p){
-  const dark=p.day?'#3A4654':'#26313C', st=p.day?'#22303C':'#56636F';
-  let h='';
-  if(p.v==='side'){ h+=`<line x1="78" y1="10" x2="78" y2="100" stroke="${st}" stroke-width="1.5"/><line x1="28" y1="4" x2="28" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="6,100 94,100 86,117 14,117" fill="${dark}" stroke="${st}"/><polygon points="94,100 99,96 99,100" fill="${dark}"/>`; }
-  else if(p.v==='stern'){ h+=`<line x1="50" y1="8" x2="50" y2="96" stroke="${st}" stroke-width="1.5"/><rect x="30" y="96" width="40" height="21" fill="${dark}" stroke="${st}"/>`; }
-  else { h+=`<line x1="50" y1="4" x2="50" y2="100" stroke="${st}" stroke-width="1.5"/><polygon points="30,100 70,100 60,118 40,118" fill="${dark}" stroke="${st}"/><polygon points="44,100 56,100 50,88" fill="${dark}"/>`; }
-  const C={W:'#FFFFFF',R:'#FF3B30',G:'#34C759',Y:'#FFCC00',B:'#2F7BFF',K:'#111'};
-  const rings=[];
-  for(const it of p.it){ if(it[0]==='yard'){ h+=`<line x1="${it[1]}" y1="${it[2]}" x2="${it[3]}" y2="${it[2]}" stroke="${st}" stroke-width="1.5"/>`; continue; }
-    if(it[0]==='staff'){ h+=`<line x1="${it[1]}" y1="${it[2]}" x2="${it[1]}" y2="${it[3]}" stroke="${st}" stroke-width="1.2"/>`; continue; }
-    const [t,x,y,c,f]=it; const col=C[c]||c||'#111'; const blk=(f||'').includes('b')?' class="blk"':''; const dif=(f||'').includes('d');
-    if(t==='L') h+=`<g${blk}><circle cx="${x}" cy="${y}" r="10" fill="${col}" opacity=".28"/><circle cx="${x}" cy="${y}" r="5" fill="${col}"/></g>`;
-    else if(t==='ghost') h+=`<circle cx="${x}" cy="${y}" r="5" fill="none" stroke="#9AA8B5" stroke-dasharray="2 2"/><text x="${x+8}" y="${y+3}" font-size="8" fill="#9AA8B5" font-family="Arial">aucun</text>`;
-    else if(t==='ball') h+=`<circle cx="${x}" cy="${y}" r="6" fill="${col}"/>`;
-    else if(t==='coneU') h+=`<polygon points="${x-6},${y+6} ${x+6},${y+6} ${x},${y-6}" fill="${col}"/>`;
-    else if(t==='coneD') h+=`<polygon points="${x-6},${y-6} ${x+6},${y-6} ${x},${y+6}" fill="${col}"/>`;
-    else if(t==='bic') h+=`<polygon points="${x},${y-8} ${x+6},${y} ${x},${y+8} ${x-6},${y}" fill="${col}"/>`;
-    else if(t==='cyl') h+=`<rect x="${x-4}" y="${y-8}" width="8" height="16" fill="${col}"/>`;
-    else if(t==='cylTow') h+=`<rect x="${x-5}" y="${y-8}" width="10" height="16" fill="#F2CE2E" stroke="#111"/><rect x="${x-5}" y="${y-3}" width="10" height="3" fill="#111"/><rect x="${x-5}" y="${y+2}" width="10" height="3" fill="#fff"/>`;
-    else if(t==='flagH') h+=`<rect x="${x}" y="${y-7}" width="8" height="14" fill="#fff" stroke="#999" stroke-width=".5"/><rect x="${x+8}" y="${y-7}" width="8" height="14" fill="#E0332B"/>`;
-    else if(t==='flagA') h+=`<line x1="${x}" y1="${y-9}" x2="${x}" y2="${y+12}" stroke="#888" stroke-width="1"/><rect x="${x}" y="${y-8}" width="9" height="15" fill="#fff" stroke="#999" stroke-width=".5"/><polygon points="${x+9},${y-8} ${x+21},${y-8} ${x+15},${y-.5} ${x+21},${y+7} ${x+9},${y+7}" fill="#1F4FBF"/>`;
-    else if(t==='flagR') h+=`<line x1="${x}" y1="${y-9}" x2="${x}" y2="${y+12}" stroke="#888" stroke-width="1"/><rect x="${x}" y="${y-8}" width="14" height="11" fill="#E0332B"/><path d="M${x+18} ${y-8} q4 5 0 10 M${x-4} ${y-8} q-4 5 0 10" fill="none" stroke="#9AA8B5" stroke-width="1"/>`;
-    else if(t==='sq') h+=`<rect x="${x-6}" y="${y-6}" width="12" height="12" fill="${col}" stroke="#999" stroke-width=".5"/>`;
-    else if(t==='sqRW') h+=`<rect x="${x-6}" y="${y-6}" width="12" height="6" fill="#E0332B"/><rect x="${x-6}" y="${y}" width="12" height="6" fill="#fff"/><rect x="${x-6}" y="${y-6}" width="12" height="12" fill="none" stroke="#999" stroke-width=".5"/>`;
-    else if(t==='pennant') h+=`<polygon points="${x},${y-5} ${x+18},${y} ${x},${y+5}" fill="#E0332B"/>`;
-    if(dif) rings.push(`<circle class="dif" cx="${x}" cy="${y}" r="11"/>`);
-  }
-  if(p.box) rings.push(`<rect class="dif" x="${p.box[0]}" y="${p.box[1]}" width="${p.box[2]}" height="${p.box[3]}" rx="6"/>`);
-  const vb=p.v==='side'?'0 -4 100 126':'16 -4 68 126'; return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${h}${rings.join('')}</svg>`;
-}
-function cmpHTML(panels,solo){ return panels.map(p=>`<div class="pan ${p.day?'day':'night'}${solo?' solo':''}">${p.img?`<img class="cq" alt="" src="${p.img}">`:panelSVG(p)}<div class="lab">${solo?'?':esc(p.lab)}</div></div>`).join(''); }
-function setStage(x,anim){
-  const st=$('stage'); st.className='stage '+(curTab().scene||'day');
-  const sign=$('sign'), boat=$('boat'), th=$('theory');
-  sign.classList.remove('in'); boat.classList.remove('in'); $('blasts').innerHTML=''; $('horn').textContent=''; th.hidden=true; $('cmp').hidden=true;
-  if(!x){ return; }
-  if(x.imgs&&x.kind==='item'){ st.classList.add('tall'); sign.innerHTML=''; const c=$('cmp'); c.style.setProperty('--n',Math.min(x.imgs.length,x.imgs.length>4?3:2)); c.innerHTML=cmpHTML(x.imgs,false); c.hidden=false; return; }
-  if(x.panels&&x.kind==='item'){ st.classList.add('tall'); sign.innerHTML=''; const c=$('cmp'); c.style.setProperty('--n',Math.min(x.panels.length,3)); c.innerHTML=cmpHTML(x.panels,false); c.hidden=false; return; }
-  if(x.kind==='compare'||x.kind==='panel'){ st.classList.add('tall'); sign.innerHTML=''; const c=$('cmp'); const ps=x.kind==='compare'?x.panels:[x.panel]; c.style.setProperty('--n',Math.min(ps.length,ps[0]&&ps[0].img?2:3)); c.innerHTML=cmpHTML(ps,x.kind==='panel'); c.hidden=false; return; }
-  if(x.kind==='theory'){ st.classList.add('th'); th.hidden=false; sign.innerHTML='';
-    let h=`<div class="tt">${esc(x.t)}</div>`;
-    if(x.imgs) h+=`<div class="ex">${x.imgs.map(m=>`<figure><img alt="" src="${m.img}"><figcaption>${esc(m.lab)}</figcaption></figure>`).join('')}</div>`;
-    if(x.snd) h+=`<div class="bls">${x.snd.map(g=>`<figure style="margin:0;display:flex;flex-direction:column;align-items:center;gap:4px"><div class="blasts" style="position:static">${blastsHTML(g[0])}</div><figcaption style="font:600 12px/1.15 var(--body)">${esc(g[1])}</figcaption></figure>`).join('')}</div>`;
-    th.innerHTML=h; return; }
-  if(x.kind==='sound'){ sign.innerHTML=''; $('horn').textContent='♪ signal sonore'; $('blasts').innerHTML=blastsHTML(x.snd); return; }
-  sign.classList.toggle('wide',!!x.wide); st.classList.toggle('wd',!!x.wide);
-  sign.innerHTML=`<img alt="" src="${x.img}">`;
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{ sign.classList.add('in'); boat.classList.add('in'); }));
-}
-function cardHTML(x,full){
-  const k=curTab();
-  let h=`<div class="meta"><span class="cat">${esc(x.kind==='theory'?'Rappel théorique':(x.cat||''))}</span><span id="count"></span></div><h2>${esc(x.t)}</h2>`;
-  if(full){
-    if(x.kind==='compare'){ h+=`<p>${esc(x.a)}</p>`; h+=x.panels.map(p=>`<p><span class="lbl">${esc(p.lab)}${p.day?' (de jour)':' (de nuit)'} : </span>${esc(p.sub||'')}</p>`).join(''); if(x.p) h+=`<p class="trap"><span class="lbl">Piège à éviter : </span>${esc(x.p)}</p>`; }
-    else if(x.kind==='theory'){ h+=`<p>${esc(x.a)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">${x.cat==='Pièges'?'Pour l\'éviter':'À retenir'} : </span>${esc(x.p)}</p>`; }
-    else if(k.key==='feux'&&x.g==='theorie'){ h+=`<p>${esc(x.a)}</p><p>${esc(x.b)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">À retenir : </span>${esc(x.p)}</p>`; }
-    else if(k.key==='feux'){ h+=`<p><span class="lbl">Jour : </span>${esc(x.a)}</p><p><span class="lbl">Nuit : </span>${esc(x.b)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">Piège : </span>${esc(x.p)}</p>`; }
-    else { h+=`<p>${esc(x.a)}</p>`; if(x.p) h+=`<p class="trap"><span class="lbl">Piège : </span>${esc(x.p)}</p>`; }
-    if(x.r) h+=`<span class="ref">${esc(x.r)}</span>`;
-  }
-  h+=`<div class="bar" aria-hidden="true"><i id="prog"></i></div>`;
-  return h;
+  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.22, t0 + .05); g.gain.setValueAtTime(.22, t0 + Math.max(.06, dur - .06)); g.gain.linearRampToValueAtTime(0, t0 + dur);
+  o1.start(t0); o2.start(t0); o1.stop(t0 + dur + .05); o2.stop(t0 + dur + .05); nodes.push(o1, o2); }
+function ding(t0, fqs, vol){ var a = audio(); if(!a) return; fqs.forEach(function(fq, k){ var o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = fq; o.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(vol/(k+1), t0); g.gain.exponentialRampToValueAtTime(.0001, t0 + .9); o.start(t0); o.stop(t0 + 1); nodes.push(o); }); }
+function bang(t0){ var a = audio(); if(!a) return; var n = a.sampleRate * .6, buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+  for(var i = 0; i < n; i++) d[i] = (Math.random()*2 - 1) * Math.pow(1 - i/n, 3);
+  var src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); f.type = "lowpass"; f.frequency.value = 700; g.gain.value = .9;
+  src.buffer = buf; src.connect(f); f.connect(g); g.connect(a.destination); src.start(t0); nodes.push(src); }
+function stopAll(){ nodes.forEach(function(n){ try{ n.stop(); }catch(e){} }); nodes = []; if(anim){ cancelAnimationFrame(anim.raf); var c = document.getElementById("cur-" + anim.id); if(c) c.setAttribute("opacity", "0"); if(anim.btn){ anim.btn.classList.remove("on"); anim.btn.textContent = "▶"; } } anim = null; }
+function jouer(code, id, btn){
+  stopAll(); var a = audio(); var p = plan(code), k = fast ? .5 : 1;
+  if(btn){ btn.classList.add("on"); btn.textContent = "■"; }
+  var t0 = a ? a.currentTime + .12 : 0;
+  if(a) p.seq.forEach(function(e){ var s = t0 + e.s * k, d = e.d * k;
+    if(e.k === "h" || e.k === "K" || e.k === "m") horn(s, Math.max(.12, d));
+    else if(e.k === "C"){ for(var r = 0; r * .2 < d; r++) ding(s + r*.2, [880, 1320, 2210], .18); }
+    else if(e.k === "G"){ for(var r2 = 0; r2 * .25 < d; r2++) ding(s + r2*.25, [196, 293, 415], .25); }
+    else if(e.k === "x") ding(s, [880, 1320, 2210], .2);
+    else if(e.k === "X") bang(s); });
+  var debut = performance.now(), cur = document.getElementById("cur-" + id);
+  anim = {id:id, btn:btn, raf:0};
+  (function pas(){ var t = (performance.now() - debut) / 1000 / k - .12;
+    if(cur){ cur.setAttribute("opacity", t > 0 ? "1" : "0"); cur.setAttribute("x1", Math.max(0, t) * U); cur.setAttribute("x2", Math.max(0, t) * U); }
+    if(t < p.total + .3){ anim.raf = requestAnimationFrame(pas); } else stopAll(); })();
 }
 
-/* ---------- défilé ---------- */
-function show(n){ list=filtered(); if(!list.length) return; i=(n+list.length)%list.length; const x=list[i];
-  setStage(x); $('card').innerHTML=cardHTML(x,true);
-  let dur=x.kind==='compare'?15:READ; if(x.kind==='sound'){ const pd=running?play(x.snd):plan(x.snd).total; dur=Math.max(READ,pd+3); }
-  timer=dur; x._dur=dur; updCount(); }
-function updCount(){ const c=$('count'); if(!c) return; const x=list[i]; c.textContent=`${i+1} / ${list.length}`+(running?` · ${Math.max(0,Math.ceil(timer))} s`:' · en pause');
-  const p=$('prog'); if(p) p.style.width=`${(1-Math.max(0,timer)/(x._dur||READ))*100}%`; }
-function tick(t){ if(last===null) last=t; const dt=Math.min(.1,(t-last)/1000); last=t;
-  if(mode==='def'&&running){ timer-=dt; if(timer<=0) show(i+1); }
-  if(mode==='def') updCount(); lightBlasts(); requestAnimationFrame(tick); }
-function reset(){ stopPlay(); running=false; $('bPlay').textContent='Démarrer'; if(mode==='def'){ show(0); } else startQuiz();
-  $('bSpeed').hidden=!(curTab().key==='sons'); $('qListen').hidden=!(curTab().key==='sons'); }
-$('bPlay').onclick=()=>{ audio(); running=!running; $('bPlay').textContent=running?'Pause':'Reprendre'; if(running){ const x=list[i]; if(x&&x.kind==='sound'){ show(i); } } else stopPlay(); };
-$('bNext').onclick=()=>{ show(i+1); };
-$('bPrev').onclick=()=>{ show(i-1); };
-$('bRestart').onclick=()=>{ show(0); };
-$('bSpeed').onclick=()=>{ fast=!fast; $('bSpeed').textContent=fast?'Sons : accélérés':'Sons : durée réelle'; show(i); };
+/* ---------------------------------------------------------------- fiches */
+var $ = function(id){ return document.getElementById(id); };
+function fiche(f){
+  var h = '<section class="card" id="f-' + f.id + '"><h2>' + f.nom + '</h2><p class="intro">' + f.intro + "</p>";
+  h += '<div class="key"><h3>Comment les reconnaître</h3><ul>' + f.key.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul></div>";
+  h += '<div class="rows">';
+  f.rows.forEach(function(r, i){
+    var id = f.id + i;
+    h += '<div class="row' + (r.non ? " non" : "") + '"><button type="button" class="play" data-code="' + r.c + '" data-id="' + id + '" aria-label="Écouter : ' + r.s.replace(/"/g, "") + '">▶</button>'
+       + '<div class="sens">' + r.s + (r.tag ? '<span class="tag">' + r.tag + "</span>" : "") + (r.non ? '<span class="pas">pas détresse</span>' : "") + "</div>"
+       + '<div class="qui"><span class="code">' + codeTexte(r.c) + "</span><br>" + r.q + "</div>"
+       + '<div class="tl">' + svgLigne(r.c, r.hl, id, i === 0) + "</div></div>";
+  });
+  h += "</div>";
+  if(f.pieges.length) h += '<div class="trap"><h3>Pièges</h3><ul>' + f.pieges.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul></div>";
+  return h + '<p class="src">' + f.src + "</p></section>";
+}
+$("fiches").innerHTML = FAM.map(fiche).join("");
+$("chips").innerHTML = FAM.map(function(f){ return '<button type="button" class="btn" data-f="' + f.id + '">' + f.nom.split(" :")[0] + "</button>"; }).join("");
+$("chips").addEventListener("click", function(e){ var b = e.target.closest("[data-f]"); if(b) $("f-" + b.dataset.f).scrollIntoView({behavior:"smooth", block:"start"}); });
+document.addEventListener("click", function(e){ var b = e.target.closest(".play"); if(!b) return;
+  if(anim && anim.btn === b){ stopAll(); return; } jouer(b.dataset.code, b.dataset.id, b); });
+$("vitesse").addEventListener("click", function(){ fast = !fast; this.textContent = fast ? "Sons : accélérés" : "Sons : durée réelle"; stopAll(); });
 
-/* ---------- quiz ---------- */
-function shuffle(a){ for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; } return a; }
-function startQuiz(){ stopPlay(); let pool=filtered().filter(x=>x.kind!=='theory'&&x.g!=='theorie');
-  if(curTab().key==='comparer'){ pool=[]; filtered().filter(c=>c.panels).forEach(c=>c.panels.forEach(p=>{ const memes=new Set(c.panels.filter(q=>!!q.day===!!p.day).map(q=>q.lab)); if(memes.size>=2) pool.push({kind:'panel',panel:p,t:p.lab,comp:c,cat:c.t}); })); } quiz={q:shuffle(pool.slice()),k:0,score:0,done:0,answered:false}; askQ(); }
-function distractors(x){ if(x.kind==='panel'){ const vus=new Set([x.t]); return shuffle(x.comp.panels.filter(p=>!!p.day===!!x.panel.day&&!vus.has(p.lab)&&vus.add(p.lab)).map(p=>({t:p.lab}))).slice(0,3); }
-  const all=curTab().items.filter(y=>y.kind!=='theory'&&y.g!=='theorie'&&y.t!==x.t);
-  let same=shuffle(all.filter(y=>y.g===x.g)); let rest=shuffle(all.filter(y=>y.g!==x.g&&y.cat===x.cat)); let any=shuffle(all.filter(y=>y.g!==x.g&&y.cat!==x.cat));
-  const vus=new Set([x.t]); return [...same,...rest,...any].filter(y=>!vus.has(y.t)&&vus.add(y.t)).slice(0,2); }
-function askQ(){ const Q=quiz.q; if(!Q.length){ $('card').innerHTML='<h2>Aucune question dans ce filtre</h2>'; return; }
-  if(quiz.k>=Q.length){ setStage(null); $('card').innerHTML=`<h2>Quiz terminé</h2><p class="verdict ${quiz.score>=Q.length*0.8?'good':'bad'}">${quiz.score} / ${Q.length} bonnes réponses</p><p class="note">Recommencez : l'ordre des questions et des réponses change à chaque fois.</p>`; return; }
-  const x=Q[quiz.k]; quiz.answered=false; setStage(x);
-  if(x.kind==='sound'){ play(x.snd); }
-  const opts=shuffle([x,...distractors(x)]);
-  const qtxt=x.q?x.q:curTab().key==='comparer'?(x.panel.day?'Quel bateau montre ces marques de jour ?':'Quel bateau montre ces feux ?'):curTab().key==='sons'?'Que signifie ce signal sonore ?':(curTab().key==='feux'?'Quel bateau montre ces feux ou ces marques ?':'Que signifie ce panneau ?');
-  $('card').innerHTML=`<div class="meta"><span class="cat">${esc(x.cat||'')}</span><span>Question ${quiz.k+1} / ${Q.length} · score ${quiz.score}</span></div><h2>${qtxt}</h2><div class="opts">${opts.map((o,n)=>`<button class="opt" data-n="${n}">${esc(o.t)}</button>`).join('')}</div><div id="fb"></div>`;
-  $('card').querySelectorAll('.opt').forEach((b,n)=>b.onclick=()=>{ if(quiz.answered) return; quiz.answered=true; const ok=opts[n]===x||(x.kind==='panel'&&opts[n].t===x.t); if(ok) quiz.score++;
-    $('card').querySelectorAll('.opt').forEach((bb,m)=>{ if(opts[m]===x||opts[m].t===x.t) bb.classList.add('good'); else if(m===n) bb.classList.add('bad'); });
-    const k=curTab().key; let fb=`<p class="verdict ${ok?'good':'bad'}">${ok?'Juste.':'Faux.'}</p>`;
-    if(x.kind==='panel'){ fb+=`<p>${esc(x.panel.sub||'')}</p><p>${esc(x.comp.a)}</p><p class="trap"><span class="lbl">Pour ne plus confondre : </span>${esc(x.comp.p)}</p>`; } else if(k==='feux') fb+=`<p><span class="lbl">Jour : </span>${esc(x.a)}</p><p><span class="lbl">Nuit : </span>${esc(x.b)}</p>`; else fb+=`<p>${esc(x.a)}</p>`;
-    if(x.p&&x.kind!=='panel') fb+=`<p class="trap"><span class="lbl">Piège : </span>${esc(x.p)}</p>`; if(x.r) fb+=`<span class="ref">${esc(x.r)}</span>`;
-    $('fb').innerHTML=fb; }); }
-$('qNext').onclick=()=>{ quiz.k++; askQ(); };
-$('qRestart').onclick=()=>startQuiz();
-$('qListen').onclick=()=>{ const x=quiz.q[quiz.k]; if(x&&x.kind==='sound') play(x.snd); };
-
-function setMode(m){ mode=m; $('mDef').setAttribute('aria-pressed',m==='def'); $('mQuiz').setAttribute('aria-pressed',m==='quiz');
-  $('ctrlDef').hidden=m!=='def'; $('ctrlQuiz').hidden=m!=='quiz'; reset(); }
-$('mDef').onclick=()=>setMode('def'); $('mQuiz').onclick=()=>setMode('quiz');
-
-buildTabs(); buildCats(); reset(); requestAnimationFrame(tick);
+/* ---------------------------------------------------------------- quiz */
+var Q = [];
+FAM.forEach(function(f){ f.rows.forEach(function(r, i){ if(r.quiz) Q.push({f:f, r:r, id:f.id + "q" + i}); }); });
+var qz = {ordre:[], k:0, bon:0, fait:0, dessin:true};
+function melange(a){ for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function choix(item){
+  var vus = {}; vus[item.r.s] = 1;
+  var meme = item.f.rows.filter(function(r){ return !r.non && r.quiz && !vus[r.s] && (vus[r.s] = 1); }).map(function(r){ return r.s; });
+  var autres = melange(Q.filter(function(x){ return x.f !== item.f && !vus[x.r.s]; }).map(function(x){ return x.r.s; }));
+  return melange([item.r.s].concat(melange(meme).slice(0, 3)).concat(autres).slice(0, 4));
+}
+function poser(){
+  if(qz.k >= qz.ordre.length){ $("quiz").innerHTML = '<h2>Terminé : ' + qz.bon + " / " + qz.fait + '</h2><div class="bar"><button type="button" class="btn pri" id="q-re">Recommencer</button></div>'; $("q-re").onclick = demarrer; return; }
+  var it = qz.ordre[qz.k], opts = choix(it);
+  $("quiz").innerHTML = '<p class="score">Question ' + (qz.k + 1) + " / " + qz.ordre.length + " · ✔ " + qz.bon + "</p>"
+    + '<p class="sens">' + it.r.quiz + "</p>"
+    + '<div class="bar"><button type="button" class="play" style="grid-row:auto" data-code="' + it.r.c + '" data-id="' + it.id + '" aria-label="Écouter le signal">▶</button><label class="chk"><input type="checkbox" id="q-dessin"' + (qz.dessin ? " checked" : "") + "> montrer le dessin</label></div>"
+    + '<div class="tl" id="q-tl"' + (qz.dessin ? "" : " hidden") + ">" + svgLigne(it.r.c, [], it.id, "quiz") + "</div>"
+    + '<div class="qopts">' + opts.map(function(o){ return '<button type="button" class="qopt">' + o + "</button>"; }).join("") + "</div>"
+    + '<div id="q-exp"></div>';
+  $("q-dessin").onchange = function(){ qz.dessin = this.checked; $("q-tl").hidden = !qz.dessin; };
+  $("quiz").querySelectorAll(".qopt").forEach(function(b){ b.onclick = function(){
+    if($("quiz").dataset.rep === "1") return; $("quiz").dataset.rep = "1";
+    var ok = b.textContent === it.r.s; qz.fait++; if(ok) qz.bon++;
+    $("quiz").querySelectorAll(".qopt").forEach(function(x){ if(x.textContent === it.r.s) x.classList.add("ok"); else if(x === b) x.classList.add("ko"); });
+    $("q-tl").hidden = false;
+    $("q-exp").innerHTML = '<div class="' + (ok ? "key" : "trap") + '"><b>' + (ok ? "✔ Juste." : "✘ Non : c'est « " + it.r.s + " ».") + "</b> " + it.r.q + ' <span class="code">' + codeTexte(it.r.c) + '</span><br>Voir la fiche « ' + it.f.nom + ' ».</div><div class="bar" style="margin-top:10px"><button type="button" class="btn pri" id="q-next">Question suivante</button></div>';
+    $("q-next").onclick = function(){ qz.k++; poser(); };
+  }; });
+  $("quiz").dataset.rep = "0";
+}
+function demarrer(){ qz.ordre = melange(Q.slice()); qz.k = 0; qz.bon = 0; qz.fait = 0; poser(); }
+function mode(q){ stopAll(); $("m-comp").setAttribute("aria-pressed", !q); $("m-quiz").setAttribute("aria-pressed", q); $("vue-comp").hidden = q; $("vue-quiz").hidden = !q; if(q) demarrer(); }
+$("m-comp").onclick = function(){ mode(false); };
+$("m-quiz").onclick = function(){ mode(true); };
 })();
 </script>
-
 </body>
 </html>
