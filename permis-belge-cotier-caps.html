@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Les trois nords</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Maquette des trois nords — Nord vrai, Nord magnétique, Nord compas ; cap vrai, magnétique, compas ; déclinaison et déviation. */
+:root{
+  --bg:#EEF1F4; --fg:#16202A; --muted:#55626F; --panel:#FFFFFF; --line:#CBD3DC;
+  --accent:#0E5A8A; --accent-fg:#FFFFFF; --trap-bg:#FFF4D6; --trap-fg:#6A4A00; --trap-line:#E0B43A;
+  --nv:#16202A; --nm:#1E8A3A; --nc:#1F5FBF; --cap:#D0021B; --mer:#E3F0F8;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
+  --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
+  --nv:#E5ECF2; --nm:#4CC16A; --nc:#6FA8FF; --cap:#FF5A5F; --mer:#13222E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --fg:#E5ECF2; --muted:#9AA8B5; --panel:#172029; --line:#2B3846;
+  --accent:#5DB2E8; --accent-fg:#0A1722; --trap-bg:#3A2E0C; --trap-fg:#F3D27A; --trap-line:#8C6A12;
+  --nv:#E5ECF2; --nm:#4CC16A; --nc:#6FA8FF; --cap:#FF5A5F; --mer:#13222E; color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:640px;margin:0 auto;padding-block:12px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:10px}
+.retour{color:var(--accent);text-decoration:none;font-weight:600;font-size:15px}
+header{display:flex;flex-direction:column;gap:2px}
+h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;letter-spacing:.02em;line-height:1.1}
+h2{font-family:var(--display);font-weight:700;font-size:21px;margin:0 0 6px;letter-spacing:.02em}
+.ver{font-size:12px;color:var(--muted)}
+.seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.seg button,.btn{font:600 14px var(--body);padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"],.btn.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.card p{margin:0 0 8px}.card p:last-child{margin-bottom:0}
+.card ul{margin:0;padding-left:20px}.card li{margin-bottom:6px}
+.scene{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--mer)}
+.scene svg,.card svg{display:block;width:100%;height:auto}
+.reg{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center}
+.reg label{font-weight:700;font-size:15px}
+.reg .val{font-family:var(--display);font-size:20px;font-weight:700;min-width:76px;text-align:right}
+.reg .row{grid-column:1/-1;display:flex;gap:6px;align-items:center}
+.reg input[type=range]{flex:1;height:32px;accent-color:var(--accent)}
+.pm{font:700 18px var(--body);width:38px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.l-nv{color:var(--nv)}.l-nm{color:var(--nm)}.l-nc{color:var(--nc)}.l-cap{color:var(--cap)}
+.calc{font-size:17px}
+.calc .ligne{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:6px 0}
+.calc .ligne:first-child{border-top:none}
+.calc .res{font-family:var(--display);font-size:22px;font-weight:700;white-space:nowrap}
+.calc .op{color:var(--muted);font-size:14px}
+.echelle{display:flex;align-items:center;justify-content:space-between;gap:4px;font-weight:700;text-align:center;font-size:14px}
+.echelle .b{border:2px solid currentColor;border-radius:10px;padding:4px 6px;min-width:58px}
+.echelle .f{flex:1;color:var(--muted);font-size:12px;line-height:1.2}
+.trap{background:var(--trap-bg);color:var(--trap-fg);border:1px solid var(--trap-line);border-radius:12px;padding:12px 14px}
+.trap h2{color:var(--trap-fg)}
+.trap ul{margin:0;padding-left:20px}.trap li{margin-bottom:6px}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
+.src{font-size:12px;color:var(--muted)}
+.ex{display:flex;gap:6px;flex-wrap:wrap}
+/* couleurs des dessins qui suivent le thème */
+.s-nv{stroke:var(--nv)}.f-nv{fill:var(--nv)}.s-nm{stroke:var(--nm)}.f-nm{fill:var(--nm)}
+.s-nc{stroke:var(--nc)}.f-nc{fill:var(--nc)}.s-cap{stroke:var(--cap)}.f-cap{fill:var(--cap)}
+.s-line{stroke:var(--line)}.f-mu{fill:var(--muted)}.f-fg{fill:var(--fg)}.s-fg{stroke:var(--fg)}.f-panel{fill:var(--panel)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<header>
+  <h1>Les trois nords : cap vrai, magnétique et compas</h1>
+  <span class="ver">version 1.0 · permis côtier · navigation · maquette à manipuler</span>
+</header>
+
+<div class="card">
+  <p>Un même cap peut s'écrire avec <b>trois chiffres différents</b>, selon le nord à partir duquel on le compte. Réglez la maquette : le dessin et le calcul changent en direct.</p>
+</div>
+
+<div class="seg" role="group" aria-label="Sens du calcul">
+  <button type="button" id="m-c2v" aria-pressed="true">Du compas vers le vrai</button>
+  <button type="button" id="m-v2c" aria-pressed="false">Du vrai vers le compas</button>
+</div>
+
+<div class="scene"><svg id="dessin" viewBox="0 0 360 392" role="img" aria-label="Les trois nords et le cap du bateau"></svg></div>
+<label class="chk"><input type="checkbox" id="zoom" checked> Agrandir les petits angles (sinon 3° sont presque invisibles)</label>
+
+<div class="card reg" id="reglages">
+  <label for="r-cap" id="lab-cap" class="l-nc">Cap compas (Cc)</label><span></span><span class="val" id="v-cap">045°</span>
+  <div class="row"><button class="pm" type="button" data-k="cap" data-d="-1">−</button><input type="range" id="r-cap" min="0" max="359" step="1" value="45"><button class="pm" type="button" data-k="cap" data-d="1">+</button></div>
+  <label for="r-dev" class="l-nc">Déviation (Dév)</label><span></span><span class="val" id="v-dev">3° E</span>
+  <div class="row"><button class="pm" type="button" data-k="dev" data-d="-1">−</button><input type="range" id="r-dev" min="-10" max="10" step="1" value="3"><button class="pm" type="button" data-k="dev" data-d="1">+</button></div>
+  <label for="r-dm" class="l-nm">Déclinaison (D)</label><span></span><span class="val" id="v-dm">2° W</span>
+  <div class="row"><button class="pm" type="button" data-k="dm" data-d="-1">−</button><input type="range" id="r-dm" min="-10" max="10" step="1" value="-2"><button class="pm" type="button" data-k="dm" data-d="1">+</button></div>
+</div>
+
+<div class="card calc" id="calcul" aria-live="polite"></div>
+
+<div class="card">
+  <h2>L'échelle des trois nords</h2>
+  <div class="echelle">
+    <span class="b l-nc">Cc<br><small>compas</small></span><span class="f">+ Dév →<br>← − Dév</span>
+    <span class="b l-nm">Cm<br><small>magnétique</small></span><span class="f">+ D →<br>← − D</span>
+    <span class="b l-nv">Cv<br><small>vrai</small></span>
+  </div>
+  <p style="margin-top:10px">Vers la droite (du compas vers la carte) : on <b>ajoute</b> les corrections avec leur signe. Vers la gauche (de la carte vers le compas) : on <b>retranche</b>.</p>
+  <p><b>Est = +, Ouest = −</b>. Moyen mnémotechnique : « Est-ce plus ? Ouest-ce moins ? »</p>
+</div>
+
+<div class="card">
+  <h2>Exemples du QCM côtier</h2>
+  <div class="ex" id="exemples"></div>
+</div>
+
+<div class="card">
+  <h2>D'où viennent les trois nords ?</h2>
+  <svg viewBox="0 0 340 214" role="img" aria-label="La Terre, le pôle Nord géographique et le pôle Nord magnétique">
+    <circle cx="170" cy="118" r="74" class="f-panel s-fg" stroke-width="2"/>
+    <path d="M96 118 Q170 140 244 118" fill="none" class="s-line" stroke-width="1.5"/>
+    <line x1="170" y1="118" x2="170" y2="30" class="s-nv" stroke-width="3"/>
+    <circle cx="170" cy="44" r="5" class="f-nv"/>
+    <text x="178" y="22" font-size="13" font-weight="700" class="f-fg">pôle Nord géographique</text>
+    <text x="178" y="37" font-size="12" class="f-mu">(là où pointe le Nord vrai)</text>
+    <circle cx="146" cy="60" r="5" class="f-nm"/>
+    <text x="8" y="58" font-size="13" font-weight="700" class="f-nm">pôle magnétique</text>
+    <text x="8" y="73" font-size="11" class="f-mu">(il bouge lentement)</text>
+    <circle cx="214" cy="138" r="5" class="f-cap"/>
+    <text x="222" y="156" font-size="13" font-weight="700" class="f-cap">vous</text>
+    <line x1="214" y1="138" x2="171" y2="49" class="s-nv" stroke-width="2" stroke-dasharray="5 4"/>
+    <line x1="214" y1="138" x2="148" y2="64" class="s-nm" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="170" y="198" font-size="12" text-anchor="middle" class="f-mu">Les deux pôles ne sont pas au même endroit :</text><text x="170" y="212" font-size="12" text-anchor="middle" class="f-mu">vues d'ici, leurs directions font un angle.</text>
+  </svg>
+  <ul>
+    <li><b class="l-nv">Nord vrai (Nv)</b> : la direction du pôle Nord géographique. C'est le nord de la <b>carte</b> : tout ce que vous tracez sur la carte est « vrai ».</li>
+    <li><b class="l-nm">Nord magnétique (Nm)</b> : là où pointe une boussole posée loin de tout métal. L'écart entre Nv et Nm est la <b>déclinaison (D)</b>. Elle dépend du <b>lieu</b> et de l'<b>année</b> : on la lit sur la rose de la carte, avec sa variation annuelle.</li>
+    <li><b class="l-nc">Nord compas (Nc)</b> : là où pointe le compas de <b>votre</b> bateau. Le moteur, le métal et l'électricité du bord tirent un peu l'aiguille. L'écart entre Nm et Nc est la <b>déviation (Dév)</b>. Elle dépend du <b>cap du bateau</b> : on la lit dans la table de déviation, à la ligne du cap suivi.</li>
+  </ul>
+</div>
+
+<div class="trap">
+  <h2>Pièges</h2>
+  <ul>
+    <li>Ne pas confondre : <b>D</b> (déclinaison) vient de la Terre et relie Nv et Nm ; <b>Dév</b> (déviation) vient du bateau et relie Nm et Nc.</li>
+    <li>Ordre du calcul, du compas vers le vrai : d'abord la déviation (Cc → Cm), puis la déclinaison (Cm → Cv).</li>
+    <li>Dans l'autre sens (cap tracé sur la carte → cap à donner au barreur), on fait le chemin inverse et on <b>change les signes</b>.</li>
+    <li>Pour un relèvement pris au compas de route, la déviation à utiliser est celle du <b>cap du bateau</b>, pas celle de la direction de l'amer.</li>
+    <li>Un résultat négatif ou au-delà de 360° se ramène entre 000° et 359° : −2° = 358°, 362° = 002°.</li>
+  </ul>
+</div>
+
+<p class="src">Matière d'examen, Navigation (complément brevet général) : « Navigation de base : Cc, Cm, Cv ; déclinaison (D) et déviation (Dév) » · Manuel : T2 p. 20-21.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var st = { mode:"c2v", cap:45, dev:3, dm:-2, zoom:true };
+  /* réglages passés dans l'adresse (lien depuis une question du QCM) : ?cc=45&dev=3&dm=-2 ou ?cv=90&... */
+  try{
+    var u = new URLSearchParams(location.search);
+    if(u.has("cv")){ st.mode = "v2c"; st.cap = +u.get("cv"); }
+    else if(u.has("cc")) st.cap = +u.get("cc");
+    if(u.has("dev")) st.dev = +u.get("dev");
+    if(u.has("dm")) st.dm = +u.get("dm");
+  }catch(e){}
+  var $ = function(id){ return document.getElementById(id); };
+  function norm(v){ return ((Math.round(v) % 360) + 360) % 360; }
+  function deg(v){ return ("00" + norm(v)).slice(-3) + "°"; }
+  function ew(v){ return v === 0 ? "0°" : Math.abs(v) + "° " + (v > 0 ? "E" : "W"); }
+  function sgn(v){ return (v >= 0 ? "+ " : "− ") + Math.abs(v) + "°"; }
+
+  function valeurs(){
+    var cc, cm, cv;
+    if(st.mode === "c2v"){ cc = st.cap; cm = cc + st.dev; cv = cm + st.dm; }
+    else { cv = st.cap; cm = cv - st.dm; cc = cm - st.dev; }
+    return { cc:norm(cc), cm:norm(cm), cv:norm(cv) };
+  }
+
+  /* ---------------- dessin ---------------- */
+  var CX = 180, CY = 196, R = 128;
+  function pt(a, r){ var k = a * Math.PI / 180; return [CX + r * Math.sin(k), CY - r * Math.cos(k)]; }
+  function f(n){ return n.toFixed(1); }
+  function arcCw(a1, a2, r){ /* arc dans le sens des aiguilles d'une montre, de a1 à a2 */
+    var dd = ((a2 - a1) % 360 + 360) % 360; if(dd < 0.01) return "";
+    if(dd > 359.5) dd = 359.5;
+    var p1 = pt(a1, r), p2 = pt(a1 + dd, r);
+    return "M" + f(p1[0]) + " " + f(p1[1]) + " A" + r + " " + r + " 0 " + (dd > 180 ? 1 : 0) + " 1 " + f(p2[0]) + " " + f(p2[1]);
+  }
+  function arcCourt(a1, a2, r){ var lo = Math.min(a1, a2), hi = Math.max(a1, a2); if(hi - lo < 0.01) return ""; var p1 = pt(lo, r), p2 = pt(hi, r);
+    return "M" + f(p1[0]) + " " + f(p1[1]) + " A" + r + " " + r + " 0 0 1 " + f(p2[0]) + " " + f(p2[1]); }
+  function txt(x, y, s, cls, anc, taille){ return '<text x="' + f(x) + '" y="' + f(y) + '" font-size="' + (taille || 13) + '" font-weight="700" text-anchor="' + (anc || "middle") + '" class="' + cls + '" font-family="Source Sans 3, Arial, sans-serif">' + s + "</text>"; }
+
+  function dessiner(){
+    var v = valeurs(), k = st.zoom ? 4 : 1, s = "";
+    var aNv = 0, aNm = st.dm * k, aNc = aNm + st.dev * k;
+    var aCap = aNc + v.cc;
+    /* rose graduée */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="' + R + '" fill="none" class="s-line" stroke-width="1.5"/>';
+    for(var g = 0; g < 360; g += 10){
+      var p1 = pt(g, R), p2 = pt(g, R - (g % 90 === 0 ? 12 : g % 30 === 0 ? 8 : 4));
+      s += '<line x1="' + f(p1[0]) + '" y1="' + f(p1[1]) + '" x2="' + f(p2[0]) + '" y2="' + f(p2[1]) + '" class="s-line" stroke-width="1.5"/>';
+    }
+    ["N", "E", "S", "W"].forEach(function(c, i){ if(i){ var q = pt(i * 90, R - 22); s += txt(q[0], q[1] + 5, c, "f-mu", "middle", 12); } });
+    s += txt(10, 18, "Rose de la carte : 0° = Nord vrai", "f-mu", "start", 11);
+    /* les trois nords */
+    var N = [ { a:aNv, c:"nv", n:"Nv" }, { a:aNm, c:"nm", n:"Nm" }, { a:aNc, c:"nc", n:"Nc" } ];
+    N.forEach(function(o){ var p = pt(o.a, R + 10); s += '<line x1="' + CX + '" y1="' + CY + '" x2="' + f(p[0]) + '" y2="' + f(p[1]) + '" class="s-' + o.c + '" stroke-width="2.6"/>';
+      var q = pt(o.a, R + 24); o.x = q[0]; o.y = q[1] + 5; });
+    var tri = N.slice().sort(function(a, b){ return a.x - b.x; });
+    for(var it = 0; it < 8; it++) for(var j = 1; j < tri.length; j++){ var gp = tri[j].x - tri[j - 1].x; if(gp < 30){ tri[j].x += (30 - gp) / 2; tri[j - 1].x -= (30 - gp) / 2; } }
+    N.forEach(function(o){ s += txt(o.x, Math.min(o.y, CY - R - 12), o.n, "f-" + o.c, "middle", 15); });
+    /* écarts entre les nords */
+    var capEst = norm(aCap) < 180, minA = Math.min(aNv, aNm, aNc), maxA = Math.max(aNv, aNm, aNc);
+    function ecart(a1, a2, r, lib, c){
+      var d = arcCourt(a1, a2, r); if(!d) return "";
+      var y = pt((a1 + a2) / 2, r)[1] + 4, x = capEst ? pt(minA, r)[0] - 8 : pt(maxA, r)[0] + 8;
+      return '<path d="' + d + '" fill="none" class="s-' + c + '" stroke-width="3.5"/>' + txt(x, y, lib, "f-" + c, capEst ? "end" : "start", 13);
+    }
+    s += ecart(aNv, aNm, 84, "D " + ew(st.dm), "nm");
+    s += ecart(aNm, aNc, 106, "Dév " + ew(st.dev), "nc");
+    /* le cap, compté depuis chaque nord */
+    [ { a:aNc, r:34, c:"nc" }, { a:aNm, r:48, c:"nm" }, { a:aNv, r:62, c:"nv" } ].forEach(function(o){
+      var d = arcCw(o.a, aCap, o.r); if(d) s += '<path d="' + d + '" fill="none" class="s-' + o.c + '" stroke-width="3"/>';
+    });
+    /* le bateau, vu de dessus, l'étrave dans l'axe du cap */
+    s += '<g transform="rotate(' + f(aCap) + " " + CX + " " + CY + ')">'
+       + '<line x1="' + CX + '" y1="' + CY + '" x2="' + CX + '" y2="' + (CY - R + 14) + '" class="s-cap" stroke-width="3.5"/>'
+       + '<path d="M' + CX + " " + (CY - R + 4) + " L" + (CX - 8) + " " + (CY - R + 20) + " L" + (CX + 8) + " " + (CY - R + 20) + ' Z" class="f-cap"/>'
+       + '<path d="M' + CX + " " + (CY - 34) + " C" + (CX + 13) + " " + (CY - 18) + " " + (CX + 12) + " " + (CY + 12) + " " + (CX + 9) + " " + (CY + 24)
+       + " L" + (CX - 9) + " " + (CY + 24) + " C" + (CX - 12) + " " + (CY + 12) + " " + (CX - 13) + " " + (CY - 18) + " " + CX + " " + (CY - 34) + ' Z" class="f-panel s-fg" stroke-width="2"/>'
+       + "</g>";
+    var pc = pt(aCap, R + 22); s += txt(pc[0], pc[1] + 5, "cap", "f-cap", "middle", 14);
+    /* récapitulatif dans le coin bas */
+    s += txt(10, 362, "Cc = " + deg(v.cc), "f-nc", "start", 15) + txt(130, 362, "Cm = " + deg(v.cm), "f-nm", "start", 15) + txt(250, 362, "Cv = " + deg(v.cv), "f-nv", "start", 15);
+    s += txt(180, 384, st.zoom ? "Les écarts D et Dév sont agrandis 4 fois pour être visibles." : "Angles réels.", "f-mu", "middle", 11);
+    $("dessin").innerHTML = s;
+  }
+
+  function calcul(){
+    var v = valeurs(), h = "";
+    function L(op, res, cls){ return '<div class="ligne"><span class="op">' + op + '</span><span class="res ' + cls + '">' + res + "</span></div>"; }
+    if(st.mode === "c2v"){
+      h += L("Cap lu au compas", "Cc = " + deg(v.cc), "l-nc");
+      h += L("Cm = Cc + Dév = " + deg(v.cc) + " " + sgn(st.dev) + (st.dev ? " (" + (st.dev > 0 ? "Est : on ajoute" : "Ouest : on retranche") + ")" : ""), "Cm = " + deg(v.cm), "l-nm");
+      h += L("Cv = Cm + D = " + deg(v.cm) + " " + sgn(st.dm) + (st.dm ? " (" + (st.dm > 0 ? "Est : on ajoute" : "Ouest : on retranche") + ")" : ""), "Cv = " + deg(v.cv), "l-nv");
+      h += '<p class="op" style="margin:6px 0 0">Cv est le cap à tracer sur la carte.</p>';
+    } else {
+      h += L("Cap tracé sur la carte", "Cv = " + deg(v.cv), "l-nv");
+      h += L("Cm = Cv − D = " + deg(v.cv) + " − (" + (st.dm >= 0 ? "+" : "−") + Math.abs(st.dm) + "°)", "Cm = " + deg(v.cm), "l-nm");
+      h += L("Cc = Cm − Dév = " + deg(v.cm) + " − (" + (st.dev >= 0 ? "+" : "−") + Math.abs(st.dev) + "°)", "Cc = " + deg(v.cc), "l-nc");
+      h += '<p class="op" style="margin:6px 0 0">Cc est le cap à donner au barreur. Vérification : ' + deg(v.cc) + " " + sgn(st.dev) + " " + sgn(st.dm) + " = " + deg(v.cv) + " ✓</p>";
+    }
+    $("calcul").innerHTML = h;
+  }
+
+  function maj(){
+    $("r-cap").value = st.cap; $("r-dev").value = st.dev; $("r-dm").value = st.dm;
+    $("v-cap").textContent = deg(st.cap); $("v-dev").textContent = ew(st.dev); $("v-dm").textContent = ew(st.dm);
+    var c2v = st.mode === "c2v";
+    $("lab-cap").textContent = c2v ? "Cap compas (Cc)" : "Cap vrai (Cv)";
+    $("lab-cap").className = c2v ? "l-nc" : "l-nv";
+    $("m-c2v").setAttribute("aria-pressed", c2v); $("m-v2c").setAttribute("aria-pressed", !c2v);
+    dessiner(); calcul();
+  }
+
+  $("r-cap").addEventListener("input", function(){ st.cap = +this.value; maj(); });
+  $("r-dev").addEventListener("input", function(){ st.dev = +this.value; maj(); });
+  $("r-dm").addEventListener("input", function(){ st.dm = +this.value; maj(); });
+  document.querySelectorAll(".pm").forEach(function(b){ b.addEventListener("click", function(){
+    var k = b.dataset.k, d = +b.dataset.d;
+    if(k === "cap") st.cap = norm(st.cap + d); else st[k] = Math.max(-10, Math.min(10, st[k] + d));
+    maj(); }); });
+  $("zoom").addEventListener("change", function(){ st.zoom = this.checked; maj(); });
+  $("m-c2v").addEventListener("click", function(){ if(st.mode !== "c2v"){ st.cap = valeurs().cc; st.mode = "c2v"; maj(); } });
+  $("m-v2c").addEventListener("click", function(){ if(st.mode !== "v2c"){ st.cap = valeurs().cv; st.mode = "v2c"; maj(); } });
+
+  /* exemples tirés du QCM côtier */
+  var EX = [
+    { n:"N079", t:"Cc 045°, Dév 3° E", mode:"c2v", cap:45, dev:3, dm:0 },
+    { n:"N077", t:"Cc 230°, Dév 4° W, D 1° E", mode:"c2v", cap:230, dev:-4, dm:1 },
+    { n:"N078", t:"Cv 090°, D 2° W, Dév 3° E", mode:"v2c", cap:90, dev:3, dm:-2 },
+    { n:"N083", t:"Cc 250°, D 4° W, Dév 3° E", mode:"c2v", cap:250, dev:3, dm:-4 }
+  ];
+  EX.forEach(function(e){
+    var b = document.createElement("button"); b.type = "button"; b.className = "btn"; b.textContent = e.n + " · " + e.t;
+    b.addEventListener("click", function(){ st.mode = e.mode; st.cap = e.cap; st.dev = e.dev; st.dm = e.dm; maj(); window.scrollTo({ top:0, behavior:"smooth" }); });
+    $("exemples").appendChild(b);
+  });
+  maj();
+})();
+</script>
+</body>
+</html>

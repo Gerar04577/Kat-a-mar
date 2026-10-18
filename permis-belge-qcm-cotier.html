@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.21 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.22 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -12814,7 +12814,8 @@ window.KAM_QCM = {
   function correction(q, juste){
     return '<p class="qz-verdict ' + (juste ? "ok" : "ko") + '">' + (juste ? "✔ Juste." : "✘ Faux. La bonne réponse : « " + q.o[q.b].t + " ».") + "</p>"
          + '<p class="qz-ex">' + q.ex + "</p>"
-         + (q.dex ? '<div class="qz-dessin">' + dessiner(q.dex) + "</div>" : "")
+         + (q.dex ? '<div class="qz-dessin">' + dessiner(q.dex) + "</div>"
+             + (q.dex.t === "nords" ? '<p class="qz-ex"><a href="./permis-belge-cotier-caps.html?' + (q.dex.cv !== undefined ? "cv=" + q.dex.cv : "cc=" + q.dex.cc) + "&dev=" + (q.dex.dev || 0) + "&dm=" + (q.dex.dm || 0) + '">🧭 Ouvrir la maquette des trois nords avec ces valeurs ›</a></p>' : "") : "")
          + (!juste && q.pg ? '<div class="qz-piege"><b>📘 Rappel théorique</b><p>' + q.pg + "</p></div>" : "")
          + (q.ref ? '<p class="qz-ref">📖 ' + q.ref + "</p>" : "");
   }
