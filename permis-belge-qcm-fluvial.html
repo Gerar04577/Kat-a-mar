@@ -666,7 +666,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">QCM FLUVIAL · v20 · brevet restreint · 310 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
+  <div class="ver">QCM FLUVIAL · v21 · brevet restreint · 313 questions d'entraînement · réserve d'examen 103 · examen blanc 200</div>
   <h1>QCM du brevet restreint (fluvial)</h1>
   <p>Entraîne-toi partie par partie, puis passe l'examen blanc. Les réponses sont cachées ; après chaque réponse tu as l'explication, la référence au cours, et quand tu te trompes, le <b>piège</b> dans lequel tu es tombé.</p>
 </header>
@@ -5690,6 +5690,117 @@ window.KAM_QCM = {
 "ex": "S'arrêter à au moins 100 m des ouvrages d'art jusqu'à ce que le gestionnaire autorise le passage ; passer sans remous gênants. Aujourd'hui, les ponts se contactent par VHF ou par téléphone.",
 "pg": "Ne te présente pas sous le tablier qui bouge : attends le signal.",
 "ref": "Tome 1, p. 77"
+},
+{
+"id": "R111",
+"cat": "R",
+"res": false,
+"q": "Un bateau en stationnement porte <b>un</b> feu bleu (ou, de jour, un cône bleu). À quelle distance minimale un autre bateau peut-il stationner à côté de lui ?",
+"d": {
+"t": "feux",
+"feux": [
+{
+"x": 100,
+"y": 50,
+"c": "bleu"
+}
+],
+"legende": "un bateau en stationnement, la nuit"
+},
+"o": [
+{
+"t": "10 m",
+"e": "Juste : un feu ou un cône bleu = 10 m."
+},
+{
+"t": "100 m",
+"e": "Faux : 100 m, c'est pour trois feux ou trois cônes bleus."
+},
+{
+"t": "50 m",
+"e": "Faux : 50 m, c'est pour deux feux ou deux cônes bleus."
+}
+],
+"b": 0,
+"ex": "Un feu bleu (matières inflammables) impose 10 m entre deux bateaux en stationnement.",
+"pg": "Plus il y a de feux bleus, plus on reste loin : 1 feu = 10 m ; 2 feux = 50 m ; 3 feux = 100 m. Attention : certains quiz en ligne donnent 100 m pour un seul feu bleu ; c'est faux.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 7.07 · Manuel : T1 p. 53"
+},
+{
+"id": "R112",
+"cat": "R",
+"res": false,
+"q": "De jour, un bateau en stationnement porte <b>trois</b> cônes bleus, pointe en bas. Quelle distance minimale faut-il garder pour stationner près de lui ?",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "cone-bas",
+"c": "bleu"
+},
+{
+"f": "cone-bas",
+"c": "bleu"
+},
+{
+"f": "cone-bas",
+"c": "bleu"
+}
+],
+"legende": "de jour, en stationnement"
+},
+"o": [
+{
+"t": "50 m",
+"e": "Faux : 50 m, c'est pour deux cônes bleus."
+},
+{
+"t": "100 m",
+"e": "Juste : trois cônes bleus (matières explosives) = 100 m."
+},
+{
+"t": "10 m",
+"e": "Faux : 10 m, c'est pour un seul cône bleu."
+}
+],
+"b": 1,
+"ex": "Trois cônes ou trois feux bleus (matières explosives) imposent 100 m entre deux bateaux en stationnement.",
+"pg": "1 cône = 10 m ; 2 cônes = 50 m ; 3 cônes = 100 m. Le nombre de cônes indique le danger de la cargaison, et donc la distance.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 7.07 · Manuel : T1 p. 53"
+},
+{
+"id": "R113",
+"cat": "R",
+"res": false,
+"q": "Deux bateaux en stationnement portent <b>chacun un</b> cône bleu. Quelle distance minimale doivent-ils garder entre eux ?",
+"d": {
+"t": "marques",
+"formes": [
+{
+"f": "cone-bas",
+"c": "bleu"
+}
+],
+"legende": "chacun des deux bateaux, de jour"
+},
+"o": [
+{
+"t": "10 m, comme pour tout bateau à un cône bleu",
+"e": "Faux : quand les deux portent un seul cône, la règle des 10 m ne joue pas entre eux."
+},
+{
+"t": "20 m, puisqu'il y a deux cônes en tout",
+"e": "Faux : on n'additionne pas les cônes des deux bateaux."
+},
+{
+"t": "Aucune distance minimale n'est imposée",
+"e": "Juste : c'est l'exception prévue par l'article 7.07."
+}
+],
+"b": 2,
+"ex": "Si les deux bateaux portent l'un et l'autre un seul cône ou feu bleu, aucune distance minimale n'est imposée entre eux.",
+"pg": "Règle générale : 10 m (1 cône), 50 m (2), 100 m (3) ; si les deux bateaux portent des cônes, c'est le plus grand nombre qui compte. Exception : un cône chacun → pas de distance imposée.",
+"ref": "Règlement général de police (AR 24/09/2006), art. 7.07 al. 1 · Absent du manuel"
 },
 {
 "id": "N001",
