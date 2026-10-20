@@ -182,7 +182,7 @@ svg text{font-family:var(--body)}
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Signaux sonores animés</h1>
-  <div class="ver">version 1.4 · signaux sonores : eaux intérieures (règlement général), mer, Escaut, canal Gand-Terneuzen</div>
+  <div class="ver">version 1.5 · signaux sonores : eaux intérieures (règlement général), mer, Escaut, canal Gand-Terneuzen</div>
 </header>
 
 <div class="bar" role="group" aria-label="Mode">
@@ -224,7 +224,7 @@ svg text{font-family:var(--body)}
 <!-- ============ QUIZ (bas) ============ -->
 <div id="z-quiz-bas" hidden></div>
 
-<p class="ref">Sources : Règlement général de police pour la navigation sur les eaux intérieures (AR du 24 septembre 2006), appendices 6 et 7 et articles cités ; RIPAM (COLREG 1972) règles 9, 13, 32 à 37 et annexe IV ; Règlement de navigation de l'Escaut maritime inférieur (AR du 23 septembre 1992), articles 2, 10, 13, 14, 18 et 32 à 37 (appelé ici « Règlement de l'Escaut ») ; Règlement de police de l'Escaut maritime inférieur (version en vigueur depuis le 8 mai 2023), art. 40 ; Règlement de navigation du canal de Gand à Terneuzen (AR du 23 septembre 1992, édition à jour au 17 septembre 2005), articles 2, 9, 10, 13, 14, 19 et 32 à 37 (appelé ici « Règlement du canal »). Pour l'animation, les signaux répétés (chaque minute, toutes les 2 minutes, 15 minutes…) ne sont joués qu'une ou deux fois.</p>
+<p class="ref">Sources : Règlement général de police pour la navigation sur les eaux intérieures (AR du 24 septembre 2006), appendices 6 et 7 et articles cités ; RIPAM (COLREG 1972) règles 9, 13, 32 à 37 et annexe IV ; Règlement de navigation de l'Escaut maritime inférieur (AR du 23 septembre 1992), articles 2, 4, 10, 13, 14, 18 et 32 à 37 (appelé ici « Règlement de l'Escaut ») ; Règlement de police de l'Escaut maritime inférieur (version en vigueur depuis le 8 mai 2023), art. 40 ; Règlement de navigation du canal de Gand à Terneuzen (AR du 23 septembre 1992, édition à jour au 17 septembre 2005), articles 2, 4, 9, 10, 13, 14, 19 et 32 à 37 (appelé ici « Règlement du canal »). Pour l'animation, les signaux répétés (chaque minute, toutes les 2 minutes, 15 minutes…) ne sont joués qu'une ou deux fois.</p>
 </div>
 
 <script>
@@ -299,16 +299,19 @@ function sg(b, code, at, o){ const p = plan(code); return Object.assign({b, code
 const N = (at, to, x, y, t) => ({at, to, x, y, t});
 /* fin d'un dépassement : A accélère à v à partir de t0, reste plus rapide jusqu'à être au moins une longueur (la sienne) devant B,
    puis reprend la vitesse de B ; s'il est passé à gauche, il revient ensuite sur sa droite (retour > 0). Renvoie l'instant de fin. */
-function finDep(A, B, t0, v, retour){
-  const L = DIM[A.type][0] * sf(A), gap = (B.x + B.v * t0) - (A.x + A.v * t0), rel = v - B.v;
-  const besoin = gap + L + 25, rampe = 3 * ((A.v + v) / 2 - B.v);
-  const tA = t0 + 3 + Math.max(0, (besoin - rampe) / rel);
+function finDep(A, B, t0, v, retour, vFin){
+  /* A accélère à v à partir de t0 et reste plus rapide jusqu'à être au moins une longueur (la sienne) devant B, mesuré sur les trajectoires
+     simulées (virages compris) ; s'il est passé à gauche, il fait ensuite son virage de retour sur sa droite à pleine vitesse, puis ralentit à vFin. */
   if(v !== A.v) V(A, t0, 3, v);
-  V(A, tA, 2, B.v);
-  if(retour){ T(A, tA, 2.5, retour); T(A, tA + 2.5, 2.5, -retour); }
-  return tA + (retour ? 5 : 2);
+  const L = DIM[A.type][0] * sf(A), H = t0 + 90, ta = simuler(A, H), tb = simuler(B, H);
+  let tA = t0 + 3; while(tA < H && etat(ta, tA)[0] - etat(tb, tA)[0] < L + 10) tA += .1;
+  const vf = vFin == null ? B.v : vFin;
+  if(retour){ T(A, tA, 1.5, retour); T(A, tA + 2, 1.5, -retour); V(A, tA + 3.5, 2, vf); return tA + 5.5; }
+  V(A, tA, 2, vf); return tA + 2;
 }
 const NB = (at, to, b, dx, dy, t) => ({at, to, b, dx, dy, t});
+/* après un demi-tour (cap ouest), le bateau reprend sa droite, c'est-à-dire le haut de l'image, s'il a fini dans la moitié basse */
+function droiteApres(A, tE, vR){ const y = etat(simuler(A, tE + .2), tE)[1]; if(y <= 112) return tE; if(vR) V(A, tE, 1.5, vR); T(A, tE, 2, 40); T(A, tE + 4, 2, -40); return tE + 6; }
 
 /* ================================================================ SCÈNES RÉUTILISABLES */
 /* — Eaux intérieures — */
@@ -341,7 +344,7 @@ function scVirerFl(side, mode){
   const A = bt("A", "peniche", 30, y, 0, 10, {jaune:1, lab:"grand bateau", col:"hA"});
   const C = bt("C", "plaisance", -64, y + (mode === "quiz" ? 0 : (tri ? 2 : -2)), 0, 10, {col:"hB"});
   const s = sg("A", tri ? "Lb" : "Lbb", .8);
-  s.reste = .4; if(!tri) A.labHaut = s.end + 1; if(mode === "quiz") V(A, s.end + .4, 1.5, 6); T(A, s.end + .4, mode === "quiz" ? 10.5 : 10, tri ? 180 : -180); V(C, s.end, 3, 3);
+  s.reste = .4; if(!tri) A.labHaut = s.end + 1; if(mode === "quiz") V(A, s.end + .4, 1.5, 6); const dT = mode === "quiz" ? 10.5 : 10; T(A, s.end + .4, dT, tri ? 180 : -180); V(C, s.end, 3, 3);
   return {set:"fleuve", boats:[A, C], sigs:[s], dur: s.end + 13,
     notes:[N(s.end + .5, s.end + 11, 255, tri ? 40 : 205, tri ? "demi-tour par sa droite (tribord)" : "demi-tour par sa gauche (bâbord)"),
            NB(s.end + 1.5, s.end + 7, "C", 0, tri ? 20 : -20, "il ralentit")]};
@@ -366,15 +369,15 @@ function scRencontre(rep){ /* art. 6.05 : rep = "acc" ou "ref" */
 /* — Mer — */
 function scChenal(side, focusB){ /* RIPAM 34 c) : dépasser dans un chenal étroit */
   const tri = side === "tri";
-  const B = bt("B", "navire", 120, 128, 0, 1.5, {s:.62, lab:"navire rattrapé", col:"hB"}); /* côté tribord du chenal (règle 9 a) */
-  const A = bt("A", "navire", 22, 128, 0, 1.5, {s:.62, lab:"veut dépasser", col:"hA"});
+  const B = bt("B", "navire", 120, 128, 0, 1, {s:.62, lab:"navire rattrapé", col:"hB"}); /* côté tribord du chenal (règle 9 a) */
+  const A = bt("A", "navire", 28, 128, 0, 1, {s:.62, lab:"veut dépasser", col:"hA"});
   const sA = sg("A", tri ? "LLb" : "LLbb", 1);
   const sB = sg("B", "LbLb", sA.end + .6, {focus: focusB ? 1 : 0});
   if(!focusB) sA.focus = 1;
   const e = sB.end;
   D(B, e, 4, 0, tri ? -5 : 5); if(tri) B.labHaut = e + 1; else A.labHaut = e + 1; sB.cote = "haut"; sB.reste = .5;
-  T(A, e + .5, 2, tri ? 25 : -25); T(A, e + 3.5, 2, tri ? -25 : 25); const f = finDep(A, B, e + .5, 14, tri ? 0 : 25);
-  return {set:"chenal", boats:[B, A], sigs:[sA, sB], dur: f + 1.5,
+  T(A, e + .5, 2, tri ? 25 : -25); T(A, e + 3.5, 2, tri ? -25 : 25); const f = finDep(A, B, e + .5, 10, tri ? 0 : 30);
+  return {set:"chenal", boats:[B, A], sigs:[sA, sB], dur: f + .3,
     notes:[N(e + .4, 99, 180, 205, tri ? "il passe le long du tribord (droite) du navire rattrapé" : "il passe le long du bâbord (gauche) du navire rattrapé")]};
 }
 function scBrumeMer(code, type, o){
@@ -436,19 +439,19 @@ function scManoeuvre(set, kind, o){ /* Escaut : 1, 2, 3 brefs, bateau en route q
   return {set, boats:[A, B], sigs:[s], dur: kind === "arr" ? s.end + 10 : s.end + 20, notes};
 }
 function scRattrapage(kind, set){ /* Escaut art. 13 § 4, 5, 6 ; canal art. 13 § 4, 5, 6 */
-  const B = bt("B", "navire", 110, 110, 0, 2, {s:.62, lab:"rattrapé", col:"hB"});
-  const A = bt("A", "navire", 15, 110, 0, 2, {s:.62, lab:"rattrapant", col:"hA"});
+  const B = bt("B", "navire", 112, 110, 0, 1.5, {s:.62, lab:"rattrapé", col:"hB"});
+  const A = bt("A", "navire", 21, 110, 0, 1.5, {s:.62, lab:"rattrapant", col:"hA"});
   const sA = sg("A", kind === "tri" ? "LLb" : "LLbb", 1, {focus: kind === "imp" ? 0 : 1});
   let sB, notes = [], fin = 0;
   if(kind === "bab"){ sB = sg("B", "b", sA.end + .6); const e = sB.end;
-    T(B, e, 1.5, 12); D(B, e, 4, 0, 5); T(B, e + 2.5, 1.5, -12); T(A, e + .5, 2, -25); T(A, e + 3.5, 2, 25); fin = finDep(A, B, e + .5, 14, 25); A.labHaut = e + 1; sB.cote = "haut"; sB.reste = .5;
+    T(B, e, 1.5, 12); D(B, e, 4, 0, 5); T(B, e + 2.5, 1.5, -12); T(A, e + .5, 2, -25); T(A, e + 3.5, 2, 25); fin = finDep(A, B, e + .5, 10, 30); A.labHaut = e + 1; sB.cote = "haut"; sB.reste = .5;
     notes.push(N(e + .3, 99, 180, 202, "il serre sur tribord ; on le dépasse par son bâbord")); }
   else if(kind === "tri"){ sB = sg("B", "bb", sA.end + .6); const e = sB.end;
-    T(B, e, 1.5, -12); D(B, e, 4, 0, -5); T(B, e + 2.5, 1.5, 12); T(A, e + .5, 2, 25); T(A, e + 3.5, 2, -25); fin = finDep(A, B, e + .5, 14, 0); B.labHaut = e + 1; sB.cote = "haut"; sB.reste = .5;
+    T(B, e, 1.5, -12); D(B, e, 4, 0, -5); T(B, e + 2.5, 1.5, 12); T(A, e + .5, 2, 25); T(A, e + 3.5, 2, -25); fin = finDep(A, B, e + .5, 10, 0); B.labHaut = e + 1; sB.cote = "haut"; sB.reste = .5;
     notes.push(N(e + .3, 99, 180, 202, "il serre sur bâbord ; on le dépasse par son tribord")); }
   else { sB = sg("B", "bbbbb", sA.end + .6, {focus:1});
     notes.push(N(sB.end + .3, 99, 180, 202, "le rattrapant reste derrière")); }
-  return {set: set || "escaut", boats:[B, A], sigs:[sA, sB], dur: kind === "imp" ? sB.end + 5 : fin + 1.5, notes};
+  return {set: set || "escaut", boats:[B, A], sigs:[sA, sB], dur: kind === "imp" ? sB.end + 5 : fin + .3, notes};
 }
 function scVirerEsc(side, mode){ /* Escaut art. 10 § 1 */
   const tri = side === "tri", y = 110; /* au milieu : les deux demi-tours tiennent dans l'eau */
@@ -457,7 +460,8 @@ function scVirerEsc(side, mode){ /* Escaut art. 10 § 1 */
   const Dd = bt("D", "plaisance", 0, 190, 0, 4, {col:"hC"}); /* cap est en bas, loin derrière le demi-tour */
   const s = sg("A", tri ? "Lb" : "Lbb", .8);
   s.reste = .3; if(tri) A.labHaut = s.end + 1; V(A, s.end, 1.5, 6); T(A, s.end + .3, 12, tri ? 180 : -180); V(C, s.end, 3, 0); V(Dd, s.end, 3, 1.5);
-  return {set:"escaut", boats:[A, C, Dd], sigs:[s], dur: s.end + 15,
+  const fD = droiteApres(A, s.end + 12.3);
+  return {set:"escaut", boats:[A, C, Dd], sigs:[s], dur: Math.max(s.end + 15, fD + .5),
     notes:[NB(s.end + .5, 99, "C", -10, 21, "contre-courant : s'arrête"),
            NB(s.end + .5, 99, "D", 0, Dd.y > 110 ? 20 : -20, "sens du courant : ralentit")]};
 }
@@ -494,11 +498,11 @@ function scManCanal(kind){
     return {set:"canal", boats:[A, B], sigs:[s, sB], dur: sB.end + 18, notes};
   }
   if(kind === "bab"){ /* il rattrape une petite embarcation et passe à son bâbord (art. 13 § 4) */
-    B = bt("B", "plaisance", 150, 150, 0, .5, {lab:"petite embarcation", col:"hB"});
-    A = bt("A", "peniche", 25, 150, 0, 6, {jaune:1, lab:"péniche", col:"hA"});
-    s = sg("A", "bb", 1); T(A, s.end + .5, 2, -50); T(A, s.end + 5.5, 2, 50); const f = finDep(A, B, s.end + .5, 10, 30);
+    B = bt("B", "plaisance", 140, 145, 0, .5, {lab:"petite embarcation", col:"hB"});
+    A = bt("A", "peniche", 25, 140, 0, 6, {jaune:1, lab:"péniche", col:"hA"});
+    s = sg("A", "bb", 1); T(A, s.end + .5, 2, -40); T(A, s.end + 6, 2, 40); const f = finDep(A, B, s.end + .5, 8, 40, 3);
     A.labHaut = s.end + 1; notes.push(N(s.end + .3, 99, 180, 40, "elle vient sur sa gauche (bâbord)"));
-    return {set:"canal", boats:[B, A], sigs:[s], dur: f + 1.5, notes};
+    return {set:"canal", boats:[B, A], sigs:[s], dur: f - 1.2, notes}; /* fin pendant son ralentissement : elle continue sa route */
   }
   /* arr : un petit bateau traverse devant elle */
   A = bt("A", "peniche", 40, 155, 0, 9, {jaune:1, lab:"péniche", col:"hA"});
@@ -511,9 +515,9 @@ function scVirerCanal(side, mode){ /* art. 10 § 1 */
   const tri = side === "tri", qz = mode === "quiz";
   const A = bt("A", "peniche", 70, 110, 0, 8, {jaune:1, lab:"veut virer", col:"hA"}); /* au milieu dans les deux modes : les deux demi-tours tiennent dans l'eau */
   const s = sg("A", tri ? "Lb" : "Lbb", .8);
-  s.reste = .3; if(tri) A.labHaut = s.end + 1; V(A, s.end + .3, 1.5, 5); T(A, s.end + .3, 11.5, tri ? 180 : -180);
+  s.reste = .3; if(tri) A.labHaut = s.end + 1; V(A, s.end + .3, 1.5, 5); T(A, s.end + .3, 11.5, tri ? 180 : -180); const fD = droiteApres(A, s.end + 11.8);
   const C = tri ? bt("C", "plaisance", 345, 46, 180, 3, {col:"hB"}) : bt("C", "plaisance", 30, 174, 0, 3, {col:"hB"}); /* à proximité, tient sa droite et garde sa route */
-  return {set:"canal", boats:[A, C], sigs:[s], dur: s.end + 17,
+  return {set:"canal", boats:[A, C], sigs:[s], dur: Math.max(s.end + 17, fD + .5),
     notes:[N(s.end + .6, s.end + 14, 260, tri ? 205 : 15, tri ? "demi-tour par sa droite (tribord)" : "demi-tour par sa gauche (bâbord)")]};
 }
 
@@ -584,8 +588,8 @@ const ITEMS = [
  sc(){ return scDetresse("bbbbL","","il a besoin d'un médecin"); }},
 {id:"fl-nap", ctx:"fl", kind:"sens", rep:"N'approchez pas (matières dangereuses)", code:"bLbL", sig:"1 son bref + 1 son prolongé, répétés sans interruption pendant au moins 15 minutes (avec le feu jaune en même temps)",
  qui:"Bateau qui porte les cônes bleus (matières dangereuses), lors d'un incident qui peut libérer ces matières, si l'équipage ne peut pas écarter le danger.",
- fait:"Le bateau qui arrivait vers la zone fait demi-tour et s'éloigne. À bord : fermer fenêtres et ouvertures, éteindre toute source de lumière et tout feu non protégé, ne plus fumer, arrêter les machines auxiliaires inutiles, éviter les étincelles.",
- ref:RGP + ", art. 4.04/1, al. 2 (signal) ; al. 3 et 4 (mesures)", rappel:"• — répété sans arrêt au moins 15 minutes. Vers la zone : s'en tenir le plus loin possible et virer si nécessaire ; déjà passé : continuer à la plus grande vitesse possible.",
+ fait:"Le bateau aux cônes bleus émet ce signal sans interruption ; le bateau qui arrivait vers la zone fait demi-tour et s'éloigne.",
+ ref:RGP + ", art. 4.04/1, al. 2 (signal) ; al. 3 et 4 (mesures)", rappel:"• — répété sans arrêt au moins 15 minutes. Vers la zone : s'en tenir le plus loin possible et virer si nécessaire ; déjà passé : continuer à la plus grande vitesse possible (al. 3). À bord du bateau qui l'entend : fermer fenêtres et ouvertures, éteindre toute source de lumière et tout feu non protégé, cesser de fumer, arrêter les machines auxiliaires non indispensables, éviter les étincelles (al. 4).",
  q:"Eaux intérieures. Le bateau arrêté émet ce signal sans interruption. Que veut dire ce signal ?", proches:["fl-pont","fl-med","fl-vt"],
  sc(){ const A = bt("A","citerne",150,100,0,0,{jaune:1,cone:1,lab:"cônes bleus",col:"hA"}); const C = bt("C","plaisance",350,150,180,4,{col:"hB"});
    const s = sg("A","bLbL",.8,{rep:"… sans interruption pendant au moins 15 minutes"}); T(C,s.end+.5,3,-180); V(C,s.end+.5,3,8);
@@ -682,9 +686,9 @@ const ITEMS = [
  fait:"Le bateau rapide en rattrape un plus lent : il vient sur bâbord pour le dépasser par sa gauche ; une fois nettement devant, il revient sur sa droite.",
  ref:"RIPAM règle 34 a)", rappel:"2 brefs seuls = « je viens sur bâbord ». Dans un chenal étroit, 2 prolongés + 2 brefs = « je compte vous rattraper sur bâbord ».",
  q:"En mer, navires en vue. Que signifie ce signal ?", proches:["m-tri","m-arr","m-doute"],
- sc(){ const B = bt("B","navire",120,120,0,4,{s:.6,col:"hB"}); const A = bt("A","plaisance",-15,120,0,14,{lab:"navire à moteur",col:"hA"});
-   const s = sg("A","bb",1,{reste:.2}); A.labHaut = s.end + 1; T(A,s.end+.5,2,-60); T(A,s.end+5.5,2,60); const f = finDep(A, B, s.end + .5, 14, 30);
-   return {set:"mer", boats:[B,A], sigs:[s], dur:f + 1.5, notes:[N(s.end+.3,99,110,205,"il vient sur sa gauche (bâbord)")]}; }},
+ sc(){ const B = bt("B","navire",120,120,0,2.5,{s:.6,col:"hB"}); const A = bt("A","plaisance",-15,120,0,14,{lab:"navire à moteur",col:"hA"});
+   const s = sg("A","bb",1,{reste:.2}); A.labHaut = s.end + 1; T(A,s.end+.5,2,-60); T(A,s.end+5.5,2,60); const f = finDep(A, B, s.end + .5, 10, 30);
+   return {set:"mer", boats:[B,A], sigs:[s], dur:f + .3, notes:[N(s.end+.3,99,110,205,"il vient sur sa gauche (bâbord)")]}; }},
 {id:"m-arr", ctx:"mer", kind:"sens", rep:"Je bats en arrière (machine en arrière)", code:"bbb", sig:"3 sons brefs",
  qui:"Navire à moteur en route, en vue d'un autre, qui fait une manœuvre prévue par le RIPAM.",
  fait:"Le cargo met sa machine en arrière : il ralentit, s'arrête puis recule (il peut encore avancer un peu sur son erre).",
@@ -719,14 +723,14 @@ const ITEMS = [
  sc(){ return scChenal("bab", false); }},
 {id:"m-accord", ctx:"mer", kind:"sens", rep:"D'accord, vous pouvez me dépasser", code:"LbLb", sig:"1 prolongé, 1 bref, 1 prolongé, 1 bref",
  qui:"Le navire rattrapé, dans un chenal étroit ou une voie d'accès, en vue l'un de l'autre, s'il est d'accord. S'il a un doute, il peut émettre au moins 5 brefs rapides.",
- fait:"Il manœuvre pour laisser la place. Même avec l'accord, le navire qui dépasse doit rester à l'écart de sa route.",
- ref:"RIPAM règle 34 c) ii) ; règles 9 e) et 13", rappel:"Accord = — • — •. Le RIPAM ne prévoit pas de signal de refus : en cas de doute, au moins 5 brefs rapides.",
+ fait:"Le navire de devant répond « d'accord » et se serre sur sa droite ; l'autre le dépasse le long de son bâbord, puis, nettement devant, revient sur sa droite.",
+ ref:"RIPAM règle 34 c) ii) ; règles 9 e) et 13", rappel:"Accord = — • — •. Le RIPAM ne prévoit pas de signal de refus : en cas de doute, au moins 5 brefs rapides. Même avec l'accord, le navire qui dépasse doit rester à l'écart de la route du navire rattrapé.",
  q:"Chenal étroit, en mer. Que veut dire le signal de la bulle entourée ?", proches:["m-dep-tri","m-dep-bab","m-mouiW"],
  sc(){ return scChenal("bab", true); }},
 {id:"m-b1", ctx:"mer", kind:"qui", rep:"Navire à moteur en route, avec de l'erre", code:"L", sig:"1 son prolongé, au moins toutes les 2 minutes",
  qui:"Navire à moteur qui avance dans l'eau (il a de l'erre), par visibilité réduite. Aussi : un pousseur et le bateau poussé accouplés de façon rigide.",
- fait:"Par visibilité réduite (brume, bruine, neige, fortes averses…), de jour comme de nuit.",
- ref:"RIPAM règle 35 a) et f)", rappel:"Brume : — = navire à moteur avec erre ; — — = stoppé sans erre ; — • • = voilier, pêche, remorqueur ou pousseur, non maître, capacité restreinte, tirant d'eau.",
+ fait:"Le navire avance dans la brume et émet 1 prolongé.",
+ ref:"RIPAM règle 35 a) et f)", rappel:"Par visibilité réduite (brume, bruine, neige, fortes averses…), de jour comme de nuit. Brume : — = navire à moteur avec erre ; — — = stoppé sans erre ; — • • = voilier, pêche, remorqueur ou pousseur, non maître, capacité restreinte, tirant d'eau.",
  q:"En mer, par brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui l'émet ?", proches:["m-b2","m-b3","m-moui"],
  sc(){ return scBrumeMer("L","navire",{v:8, b:{s:.8, lab:"navire à moteur"}}); }},
 {id:"m-b2", ctx:"mer", kind:"qui", rep:"Navire à moteur en route, stoppé, sans erre", code:"LPL", sig:"2 sons prolongés (≈ 2 s entre eux), au moins toutes les 2 minutes",
@@ -737,8 +741,8 @@ const ITEMS = [
  sc(){ return scBrumeMer("LPL","navire",{x:200, y:100, v:0, b:{s:.8, lab:"stoppé, sans erre"}}); }},
 {id:"m-b3", ctx:"mer", kind:"qui", rep:"Voilier, navire en train de pêcher, qui remorque ou pousse, non maître de sa manœuvre, à capacité restreinte ou handicapé par son tirant d'eau", code:"Lbb", sig:"1 prolongé + 2 brefs, au moins toutes les 2 minutes",
  qui:"Ici un voilier sous voiles. Même signal pour les autres navires de la liste ; aussi, à la place de la cloche, le navire en train de pêcher au mouillage et celui à capacité restreinte qui travaille au mouillage.",
- fait:"Un voilier qui avance au moteur compte comme un navire à moteur (— ou — —).",
- ref:"RIPAM règle 35 c) et d)", rappel:"— • • = voilier, pêche, remorqueur ou pousseur, non maître, capacité restreinte, tirant d'eau. Le remorqué (avec équipage) : — • • •.",
+ fait:"Le voilier avance dans la brume et émet — • •.",
+ ref:"RIPAM règle 35 c) et d)", rappel:"— • • = voilier, pêche, remorqueur ou pousseur, non maître, capacité restreinte, tirant d'eau. Le remorqué avec équipage : — • • •. Un voilier qui avance au moteur compte comme un navire à moteur : — ou — —.",
  q:"En mer, par brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui peut l'émettre ?", proches:["m-b4","m-b1","m-pil"],
  sc(){ return scBrumeMer("Lbb","voilier",{x:290, y:100, h:195, v:5, b:{lab:"voilier"}}); }},
 {id:"m-b4", ctx:"mer", kind:"qui", rep:"Navire remorqué (le dernier), avec équipage à bord", code:"Lbbb", sig:"1 prolongé + 3 brefs, si possible juste après le signal du remorqueur",
@@ -754,7 +758,7 @@ const ITEMS = [
  q:"En mer, par brume. Vous entendez un prolongé, puis 4 brefs. Qui est-ce ?", proches:["m-b4","m-b3","m-b2"],
  sc(){ return scBrumeMer("L|bbbb","pilote",{x:300, y:80, v:8, b:{lab:"bateau-pilote"}}); }},
 {id:"m-moui", ctx:"mer", kind:"qui", rep:"Navire au mouillage (moins de 100 m)", code:"C", sig:"Cloche sonnée rapidement ≈ 5 s, au moins une fois par minute",
- qui:"Navire au mouillage, par visibilité réduite. De 12 à moins de 20 m, il n'est pas tenu à la cloche, mais doit alors émettre un autre signal sonore efficace au moins toutes les 2 minutes.",
+ qui:"Navire au mouillage, par visibilité réduite. De 12 à moins de 20 m, il n'est pas tenu de sonner la cloche, mais doit alors émettre un autre signal sonore efficace au moins toutes les 2 minutes.",
  fait:"Le navire au mouillage sonne la cloche rapidement ≈ 5 s. Non montré ici : il peut ajouter au sifflet • — • pour signaler sa position à un navire qui approche.",
  ref:"RIPAM règle 35 g) et i)", rappel:"Cloche ≈ 5 s chaque minute = mouillage. 100 m ou plus : cloche à l'avant puis gong à l'arrière.",
  q:"En mer, par brume. Vous entendez ce signal, au moins une fois par minute. Qui est-ce ?", proches:["m-ech","m-moui100","m-b2"],
@@ -833,7 +837,7 @@ const ITEMS = [
  sc(){ return scDoute("escaut", false); }},
 {id:"e-vt", ctx:"esc", kind:"sens", rep:"Je vais virer sur tribord", code:"Lb", sig:"1 son prolongé + 1 son bref (répété au besoin)",
  qui:"Bateau qui veut virer (faire demi-tour), dans le sens du courant ou en eau sans courant.",
- fait:"Le navire fait demi-tour par sa droite. Le bateau proche qui va à contre-courant s'arrête (par rapport au fond) ; celui qui va dans le sens du courant ralentit.",
+ fait:"Le navire fait demi-tour par sa droite, puis se rapproche de sa droite (art. 9 § 1). Le bateau proche qui va à contre-courant s'arrête par rapport au fond ; celui qui va dans le sens du courant ralentit.",
  ref:RE + ", art. 10 § 1 à 3", rappel:"Virer : 1 prolongé + 1 bref (tribord) ou + 2 brefs (bâbord). Quand un bateau faisant route dans le sens du courant vire : le bateau proche qui fait route à contre-courant s'arrête par rapport au fond, celui qui fait route dans le sens du courant ralentit.",
  q:"Escaut. Le navire émet ce signal. Qu'annonce-t-il ?", proches:["e-vb","e-tri","e-rtri"],
  sc(m){ return scVirerEsc("tri", m); }},
@@ -863,8 +867,8 @@ const ITEMS = [
  sc(){ return scRattrapage("imp"); }},
 {id:"e-b1", ctx:"esc", kind:"qui", rep:"Bateau à moteur (ou convoi poussé, formation à couple) en route, avec de l'erre", code:"L", sig:"1 son prolongé, au moins toutes les 2 minutes",
  qui:"Bateau à moteur, convoi poussé ou formation à couple qui avance dans l'eau, par visibilité réduite.",
- fait:"Dans la brume ou près d'elle, de jour comme de nuit.",
- ref:RE + ", art. 35 § 1 et § 2, 1", rappel:"Comme en mer : — avec erre, — — stoppé sans erre, — • • pour la liste « non maître… grandes dimensions… », — • • • pour le remorqué.",
+ fait:"Le bateau avance dans la brume et émet 1 prolongé.",
+ ref:RE + ", art. 35 § 1 et § 2, 1", rappel:"Dans la brume ou près d'elle, de jour comme de nuit. Comme en mer : — avec erre, — — stoppé sans erre, — • • pour la liste « non maître… grandes dimensions… », — • • • pour le remorqué.",
  q:"Escaut, brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui l'émet ?", proches:["e-b2","e-b3","e-moui"],
  sc(){ return scBrumeMer("L","navire",{set:"escaut", v:8, b:{s:.8, lab:"bateau à moteur"}}); }},
 {id:"e-b2", ctx:"esc", kind:"qui", rep:"Bateau à moteur (ou convoi poussé, formation à couple) stoppé, sans erre", code:"LPL", sig:"2 sons prolongés (≈ 2 s entre eux), au moins toutes les 2 minutes",
@@ -885,7 +889,7 @@ const ITEMS = [
  ref:RE + ", art. 35 § 2, 4", rappel:"Remorqueur — • •, remorqué — • • • : un bref de plus.",
  q:"Escaut, brume. Juste après un « — • • », vous entendez ce signal. Qui l'émet ?", proches:["e-b3","e-b2","e-echW"],
  sc(){ return scRemorque("esc"); }},
-{id:"e-moui", ctx:"esc", kind:"qui", rep:"Bateau au mouillage", code:"C", sig:"Cloche sonnée rapidement ≈ 5 s, au moins une fois par minute (100 m ou plus : puis gong à l'arrière)",
+{id:"e-moui", ctx:"esc", kind:"qui", rep:"Bateau au mouillage", code:"C", sig:"Cloche sonnée rapidement ≈ 5 s, au moins une fois par minute (100 m ou plus : puis aussitôt le gong)",
  qui:"Bateau au mouillage, par visibilité réduite.",
  fait:"Le bateau au mouillage sonne la cloche rapidement ≈ 5 s. Non montré ici : à 100 m ou plus, la cloche à l'avant, ou là où l'ancre le tient, puis aussitôt le gong ≈ 5 s.",
  ref:RE + ", art. 35 § 3", rappel:"Cloche = mouillage ; 3 coups + cloche + 3 coups = échoué.",
@@ -918,7 +922,7 @@ const ITEMS = [
  sc(){ return scCoude("esc"); }},
 {id:"e-avert", ctx:"esc", kind:"sens", rep:"Avertissement : attention, pour prévenir un abordage", code:"L", sig:"1 son prolongé (répété au besoin)",
  qui:"Tout bateau qui doit attirer l'attention d'un autre pour éviter un abordage.",
- fait:"Le petit bateau dérive vers la route du navire ; averti, il s'écarte.",
+ fait:"Le petit bateau coupe la route du navire ; averti, il s'écarte.",
  ref:RE + ", art. 36 § 3 et § 4", rappel:"Sur l'Escaut, 1 prolongé = avertissement (courbe où la vue est gênée, ou pour prévenir un abordage).",
  q:"Escaut, beau temps. Le navire émet ce signal. Que veut dire ce signal ?", proches:["e-vt","e-pm","e-tri"],
  sc(){ const A = bt("A","navire",40,120,0,9,{s:.85,lab:"navire",col:"hA"}); const C = bt("C","menue",215,160,250,3,{lab:"petit bateau",col:"hB"});
@@ -986,7 +990,7 @@ const ITEMS = [
    return {set:"canal", boats:[A,B], sigs:[s], dur:s.end+6, notes:[N(s.end+.4,99,120,205,"la péniche ralentit et passe au large")]}; }},
 {id:"g-vt", ctx:"gt", kind:"sens", rep:"Je vais virer sur tribord", code:"Lb", sig:"1 son prolongé + 1 son bref (répété au besoin)",
  qui:"Bateau qui veut virer (faire demi-tour) ; il le signale à temps aux bateaux qui se trouvent à proximité.",
- fait:"La péniche fait demi-tour par sa droite et le signale au petit bateau qui se trouve à proximité. Elle ne doit pas l'obliger à changer de route ou de vitesse : il garde sa route.",
+ fait:"La péniche fait demi-tour par sa droite et le signale au petit bateau qui se trouve à proximité, puis se rapproche de sa droite (art. 9 § 1). Elle ne doit pas l'obliger à changer de route ou de vitesse : il garde sa route.",
  ref:RC + ", art. 10 § 1", rappel:"Virer : 1 prolongé + 1 bref (tribord) ou + 2 brefs (bâbord). Interdit devant l'entrée d'une darse, d'un canal latéral ou d'une écluse quand des bateaux en sortent ou s'y dirigent (§ 2).",
  q:"Canal Gand-Terneuzen. La péniche émet ce signal. Qu'annonce-t-elle ?", proches:["g-vb","g-tri","g-rtri"],
  sc(m){ return scVirerCanal("tri", m); }},
@@ -1016,13 +1020,13 @@ const ITEMS = [
  sc(){ return scRattrapage("imp","canal"); }},
 {id:"g-b1", ctx:"gt", kind:"qui", rep:"Bateau à moteur (ou convoi poussé, formation à couple) en route, avec de l'erre", code:"L", sig:"1 son prolongé, au moins toutes les 2 minutes",
  qui:"Bateau à moteur, convoi poussé ou formation à couple qui avance dans l'eau, par visibilité réduite.",
- fait:"Celui qui entend ce signal sur l'avant du travers réduit sa vitesse au minimum nécessaire pour maintenir son cap, sauf s'il est établi qu'il n'y a pas de risque d'abordage (art. 19 § 5).",
- ref:RC + ", art. 35 § 1 et § 2 a) ; art. 19 § 5", rappel:"Canal, brume : — avec erre, — — sans erre, — • • (non maître, capacité restreinte, grandes dimensions, remorqueur), — • • • remorqué, — • • • • bac.",
+ fait:"La péniche avance dans la brume et émet 1 prolongé.",
+ ref:RC + ", art. 35 § 1 et § 2 a) ; art. 19 § 5", rappel:"Canal, brume : — avec erre, — — sans erre, — • • pour non maître, capacité restreinte, grandes dimensions, remorqueur ; — • • • remorqué, — • • • • bac. Celui qui entend ce signal sur l'avant du travers réduit sa vitesse au minimum nécessaire pour maintenir son cap, sauf s'il est établi qu'il n'y a pas de risque d'abordage (art. 19 § 5).",
  q:"Canal Gand-Terneuzen, brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui l'émet ?", proches:["g-b2","g-b3","g-moui"],
  sc(){ return scBrumeMer("L","peniche",{set:"canal", x:290, y:70, v:7, b:{jaune:1, lab:"bateau à moteur"}}); }},
 {id:"g-b2", ctx:"gt", kind:"qui", rep:"Bateau à moteur (ou convoi poussé, formation à couple) en route, sans erre", code:"LPL", sig:"2 sons prolongés (≈ 2 s entre eux), au moins toutes les 2 minutes",
  qui:"Bateau à moteur, convoi poussé ou formation à couple en route mais qui n'avance plus dans l'eau, par visibilité réduite.",
- fait:"Sans erre n'est pas « au mouillage » : au mouillage, c'est la cloche.",
+ fait:"Sans erre, la péniche émet ses 2 prolongés dans la brume. Non montré ici : au mouillage, ce serait la cloche.",
  ref:RC + ", art. 35 § 2 b)", rappel:"— — = en route, sans erre.",
  q:"Canal Gand-Terneuzen, brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui l'émet ?", proches:["g-b1","g-b3","g-moui"],
  sc(){ return scBrumeMer("LPL","peniche",{set:"canal", x:200, y:70, v:0, b:{jaune:1, lab:"sans erre"}}); }},
@@ -1047,8 +1051,8 @@ const ITEMS = [
    return {set:"canal", fog:1, boats:[A], sigs:[s], dur:s.end+3}; }},
 {id:"g-moui", ctx:"gt", kind:"qui", rep:"Bateau au mouillage", code:"C", sig:"Cloche sonnée rapidement ≈ 5 s, au moins une fois par minute",
  qui:"Bateau au mouillage, par visibilité réduite (mouillage en principe interdit dans le canal, sauf autorisation ou sécurité — art. 9 § 4 et 5, hors programme).",
- fait:"Pas de gong dans le règlement du canal : seulement la cloche.",
- ref:RC + ", art. 35 § 3", rappel:"Cloche = mouillage ; 3 coups + cloche + 3 coups = échoué.",
+ fait:"Le bateau au mouillage sonne la cloche rapidement ≈ 5 s.",
+ ref:RC + ", art. 35 § 3", rappel:"Cloche = mouillage ; 3 coups + cloche + 3 coups = échoué. Pas de gong dans le règlement du canal : seulement la cloche.",
  q:"Canal Gand-Terneuzen, brume. Vous entendez ce signal, au moins une fois par minute. Qui est-ce ?", proches:["g-ech","g-b2","g-echW"],
  sc(){ return scMouillage("canal","↻ au moins une fois par minute"); }},
 {id:"g-mouiW", ctx:"gt", kind:"sens", rep:"J'avertis un bateau qui s'approche", code:"bLb", sig:"1 bref, 1 prolongé, 1 bref (facultatif, en plus de la cloche)",
@@ -1078,7 +1082,7 @@ const ITEMS = [
  sc(){ return scCoude("gt"); }},
 {id:"g-avert", ctx:"gt", kind:"sens", rep:"Avertissement : attention, pour éviter un abordage", code:"L", sig:"1 son prolongé (répété au besoin)",
  qui:"Tout bateau qui doit, dans des circonstances particulières, attirer l'attention pour éviter un abordage.",
- fait:"Le petit bateau dérive vers la route du navire ; averti, il s'écarte.",
+ fait:"Le petit bateau coupe la route du navire ; averti, il s'écarte.",
  ref:RC + ", art. 36 § 3 et § 4", rappel:"Dans le canal, 1 prolongé = avertissement (courbe où la vue est gênée, ou pour éviter un abordage). Les feux à éclats très vifs (stroboscopes) sont interdits pour attirer l'attention (§ 5).",
  q:"Canal Gand-Terneuzen, beau temps. Le navire émet ce signal. Que veut dire ce signal ?", proches:["g-vt","g-pm","g-tri"],
  sc(){ const A = bt("A","navire",40,120,0,9,{s:.75,lab:"navire",col:"hA"}); const C = bt("C","menue",215,150,250,3,{lab:"petit bateau",col:"hB"});
@@ -1130,15 +1134,15 @@ function scSynth(kind){
     T(A,s1.end + .3,8,180); T(B,s2.end + .3,8,-180);
     boats = [A, B]; dur = s2.end + 10;
   } else {
-    const B1 = bt("C","plaisance",120,50,0,3,{s:.8,col:"hB"}), A1 = bt("A","plaisance",30,50,0,3,{s:.8,col:"hA"});
-    const B2 = bt("D","plaisance",120,170,0,3,{s:.8,col:"hB"}), A2 = bt("B","plaisance",30,170,0,3,{s:.8,col:"hC"});
+    const B1 = bt("C","plaisance",110,50,0,2,{s:.8,col:"hB"}), A1 = bt("A","plaisance",40,50,0,2,{s:.8,col:"hA"});
+    const B2 = bt("D","plaisance",110,170,0,2,{s:.8,col:"hB"}), A2 = bt("B","plaisance",40,170,0,2,{s:.8,col:"hC"});
     s1 = sg("A","LLb",.8,{cols:cols(kind,1), reste:.3}); s2 = sg("B","LLbb",s1.end + .8,{cols:cols(kind,2), reste:.3});
     /* le bateau qui dépasse reste plus rapide jusqu'à être nettement devant (au moins une longueur), puis reprend la vitesse du rattrapé ;
        en bas, il revient ensuite sur sa droite (RIPAM 13 d) ; Escaut art. 13 § 2 et § 10 ; canal art. 13 § 9) */
     const t1 = s1.end + .5, t2 = s2.end + .5;
     T(A1,t1,2,38); T(A1,t1 + 5,2,-38); const f1 = finDep(A1, B1, t1, 12, 0); D(B1,t1,3,0,-3);
-    T(A2,t2,2,-38); T(A2,t2 + 4,2,38); const f2 = finDep(A2, B2, t2, 14, 35); D(B2,t2,3,0,3);
-    boats = [B1, A1, B2, A2]; dur = Math.max(f1, f2) + 1.5;
+    T(A2,t2,2,-38); T(A2,t2 + 4,2,38); const f2 = finDep(A2, B2, t2, 10, 30); D(B2,t2,3,0,3);
+    boats = [B1, A1, B2, A2]; dur = Math.max(f1, f2) + .3;
   }
   return {set:"synthese", boats, sigs:[s1, s2], dur,
     notes:[N(0,99,82,110,"↑ tribord : 1 bref final"), N(0,99,272,110,"↓ bâbord : 2 brefs finaux"), N(0,99,180,206,PREFTX[kind])]};
@@ -1176,7 +1180,7 @@ const SYNTH = [
  {id:"s-vire", synth:1, cat:"vire", pos:0, ctxs:["fl","esc","gt"], tous:1, ctxTx:NOMCTX(["fl","esc","gt"]) + " (pas de signal de virement en mer)",
   titre:"Je vire… sur tribord (1 prolongé + 1 bref) ou sur bâbord (1 prolongé + 2 brefs)", lignes:[["Je vire sur tribord","Lb"],["Je vire sur bâbord","Lbb"]],
   texte:"Virer = faire demi-tour. Le prolongé annonce le demi-tour ; les brefs qui suivent donnent le côté. En haut, demi-tour par la droite ; en bas, par la gauche.",
-  refsC:{fl:"Eaux intérieures : " + RGP + ", art. 6.13, al. 2 et 4 ; art. 4.02, al. 3", esc:"Escaut : " + RE + ", art. 10 § 1 et § 2", gt:"Canal : " + RC + ", art. 10 § 1"},
+  refsC:{fl:"Eaux intérieures : " + RGP + ", art. 6.13, al. 2 et 4 ; art. 4.02, al. 3", esc:"Escaut : " + RE + ", art. 10 § 1 à 3", gt:"Canal : " + RC + ", art. 10 § 1"},
   encadre:"<b>En eaux intérieures :</b> obligatoire seulement « si la manœuvre envisagée devait obliger un autre bateau à modifier sa route ou sa vitesse » (art. 6.13, al. 2) ; réservé aux grands bateaux : « une menue embarcation ne peut pas faire usage des signaux sonores prévus à l'appendice 6, B, C, D et E » (art. 4.02, al. 3), et les al. 1 à 3 de l'art. 6.13 « ne s'appliquent pas à une menue embarcation dans son comportement avec un grand bateau » (al. 4).",
   parts:{fl:"Eaux intérieures : grand bateau, seulement si sa manœuvre oblige d'autres bateaux à modifier leur route ou leur vitesse ; ceux-ci adaptent leur vitesse et leur route (art. 6.13, al. 2 et 3).",
    mer:"Mer : pas de signal de virement ; — • • y est un signal de brume — règle 35 c).",
@@ -1187,7 +1191,7 @@ const SYNTH = [
   titre:"Je veux dépasser… par votre tribord (2 prolongés + 1 bref) ou par votre bâbord (2 prolongés + 2 brefs)", lignes:[["… par votre tribord","LLb"],["… par votre bâbord","LLbb"]],
   texte:"Les 2 prolongés disent « je veux vous dépasser » ; les brefs donnent le côté du bateau dépassé. Pour passer le long de son tribord, le bateau qui dépasse va à sa droite ; le long de son bâbord, à sa gauche. La réponse du bateau rattrapé dépend du contexte : en mer « — • — • » (d'accord), sur l'Escaut et le canal il vient du côté opposé et émet 1 ou 2 brefs, ou au moins 5 brefs s'il ne peut pas (voir les fiches suivantes).",
   texteC:{mer:"Les 2 prolongés disent « je veux vous dépasser » ; les brefs donnent le côté du bateau dépassé. Pour passer le long de son tribord, le bateau qui dépasse va à sa droite ; le long de son bâbord, à sa gauche. En mer, le navire rattrapé répond « — • — • » s'il est d'accord ; s'il a un doute, il peut émettre au moins 5 brefs rapides — règles 9 e) et 34 d).", esc:"Les 2 prolongés disent « je veux vous dépasser » ; les brefs donnent le côté du bateau dépassé. Pour passer le long de son tribord, le bateau qui dépasse va à sa droite ; le long de son bâbord, à sa gauche. Sur l'Escaut, le bateau rattrapé vient du côté opposé et émet 1 bref (il vient sur tribord) ou 2 brefs (il vient sur bâbord), ou au moins 5 brefs s'il ne peut pas faciliter le dépassement (art. 13 § 4 à 6).", gt:"Les 2 prolongés disent « je veux vous dépasser » ; les brefs donnent le côté du bateau dépassé. Pour passer le long de son tribord, le bateau qui dépasse va à sa droite ; le long de son bâbord, à sa gauche. Dans le canal, le bateau rattrapé vient du côté opposé et émet 1 bref (il vient sur tribord) ou 2 brefs (il vient sur bâbord), ou au moins 5 brefs s'il ne peut pas faciliter le dépassement (art. 13 § 4 à 6)."},
-  refsC:{mer:"Mer : RIPAM règle 34 c) (« je compte vous rattraper sur tribord / sur bâbord ») (en mer : seulement en chenal étroit ou voie d'accès, en vue l'un de l'autre)", esc:"Escaut : " + RE + ", art. 13 § 4 à 6", gt:"Canal : " + RC + ", art. 13 § 4 à 6"},
+  refsC:{mer:"Mer : RIPAM règle 34 c), « je compte vous rattraper sur tribord / sur bâbord », seulement dans un chenal étroit ou une voie d'accès, en vue l'un de l'autre", esc:"Escaut : " + RE + ", art. 13 § 4 à 6", gt:"Canal : " + RC + ", art. 13 § 4 à 6"},
   parts:{fl:"Eaux intérieures : signaux de dépassement hors programme (art. 6.10, al. 2 à 5).",
    mer:"Mer : seulement dans un chenal étroit ou une voie d'accès, en vue l'un de l'autre ; le rattrapé répond — • — • s'il est d'accord ; s'il a un doute, il peut émettre au moins 5 brefs rapides — règles 9 e) et 34 c) et d).",
    esc:"Escaut : le bateau rattrapé vient du côté opposé et émet 1 bref (il vient sur tribord) ou 2 brefs (il vient sur bâbord), ou au moins 5 brefs s'il ne peut pas faciliter le dépassement (art. 13 § 4 à 6).",
@@ -1236,7 +1240,8 @@ FUS.forEach(([gid, titre, membres, scenes, sigN]) => {
 ITEMS.forEach(it => { const g = GRP_OF[it.id]; if(!g) FICHES.push(it); else if(BYID[g].membres[0] === it.id) FICHES.push(BYID[g]); });
 FICHES.forEach(f => { if(!f.ctxs) f.ctxs = [f.ctx]; });
 /* quiz « Tous » : familles de sens équivalent, gardées en fiches séparées parce que les règles diffèrent ; une seule question par famille */
-const FAMQ = [["m-coude","u-coude"], ["fl-inc","u-pm"], ["m-dep-tri","u-rtri"], ["m-dep-bab","u-rbab"], ["m-b3","e-b3","g-b3"]];
+const FAMQ = [["fl-etroit","m-coude","u-coude"], ["fl-inc","u-pm"], ["m-dep-tri","u-rtri"], ["m-dep-bab","u-rbab"], ["m-b3","e-b3","g-b3"],
+  ["fl-brume","u-b1"], ["fl-att","u-avert"], ["fl-stat","u-moui"], ["fl-pontL","fl-ecl"]];
 const QFAM = {}; /* id de question -> famille (fiche fusionnée, famille ou elle-même) */
 ITEMS.forEach(it => { QFAM[it.id] = GRP_OF[it.id] || it.id; });
 FAMQ.forEach((F, k) => F.forEach(x => (BYID[x].fus ? BYID[x].membres : [x]).forEach(id => { QFAM[id] = "fam" + k; })));
@@ -1260,7 +1265,7 @@ function boxL(ouvert){ /* un seul son prolongé : résumé des indices, détail 
     <li>À l'approche d'une écluse : « je veux franchir l'écluse » (ou par radiotéléphone) — art. 6.28, al. 1.</li>
     <li>Par visibilité réduite, bateau qui ne navigue pas au radar et gagne le poste d'amarrage ou d'ancrage sûr le plus proche : répété à intervalles d'une minute au plus — art. 6.33, al. 1 b).</li>
     <li>Là où est placé le panneau B.7 « obligation d'émettre un signal sonore » ; un cartouche peut préciser « émettez un son prolongé » — appendice 7, B.7 et F.4.</li>
-    <li class="nq">Hors programme : bac à câble longitudinal qui stationne du côté opposé à l'ancrage du câble, les bateaux qui approchent peuvent exiger le dégagement du chenal par 1 son prolongé — art. 6.23, al. 2 b) ; bateau avalant naviguant au radar, sans contact radio avec les bateaux venant en sens inverse — art. 6.32, al. 4 a).</li></ul>
+    <li class="nq">Hors programme : quand un bac à câble longitudinal stationne du côté du chenal opposé à l'ancrage de son câble, les bateaux qui approchent peuvent exiger, par 1 son prolongé, qu'il dégage le chenal — art. 6.23, al. 2 b). Un bateau avalant qui navigue au radar sans pouvoir établir de contact radio avec les bateaux venant en sens inverse émet 1 son prolongé, répété autant que nécessaire — art. 6.32, al. 4 a).</li></ul>
     <p><b>Mer</b> (RIPAM) :</p><ul>
     <li>À l'approche d'un coude ou d'une partie de chenal où d'autres navires peuvent être cachés par un obstacle ; le navire caché qui l'entend répond par 1 son prolongé — règle 34 e).</li>
     <li>Par visibilité réduite, navire à propulsion mécanique ayant de l'erre : au moins toutes les 2 minutes — règle 35 a).</li>
@@ -1897,7 +1902,7 @@ function ficheFus(it, scIt){
   const opts = optionsScene(it, ST.filtre || "tous");
   const lignes = it.membres.map(id => { const m = BYID[id];
     const qui = m.id === scIt.id ? m.qui : m.qui.replace(/\s*Ici : [^.]*\.$/, ""); /* « Ici : … » ne vaut que pour la scène montrée */
-    return `<li><b>${CTX[m.ctx]} :</b> ${m.rep !== it.rep ? `« ${m.rep} ». ` : ""}${qui}${m.sig !== it.sig ? ` <span class="nq">(${m.sig})</span>` : ""} <span class="ref">${m.ref}</span></li>`; }).join("");
+    return `<li><b>${CTX[m.ctx]} :</b> ${m.rep !== it.rep ? `« ${m.rep} ». ` : ""}${qui}${m.sig !== it.sig ? ` <span class="nq">— ${m.sig}</span>` : ""} <span class="ref">${m.ref}</span></li>`; }).join("");
   return `<div class="fiche"><span class="ctxb">${CATNOM[it.cat]}</span><div class="pills">${it.ctxs.map(c => `<span class="pill">${CTXC[c]}</span>`).join("")}</div><h2>${it.rep}</h2>
     <p class="sig">${codeHTML(it.code)}<span>${it.sig}</span></p>
     <p><b>Selon l'endroit :</b></p><ul class="lctx">${lignes}</ul>
