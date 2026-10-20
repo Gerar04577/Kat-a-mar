@@ -182,7 +182,7 @@ svg text{font-family:var(--body)}
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Signaux sonores animés</h1>
-  <div class="ver">version 1.5 · signaux sonores : eaux intérieures (règlement général), mer, Escaut, canal Gand-Terneuzen</div>
+  <div class="ver">version 1.6 · signaux sonores : eaux intérieures (règlement général), mer, Escaut, canal Gand-Terneuzen</div>
 </header>
 
 <div class="bar" role="group" aria-label="Mode">
@@ -224,7 +224,7 @@ svg text{font-family:var(--body)}
 <!-- ============ QUIZ (bas) ============ -->
 <div id="z-quiz-bas" hidden></div>
 
-<p class="ref">Sources : Règlement général de police pour la navigation sur les eaux intérieures (AR du 24 septembre 2006), appendices 6 et 7 et articles cités ; RIPAM (COLREG 1972) règles 9, 13, 32 à 37 et annexe IV ; Règlement de navigation de l'Escaut maritime inférieur (AR du 23 septembre 1992), articles 2, 4, 10, 13, 14, 18 et 32 à 37 (appelé ici « Règlement de l'Escaut ») ; Règlement de police de l'Escaut maritime inférieur (version en vigueur depuis le 8 mai 2023), art. 40 ; Règlement de navigation du canal de Gand à Terneuzen (AR du 23 septembre 1992, édition à jour au 17 septembre 2005), articles 2, 4, 9, 10, 13, 14, 19 et 32 à 37 (appelé ici « Règlement du canal »). Pour l'animation, les signaux répétés (chaque minute, toutes les 2 minutes, 15 minutes…) ne sont joués qu'une ou deux fois.</p>
+<p class="ref">Sources : Règlement général de police pour la navigation sur les eaux intérieures (AR du 24 septembre 2006), appendices 6 et 7 et articles cités ; RIPAM (COLREG 1972) règles 8, 9, 13, 17, 32 à 37 et annexe IV ; Règlement de navigation de l'Escaut maritime inférieur (AR du 23 septembre 1992), articles 2, 4, 9, 10, 13, 14, 18 et 32 à 37 (appelé ici « Règlement de l'Escaut ») ; Règlement de police de l'Escaut maritime inférieur (version en vigueur depuis le 8 mai 2023), art. 40 ; Règlement de navigation du canal de Gand à Terneuzen (AR du 23 septembre 1992, édition à jour au 17 septembre 2005), articles 2, 4, 9, 10, 13, 14, 19 et 32 à 37 (appelé ici « Règlement du canal »). Pour l'animation, les signaux répétés (chaque minute, toutes les 2 minutes, 15 minutes…) ne sont joués qu'une ou deux fois.</p>
 </div>
 
 <script>
@@ -303,8 +303,9 @@ function finDep(A, B, t0, v, retour, vFin){
   /* A accélère à v à partir de t0 et reste plus rapide jusqu'à être au moins une longueur (la sienne) devant B, mesuré sur les trajectoires
      simulées (virages compris) ; s'il est passé à gauche, il fait ensuite son virage de retour sur sa droite à pleine vitesse, puis ralentit à vFin. */
   if(v !== A.v) V(A, t0, 3, v);
-  const L = DIM[A.type][0] * sf(A), H = t0 + 90, ta = simuler(A, H), tb = simuler(B, H);
-  let tA = t0 + 3; while(tA < H && etat(ta, tA)[0] - etat(tb, tA)[0] < L + 10) tA += .1;
+  /* « devant » : poupe du dépassant − étrave du dépassé ≥ max(10 px, ¼ de la longueur du dépassé) */
+  const LA = DIM[A.type][0] * sf(A), LB = DIM[B.type][0] * sf(B), ecart = (LA + LB) / 2 + Math.max(10, LB / 4), H = t0 + 90, ta = simuler(A, H), tb = simuler(B, H);
+  let tA = t0 + 3; while(tA < H && etat(ta, tA)[0] - etat(tb, tA)[0] < ecart) tA += .1;
   const vf = vFin == null ? B.v : vFin;
   if(retour){ T(A, tA, 1.5, retour); T(A, tA + 2, 1.5, -retour); V(A, tA + 3.5, 2, vf); return tA + 5.5; }
   V(A, tA, 2, vf); return tA + 2;
@@ -589,7 +590,7 @@ const ITEMS = [
 {id:"fl-nap", ctx:"fl", kind:"sens", rep:"N'approchez pas (matières dangereuses)", code:"bLbL", sig:"1 son bref + 1 son prolongé, répétés sans interruption pendant au moins 15 minutes (avec le feu jaune en même temps)",
  qui:"Bateau qui porte les cônes bleus (matières dangereuses), lors d'un incident qui peut libérer ces matières, si l'équipage ne peut pas écarter le danger.",
  fait:"Le bateau aux cônes bleus émet ce signal sans interruption ; le bateau qui arrivait vers la zone fait demi-tour et s'éloigne.",
- ref:RGP + ", art. 4.04/1, al. 2 (signal) ; al. 3 et 4 (mesures)", rappel:"• — répété sans arrêt au moins 15 minutes. Vers la zone : s'en tenir le plus loin possible et virer si nécessaire ; déjà passé : continuer à la plus grande vitesse possible (al. 3). À bord du bateau qui l'entend : fermer fenêtres et ouvertures, éteindre toute source de lumière et tout feu non protégé, cesser de fumer, arrêter les machines auxiliaires non indispensables, éviter les étincelles (al. 4).",
+ ref:RGP + ", art. 4.04/1, al. 2 (signal) ; al. 3 et 4 (mesures)", rappel:"• — répété sans interruption pendant au moins 15 minutes. Vers la zone : s'en tenir le plus loin possible et virer si nécessaire ; déjà passé : continuer à la plus grande vitesse possible (al. 3). À bord du bateau qui l'entend : fermer fenêtres et ouvertures, éteindre toute source de lumière et tout feu non protégé, cesser de fumer, arrêter les machines auxiliaires non indispensables, éviter les étincelles (al. 4).",
  q:"Eaux intérieures. Le bateau arrêté émet ce signal sans interruption. Que veut dire ce signal ?", proches:["fl-pont","fl-med","fl-vt"],
  sc(){ const A = bt("A","citerne",150,100,0,0,{jaune:1,cone:1,lab:"cônes bleus",col:"hA"}); const C = bt("C","plaisance",350,150,180,4,{col:"hB"});
    const s = sg("A","bLbL",.8,{rep:"… sans interruption pendant au moins 15 minutes"}); T(C,s.end+.5,3,-180); V(C,s.end+.5,3,8);
@@ -606,14 +607,14 @@ const ITEMS = [
      notes:[N(0, s.end+.8, 250, 205, "pont fermé"), N(s.end+.8, s.end+5, 250, 205, "le pont s'ouvre")]}; }},
 {id:"fl-ecl", ctx:"fl", kind:"sens", rep:"J'annonce que je veux franchir l'écluse", code:"L", sig:"1 son prolongé (ou un message par radiotéléphone)",
  qui:"Bateau qui arrive au garage d'une écluse.",
- fait:"La péniche réduit sa vitesse et annonce qu'elle veut passer l'écluse. Si elle ne peut pas entrer tout de suite, elle s'arrête avant le signal B.5.",
+ fait:"La péniche réduit sa vitesse et annonce qu'elle veut passer l'écluse.",
  ref:RGP + ", art. 6.28, al. 1", rappel:"À l'approche d'une écluse : réduire la vitesse, annoncer son intention par un son prolongé ou par radiotéléphone, s'arrêter avant le signal B.5 si on n'entre pas tout de suite. Même annonce (1 son prolongé ou radio) à l'approche d'un pont mobile (art. 6.26, al. 1).",
  q:"Eaux intérieures. La péniche émet ce signal à l'approche de l'ouvrage. Que veut dire ce signal ?", proches:["fl-arr","fl-dang"],
  sc(){ const A = bt("A","peniche",60,110,0,8,{jaune:1,lab:"péniche",col:"hA"}); const s = sg("A","L",1.5); V(A,s.end+.5,8,0);
    return {set:"ecluse", boats:[A], sigs:[s], dur:s.end+9, notes:[N(0,99,212,40,"garage de l'écluse"), N(s.end+.5,99,120,205,"elle réduit sa vitesse")]}; }},
 {id:"fl-pontL", ctx:"fl", kind:"sens", rep:"J'annonce que je veux franchir le pont mobile", code:"L", sig:"1 son prolongé (ou un message par radiotéléphone)",
  qui:"Conducteur d'un bateau qui arrive à un pont mobile.",
- fait:"La péniche réduit sa vitesse et annonce qu'elle veut passer le pont ; le pont s'ouvre, elle passe. Si elle ne pouvait pas passer, elle s'arrêterait avant le signal B.5.",
+ fait:"La péniche réduit sa vitesse et annonce qu'elle veut passer le pont ; le pont s'ouvre, elle passe.",
  ref:RGP + ", art. 6.26, al. 1 et 2", rappel:"À l'approche d'un pont mobile : réduire la vitesse, annoncer son intention de franchir le pont par un son prolongé ou par radiotéléphone, suivre les ordres éventuels du personnel du pont, s'arrêter avant le signal B.5 si on ne peut pas ou ne veut pas passer. Même annonce à l'approche d'une écluse (art. 6.28, al. 1). Ne pas confondre avec — • — (appendice 6, A : demande de manœuvre d'un pont mobile ou d'une écluse).",
  q:"Eaux intérieures. La péniche émet ce signal à l'approche de l'ouvrage. Que veut dire ce signal ?", proches:["fl-ecl","fl-arr","fl-detL"],
  sc(){ const A = bt("A","peniche",40,110,0,9,{jaune:1,lab:"péniche",col:"hA"}); const s = sg("A","L",1.5); V(A,s.end+.5,4,2); V(A,s.end+6,3,10);
@@ -635,7 +636,7 @@ const ITEMS = [
  qui:"Grand bateau qui se dirige vers un endroit situé à sa gauche (quai, port, écluse…), face à un grand bateau qui vient en sens inverse. Pas par mauvaise visibilité (art. 6.30, al. 4).",
  fait:"A demande ; B répond « d'accord » par le même signal. Les deux péniches se croisent tribord contre tribord : chacune a l'autre sur sa droite.",
  ref:RGP + ", art. 6.05, al. 1 et 2", rappel:"Normalement on se croise bâbord contre bâbord. 2 brefs + à tribord le panneau bleu clair avec le feu blanc scintillant (de nuit : le feu, panneau facultatif) = « je veux passer à tribord ». Réponse : même signal = d'accord ; série de sons très brefs = refus.",
- q:"Eaux intérieures. Deux grands bateaux vont se croiser. A émet ce signal et montre un panneau bleu clair. Que demande-t-il ?", proches:["fl-arr","fl-refus","fl-vb"],
+ q:"Eaux intérieures. Deux grands bateaux vont se croiser ; A émet ce signal. Que veut dire ce signal ?", proches:["fl-arr","fl-refus","fl-vb"],
  sc(){ const r = scRencontre("acc"); r.sigs[0].focus = 1; r.sigs[1].focus = 0; return r; }},
 {id:"fl-acc", ctx:"fl", kind:"sens", rep:"D'accord, passez à tribord", code:"bb", sig:"2 sons brefs (+ les mêmes signaux visuels à tribord, s'il en est équipé)",
  qui:"Le grand bateau à qui l'on demande de croiser tribord contre tribord, s'il accepte.",
@@ -692,7 +693,7 @@ const ITEMS = [
 {id:"m-arr", ctx:"mer", kind:"sens", rep:"Je bats en arrière (machine en arrière)", code:"bbb", sig:"3 sons brefs",
  qui:"Navire à moteur en route, en vue d'un autre, qui fait une manœuvre prévue par le RIPAM.",
  fait:"Le cargo met sa machine en arrière : il ralentit, s'arrête puis recule (il peut encore avancer un peu sur son erre).",
- ref:"RIPAM règle 34 a)", rappel:"3 brefs = machine en arrière. Ce n'est pas SOS (3 courts, 3 longs, 3 courts).",
+ ref:"RIPAM règle 34 a)", rappel:"3 brefs = machine en arrière. Ce n'est pas SOS (3 courts, 3 longs, 3 courts). Ici, le petit bateau devait s'écarter et ne le fait pas : le navire privilégié peut alors manœuvrer lui-même, et doit le faire s'il est trop près — règle 17 a) ii) et b). Il peut casser son erre en battant en arrière — règle 8 e).",
  q:"En mer, navires en vue. Le cargo émet ce signal. Que fait-il ?", proches:["m-tri","m-bab","m-doute"],
  sc(){ const A = bt("A","navire",40,105,0,8,{s:.85,lab:"navire à moteur",col:"hA"}); const B = bt("B","plaisance",215,30,90,6,{col:"hB"});
    const s = sg("A","bbb",1), q = s.end + .5; V(A,q,4,0); V(A,q+4,3,-4); V(A,q+7.5,2,0);
@@ -730,7 +731,7 @@ const ITEMS = [
 {id:"m-b1", ctx:"mer", kind:"qui", rep:"Navire à moteur en route, avec de l'erre", code:"L", sig:"1 son prolongé, au moins toutes les 2 minutes",
  qui:"Navire à moteur qui avance dans l'eau (il a de l'erre), par visibilité réduite. Aussi : un pousseur et le bateau poussé accouplés de façon rigide.",
  fait:"Le navire avance dans la brume et émet 1 prolongé.",
- ref:"RIPAM règle 35 a) et f)", rappel:"Par visibilité réduite (brume, bruine, neige, fortes averses…), de jour comme de nuit. Brume : — = navire à moteur avec erre ; — — = stoppé sans erre ; — • • = voilier, pêche, remorqueur ou pousseur, non maître, capacité restreinte, tirant d'eau.",
+ ref:"RIPAM règle 35 a) et f)", rappel:"Par visibilité réduite (brume, bruine, neige, fortes averses…), de jour comme de nuit. Brume : — = navire à moteur avec erre ; — — = stoppé sans erre ; — • • = voilier, pêche, remorqueur ou pousseur, non maître, capacité restreinte, tirant d'eau. Un navire de moins de 12 m n'est pas tenu de faire ces signaux de brume, mais il doit alors émettre un autre signal sonore efficace au moins toutes les 2 minutes (règle 35 j).",
  q:"En mer, par brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui l'émet ?", proches:["m-b2","m-b3","m-moui"],
  sc(){ return scBrumeMer("L","navire",{v:8, b:{s:.8, lab:"navire à moteur"}}); }},
 {id:"m-b2", ctx:"mer", kind:"qui", rep:"Navire à moteur en route, stoppé, sans erre", code:"LPL", sig:"2 sons prolongés (≈ 2 s entre eux), au moins toutes les 2 minutes",
@@ -753,7 +754,7 @@ const ITEMS = [
  sc(){ return scRemorque("mer"); }},
 {id:"m-pil", ctx:"mer", kind:"qui", rep:"Bateau-pilote en service", code:"L|bbbb", sig:"Son signal de brume normal (ici 1 prolongé : il a de l'erre), plus 4 sons brefs d'identification (facultatifs)",
  qui:"Bateau-pilote en service de pilotage, par visibilité réduite.",
- fait:"Stoppé, il ferait 2 prolongés ; au mouillage, la cloche. Il peut y ajouter ses 4 brefs.",
+ fait:"Le bateau-pilote avance dans la brume : 1 prolongé, car il a de l'erre, puis ses 4 brefs d'identification. Non montré ici : stoppé, il ferait 2 prolongés ; au mouillage, la cloche.",
  ref:"RIPAM règle 35 k)", rappel:"4 brefs d'identité, en plus du signal de brume = bateau-pilote. Rien à voir avec les 5 brefs du doute.",
  q:"En mer, par brume. Vous entendez un prolongé, puis 4 brefs. Qui est-ce ?", proches:["m-b4","m-b3","m-b2"],
  sc(){ return scBrumeMer("L|bbbb","pilote",{x:300, y:80, v:8, b:{lab:"bateau-pilote"}}); }},
@@ -787,7 +788,7 @@ const ITEMS = [
  qui:"Navire en détresse qui demande de l'aide.",
  fait:"Le son ne s'arrête pas (ici coupé après 10 s). Un autre bateau vient l'aider.",
  ref:"RIPAM règle 37 ; annexe IV, 1 b)", rappel:"Un prolongé dure 4 à 6 s puis s'arrête ; le son continu de détresse ne s'arrête pas.",
- q:"En mer. Un bateau arrêté fait retentir ce signal sans s'arrêter. Que veut dire ce signal ?", proches:["m-coude","m-arr"],
+ q:"En mer. Un bateau arrêté fait retentir ce signal sans interruption. Que veut dire ce signal ?", proches:["m-coude","m-arr"],
  sc(){ return scDetresseMer("mer","K",s => ({notes:[N(1,99,180,205,"son continu : il ne s'arrête pas")]})); }},
 {id:"m-sos", ctx:"mer", kind:"sens", rep:"Détresse : je demande du secours", code:"TTT DDD TTT", sig:"SOS en morse : 3 courts, 3 longs, 3 courts (• • • — — — • • •)",
  qui:"Navire en détresse, avec n'importe quel moyen de signalisation (ici au son).",
@@ -879,7 +880,7 @@ const ITEMS = [
  sc(){ return scBrumeMer("LPL","navire",{set:"escaut", x:200, y:100, v:0, b:{s:.8, lab:"stoppé, sans erre"}}); }},
 {id:"e-b3", ctx:"esc", kind:"qui", rep:"Navire de grandes dimensions, non maître de sa manœuvre, à capacité restreinte, voilier, bateau en train de pêcher ou qui en remorque un autre", code:"Lbb", sig:"1 prolongé + 2 brefs, au moins toutes les 2 minutes",
  qui:"Ici un navire de grandes dimensions. Particularité de l'Escaut et du canal (absent du RIPAM) : il figure dans cette liste.",
- fait:"Même signal pour toute la liste, en faisant route.",
+ fait:"Le navire de grandes dimensions fait route dans la brume et émet — • •. Même signal pour toute la liste.",
  ref:RE + ", art. 35 § 2, 3", rappel:"Sur l'Escaut, le navire de grandes dimensions fait — • •, comme le voilier ou le remorqueur.",
  q:"Escaut, brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui peut l'émettre ?", proches:["e-b4","e-b1","e-b2"],
  sc(){ return scBrumeMer("Lbb","navire",{set:"escaut", x:270, y:100, v:6, b:{s:1.3, lab:"navire de grandes dimensions"}}); }},
@@ -932,7 +933,7 @@ const ITEMS = [
  qui:"Bateau en détresse qui désire du secours.",
  fait:"Le son ne s'arrête pas (ici coupé après 10 s). Un autre bateau vient l'aider.",
  ref:RE + ", art. 37, 1°", rappel:"Signaux sonores de détresse sur l'Escaut : son continu, SOS, séries de coups de cloche ou sons prolongés répétés.",
- q:"Escaut. Un bateau arrêté fait retentir ce signal sans s'arrêter. Que veut dire ce signal ?", proches:["e-avert","e-coude"],
+ q:"Escaut. Un bateau arrêté fait retentir ce signal sans interruption. Que veut dire ce signal ?", proches:["e-avert","e-coude"],
  sc(){ return scDetresseMer("escaut","K",s => ({notes:[N(1,99,180,200,"son continu : il ne s'arrête pas")]})); }},
 {id:"e-sos", ctx:"esc", kind:"sens", rep:"Détresse : je demande du secours", code:"TTT DDD TTT", sig:"SOS en morse : 3 courts, 3 longs, 3 courts",
  qui:"Bateau en détresse, avec n'importe quel système de signalisation (ici au son).",
@@ -1032,7 +1033,7 @@ const ITEMS = [
  sc(){ return scBrumeMer("LPL","peniche",{set:"canal", x:200, y:70, v:0, b:{jaune:1, lab:"sans erre"}}); }},
 {id:"g-b3", ctx:"gt", kind:"qui", rep:"Bateau non maître de sa manœuvre, à capacité restreinte, navire de grandes dimensions ou bateau qui en remorque un autre", code:"Lbb", sig:"1 prolongé + 2 brefs, au moins toutes les 2 minutes",
  qui:"Ici un navire de grandes dimensions. Dans le canal, la liste ne comprend ni le voilier ni le bateau en train de pêcher.",
- fait:"Même signal pour toute la liste, en faisant route.",
+ fait:"Le navire de grandes dimensions fait route dans la brume et émet — • •. Même signal pour toute la liste.",
  ref:RC + ", art. 35 § 2 c)", rappel:"Canal : — • • = non maître, capacité restreinte, navire de grandes dimensions, remorqueur. Le remorqué : — • • •.",
  q:"Canal Gand-Terneuzen, brume. Vous entendez ce signal, au moins toutes les 2 minutes. Qui peut l'émettre ?", proches:["g-b4","g-b1","g-bac"],
  sc(){ return scBrumeMer("Lbb","navire",{set:"canal", x:270, y:72, v:6, b:{s:1.1, lab:"navire de grandes dimensions"}}); }},
@@ -1044,7 +1045,7 @@ const ITEMS = [
  sc(){ return scRemorque("gt"); }},
 {id:"g-bac", ctx:"gt", kind:"qui", rep:"Bac faisant route", code:"Lbbbb", sig:"1 prolongé + 4 brefs, au moins chaque minute",
  qui:"Bac qui traverse le canal, par visibilité réduite.",
- fait:"Le bac traverse d'une rive à l'autre ; son signal revient au moins chaque minute (et non toutes les 2 minutes).",
+ fait:"Le bac traverse le canal dans la brume ; son signal revient au moins chaque minute, et non toutes les 2 minutes.",
  ref:RC + ", art. 35 § 5", rappel:"— • • • • chaque minute = bac. — • • • = remorqué ; — • • = non maître, capacité restreinte, grandes dimensions, remorqueur.",
  q:"Canal Gand-Terneuzen, brume. Vous entendez ce signal, au moins une fois par minute. Qui l'émet ?", proches:["g-b4","g-b3","g-b1"],
  sc(){ const A = bt("A","bac",215,168,270,4,{cache:1,lab:"bac",col:"hC"}); const s = sg("A","Lbbbb",1,{rep:"↻ répété au moins chaque minute"});
@@ -1092,7 +1093,7 @@ const ITEMS = [
  qui:"Bateau en détresse qui demande assistance.",
  fait:"Le son ne s'arrête pas (ici coupé après 10 s). Un autre bateau vient l'aider.",
  ref:RC + ", art. 37 a)", rappel:"Signaux sonores de détresse du canal : son continu de l'appareil de brume, séries de coups de cloche ou sons prolongés répétés.",
- q:"Canal Gand-Terneuzen. Un bateau arrêté fait retentir ce signal sans s'arrêter. Que veut dire ce signal ?", proches:["g-avert","g-coude","g-echM"],
+ q:"Canal Gand-Terneuzen. Un bateau arrêté fait retentir ce signal sans interruption. Que veut dire ce signal ?", proches:["g-avert","g-coude","g-echM"],
  sc(){ return scDetresseMer("canal","K",s => ({notes:[N(1,99,180,205,"son continu : il ne s'arrête pas")]})); }},
 {id:"g-detL", ctx:"gt", kind:"sens", rep:"Détresse : je demande assistance", code:"LL", sig:"Sons prolongés répétés (ou séries de coups de cloche)",
  qui:"Bateau en détresse qui demande assistance.",
@@ -1362,7 +1363,7 @@ const TAB = [
    gt:[{id:"g-coude", si:"À l'approche d'une courbe où la vue est gênée par autre chose que la brume."},
        {id:"g-avert", si:"Pour attirer l'attention afin d'éviter un abordage."},
        {id:"g-b1", si:"Par visibilité réduite, répété au moins toutes les 2 minutes."}]}},
- {g:"Brume (visibilité réduite)", note:"Voir aussi plus haut : — = brume d'un bateau à moteur avec de l'erre ; — • • = brume de certains bateaux en mer, sur l'Escaut et le canal."},
+ {g:"Brume (visibilité réduite)", note:"Voir aussi plus haut : — = brume (eaux intérieures : bateau sans radar ; ailleurs : bateau à moteur avec de l'erre) ; — • • = brume de certains bateaux en mer, sur l'Escaut et le canal."},
  {code:"LPL", nom:"2 prolongés (≈ 2 s entre eux)", c:{
    fl:[NX], mer:[{id:"m-b2"}], esc:[{id:"e-b2"}], gt:[{id:"g-b2"}]}},
  {code:"Lbbb", nom:"1 prolongé + 3 brefs", c:{
