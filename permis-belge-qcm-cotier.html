@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.24 · complément au brevet général · 300 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.25 · complément au brevet général · 303 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -2141,7 +2141,7 @@ window.KAM_IMG = {};
 
 </script>
 <script>
-/* QCM CÔTIER — complément au brevet de conduite général. Entraînement : R001-R100, N001-N100, S001-S100.
+/* QCM CÔTIER — complément au brevet de conduite général. Entraînement : R001-R100, N001-N100, S001-S103.
    Réserve d'examen (res) : R201-R234, N201-N234, S201-S234. Bonne réponse = o[b].
    Sources : RIPAM à jour, règlements de l'Escaut maritime inférieur, de la mer territoriale et du canal
    de Gand à Terneuzen, AR plaisance du 28/06/2019, manuel Booost-Boat (Tomes 1 à 3). */
@@ -11773,6 +11773,78 @@ window.KAM_QCM = {
 "ex": "Hélitreuillage : laisser le câble toucher l'eau ou le pont (décharge de l'électricité statique) avant de le saisir, et ne jamais l'amarrer au bateau. Suivre les consignes données par VHF.",
 "pg": "Prépare le pont : range et arrime tout ce qui peut s'envoler, dégage une zone, fais porter les gilets. Garde le cap et la vitesse demandés par l'équipage de l'hélicoptère.",
 "ref": "Pratique établie des services de sauvetage (hélitreuillage) · Absent du manuel"
+},
+{
+"id": "S101",
+"cat": "S",
+"res": false,
+"q": "Le couple d'un moteur in-bord (sa force de rotation) est-il plus grand en marche avant ou en marche arrière ?",
+"o": [
+{
+"t": "Plus grand en marche arrière.",
+"e": "Non : ce qu'on ressent davantage en marche arrière, c'est l'effet de pas de l'hélice, pas le couple du moteur."
+},
+{
+"t": "Plus grand en marche avant.",
+"e": "Non : le moteur tourne toujours dans le même sens ; seul l'inverseur change le sens de l'hélice."
+},
+{
+"t": "Le sens de marche n'y change rien : le couple dépend du régime du moteur.",
+"e": "Oui : le moteur ne « sait » pas si vous avancez ou reculez."
+}
+],
+"b": 2,
+"ex": "Le moteur tourne toujours dans le même sens. Pour reculer, l'inverseur (la boîte entre le moteur et l'hélice) inverse le sens de l'hélice. Le couple dépend du régime (tours/minute), pas du sens de marche.",
+"pg": "Ne pas confondre avec l'effet de pas de l'hélice : il se fait surtout sentir en marche arrière. Avec une hélice à pas droit, en marche arrière, la poupe part vers bâbord. C'est cela que le manuel appelle aussi « effet de couple » de l'hélice.",
+"ref": "Connaissances techniques établies (moteurs marins) · Manuel : T3 p. 6 (effet de pas de l'hélice)"
+},
+{
+"id": "S102",
+"cat": "S",
+"res": false,
+"q": "Sur l'arrivée de gazole d'un in-bord diesel, un filtre porte en bas un bol transparent avec un robinet de purge. À quoi sert-il surtout ?",
+"o": [
+{
+"t": "À retenir l'eau mêlée au carburant : elle se dépose au fond du bol.",
+"e": "Oui : c'est un filtre séparateur d'eau ; l'eau, plus lourde que le gazole, tombe au fond."
+},
+{
+"t": "À filtrer l'eau de mer avant la pompe à impeller.",
+"e": "Non : ça, c'est le filtre à eau de mer, sur le circuit de refroidissement, pas sur l'arrivée de gazole."
+},
+{
+"t": "À recueillir l'huile usagée du moteur.",
+"e": "Non : l'huile a son propre filtre, sur le moteur ; ce bol est sur l'arrivée de carburant."
+}
+],
+"b": 0,
+"ex": "Le filtre séparateur d'eau (ou décanteur) arrête l'eau et les impuretés du carburant avant qu'elles n'arrivent à la pompe d'injection et aux injecteurs. Le bol transparent permet de voir l'eau ; le robinet du bas sert à la vider.",
+"pg": "L'eau arrive dans le réservoir surtout par condensation. Dans un diesel, elle fait caler le moteur et peut abîmer l'injection. Avant de partir : regarder le bol et purger l'eau s'il y en a.",
+"ref": "Connaissances techniques établies (moteurs marins) · Manuel : T1 p. 68 (« filtre à carburant », sans parler de l'eau)"
+},
+{
+"id": "S103",
+"cat": "S",
+"res": false,
+"q": "Par temps de gel (sous 0 °C), quel gaz faut-il à bord pour que le réchaud fonctionne encore ?",
+"o": [
+{
+"t": "Le butane, parce qu'il supporte mieux le froid.",
+"e": "Non : c'est l'inverse ; sous 0 °C, le butane reste liquide dans la bouteille et ne donne presque plus de gaz."
+},
+{
+"t": "Le propane, qui se transforme encore en gaz jusqu'à environ −42 °C.",
+"e": "Oui : c'est le gaz des temps froids."
+},
+{
+"t": "Peu importe : les deux fonctionnent de la même façon par tous les temps.",
+"e": "Non : le butane cesse pratiquement de fonctionner vers 0 °C."
+}
+],
+"b": 1,
+"ex": "Dans la bouteille, le gaz est liquide ; il doit se transformer en gaz pour alimenter le réchaud. Le butane le fait jusqu'à environ −0,5 °C seulement ; le propane jusqu'à environ −42 °C.",
+"pg": "Moyen de retenir : Propane pour le Pôle (le froid), Butane pour la Belle saison. Les deux gaz sont plus lourds que l'air : une fuite descend dans les fonds, d'où le détecteur placé en bas et le coffre à bouteille aéré par le bas vers l'extérieur.",
+"ref": "Propriétés physiques établies (ébullition : butane ≈ −0,5 °C ; propane ≈ −42 °C) · Absent du manuel"
 },
 {
 "id": "S201",
