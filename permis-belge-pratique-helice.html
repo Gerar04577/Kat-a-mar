@@ -32,11 +32,17 @@ p{margin:6px 0}
 ol{margin:6px 0 0;padding-left:22px} li{margin:3px 0;color:var(--mute)} li.cur{color:var(--ink);font-weight:700}
 .ok{color:var(--ok)} .ko{color:var(--ko)}
 h1.p2{margin-top:28px}
+
+:root{--bois:#a9805f;--autre:#c9ced6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bois:#7a5a40;--autre:#3a4656}}
+:root[data-theme="dark"]{--bois:#7a5a40;--autre:#3a4656}
+#rejA{width:100%;margin-top:4px}
+.etapeA{font-size:16px;font-weight:700;min-height:3.2em;margin:8px 0 0}
 </style>
 </head>
 <body>
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
-<div class="ver">Effet du pas de l'hélice · version 1.1 · Tome 3 · 1. pourquoi l'arrière part de côté · 2. virer en plusieurs fois</div>
+<div class="ver">Effet du pas de l'hélice · version 1.2 · Tome 3 · 1. pourquoi l'arrière part de côté · 2. virer en plusieurs fois · 3. entrer dans une place</div>
 <h1>Effet du pas de l'hélice : pourquoi l'arrière part de côté ?</h1>
 
 <div class="card">
@@ -250,6 +256,97 @@ h1.p2{margin-top:28px}
   document.getElementById("bB").onclick=()=>go("B");
   document.getElementById("rej").onclick=()=>go(S);
   go("A"); requestAnimationFrame(frame);
+})();
+</script>
+<h1 class="p2">Entrer dans une place : par la gauche (A) ou par la droite (B) ?</h1>
+<div class="card">
+  <div class="seg"><button id="amA">Arrivée par la gauche (A)</button><button id="amB" class="on">Arrivée par la droite (B)</button></div>
+  <svg id="amSc" viewBox="0 0 320 380" aria-label="Le port vu du ciel"></svg>
+  <div class="etapeA" id="amEt"></div>
+  <button id="rejA">↺ Rejouer</button>
+</div>
+
+<div class="card">
+  <h2>Pourquoi par la droite (B) ?</h2>
+  <p>1. La place est entre un bateau (à gauche) et un catway, un ponton étroit (à droite).</p>
+  <p>2. Pour casser l'erre au bout de la place, on fait <b>marche arrière</b>. Avec un <b>pas droit</b>, l'arrière part alors à <b class="ko">bâbord</b> : l'<b>avant pivote vers tribord</b>, donc vers le catway.</p>
+  <p>3. <b class="ok">Par la droite (B)</b>, on tourne vers tribord pour entrer : on arrive en biais, l'avant un peu tourné vers la <b>gauche</b>. La marche arrière fait pivoter l'avant vers la droite : le bateau se <b>redresse</b> et se range le long du catway.</p>
+  <p>4. <b class="ko">Par la gauche (A)</b>, on tourne vers bâbord : on arrive en biais, l'avant déjà tourné vers la <b>droite</b>, vers le catway. La marche arrière accentue ce biais : l'avant <b>vient taper</b> le catway, et l'arrière part vers le bateau voisin.</p>
+  <p class="small">Règle à retenir : arriver en biais du côté où la marche arrière va ramener l'avant. Pas droit : l'avant part à tribord en marche arrière, donc on arrive l'avant légèrement tourné vers bâbord. Pas gauche : tout s'inverse. Effet du pas de l'hélice : manuel, Tome 3, p. 6.</p>
+</div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg", css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const sc=document.getElementById("amSc");
+  const FX=186; // bord gauche du catway
+  const SC={
+    A:[{x:30,y:290,h:90,t:"Le bateau arrive par la gauche, en marche avant."},
+       {x:118,y:228,h:60,m:"av",t:"Il tourne vers bâbord pour entrer : il arrive en biais, l'avant tourné vers le catway."},
+       {x:150,y:168,h:38,m:"av",t:"Il entre dans la place, l'avant déjà tourné vers la droite."},
+       {x:153,y:172,h:70,m:"ar",walk:1,t:"Marche arrière pour s'arrêter : l'arrière part à bâbord, l'avant pivote vers tribord… et vient taper le catway.",ko:1}],
+    B:[{x:290,y:290,h:-90,t:"Le bateau arrive par la droite, en marche avant."},
+       {x:208,y:205,h:-55,m:"av",t:"Il tourne vers tribord pour entrer : il arrive en biais, l'avant un peu tourné vers la gauche."},
+       {x:168,y:128,h:-22,m:"av",t:"Il entre dans la place, l'avant légèrement vers la gauche."},
+       {x:170,y:132,h:0,m:"ar",walk:1,t:"Marche arrière pour s'arrêter : l'avant pivote vers tribord, le bateau se redresse le long du catway.",ok:1}]
+  };
+  let S="B",k=0,t=0,last=performance.now(); const SEG=2.6;
+  function el(n,a,p){const e=document.createElementNS(NS,n);for(const q in a)e.setAttribute(q,a[q]);if(p)p.appendChild(e);return e}
+  const rad=d=>d*Math.PI/180;
+  function coque(x,y,h,col,ghost){
+    const f=[Math.sin(rad(h)),-Math.cos(rad(h))], s=[Math.cos(rad(h)),Math.sin(rad(h))], L=32, W=11;
+    const P=(a,b)=>`${x+f[0]*a+s[0]*b},${y+f[1]*a+s[1]*b}`;
+    el("polygon",{points:[P(L,0),P(L*.45,W),P(-L,W),P(-L,-W),P(L*.45,-W)].join(" "),fill:ghost?"none":col,stroke:ghost?css("--mute"):css("--ink"),"stroke-width":ghost?1:1.2,"stroke-dasharray":ghost?"3 3":"",opacity:ghost?.6:1},sc);
+    return {f,s,L};
+  }
+  function fleche(x1,y1,x2,y2,c,w){
+    el("line",{x1,y1,x2,y2,stroke:c,"stroke-width":w,"stroke-linecap":"round"},sc);
+    const a=Math.atan2(y2-y1,x2-x1),L=7+w;
+    el("polygon",{points:`${x2},${y2} ${x2-L*Math.cos(a-.5)},${y2-L*Math.sin(a-.5)} ${x2-L*Math.cos(a+.5)},${y2-L*Math.sin(a+.5)}`,fill:c},sc);
+  }
+  function decor(){
+    el("rect",{x:0,y:0,width:320,height:380,rx:12,fill:css("--eau")},sc);
+    el("rect",{x:0,y:0,width:320,height:70,fill:css("--bois")},sc);
+    el("text",{x:160,y:40,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#fff"},sc).textContent="quai";
+    // catways (pontons étroits)
+    [[22,14],[FX,14]].forEach(([x,w])=>el("rect",{x,y:70,width:w,height:110,fill:css("--bois")},sc));
+    el("text",{x:FX+7,y:196,"text-anchor":"middle","font-size":10,fill:css("--ink")},sc).textContent="catway";
+    // bateaux déjà amarrés
+    coque(60,128,0,css("--autre")); coque(120,128,0,css("--autre")); coque(232,128,0,css("--autre"));
+    el("text",{x:165,y:84,"text-anchor":"middle","font-size":11,"font-weight":700,fill:css("--accent")},sc).textContent="place libre";
+  }
+  function draw(){
+    const L=SC[S], a=L[k], b=L[Math.min(k+1,L.length-1)], u=k+1<L.length?Math.min(t/SEG,1):1;
+    const x=a.x+(b.x-a.x)*u, y=a.y+(b.y-a.y)*u, h=a.h+(b.h-a.h)*u;
+    sc.innerHTML=""; decor();
+    for(let i=0;i<k;i++) coque(L[i].x,L[i].y,L[i].h,"",true);
+    const fin=k===L.length-1;
+    const {f,s,L:Lo}=coque(x,y,h,fin&&a.ko?"#e5989b":fin&&a.ok?"#9fd8a8":css("--coque"));
+    el("circle",{cx:x+f[0]*Lo*.45+s[0]*9,cy:y+f[1]*Lo*.45+s[1]*9,r:3,fill:css("--tri")},sc);
+    el("circle",{cx:x+f[0]*Lo*.45-s[0]*9,cy:y+f[1]*Lo*.45-s[1]*9,r:3,fill:css("--bab")},sc);
+    if(b.m&&u<1){ const d=b.m==="av"?1:-1; fleche(x+f[0]*d*36,y+f[1]*d*36,x+f[0]*d*54,y+f[1]*d*54,css("--accent"),3); }
+    if(b.walk&&(u<1||fin)){ const sx=x-f[0]*32, sy=y-f[1]*32; fleche(sx,sy,sx-s[0]*28,sy-s[1]*28,css("--bab"),4); }
+    if(fin&&a.ko){ el("text",{x:x+f[0]*40+8,y:y+f[1]*40,"font-size":20,fill:css("--ko"),"font-weight":700},sc).textContent="✘"; }
+    if(fin&&a.ok){ el("text",{x:x+28,y:y,"font-size":20,fill:css("--ok"),"font-weight":700},sc).textContent="✔"; }
+    const etat=b.m&&u<1?(b.m==="av"?"▲ marche avant":"▼ marche arrière (l'hélice pousse l'arrière à bâbord)"):"";
+    el("text",{x:160,y:372,"text-anchor":"middle","font-size":12,"font-weight":700,fill:css("--ink")},sc).textContent=etat;
+    el("text",{x:30,y:330,"text-anchor":"middle","font-size":16,"font-weight":800,fill:css("--ink")},sc).textContent="A";
+    el("text",{x:290,y:330,"text-anchor":"middle","font-size":16,"font-weight":800,fill:css("--ink")},sc).textContent="B";
+  }
+  function texte(){
+    const L=SC[S], p=L[Math.min(k+1,L.length-1)], cur=t>0&&k+1<L.length?p:L[k];
+    document.getElementById("amEt").innerHTML=(S==="B"?'<span class="ok">✔ Bon choix</span> — ':'<span class="ko">✘ Mauvais choix</span> — ')+cur.t;
+  }
+  function frame(now){
+    const L=SC[S], dt=(now-last)/1000; last=now;
+    if(k+1<L.length){ t+=dt; if(t>=SEG+0.7){ k++; t=0; } }
+    texte(); draw(); requestAnimationFrame(frame);
+  }
+  function go(x){ S=x; k=0; t=0; document.getElementById("amA").classList.toggle("on",x==="A"); document.getElementById("amB").classList.toggle("on",x==="B"); }
+  document.getElementById("amA").onclick=()=>go("A");
+  document.getElementById("amB").onclick=()=>go("B");
+  document.getElementById("rejA").onclick=()=>go(S);
+  go("B"); requestAnimationFrame(frame);
 })();
 </script>
 </body>
