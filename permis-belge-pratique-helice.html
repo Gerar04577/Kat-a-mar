@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Effet du pas de l'hélice</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--eau:#cfe3f2;--coque:#9aa9bd;--bab:#d62828;--tri:#1a9c46;--force:#e07a00;--helice:#c9a227}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--eau:#1d3448;--coque:#56657a}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--eau:#1d3448;--coque:#56657a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:12px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;background:var(--bg);border-bottom:1px solid var(--line);color:var(--accent);text-decoration:none;font-weight:600;font-size:16px}
+.ver{font-size:12px;color:var(--mute)}
+h1{font-size:20px;margin:4px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+.card h2{font-size:15px;margin:0 0 6px;color:var(--accent)}
+svg{display:block;width:100%;height:auto}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px system-ui;padding:6px}
+button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.res{font-size:17px;font-weight:700;text-align:center;margin:8px 0 2px}
+.b{color:var(--bab)} .t{color:var(--tri)}
+p{margin:6px 0}
+.small{font-size:14px;color:var(--mute)}
+
+:root{--rive:#b9d7a8;--ok:#1a9c46;--ko:#d62828}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--rive:#2f4a2a}}
+:root[data-theme="dark"]{--rive:#2f4a2a}
+#rej{width:100%;margin-top:4px}
+.etape{font-size:16px;font-weight:700;min-height:3.2em;margin:8px 0 0}
+ol{margin:6px 0 0;padding-left:22px} li{margin:3px 0;color:var(--mute)} li.cur{color:var(--ink);font-weight:700}
+.ok{color:var(--ok)} .ko{color:var(--ko)}
+h1.p2{margin-top:28px}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="ver">Effet du pas de l'hélice · version 1.1 · Tome 3 · 1. pourquoi l'arrière part de côté · 2. virer en plusieurs fois</div>
+<h1>Effet du pas de l'hélice : pourquoi l'arrière part de côté ?</h1>
+
+<div class="card">
+  <div class="seg"><button id="pd" class="on">Hélice à pas droit</button><button id="pg">Hélice à pas gauche</button></div>
+  <div class="seg"><button id="av">Marche avant</button><button id="ar" class="on">Marche arrière</button></div>
+  <div class="res" id="res"></div>
+</div>
+
+<div class="card">
+  <h2>1. L'hélice vue de derrière le bateau</h2>
+  <svg id="arr" viewBox="0 0 320 272" aria-label="Hélice vue de l'arrière"></svg>
+  <p class="small">Vous êtes derrière le bateau et regardez vers l'avant : bâbord est à votre gauche, tribord à votre droite. La pale du <b>bas</b>, plus profonde, pousse plus fort que celle du haut (flèche orange épaisse).</p>
+</div>
+
+<div class="card">
+  <h2>2. Ce que fait le bateau, vu du ciel</h2>
+  <svg id="ciel" viewBox="0 0 320 300" aria-label="Le bateau vu du ciel"></svg>
+  <p class="small" id="note"></p>
+</div>
+
+<div class="card">
+  <h2>À retenir</h2>
+  <p>• La pale du bas « roule » sur l'eau comme une roue sur le sol : <b>l'arrière part à l'opposé du sens où va la pale du bas</b> (donc du côté où va la pale du haut).</p>
+  <p>• <b>Pas droit, marche arrière :</b> l'arrière part à <b class="b">bâbord</b>, l'avant vers tribord. C'est là que l'effet est le plus fort.</p>
+  <p>• <b>Pas droit, marche avant :</b> l'effet est faible, l'avant tend vers bâbord ; le gouvernail le corrige.</p>
+  <p>• <b>Pas gauche :</b> tout s'inverse.</p>
+  <p class="small">Pourquoi c'est plus fort en arrière : le jet de l'hélice part vers l'avant et frappe la coque d'un côté plus que de l'autre, et le gouvernail, hors du jet, ne compense presque rien, surtout à faible vitesse. (Manuel, T3 p. 6.)</p>
+</div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg", css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const S={pas:"droit",marche:"arriere"}, arr=document.getElementById("arr"), ciel=document.getElementById("ciel");
+  function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+  // rot = +1 : sens des aiguilles d'une montre vu de l'arrière
+  const rot=()=>(S.pas==="droit"?1:-1)*(S.marche==="avant"?1:-1);
+  // la pale du bas va vers bâbord si rot=+1 ; l'arrière part à l'opposé
+  const arriereVers=()=>rot()===1?"tribord":"babord";
+  function fleche(p,x1,y1,x2,y2,c,w){
+    el("line",{x1,y1,x2,y2,stroke:c,"stroke-width":w,"stroke-linecap":"round"},p);
+    const a=Math.atan2(y2-y1,x2-x1),L=6+w*1.6;
+    el("polygon",{points:`${x2},${y2} ${x2-L*Math.cos(a-0.5)},${y2-L*Math.sin(a-0.5)} ${x2-L*Math.cos(a+0.5)},${y2-L*Math.sin(a+0.5)}`,fill:c},p);
+  }
+  let ang=0, yaw=0, t0=performance.now();
+  function texte(){
+    const v=arriereVers(), fort=S.marche==="arriere";
+    document.getElementById("res").innerHTML=`L'arrière part vers <span class="${v==="babord"?"b":"t"}">${v==="babord"?"bâbord":"tribord"}</span>, l'avant vers ${v==="babord"?'<span class="t">tribord</span>':'<span class="b">bâbord</span>'} — effet ${fort?"FORT":"faible"}`;
+    document.getElementById("note").innerHTML=fort?"Marche arrière : le jet de l'hélice part vers l'avant le long de la coque (traits bleus) ; le gouvernail est presque sans effet.":"Marche avant : le jet passe sur le gouvernail, qui corrige facilement ; l'effet est faible.";
+    ["pd","pg","av","ar"].forEach(id=>document.getElementById(id).classList.toggle("on",{pd:S.pas==="droit",pg:S.pas==="gauche",av:S.marche==="avant",ar:S.marche==="arriere"}[id]));
+  }
+  function drawArr(){
+    arr.innerHTML="";
+    el("rect",{x:0,y:0,width:320,height:272,rx:12,fill:css("--eau")},arr);
+    el("line",{x1:0,y1:40,x2:320,y2:40,stroke:"#7fb5d9","stroke-width":2},arr);
+    el("text",{x:8,y:32,"font-size":11,fill:css("--mute")},arr).textContent="surface";
+    el("text",{x:10,y:160,"font-size":13,"font-weight":700,fill:css("--bab")},arr).textContent="BÂBORD";
+    el("text",{x:310,y:160,"font-size":13,"font-weight":700,fill:css("--tri"),"text-anchor":"end"},arr).textContent="TRIBORD";
+    // coque vue de l'arrière
+    el("path",{d:"M70,20 L250,20 L230,70 Q160,92 90,70 Z",fill:css("--coque"),stroke:css("--ink"),"stroke-width":1.2},arr);
+    const cx=160,cy=160,R=55;
+    el("line",{x1:cx,y1:78,x2:cx,y2:cy,stroke:css("--ink"),"stroke-width":3},arr);
+    // pales
+    const g=el("g",{transform:`rotate(${ang} ${cx} ${cy})`},arr);
+    for(let k=0;k<3;k++){const a=k*120;el("ellipse",{cx:cx,cy:cy-R/2,rx:13,ry:R/2,fill:css("--helice"),stroke:"#7a5d00","stroke-width":1,transform:`rotate(${a} ${cx} ${cy})`},g)}
+    el("circle",{cx,cy,r:9,fill:"#7a5d00"},arr);
+    // sens de rotation
+    const r=rot();
+    el("text",{x:cx,y:cy+4,"text-anchor":"middle","font-size":12,fill:"#fff","font-weight":700},arr).textContent=r===1?"↻":"↺";
+    // pale du haut (flèche fine) et pale du bas (flèche épaisse)
+    const dirBas=r===1?-1:1; // -1 = vers bâbord (gauche)
+    fleche(arr,cx+dirBas*24,cy-R-4,cx-dirBas*24,cy-R-4,css("--force"),2);
+    fleche(arr,cx-dirBas*40,cy+R+14,cx+dirBas*40,cy+R+14,css("--force"),6);
+    el("text",{x:cx,y:cy+R+36,"text-anchor":"middle","font-size":11,"font-weight":700,fill:css("--ink")},arr).textContent="pale du bas : va vers "+(dirBas===-1?"bâbord":"tribord")+", pousse FORT";
+    el("text",{x:cx,y:cy+R+52,"text-anchor":"middle","font-size":11,fill:css("--ink")},arr).textContent="pale du haut : va vers "+(dirBas===-1?"tribord":"bâbord")+", pousse peu";
+    // réaction sur l'arrière
+    const v=arriereVers()==="babord"?-1:1;
+    fleche(arr,cx,48,cx+v*70,48,v===-1?css("--bab"):css("--tri"),5);
+  }
+  function drawCiel(){
+    ciel.innerHTML="";
+    el("rect",{x:0,y:0,width:320,height:300,rx:12,fill:css("--eau")},ciel);
+    const cx=160,cy=150;
+    const g=el("g",{transform:`rotate(${yaw} ${cx} ${cy-30})`},ciel);
+    // coque, avant en haut
+    el("path",{d:`M${cx},${cy-110} Q${cx+34},${cy-60} ${cx+30},${cy+60} L${cx-30},${cy+60} Q${cx-34},${cy-60} ${cx},${cy-110} Z`,fill:css("--coque"),stroke:css("--ink"),"stroke-width":1.2},g);
+    el("rect",{x:cx-14,y:cy-40,width:28,height:40,rx:4,fill:"#fff",opacity:.85},g);
+    el("text",{x:cx,y:cy-80,"text-anchor":"middle","font-size":11,"font-weight":700,fill:css("--ink")},g).textContent="AVANT";
+    el("circle",{cx:cx-20,cy:cy-20,r:5,fill:css("--bab")},g);
+    el("circle",{cx:cx+20,cy:cy-20,r:5,fill:css("--tri")},g);
+    // hélice et jet
+    el("rect",{x:cx-10,y:cy+60,width:20,height:6,fill:css("--helice")},g);
+    if(S.marche==="arriere"){
+      for(let k=-1;k<=1;k+=2){el("path",{d:`M${cx+k*8},${cy+58} q${k*22},-30 ${k*30},-80`,fill:"none",stroke:"#2f7bff","stroke-width":2,"stroke-dasharray":"4 4",opacity:.8},g)}
+    } else {
+      el("path",{d:`M${cx},${cy+68} l0,40`,fill:"none",stroke:"#2f7bff","stroke-width":2,"stroke-dasharray":"4 4",opacity:.8},g);
+    }
+    // flèche de l'arrière
+    const v=arriereVers()==="babord"?-1:1;
+    fleche(ciel,cx,cy+80,cx+v*60,cy+80,v===-1?css("--bab"):css("--tri"),5);
+    el("text",{x:cx+v*64,y:cy+100,"text-anchor":v===-1?"start":"end","font-size":11,"font-weight":700,fill:css("--ink")},ciel).textContent="";
+    el("text",{x:12,y:22,"font-size":12,fill:css("--mute")},ciel).textContent=S.marche==="avant"?"▲ il avance":"▼ il recule";
+    el("text",{x:10,y:290,"font-size":12,"font-weight":700,fill:css("--bab")},ciel).textContent="bâbord";
+    el("text",{x:310,y:290,"font-size":12,"font-weight":700,fill:css("--tri"),"text-anchor":"end"},ciel).textContent="tribord";
+  }
+  function frame(now){
+    const dt=(now-t0)/1000; t0=now;
+    ang=(ang+rot()*dt*120)%360;
+    // l'arrière part vers bâbord = l'avant vers tribord = rotation horaire vue du ciel (yaw > 0)
+    const max=S.marche==="arriere"?28:7, v=arriereVers()==="babord"?1:-1;
+    yaw+= (v*max-yaw)*Math.min(1,dt*0.6);
+    drawArr(); drawCiel(); requestAnimationFrame(frame);
+  }
+  const set=(k,v)=>()=>{S[k]=v;yaw=0;texte()};
+  document.getElementById("pd").onclick=set("pas","droit");
+  document.getElementById("pg").onclick=set("pas","gauche");
+  document.getElementById("av").onclick=set("marche","avant");
+  document.getElementById("ar").onclick=set("marche","arriere");
+  texte(); requestAnimationFrame(frame);
+})();
+</script>
+<h1 class="p2">Virer dans un canal étroit : de quel côté commencer ?</h1>
+<div class="card">
+  <div class="seg"><button id="bA" class="on">Départ côté bâbord</button><button id="bB">Départ côté tribord</button></div>
+  <svg id="sc" viewBox="0 0 320 380" aria-label="Le canal vu du ciel"></svg>
+  <div class="etape" id="etape"></div>
+  <ol id="liste"></ol>
+  <button id="rej">↺ Rejouer</button>
+</div>
+
+<div class="card">
+  <h2>Pourquoi côté bâbord ?</h2>
+  <p>1. Avec un <b>pas droit</b>, en <b>marche arrière</b>, l'arrière part à <b class="ko">bâbord</b>, donc l'avant continue de tourner vers <b class="ok">tribord</b>.</p>
+  <p>2. Le virage le plus facile est donc un virage <b>vers tribord</b> : en avant, la barre le fait ; en arrière, l'hélice le continue. Chaque marche arrière <b>aide</b> le demi-tour.</p>
+  <p>3. Pour tourner vers tribord, il faut de la place <b>à tribord</b> : on commence donc le long de la rive <b>bâbord</b> (à sa gauche), et on a toute la largeur du canal devant soi.</p>
+  <p>4. En partant côté tribord, on doit tourner vers bâbord : chaque marche arrière <b class="ko">défait</b> une partie du virage, et il faut beaucoup plus de manœuvres.</p>
+  <p class="small">Pas gauche : tout s'inverse, on part côté tribord et on tourne vers bâbord. Effet du pas de l'hélice : manuel, Tome 3, p. 6.</p>
+</div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg", css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const sc=document.getElementById("sc");
+  // x, y, cap (degrés, 0 = vers le haut, sens horaire), mode (av / ar), barre, texte
+  const A=[
+    {x:88,y:300,h:0,t:"Départ : le long de la rive bâbord (à gauche du bateau)."},
+    {x:165,y:205,h:70,m:"av",b:"tribord",t:"Marche avant, barre à tribord : l'avant vient vers tribord."},
+    {x:205,y:178,h:100,m:"av",b:"tribord",t:"La rive d'en face approche : on passe en marche arrière."},
+    {x:180,y:175,h:145,m:"ar",b:"0",t:"Marche arrière : l'arrière part à bâbord, l'avant CONTINUE vers tribord. L'hélice aide.",walk:1},
+    {x:185,y:245,h:185,m:"av",b:"tribord",t:"Marche avant, barre à tribord : le demi-tour est terminé en deux manœuvres."},
+    {x:180,y:320,h:180,m:"av",b:"0",t:"Demi-tour réussi."}
+  ];
+  const B=[
+    {x:232,y:300,h:0,t:"Départ : le long de la rive tribord. Pas de place pour tourner vers tribord : il faut tourner vers bâbord."},
+    {x:160,y:212,h:-70,m:"av",b:"bâbord",t:"Marche avant, barre à bâbord : l'avant vient vers bâbord."},
+    {x:118,y:182,h:-95,m:"av",b:"bâbord",t:"La rive d'en face approche : on passe en marche arrière."},
+    {x:145,y:184,h:-68,m:"ar",b:"0",t:"Marche arrière : l'arrière part à bâbord, l'avant REVIENT vers tribord. L'hélice défait le virage.",walk:1},
+    {x:112,y:170,h:-110,m:"av",b:"bâbord",t:"Marche avant, barre à bâbord : on regagne ce qu'on a perdu…"},
+    {x:140,y:172,h:-88,m:"ar",b:"0",t:"…mais la marche arrière suivante le défait encore.",walk:1},
+    {x:120,y:185,h:-125,m:"av",b:"bâbord",t:"Il faut beaucoup plus de manœuvres, et l'on s'use contre l'hélice."}
+  ];
+  let S="A", k=0, t=0, last=performance.now(), trail=[];
+  const SEG=2.6;
+  function el(n,a,p){const e=document.createElementNS(NS,n);for(const q in a)e.setAttribute(q,a[q]);if(p)p.appendChild(e);return e}
+  const rad=d=>d*Math.PI/180;
+  function liste(){
+    const L=S==="A"?A:B;
+    document.getElementById("liste").innerHTML=L.map((p,i)=>`<li class="${i===k?"cur":""}">${p.t}</li>`).join("");
+    document.getElementById("etape").innerHTML=(S==="A"?'<span class="ok">✔ Bon choix</span> — ':'<span class="ko">✘ Mauvais choix</span> — ')+L[k].t;
+  }
+  function boat(g,x,y,h,ghost){
+    const f=[Math.sin(rad(h)),-Math.cos(rad(h))], s=[Math.cos(rad(h)),Math.sin(rad(h))], L=34, W=11;
+    const P=(a,b)=>`${x+f[0]*a+s[0]*b},${y+f[1]*a+s[1]*b}`;
+    el("polygon",{points:[P(L,0),P(L*.45,W),P(-L,W),P(-L,-W),P(L*.45,-W)].join(" "),fill:ghost?"none":css("--coque"),stroke:ghost?css("--mute"):css("--ink"),"stroke-width":ghost?1:1.3,"stroke-dasharray":ghost?"3 3":"",opacity:ghost?.6:1},g);
+    if(!ghost){
+      el("circle",{cx:x+f[0]*L*.45+s[0]*(W-2),cy:y+f[1]*L*.45+s[1]*(W-2),r:3.5,fill:css("--tri")},g);
+      el("circle",{cx:x+f[0]*L*.45-s[0]*(W-2),cy:y+f[1]*L*.45-s[1]*(W-2),r:3.5,fill:css("--bab")},g);
+    }
+    return {f,s};
+  }
+  function fleche(x1,y1,x2,y2,c,w){
+    el("line",{x1,y1,x2,y2,stroke:c,"stroke-width":w,"stroke-linecap":"round"},sc);
+    const a=Math.atan2(y2-y1,x2-x1),L=7+w;
+    el("polygon",{points:`${x2},${y2} ${x2-L*Math.cos(a-.5)},${y2-L*Math.sin(a-.5)} ${x2-L*Math.cos(a+.5)},${y2-L*Math.sin(a+.5)}`,fill:c},sc);
+  }
+  function draw(){
+    const L=S==="A"?A:B, a=L[k], b=L[Math.min(k+1,L.length-1)], u=k+1<L.length?Math.min(t/SEG,1):1;
+    const x=a.x+(b.x-a.x)*u, y=a.y+(b.y-a.y)*u, h=a.h+(b.h-a.h)*u;
+    sc.innerHTML="";
+    el("rect",{x:0,y:0,width:320,height:380,rx:12,fill:css("--eau")},sc);
+    el("rect",{x:0,y:0,width:40,height:380,fill:css("--rive")},sc);
+    el("rect",{x:280,y:0,width:40,height:380,fill:css("--rive")},sc);
+    el("text",{x:20,y:200,"font-size":11,fill:css("--ink"),transform:"rotate(-90 20 200)","text-anchor":"middle"},sc).textContent="rive";
+    el("text",{x:300,y:200,"font-size":11,fill:css("--ink"),transform:"rotate(90 300 200)","text-anchor":"middle"},sc).textContent="rive";
+    trail.forEach(p=>boat(sc,p.x,p.y,p.h,true));
+    const g=el("g",{},sc), {f,s}=boat(g,x,y,h,false);
+    // flèche de marche
+    if(b.m&&u<1){ const d=b.m==="av"?1:-1; fleche(x+f[0]*d*40,y+f[1]*d*40,x+f[0]*d*62,y+f[1]*d*62,css("--accent"),3); }
+    // effet de l'hélice en marche arrière : l'arrière part à bâbord
+    if(b.walk&&u<1){ const sx=x-f[0]*34, sy=y-f[1]*34; fleche(sx,sy,sx-s[0]*34,sy-s[1]*34,css("--bab"),5);
+      el("text",{x:sx-s[0]*52,y:sy-s[1]*52+4,"font-size":11,"font-weight":700,fill:css("--bab"),"text-anchor":"middle"},sc).textContent="hélice"; }
+    const etat=b.m&&u<1?(b.m==="av"?"▲ marche avant":"▼ marche arrière")+(b.b&&b.b!=="0"?" · barre à "+b.b:" · barre au milieu"):"";
+    el("text",{x:160,y:22,"text-anchor":"middle","font-size":13,"font-weight":700,fill:css("--ink")},sc).textContent=etat;
+  }
+  function frame(now){
+    const L=S==="A"?A:B, dt=(now-last)/1000; last=now;
+    if(k+1<L.length){ t+=dt; if(t>=SEG+0.6){ trail.push({x:L[k].x,y:L[k].y,h:L[k].h}); k++; t=0; liste(); } }
+    draw(); requestAnimationFrame(frame);
+  }
+  function go(x){ S=x; k=0; t=0; trail=[]; document.getElementById("bA").classList.toggle("on",x==="A"); document.getElementById("bB").classList.toggle("on",x==="B"); liste(); }
+  document.getElementById("bA").onclick=()=>go("A");
+  document.getElementById("bB").onclick=()=>go("B");
+  document.getElementById("rej").onclick=()=>go(S);
+  go("A"); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
