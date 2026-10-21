@@ -42,7 +42,7 @@ h1.p2{margin-top:28px}
 </head>
 <body>
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
-<div class="ver">Effet du pas de l'hélice · version 1.2 · Tome 3 · 1. pourquoi l'arrière part de côté · 2. virer en plusieurs fois · 3. entrer dans une place</div>
+<div class="ver">Effet du pas de l'hélice · version 1.3 · Tome 3 · 1. pourquoi l'arrière part de côté · 2. virer en plusieurs fois · 3. entrer dans une place</div>
 <h1>Effet du pas de l'hélice : pourquoi l'arrière part de côté ?</h1>
 
 <div class="card">
@@ -165,6 +165,7 @@ h1.p2{margin-top:28px}
 </script>
 <h1 class="p2">Virer dans un canal étroit : de quel côté commencer ?</h1>
 <div class="card">
+  <div class="seg"><button id="pdV" class="on">Hélice à pas droit</button><button id="pgV">Hélice à pas gauche</button></div>
   <div class="seg"><button id="bA" class="on">Départ côté bâbord</button><button id="bB">Départ côté tribord</button></div>
   <svg id="sc" viewBox="0 0 320 380" aria-label="Le canal vu du ciel"></svg>
   <div class="etape" id="etape"></div>
@@ -173,12 +174,13 @@ h1.p2{margin-top:28px}
 </div>
 
 <div class="card">
-  <h2>Pourquoi côté bâbord ?</h2>
+  <h2>Pourquoi côté bâbord (pas droit) ?</h2>
   <p>1. Avec un <b>pas droit</b>, en <b>marche arrière</b>, l'arrière part à <b class="ko">bâbord</b>, donc l'avant continue de tourner vers <b class="ok">tribord</b>.</p>
   <p>2. Le virage le plus facile est donc un virage <b>vers tribord</b> : en avant, la barre le fait ; en arrière, l'hélice le continue. Chaque marche arrière <b>aide</b> le demi-tour.</p>
   <p>3. Pour tourner vers tribord, il faut de la place <b>à tribord</b> : on commence donc le long de la rive <b>bâbord</b> (à sa gauche), et on a toute la largeur du canal devant soi.</p>
   <p>4. En partant côté tribord, on doit tourner vers bâbord : chaque marche arrière <b class="ko">défait</b> une partie du virage, et il faut beaucoup plus de manœuvres.</p>
-  <p class="small">Pas gauche : tout s'inverse, on part côté tribord et on tourne vers bâbord. Effet du pas de l'hélice : manuel, Tome 3, p. 6.</p>
+  <p><b>Pas gauche : tout s'inverse.</b> En marche arrière, l'arrière part à <b class="ok">tribord</b> et l'avant vers <b class="ko">bâbord</b> : on vire vers bâbord, en commençant le long de la rive <b>tribord</b>. Touchez « Hélice à pas gauche » pour le voir.</p>
+  <p class="small">Règle : on vire du côté où la marche arrière fait partir l'avant. Effet du pas de l'hélice : manuel, Tome 3, p. 6.</p>
 </div>
 
 <script>
@@ -203,14 +205,22 @@ h1.p2{margin-top:28px}
     {x:140,y:172,h:-88,m:"ar",b:"0",t:"…mais la marche arrière suivante le défait encore.",walk:1},
     {x:120,y:185,h:-125,m:"av",b:"bâbord",t:"Il faut beaucoup plus de manœuvres, et l'on s'use contre l'hélice."}
   ];
+  // Pas gauche : scènes en miroir (gauche ↔ droite, bâbord ↔ tribord)
+  const sw=x=>x.replace(/bâbord|tribord|gauche|droite/g,m=>({"bâbord":"tribord","tribord":"bâbord","gauche":"droite","droite":"gauche"})[m]);
+  const mir=L=>L.map(p=>Object.assign({},p,{x:320-p.x,h:-p.h,t:sw(p.t),b:p.b&&p.b!=="0"?sw(p.b):p.b}));
+  const A2=mir(A), B2=mir(B);
+  let PAS="droit";
+  // bouton A = départ côté bâbord ; B = départ côté tribord. Bon choix : A au pas droit, B au pas gauche.
+  const scene=()=>PAS==="droit"?(S==="A"?A:B):(S==="A"?B2:A2);
+  const bon=()=>PAS==="droit"?S==="A":S==="B";
   let S="A", k=0, t=0, last=performance.now(), trail=[];
   const SEG=2.6;
   function el(n,a,p){const e=document.createElementNS(NS,n);for(const q in a)e.setAttribute(q,a[q]);if(p)p.appendChild(e);return e}
   const rad=d=>d*Math.PI/180;
   function liste(){
-    const L=S==="A"?A:B;
+    const L=scene();
     document.getElementById("liste").innerHTML=L.map((p,i)=>`<li class="${i===k?"cur":""}">${p.t}</li>`).join("");
-    document.getElementById("etape").innerHTML=(S==="A"?'<span class="ok">✔ Bon choix</span> — ':'<span class="ko">✘ Mauvais choix</span> — ')+L[k].t;
+    document.getElementById("etape").innerHTML=(bon()?'<span class="ok">✔ Bon choix</span> — ':'<span class="ko">✘ Mauvais choix</span> — ')+L[k].t;
   }
   function boat(g,x,y,h,ghost){
     const f=[Math.sin(rad(h)),-Math.cos(rad(h))], s=[Math.cos(rad(h)),Math.sin(rad(h))], L=34, W=11;
@@ -228,7 +238,7 @@ h1.p2{margin-top:28px}
     el("polygon",{points:`${x2},${y2} ${x2-L*Math.cos(a-.5)},${y2-L*Math.sin(a-.5)} ${x2-L*Math.cos(a+.5)},${y2-L*Math.sin(a+.5)}`,fill:c},sc);
   }
   function draw(){
-    const L=S==="A"?A:B, a=L[k], b=L[Math.min(k+1,L.length-1)], u=k+1<L.length?Math.min(t/SEG,1):1;
+    const L=scene(), a=L[k], b=L[Math.min(k+1,L.length-1)], u=k+1<L.length?Math.min(t/SEG,1):1;
     const x=a.x+(b.x-a.x)*u, y=a.y+(b.y-a.y)*u, h=a.h+(b.h-a.h)*u;
     sc.innerHTML="";
     el("rect",{x:0,y:0,width:320,height:380,rx:12,fill:css("--eau")},sc);
@@ -241,17 +251,20 @@ h1.p2{margin-top:28px}
     // flèche de marche
     if(b.m&&u<1){ const d=b.m==="av"?1:-1; fleche(x+f[0]*d*40,y+f[1]*d*40,x+f[0]*d*62,y+f[1]*d*62,css("--accent"),3); }
     // effet de l'hélice en marche arrière : l'arrière part à bâbord
-    if(b.walk&&u<1){ const sx=x-f[0]*34, sy=y-f[1]*34; fleche(sx,sy,sx-s[0]*34,sy-s[1]*34,css("--bab"),5);
-      el("text",{x:sx-s[0]*52,y:sy-s[1]*52+4,"font-size":11,"font-weight":700,fill:css("--bab"),"text-anchor":"middle"},sc).textContent="hélice"; }
+    if(b.walk&&u<1){ const sx=x-f[0]*34, sy=y-f[1]*34, q=PAS==="droit"?-1:1, c=PAS==="droit"?css("--bab"):css("--tri"); fleche(sx,sy,sx+q*s[0]*34,sy+q*s[1]*34,c,5);
+      el("text",{x:sx+q*s[0]*52,y:sy+q*s[1]*52+4,"font-size":11,"font-weight":700,fill:c,"text-anchor":"middle"},sc).textContent="hélice"; }
     const etat=b.m&&u<1?(b.m==="av"?"▲ marche avant":"▼ marche arrière")+(b.b&&b.b!=="0"?" · barre à "+b.b:" · barre au milieu"):"";
     el("text",{x:160,y:22,"text-anchor":"middle","font-size":13,"font-weight":700,fill:css("--ink")},sc).textContent=etat;
   }
   function frame(now){
-    const L=S==="A"?A:B, dt=(now-last)/1000; last=now;
+    const L=scene(), dt=(now-last)/1000; last=now;
     if(k+1<L.length){ t+=dt; if(t>=SEG+0.6){ trail.push({x:L[k].x,y:L[k].y,h:L[k].h}); k++; t=0; liste(); } }
     draw(); requestAnimationFrame(frame);
   }
   function go(x){ S=x; k=0; t=0; trail=[]; document.getElementById("bA").classList.toggle("on",x==="A"); document.getElementById("bB").classList.toggle("on",x==="B"); liste(); }
+  const setPas=p=>{PAS=p; document.getElementById("pdV").classList.toggle("on",p==="droit"); document.getElementById("pgV").classList.toggle("on",p==="gauche"); go(S);};
+  document.getElementById("pdV").onclick=()=>setPas("droit");
+  document.getElementById("pgV").onclick=()=>setPas("gauche");
   document.getElementById("bA").onclick=()=>go("A");
   document.getElementById("bB").onclick=()=>go("B");
   document.getElementById("rej").onclick=()=>go(S);
