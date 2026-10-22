@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feux du port d'Ostende</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--nuit:#0d1626;--ok:#1a9c46;--ko:#d62828}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:12px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;background:var(--bg);border-bottom:1px solid var(--line);color:var(--accent);text-decoration:none;font-weight:600;font-size:16px}
+.prog{border-left:4px solid var(--accent);background:var(--card);border-radius:8px;padding:8px 10px;font-size:14px;margin:10px 0}
+.ver{font-size:12px;color:var(--mute)}
+h1{font-size:20px;margin:4px 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center}
+.sig.wide{grid-column:1/-1}
+.mat{background:var(--nuit);border-radius:10px;padding:8px 6px;display:flex;gap:6px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:6px}
+.l{width:22px;height:22px;border-radius:50%;box-shadow:0 0 10px currentColor}
+.R{background:#ff3b30;color:#ff3b30}.G{background:#34c759;color:#34c759}.W{background:#fff;color:#fff}.Y{background:#ffcc00;color:#ffcc00}.off{background:transparent;box-shadow:none}
+.blink{animation:b 1s steps(2,start) infinite}@keyframes b{to{visibility:hidden}}
+.t{font-size:14px}.t b{display:block;font-size:15px;margin-bottom:2px}
+.ok{color:var(--ok)}.ko{color:var(--ko)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+.card h2{font-size:15px;margin:0 0 6px;color:var(--accent)}
+p{margin:6px 0}.small{font-size:13px;color:var(--mute)}
+@media (max-width:420px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="ver">Rappel · version 1.0 · feux de trafic du port d'Ostende (signaux internationaux de l'AISM)</div>
+<h1>Feux d'entrée et de sortie du port d'Ostende</h1>
+<p class="small">Trois feux l'un au-dessus de l'autre, sur le mât gris de la jetée Est, à droite du grand phare de jetée. On les lit de haut en bas.</p>
+<div class="prog"><b>Examen :</b> seule l'obligation d'obéir aux signaux du port est au programme (règlement de la mer territoriale, art. 10 § 7). Le détail des feux ci-dessous n'est décrit dans aucun texte du programme : il sert pour naviguer.</div>
+
+<div class="grid">
+  <div class="sig"><div class="mat"><div class="col"><span class="l R blink"></span><span class="l R blink"></span><span class="l R blink"></span></div></div>
+    <div class="t"><b class="ko">Danger grave</b>3 rouges <u>à éclats</u> : port fermé, tout le monde s'arrête ou se déroute selon les instructions.</div></div>
+  <div class="sig"><div class="mat"><div class="col"><span class="l R"></span><span class="l R"></span><span class="l R"></span></div></div>
+    <div class="t"><b class="ko">Passage interdit</b>3 rouges fixes : on n'entre pas, on ne sort pas. On attend.</div></div>
+  <div class="sig"><div class="mat"><div class="col"><span class="l G"></span><span class="l G"></span><span class="l G"></span></div></div>
+    <div class="t"><b class="ok">Passage autorisé, sens unique</b>3 verts : on peut passer, la circulation va dans un seul sens.</div></div>
+  <div class="sig"><div class="mat"><div class="col"><span class="l G"></span><span class="l G"></span><span class="l W"></span></div></div>
+    <div class="t"><b class="ok">Passage autorisé, double sens</b>vert, vert, blanc : on peut passer, mais on peut croiser un navire qui sort.</div></div>
+  <div class="sig"><div class="mat"><div class="col"><span class="l G"></span><span class="l W"></span><span class="l G"></span></div></div>
+    <div class="t"><b>Seulement sur instruction</b>vert, blanc, vert : seul le navire qui a reçu l'autorisation passe ; les autres attendent.</div></div>
+  <div class="sig"><div class="mat"><div class="col"><span class="l Y"></span><span class="l off"></span><span class="l off"></span></div><div class="col"><span class="l R"></span><span class="l R"></span><span class="l R"></span></div></div>
+    <div class="t"><b>Avec un feu jaune à gauche</b>Exception : les bateaux qui peuvent naviguer <u>hors du chenal principal</u> ne sont pas tenus par le signal (ici 3 rouges = interdit dans le chenal, permis à côté).</div></div>
+</div>
+
+<div class="card">
+  <h2>Ce qu'il faut faire avec votre bateau à Ostende</h2>
+  <p>1. <b class="ko">3 rouges</b> : vous attendez au large de l'entrée.</p>
+  <p>2. <b class="ok">Vert, vert, blanc</b> : vous pouvez entrer, en serrant votre droite (des navires peuvent sortir).</p>
+  <p>3. Les feux peuvent changer au dernier moment : annoncez votre arrivée au poste du port (<i>port control</i>) par VHF.</p>
+  <p>4. Au bassin Montgomery (club nautique), un panneau à flèches vertes ou rouges indique en plus si l'on peut sortir vers la mer, l'écluse des pêcheurs ou l'avant-port.</p>
+</div>
+
+<div class="card">
+  <h2>D'où vient la règle</h2>
+  <p class="small">Le règlement de la mer territoriale belge (AR 4/08/1981, art. 10 § 7) oblige à « observer les signaux portuaires prescrits et exhibés par les autorités », sans les décrire. Ostende applique les signaux internationaux de trafic portuaire de l'AISM (IALA) : le mât des feux de trafic est sur la jetée Est.</p>
+  <p class="small">Ne pas confondre avec l'ancien feu violet clignotant / cônes en sablier « interdiction de sortir pour les petits bateaux » au sémaphore (ancien art. 37 § 4), supprimé en 2019.</p>
+</div>
+</body>
+</html>
