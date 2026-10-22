@@ -669,7 +669,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>QCM Côtier</span></div>
 <main>
 <header>
-  <div class="ver">QCM CÔTIER · v1.26 · complément au brevet général · 305 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
+  <div class="ver">QCM CÔTIER · v1.27 · complément au brevet général · 307 questions d'entraînement · réserve d'examen 102 · examen blanc 200</div>
   <h1>QCM du complément au brevet général (côtier)</h1>
   <p>Entraîne-toi matière par matière, puis passe l'examen blanc. Après chaque réponse : l'explication et la source. Quand tu te trompes : un <b>rappel théorique</b>. Tu peux quitter à tout moment : à ton retour, tu reprends à la dernière question répondue.</p>
 </header>
@@ -2141,7 +2141,7 @@ window.KAM_IMG = {};
 
 </script>
 <script>
-/* QCM CÔTIER — complément au brevet de conduite général. Entraînement : R001-R102, N001-N100, S001-S103.
+/* QCM CÔTIER — complément au brevet de conduite général. Entraînement : R001-R104, N001-N100, S001-S103.
    Réserve d'examen (res) : R201-R234, N201-N234, S201-S234. Bonne réponse = o[b].
    Sources : RIPAM à jour, règlements de l'Escaut maritime inférieur, de la mer territoriale et du canal
    de Gand à Terneuzen, AR plaisance du 28/06/2019, manuel Booost-Boat (Tomes 1 à 3). */
@@ -5160,6 +5160,54 @@ window.KAM_QCM = {
 "ex": "De jour, des travaux en cours sur une installation fixe sont marqués par deux pavillons rouges superposés ; de nuit, par deux feux rouges superposés surmontés d'un feu vert (art. 17).",
 "pg": "Jour : deux pavillons rouges. Nuit : vert au-dessus de deux rouges. Ne pas confondre avec la drague (boule-losange-boule, deux boules côté obstruction, deux losanges côté passage) ni avec l'engin au travail des eaux intérieures (ballon rouge côté entravé, deux bicônes verts côté libre).",
 "ref": "Règlement de police et de navigation mer territoriale, ports et plages (AR 4/08/1981), art. 17 · Absent du manuel"
+},
+{
+"id": "R103",
+"cat": "R",
+"res": false,
+"q": "Sur le canal de Gand à Terneuzen, un bateau à capacité de manœuvre restreinte et un navire de grandes dimensions font route et risquent de se gêner. Qui doit s'écarter ?",
+"o": [
+{
+"t": "Le navire de grandes dimensions, comme en mer devant un navire à capacité restreinte.",
+"e": "Non : sur le canal, c'est l'inverse ; le navire de grandes dimensions passe avant le bateau à capacité restreinte."
+},
+{
+"t": "Le bateau à capacité de manœuvre restreinte.",
+"e": "Oui : il doit s'écarter du bateau qui n'est pas maître de sa manœuvre et du navire de grandes dimensions (art. 18 § 1er, c)."
+},
+{
+"t": "Aucun des deux : chacun vient sur tribord.",
+"e": "Non : c'est la règle des routes opposées entre bateaux sans priorité ; ici, l'article 18 fixe qui s'écarte."
+}
+],
+"b": 1,
+"ex": "Sur le canal, le bateau à capacité de manœuvre restreinte faisant route doit s'écarter de la route du bateau qui n'est pas maître de sa manœuvre et du navire de grandes dimensions (art. 18 § 1er, c).",
+"pg": "Sur le canal de Gand à Terneuzen, l'ordre est : 1) le bateau qui n'est pas maître de sa manœuvre (en panne) ; 2) le navire de grandes dimensions ; 3) le bateau à capacité de manœuvre restreinte ; puis tous les autres. Chacun s'écarte de ceux qui le précèdent. Moyen de retenir : « Panne, Géant, Gêné ». Piège : en mer (RIPAM), le navire de grandes dimensions n'existe pas ; sur le canal (et sur l'Escaut), il passe AVANT le bateau à capacité restreinte, car sa taille le coince dans le chenal.",
+"ref": "Règlement de navigation du canal de Gand à Terneuzen (AR 1992), art. 18 § 1er, a) à c) · Absent du manuel"
+},
+{
+"id": "R104",
+"cat": "R",
+"res": false,
+"q": "Sur le canal de Gand à Terneuzen, quel est l'ordre de priorité, du plus prioritaire au moins prioritaire ?",
+"o": [
+{
+"t": "Navire de grandes dimensions, puis bateau qui n'est pas maître de sa manœuvre, puis bateau à capacité de manœuvre restreinte.",
+"e": "Non : le navire de grandes dimensions doit lui-même s'écarter du bateau qui n'est pas maître de sa manœuvre (art. 18 § 1er, b)."
+},
+{
+"t": "Bateau qui n'est pas maître de sa manœuvre, puis bateau à capacité de manœuvre restreinte, puis navire de grandes dimensions.",
+"e": "Non : le bateau à capacité restreinte doit s'écarter du navire de grandes dimensions (art. 18 § 1er, c)."
+},
+{
+"t": "Bateau qui n'est pas maître de sa manœuvre, puis navire de grandes dimensions, puis bateau à capacité de manœuvre restreinte.",
+"e": "Oui : chacun s'écarte de ceux qui le précèdent (art. 18 § 1er, a à c)."
+}
+],
+"b": 2,
+"ex": "Art. 18 § 1er : tout bateau s'écarte des trois ; le navire de grandes dimensions s'écarte du bateau qui n'est pas maître de sa manœuvre ; le bateau à capacité restreinte s'écarte des deux premiers.",
+"pg": "Sur le canal de Gand à Terneuzen, l'ordre est : 1) le bateau qui n'est pas maître de sa manœuvre (en panne) ; 2) le navire de grandes dimensions ; 3) le bateau à capacité de manœuvre restreinte ; puis tous les autres. Chacun s'écarte de ceux qui le précèdent. Moyen de retenir : « Panne, Géant, Gêné ». Piège : en mer (RIPAM), le navire de grandes dimensions n'existe pas ; sur le canal (et sur l'Escaut), il passe AVANT le bateau à capacité restreinte, car sa taille le coince dans le chenal.",
+"ref": "Règlement de navigation du canal de Gand à Terneuzen (AR 1992), art. 18 § 1er, a) à c) · Absent du manuel"
 },
 {
 "id": "R201",
