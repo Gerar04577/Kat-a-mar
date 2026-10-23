@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qui passe en premier ?</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--keep:#1a9c46;--give:#d96a00;--eau:#bcd9ee;--mer:#9cc7e6;--rive:#a9c98a;--rive2:#7da35c;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--keep:#3ccf6e;--give:#ff9a3c;--eau:#1d3a52;--mer:#173349;--rive:#35502b;--rive2:#4d6e3c;--warn:#2e2810;--warnb:#f0c94a}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--keep:#3ccf6e;--give:#ff9a3c;--eau:#1d3a52;--mer:#173349;--rive:#35502b;--rive2:#4d6e3c;--warn:#2e2810;--warnb:#f0c94a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:12px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;background:var(--bg);border-bottom:1px solid var(--line);color:var(--accent);text-decoration:none;font-weight:600;font-size:16px}
+.ver{font-size:12px;color:var(--mute);margin-top:8px}
+h1{font-size:20px;margin:4px 0 8px}
+p{margin:6px 0}.small{font-size:13px;color:var(--mute)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 15px system-ui;padding:6px 10px}
+button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch}
+.chips button{flex:0 0 auto;min-height:38px;font-size:14px;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+.card h2{font-size:17px;margin:0 0 6px}
+svg{display:block;width:100%;height:auto;border-radius:10px}
+.ctl{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:8px;margin-top:8px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin:6px 0 0;color:var(--mute)}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.who div{border-radius:10px;padding:8px;font-size:14px;border:1px solid var(--line)}
+.who b{display:block;font-size:13px;margin-bottom:2px}
+.k b{color:var(--keep)}.g b{color:var(--give)}
+.ref{font-size:13px;color:var(--mute);border-left:3px solid var(--accent);padding:4px 8px;margin:8px 0 0}
+.ref q{font-style:italic;color:var(--ink)}
+.piege{background:var(--warn);border-left:4px solid var(--warnb);border-radius:8px;padding:8px 10px;font-size:14px;margin:8px 0 0}
+table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--mute)}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="ver">Animations · version 1.0 · qui passe en premier ? Croisements, rencontres et dépassements, en eaux intérieures et en mer</div>
+<h1>Qui passe en premier ?</h1>
+<p class="small">Choisissez le règlement, puis une situation. Le bateau <b style="color:var(--keep)">vert garde sa route</b>, le bateau <b style="color:var(--give)">orange s'écarte</b>. Les règles ne sont <b>pas les mêmes</b> en eaux intérieures et en mer. « Le côté du chenal à tribord » d'un bateau = la moitié du chenal qui est à SA droite, dans son sens de marche (à ne pas confondre avec la « rive droite » ou le « côté droit » du balisage, qui se lisent toujours vers l'aval).</p>
+
+<div class="seg"><button id="tI" class="on">Eaux intérieures (fluvial)</button><button id="tM">En mer (côtier)</button></div>
+<div class="chips" id="chips"></div>
+<p class="small" id="noteM" hidden>Onglet « En mer » : règlement international (RIPAM). Le programme côtier comprend aussi les règlements de l'Escaut, du canal de Gand à Terneuzen et de la mer territoriale belge, qui ont leurs propres règles (non traitées ici).</p>
+
+<div class="card">
+  <h2 id="ttl"></h2>
+  <svg id="sc" viewBox="0 0 360 260" aria-label="Animation vue du ciel"></svg>
+  <div class="leg"><span><i style="background:var(--keep)"></i>garde sa route</span><span><i style="background:var(--give)"></i>s'écarte</span><span><i style="background:#8b97a8"></i>autre bateau</span></div>
+  <div class="ctl"><button id="prev">‹ Préc.</button><button id="play">⏸ Pause</button><button id="next">Suiv. ›</button></div>
+  <p id="sit" style="margin-top:10px"></p>
+  <div class="who"><div class="k"><b>Garde sa route</b><span id="keep"></span></div><div class="g"><b>S'écarte</b><span id="give"></span></div></div>
+  <p id="why"></p>
+  <div class="ref" id="ref"></div>
+  <div class="piege" id="piege"></div>
+</div>
+
+<div class="card" id="recap"></div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg", css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+/* Bateaux : t = type (m petit moteur, g grand bateau, v voilier, r rames, p pêche, nuc non maître, ram capacité restreinte, tir tirant d'eau, rap rapide)
+   role : k = garde sa route, e = s'écarte, n = neutre. k = images-clés [t 0..1, x, y, cap en degrés : 0 = vers la droite, 90 = vers le bas]. */
+const SC={
+ I:[
+ {id:"I1",chip:"Rencontre (1)",t:"Rencontre : l'un suit le côté du chenal à son tribord",scene:"riv",band:[{y1:130,y2:222,lab:"côté du chenal à tribord de A"}],
+  b:[{n:"A",t:"m",role:"k",k:[[0,20,178,0],[1,340,178,0]]},
+     {n:"B",t:"m",role:"e",k:[[0,345,168,180],[.28,255,168,180],[.5,190,92,215],[.62,150,84,180],[1,15,84,180]]}],
+  sit:"A et B arrivent l'un vers l'autre. A suit le côté du chenal qui est à SA droite (tribord). B n'est pas du côté du chenal à son tribord.",
+  keep:"A, qui suit le côté du chenal à tribord.",give:"B, l'autre bateau.",
+  why:"En eaux intérieures, la règle de base est le côté du chenal : celui qui suit la moitié du chenal à sa droite (son tribord) garde sa route.",
+  ref:"Règlement fluvial (RGP), art. 6.04, al. 1 : <q>le bateau qui suit le côté du chenal à tribord est tenu de maintenir sa route et l'autre bateau de s'écarter</q>.",
+  piege:"Cette règle vaut entre tous les bateaux, petits ou grands, sauf face au bateau rapide (il laisse la place à tous, art. 6.01/1) et aux bateaux à capacité de manœuvre restreinte ou en pêche (on s'en écarte toujours, art. 6.34)."},
+ {id:"I2",chip:"Rencontre (2)",t:"Rencontre : aucun ne suit le côté du chenal à son tribord",scene:"riv",
+  b:[{n:"A",t:"m",role:"e",k:[[0,20,128,0],[.3,120,128,0],[.45,170,152,25],[.55,200,156,0],[1,340,156,0]]},
+     {n:"B",t:"m",role:"e",k:[[0,340,132,180],[.3,240,132,180],[.45,190,106,205],[.55,160,102,180],[1,20,102,180]]}],
+  sit:"A et B arrivent l'un vers l'autre au milieu du chenal. Aucun ne suit le côté du chenal à son tribord.",
+  keep:"Personne.",give:"Les deux : chacun vient sur sa droite (tribord) et ils se croisent bâbord contre bâbord.",
+  why:"Comme deux voitures qui se croisent : chacun serre à droite.",
+  ref:"RGP art. 6.04, al. 1/1 : <q>chacun d'eux doit venir sur tribord pour passer à bâbord de l'autre</q>. <q>La présente disposition n'est pas applicable entre une menue embarcation et un grand bateau.</q>",
+  piege:"Entre une menue embarcation (moins de 20 m) et un grand bateau, cette règle ne joue pas : la menue embarcation laisse la place (voir « Petit et grand »)."},
+ {id:"I3",chip:"Croisement (1)",t:"Croisement : l'un suit le côté du chenal à son tribord",scene:"riv",band:[{y1:130,y2:222,lab:"côté du chenal à tribord de A"}],
+  b:[{n:"A",t:"m",role:"k",k:[[0,20,178,0],[1,340,178,0]]},
+     {n:"C",t:"m",role:"e",k:[[0,215,250,-90],[.35,215,236,-90],[.55,215,232,-90],[.7,215,224,-90],[1,215,40,-90]]}],
+  sit:"A suit le côté du chenal à son tribord (à sa droite). C veut traverser le chenal et arrive par la DROITE de A.",
+  keep:"A, qui suit le côté du chenal à tribord.",give:"C : il attend que A soit passé, puis traverse derrière lui.",
+  why:"Même si C arrive par la droite de A, c'est le côté du chenal qui compte d'abord. C'est la réponse B du QCM en ligne sur A, B et C (A dans le chenal, B grand navire, C qui traverse).",
+  ref:"RGP art. 6.03/1, al. 1 : <q>Si les routes de deux bateaux se croisent […], le bateau qui suit le côté du chenal à tribord est tenu de maintenir sa route et l'autre bateau de s'écarter</q>.",
+  piege:"En mer, ce serait l'inverse : A verrait C sur sa droite et devrait s'écarter (onglet « En mer », « Traverser un chenal »)."},
+ {id:"I4",chip:"Croisement (2)",t:"Croisement : aucun ne suit le côté du chenal à son tribord",scene:"riv",
+  b:[{n:"A",t:"m",role:"e",k:[[0,20,96,0],[.4,140,96,0],[.78,150,96,0],[1,340,96,0]]},
+     {n:"C",t:"m",role:"k",k:[[0,230,236,-90],[1,230,30,-90]]}],
+  sit:"A navigue au milieu du chenal, pas du côté du chenal à son tribord. C fait déjà route en travers du chenal (il ne sort pas d'un port, ne quitte pas son poste, ne vire pas) et arrive par la droite de A.",
+  keep:"C, qui vient de la droite de A.",give:"A : il ralentit et passe derrière C, jamais devant lui.",
+  why:"Seulement quand personne ne suit le côté du chenal à son tribord : celui qui voit l'autre sur sa droite s'écarte.",
+  ref:"RGP art. 6.03/1, al. 1/1 : <q>le bateau qui voit l'autre bateau sur tribord doit s'écarter de la route de celui-ci et, si les circonstances le permettent, éviter de croiser sa route sur l'avant</q>. Pas entre une menue embarcation et un grand bateau.",
+  piege:"Cette règle « de la droite » ne s'applique pas non plus à un bateau qui vire, qui part ou qui sort d'un port (art. 6.03/1, al. 2)."},
+ {id:"I5",chip:"Petit et grand",t:"Menue embarcation et grand bateau",scene:"riv",
+  b:[{n:"G",t:"g",role:"k",k:[[0,380,130,180],[1,-40,130,180]]},
+     {n:"A",t:"m",role:"e",k:[[0,20,124,0],[.2,90,124,0],[.35,135,186,40],[.45,165,196,0],[1,340,196,0]]}],
+  sit:"A, menue embarcation (moins de 20 m ; un bac, un bateau à passagers, un bateau qui pêche ou un remorqueur restent des grands bateaux), rencontre G, un grand bateau. Aucune règle de route ne départage.",
+  keep:"G, le grand bateau.",give:"A, la menue embarcation : elle laisse la place pour passer et manœuvrer.",
+  why:"Un grand bateau manœuvre mal et a besoin de place : le petit s'efface.",
+  ref:"RGP art. 6.02, al. 2 : <q>la menue embarcation est obligée de laisser au grand bateau, sauf s'il s'agit d'un bateau rapide, l'espace nécessaire pour poursuivre sa route et pour manœuvrer ; elle ne peut pas exiger que le bateau en question s'écarte en sa faveur</q>.",
+  piege:"Si la menue embarcation suit le côté du chenal à son tribord, la règle n° 1 (art. 6.04 al. 1 ou 6.03/1 al. 1) s'applique quand même, même face à un grand bateau."},
+ {id:"I6",chip:"Moteur, rames, voile",t:"Entre menues embarcations : moteur, rames, voile",scene:"riv",wind:90,
+  b:[{n:"M",t:"m",role:"e",k:[[0,20,128,0],[.35,130,128,0],[.6,150,132,0],[1,340,128,0]]},
+     {n:"V",t:"v",role:"k",k:[[0,200,30,90],[1,200,240,90]]}],
+  sit:"M (moteur) et V (voilier), deux menues embarcations, se croisent. Aucun ne suit le côté du chenal à son tribord. V arrive par la GAUCHE de M.",
+  keep:"V, le voilier.",give:"M, le bateau à moteur : il ralentit et laisse passer.",
+  why:"Entre menues embarcations : le moteur s'écarte pour la voile et pour les rames ; les rames s'écartent pour la voile. Ici, peu importe le côté d'où vient V.",
+  ref:"RGP art. 6.03/1, al. 3 : <q>a) l'embarcation motorisée doit s'écarter pour l'embarcation à voiles ou l'embarcation mue par la force musculaire […] et b) l'embarcation mue par la force musculaire doit s'écarter pour l'embarcation à voiles […]</q>. Pour une rencontre, même ordre, en s'écartant si possible sur tribord (art. 6.04, al. 8).",
+  piege:"Ordre à retenir entre menues embarcations : voile, puis rames, puis moteur."},
+ {id:"I7",chip:"Deux voiliers",t:"Deux voiliers",scene:"riv",wind:90,
+  b:[{n:"A",t:"v",role:"e",k:[[0,20,116,0],[.3,120,116,0],[.45,165,84,-30],[.55,195,80,0],[1,340,80,0]]},
+     {n:"B",t:"v",role:"k",k:[[0,340,142,180],[1,20,142,180]]}],
+  sit:"Le vent vient du haut. A reçoit le vent par sa gauche (bâbord). B le reçoit par sa droite (tribord). Ils se rencontrent, et aucun ne suit le côté du chenal à son tribord.",
+  keep:"B, qui reçoit le vent de tribord.",give:"A, qui reçoit le vent de bâbord.",
+  why:"Même règle qu'en mer. Pour un croisement, si les deux reçoivent le vent du même côté, celui qui est au vent (plus près d'où vient le vent) s'écarte (art. 6.03/1, al. 4 b).",
+  ref:"RGP art. 6.04, al. 9 (rencontre) : <q>le bateau à voiles qui reçoit le vent de bâbord doit s'écarter de la route de celui qui reçoit le vent de tribord</q>. Art. 6.03/1, al. 4 (croisement) : a) même règle ; b) <q>quand les deux bateaux reçoivent le vent du même bord, celui qui est au vent doit s'écarter de la route de celui qui est sous le vent</q>.",
+  piege:"Pas entre une menue embarcation à voiles et un grand bateau à voiles. Et si l'un suit le côté du chenal à son tribord, c'est lui qui garde sa route."},
+ {id:"I8",chip:"Passage étroit (courant)",t:"Passage étroit sur une rivière à courant",scene:"etroit",flow:180,
+  b:[{n:"Av",t:"m",role:"k",k:[[0,345,128,180],[1,15,128,180]]},
+     {n:"Mo",t:"m",role:"e",k:[[0,20,160,0],[.3,95,160,0],[.78,100,160,0],[.88,150,132,-20],[1,330,130,0]]}],
+  sit:"Le chenal se rétrécit : on ne peut pas s'y croiser. Le courant va vers la gauche. « Av » descend avec le courant (avalant). « Mo » le remonte (montant).",
+  keep:"L'avalant, qui descend le courant.",give:"Le montant : il attend avant le passage.",
+  why:"Le bateau qui descend est poussé par le courant et s'arrête mal : c'est lui qui passe.",
+  ref:"RGP art. 6.07, al. 1 c) : <q>sur les voies navigables à courant, le bateau avalant doit poursuivre sa route tandis que le bateau montant doit laisser le passage</q>.",
+  piege:"Le même article demande de franchir un passage étroit le plus vite possible, et d'émettre un son prolongé avant d'y entrer si la vue est gênée. Ces règles ne jouent pas si le passage est réglé par des signaux (art. 6.07, al. 3)."},
+ {id:"I9",chip:"Passage étroit (sans courant)",t:"Passage étroit sans courant (canal)",scene:"etroitS",
+  b:[{n:"B",t:"m",role:"k",k:[[0,345,92,180],[1,15,92,180]]},
+     {n:"A",t:"m",role:"e",k:[[0,20,160,0],[.3,95,160,0],[.78,100,160,0],[.88,155,96,-40],[1,330,92,0]]}],
+  sit:"Canal sans courant. Le passage étroit est dû à un obstacle à tribord (à droite) de A. B n'a pas d'obstacle à sa droite.",
+  keep:"B, qui n'a pas d'obstacle à tribord.",give:"A, qui a l'obstacle à tribord : il attend.",
+  why:"Celui que l'obstacle gêne attend ; l'autre passe. Dans une courbe, celui qui a l'extérieur de la courbe à sa droite passe.",
+  ref:"RGP art. 6.07, al. 1 d) i) : <q>le bateau qui ne rencontre pas d'obstacle à tribord ou qui dans une courbe, a le côté extérieur à tribord, doit poursuivre sa route au détriment d'un autre</q>. Pas entre une menue embarcation et un grand bateau.",
+  piege:"Exceptions de cet article entre menues embarcations : la voile passe avant le moteur et les rames (art. 6.07, al. 1 d) ii)."},
+ {id:"I10",chip:"Dépassement",t:"Dépassement",scene:"riv",
+  b:[{n:"R",t:"m",role:"k",k:[[0,90,170,0],[.5,165,170,0],[1,245,170,0]]},
+     {n:"D",t:"m",role:"e",k:[[0,10,170,0],[.2,80,170,0],[.38,135,128,-15],[.65,250,124,0],[.85,300,160,20],[1,340,170,0]]}],
+  sit:"D va plus vite que R et veut le dépasser.",
+  keep:"R, le bateau rattrapé : il ne gêne pas, et ralentit si c'est nécessaire.",give:"D, le rattrapant : en règle générale, il passe à bâbord (à gauche) de R.",
+  why:"On dépasse seulement si c'est sans danger. S'il n'y a aucun risque d'abordage, on peut dépasser d'un côté ou de l'autre.",
+  ref:"RGP art. 6.09, al. 1 et 2 : on ne dépasse qu'après s'être assuré que c'est sans danger ; <q>Le rattrapé doit faciliter le dépassement autant qu'il est nécessaire et possible</q>. Art. 6.10, al. 1 : <q>En règle générale, le rattrapant doit passer à bâbord du rattrapé</q>.",
+  piege:"Un voilier qui en rattrape un autre passe si possible du côté d'où le rattrapé reçoit le vent (art. 6.10, al. 7). Les signaux sonores de dépassement (2 prolongés + 1 ou 2 brefs) sont hors programme fluvial."},
+ {id:"I11",chip:"Sortie de port",t:"Sortir d'un port et traverser le chenal",scene:"port",
+  b:[{n:"A",t:"m",role:"k",k:[[0,20,150,0],[1,340,150,0]]},
+     {n:"P",t:"m",role:"e",k:[[0,180,258,-90],[.5,180,240,-90],[.6,180,232,-90],[1,180,36,-90]]}],
+  sit:"P sort d'un port (en bas) et veut traverser le chenal. A passe dans le chenal.",
+  keep:"A, qui navigue dans le chenal.",give:"P : il ne sort que si A n'a pas à changer brusquement de route ou de vitesse.",
+  why:"Celui qui sort d'un port, qui part ou qui vire doit d'abord s'assurer qu'il ne dérange personne.",
+  ref:"RGP art. 6.16, al. 1 : un bateau ne peut sortir d'un port ni traverser la voie principale <q>qu'après s'être assuré que ces manœuvres peuvent s'effectuer sans danger et sans que d'autres bateaux soient obligés de modifier brusquement leur route ou leur vitesse</q>. Même idée pour virer : art. 6.13, al. 1.",
+  piege:"Sur une rivière à courant, l'avalant qui doit virer pour entrer dans un port laisse la priorité au montant qui veut aussi y entrer (art. 6.16, al. 1)."},
+ {id:"I12",chip:"Bateau rapide",t:"Le bateau rapide",scene:"riv",
+  b:[{n:"M",t:"m",role:"k",k:[[0,20,150,0],[1,200,150,0]]},
+     {n:"Rap",t:"rap",role:"e",k:[[0,-40,150,0],[.12,0,150,0],[.28,60,100,-30],[.6,250,92,0],[1,400,100,0]]}],
+  sit:"Un bateau rapide (grand bateau qui peut dépasser 40 km/h) arrive derrière une menue embarcation M.",
+  keep:"M, même si c'est une menue embarcation.",give:"Le bateau rapide : il laisse de la place à TOUS les autres bateaux.",
+  why:"C'est l'exception à la règle « le petit s'efface devant le grand ».",
+  ref:"RGP art. 6.01/1 : <q>Un bateau rapide doit laisser à tous les autres bateaux l'espace nécessaire pour suivre leur route et pour manœuvrer ; il ne peut exiger que ceux-ci s'écartent en son [sic] faveur</q>. Définition : art. 1.01 d7).",
+  piege:"Art. 6.02, al. 2 : la menue embarcation laisse la place au grand bateau, « sauf s'il s'agit d'un bateau rapide »."},
+ {id:"I13",chip:"Capacité restreinte",t:"Bateau à capacité de manœuvre restreinte",scene:"riv",
+  b:[{n:"T",t:"ram",role:"k",k:[[0,190,120,0],[1,196,120,0]]},
+     {n:"A",t:"m",role:"e",k:[[0,345,124,180],[.3,270,124,180],[.45,240,62,215],[.6,190,56,180],[1,15,56,180]]}],
+  sit:"T travaille dans le chenal (par exemple des travaux sous l'eau) et montre les signaux du bateau à capacité de manœuvre restreinte.",
+  keep:"T, qui ne peut pas s'écarter.",give:"A, et tout autre bateau.",
+  why:"Un bateau qui ne peut pas manœuvrer librement a la priorité dans une rencontre ou un croisement.",
+  ref:"RGP art. 6.34, al. 1 : <q>En cas de rencontre ou de routes qui se croisent, un bateau doit s'écarter de la route de l'autre si celui-ci porte […] les signaux visés à l'article 3.34</q> (capacité restreinte) ou à l'art. 3.35 (pêche ; l'art. 3.35 lui-même est hors programme fluvial). Entre les deux, le bateau en pêche s'écarte (al. 2).",
+  piege:"Signaux de l'art. 3.34 : de jour, ballon, bicône, ballon noirs l'un au-dessus de l'autre ; de nuit, rouge, blanc, rouge."}
+ ],
+ M:[
+ {id:"M1",chip:"Face à face",t:"Face à face (routes opposées)",scene:"mer",
+  b:[{n:"A",t:"m",role:"e",k:[[0,20,128,0],[.3,120,128,0],[.45,170,156,25],[.55,200,160,0],[1,340,160,0]]},
+     {n:"B",t:"m",role:"e",k:[[0,340,132,180],[.3,240,132,180],[.45,190,104,205],[.55,160,100,180],[1,20,100,180]]}],
+  sit:"Deux navires à moteur arrivent droit l'un sur l'autre. De nuit, chacun voit les deux feux de côté de l'autre.",
+  keep:"Personne.",give:"Les deux : chacun vient sur tribord (à droite) pour passer bâbord contre bâbord.",
+  why:"En cas de doute, on considère qu'on est face à face et on vient sur tribord.",
+  ref:"RIPAM règle 14 a) : <q>chacun d'eux doit venir sur tribord pour passer par bâbord l'un de l'autre</q> ; c) en cas de doute, considérer que la situation existe.",
+  piege:"En eaux intérieures, c'est d'abord le côté du chenal qui compte (art. 6.04, al. 1)."},
+ {id:"M2",chip:"Croisement",t:"Routes qui se croisent",scene:"mer",
+  b:[{n:"A",t:"m",role:"e",k:[[0,20,110,0],[.3,100,110,0],[.5,140,130,35],[.7,215,165,0],[1,340,130,-20]]},
+     {n:"B",t:"m",role:"k",k:[[0,200,250,-90],[1,200,10,-90]]}],
+  sit:"Deux navires à moteur. B arrive par la DROITE (tribord) de A. De nuit, A voit le feu ROUGE de B.",
+  keep:"B : il maintient son cap ET sa vitesse.",give:"A : il manœuvre tôt et franchement, et passe DERRIÈRE B, jamais devant.",
+  why:"Moyen de retenir : « je vois son feu rouge, c'est moi qui cède » (en changeant de route ou en ralentissant).",
+  ref:"RIPAM règle 15 : <q>le navire qui voit l'autre navire sur tribord doit s'écarter de la route de celui-ci et, si les circonstances le permettent, éviter de croiser sa route sur l'avant</q>. Règle 16 : manœuvrer de bonne heure et franchement. Règle 17 a) i) : l'autre <q>doit maintenir son cap et sa vitesse</q>.",
+  piege:"Si A ne réagit pas, B peut manœuvrer pour éviter l'abordage, mais si possible pas vers sa gauche (règle 17 a) ii) et c). S'ils sont si près que A seul ne peut plus éviter l'abordage, B DOIT manœuvrer lui aussi (règle 17 b)."},
+ {id:"M3",chip:"Rattrapage",t:"Le navire qui en rattrape un autre",scene:"mer",wind:90,
+  b:[{n:"R",t:"m",role:"k",k:[[0,110,150,0],[1,210,150,0]]},
+     {n:"V",t:"v",role:"e",k:[[0,10,150,0],[.3,100,150,0],[.45,140,112,-25],[.7,240,104,0],[1,330,112,0]]}],
+  sit:"Le voilier V, plus rapide, rattrape le navire à moteur R par l'arrière.",
+  keep:"R, le rattrapé, même à moteur.",give:"V, le rattrapant, même à voile.",
+  why:"Le rattrapant s'écarte TOUJOURS, quelles que soient les autres règles. On rattrape quand on arrive par l'arrière (de nuit, on ne voit que le feu de poupe).",
+  ref:"RIPAM règle 13 a) : <q>Nonobstant toute disposition des règles des sections I et II de la partie B, tout navire qui en rattrape un autre doit s'écarter de la route de ce dernier</q>. b) : arriver de plus de 22,5° sur l'arrière du travers.",
+  piege:"Le voilier qui rattrape un bateau à moteur perd sa priorité habituelle. En cas de doute, on se considère comme rattrapant (13 c)."},
+ {id:"M4",chip:"Moteur et voile",t:"Navire à moteur et navire à voile",scene:"mer",wind:90,
+  b:[{n:"M",t:"m",role:"e",k:[[0,20,128,0],[.35,130,128,0],[.6,150,132,0],[1,340,128,0]]},
+     {n:"V",t:"v",role:"k",k:[[0,200,20,90],[1,200,250,90]]}],
+  sit:"M (moteur) et V (voilier) se croisent. V arrive par la GAUCHE de M.",
+  keep:"V, le voilier.",give:"M, le navire à moteur.",
+  why:"Le moteur s'écarte du voilier, de quelque côté qu'il vienne.",
+  ref:"RIPAM règle 18 a) : <q>Un navire à propulsion mécanique faisant route doit s'écarter de la route […] iv) d'un navire à voile</q>.",
+  piege:"Sauf si le voilier rattrape (règle 13), ou dans un chenal étroit où un voilier ne doit pas gêner un navire qui ne peut naviguer qu'à l'intérieur (règle 9 b)."},
+ {id:"M5",chip:"Voiliers (2 côtés)",t:"Deux voiliers : vent de côtés différents",scene:"mer",wind:90,
+  b:[{n:"A",t:"v",role:"e",k:[[0,20,128,0],[.3,120,128,0],[.45,165,160,30],[.55,195,166,0],[1,340,166,0]]},
+     {n:"B",t:"v",role:"k",k:[[0,340,124,180],[1,20,124,180]]}],
+  sit:"Le vent vient du haut. A reçoit le vent par bâbord (gauche), B par tribord (droite). La bôme est toujours du côté opposé au vent.",
+  keep:"B, qui reçoit le vent de tribord.",give:"A, qui reçoit le vent de bâbord.",
+  why:"Pour savoir d'où vient le vent : regardez la grand-voile. Le vent vient du côté opposé à la bôme.",
+  ref:"RIPAM règle 12 a) i) : <q>celui qui reçoit le vent de bâbord doit s'écarter de la route de l'autre</q>. iii) celui qui reçoit le vent de bâbord et voit un voilier au vent sans savoir de quel bord celui-ci reçoit le vent s'écarte aussi.",
+  piege:"Même règle en eaux intérieures quand aucun ne suit le côté du chenal à son tribord (RGP art. 6.04, al. 9)."},
+ {id:"M6",chip:"Voiliers (même côté)",t:"Deux voiliers : vent du même côté",scene:"mer",wind:90,
+  b:[{n:"H",t:"v",role:"e",k:[[0,20,90,0],[.3,110,90,0],[.5,150,70,-20],[1,330,66,0]]},
+     {n:"S",t:"v",role:"k",k:[[0,20,190,-15],[1,330,110,-15]]}],
+  sit:"Le vent vient du haut. Les deux voiliers le reçoivent du même côté (bâbord). H est au vent (plus haut, plus près d'où vient le vent), S est sous le vent.",
+  keep:"S, qui est sous le vent.",give:"H, qui est au vent.",
+  why:"Le voilier au vent « prend » le vent de l'autre : c'est lui qui s'écarte.",
+  ref:"RIPAM règle 12 a) ii) : <q>quand les deux navires reçoivent le vent du même bord, celui qui est au vent doit s'écarter de la route de celui qui est sous le vent</q>.",
+  piege:"Le côté « au vent » est celui d'où vient le vent ; « sous le vent » est l'autre côté."},
+ {id:"M7",chip:"Pêche",t:"Navire en train de pêcher",scene:"mer",wind:90,
+  b:[{n:"P",t:"p",role:"k",k:[[0,150,128,0],[1,200,128,0]]},
+     {n:"M",t:"m",role:"e",k:[[0,345,128,180],[.3,280,128,180],[.45,250,76,225],[.6,190,66,180],[1,15,66,180]]},
+     {n:"V",t:"v",role:"e",wind:90,k:[[0,15,212,-15],[.35,110,186,-15],[.5,150,212,15],[1,340,220,0]]}],
+  sit:"P pêche avec un engin qui gêne sa manœuvre (chalut, filets). M (moteur) et V (voilier) s'approchent.",
+  keep:"P, le navire en train de pêcher.",give:"M et V : le moteur ET le voilier s'écartent.",
+  why:"Un navire qui pêche manœuvre mal à cause de son engin de pêche.",
+  ref:"RIPAM règle 18 a) iii) et b) iii) : le navire à moteur et le navire à voile doivent s'écarter de la route <q>d'un navire en train de pêcher</q>.",
+  piege:"Le navire qui pêche s'écarte lui-même, dans la mesure du possible, du navire non maître de sa manœuvre et du navire à capacité restreinte (18 c). Dans un chenal étroit, il ne doit pas gêner les autres (9 c)."},
+ {id:"M8",chip:"Non maître",t:"Non maître de sa manœuvre / capacité restreinte",scene:"mer",wind:90,
+  b:[{n:"N",t:"nuc",role:"k",k:[[0,180,128,10],[1,188,130,15]]},
+     {n:"P",t:"p",role:"e",k:[[0,345,70,180],[.4,250,70,180],[.6,180,40,190],[1,15,46,180]]},
+     {n:"V",t:"v",role:"e",wind:90,k:[[0,15,200,0],[.35,100,200,0],[.55,150,226,15],[1,340,226,0]]}],
+  sit:"N n'est pas maître de sa manœuvre (panne, gouvernail cassé) : 2 boules noires de jour, 2 feux rouges de nuit. Tous les autres s'approchent.",
+  keep:"N : tout le monde s'écarte de lui (de même pour le navire à capacité de manœuvre restreinte).",give:"Tous les autres : moteur, voilier et même le navire qui pêche.",
+  why:"En haut de l'échelle : non maître et capacité restreinte. Puis pêche, puis voile, puis moteur.",
+  ref:"RIPAM règle 18 a) i) et ii), b) i) et ii), c) : moteur, voile et pêche s'écartent <q>d'un navire qui n'est pas maître de sa manœuvre</q> et <q>d'un navire à capacité de manœuvre restreinte</q>.",
+  piege:"Pour le navire qui pêche, la règle dit « dans la mesure du possible » (18 c)."},
+ {id:"M9",chip:"Chenal étroit",t:"Dans un chenal étroit",scene:"chenal",
+  b:[{n:"G",t:"g",role:"k",k:[[0,380,118,180],[1,-40,118,180]]},
+     {n:"A",t:"m",role:"e",k:[[0,20,124,0],[.2,85,124,0],[.35,125,152,30],[.45,155,156,0],[1,340,156,0]]}],
+  sit:"G est un grand navire qui ne peut naviguer qu'à l'intérieur du chenal. A est un bateau de moins de 20 m.",
+  keep:"G, qui ne peut naviguer en sécurité qu'à l'intérieur du chenal.",give:"A : il ne gêne pas G et serre le bord droit du chenal.",
+  why:"Dans un chenal étroit, chacun serre sa droite. Les bateaux de moins de 20 m et les voiliers ne gênent pas les navires qui ne peuvent naviguer que dans le chenal.",
+  ref:"RIPAM règle 9 a) : naviguer <q>aussi près que possible de la limite extérieure droite du chenal</q> ; b) : <q>Les navires de longueur inférieure à 20 mètres et les navires à voile ne doivent pas gêner le passage des navires qui ne peuvent naviguer en toute sécurité qu'à l'intérieur d'un chenal étroit</q>.",
+  piege:"Tout navire doit éviter de mouiller dans un chenal étroit (9 g)."},
+ {id:"M10",chip:"Traverser un chenal",t:"Traverser un chenal étroit (le QCM A, B, C, en mer)",scene:"chenal",
+  b:[{n:"A",t:"m",role:"e",k:[[0,10,150,0],[.3,100,150,0],[.82,125,150,0],[1,330,150,0]]},
+     {n:"B",t:"g",role:"k",k:[[0,420,112,180],[1,-60,112,180]]},
+     {n:"C",t:"m",role:"e",k:[[0,190,250,-90],[.4,190,236,-90],[.62,190,230,-90],[1,190,20,-90]]}],
+  sit:"Mêmes bateaux que le QCM en ligne, mais EN MER : A est dans le chenal, B (6 m de tirant d'eau) ne peut naviguer que dans le chenal, C veut traverser et arrive par la droite de A.",
+  keep:"B, qui ne peut naviguer qu'à l'intérieur du chenal. Puis C par rapport à A (C est orange car il attend B).",give:"A s'écarte de C (C est à sa droite), et C ne traverse pas tant qu'il gênerait B.",
+  why:"En mer, le côté du chenal ne donne aucune priorité : A applique la règle « je vois à droite, je m'écarte ». Mais traverser devant un navire qui ne peut pas sortir du chenal est interdit.",
+  ref:"RIPAM règle 15 (A voit C sur tribord) et règle 9 d) : <q>Un navire ne doit pas traverser un chenal étroit […] si, ce faisant, il gêne le passage des navires qui ne peuvent naviguer en toute sécurité qu'à l'intérieur de ce chenal</q>.",
+  piege:"Avec le règlement fluvial, la même image donne l'inverse : A suit le côté du chenal à son tribord et garde sa route (onglet « Eaux intérieures », « Croisement (1) »)."},
+ {id:"M11",chip:"Tirant d'eau",t:"Navire handicapé par son tirant d'eau",scene:"mer",
+  b:[{n:"T",t:"tir",role:"k",k:[[0,-60,128,0],[1,420,128,0]]},
+     {n:"A",t:"m",role:"e",k:[[0,345,124,180],[.25,270,124,180],[.4,230,66,225],[.55,170,58,180],[1,15,58,180]]}],
+  sit:"T est un grand navire handicapé par son tirant d'eau (de nuit, 3 feux rouges superposés ; de jour, un cylindre noir). Il ne peut pas sortir de la zone profonde.",
+  keep:"T : on évite de gêner son passage.",give:"A, et tous les autres navires (sauf le non maître et la capacité restreinte).",
+  why:"Il n'a pas une « priorité » comme un voilier, mais on doit éviter de le gêner, et lui-même navigue avec une prudence particulière.",
+  ref:"RIPAM règle 18 d) i) : <q>Tout navire autre qu'un navire qui n'est pas maître de sa manœuvre ou qu'un navire à capacité de manœuvre restreinte doit, si les circonstances le permettent, éviter de gêner le libre passage d'un navire handicapé par son tirant d'eau, qui montre les signaux prévus à la règle 28</q>.",
+  piege:"Ce navire n'existe pas en eaux intérieures."}
+ ]};
+const RECAP={
+ I:`<h2>À retenir : eaux intérieures (fluvial)</h2><table><tr><th>Ordre</th><th>Règle</th></tr>
+ <tr><td>Avant tout</td><td>On s'écarte du bateau à <b>capacité de manœuvre restreinte</b> et du bateau <b>en pêche</b> (art. 6.34). Le <b>bateau rapide</b> laisse la place à tous (art. 6.01/1).</td></tr>
+ <tr><td>1</td><td>Celui qui <b>suit le côté du chenal à son tribord</b> garde sa route (art. 6.03/1 al. 1, 6.04 al. 1).</td></tr>
+ <tr><td>2</td><td><b>Menue embarcation</b> : elle laisse la place au <b>grand bateau</b>, sauf au bateau rapide (art. 6.02 al. 2).</td></tr>
+ <tr><td>3</td><td>Personne sur le côté du chenal à son tribord : <b>rencontre</b> = chacun vient sur tribord ; <b>croisement</b> = celui qui voit l'autre à droite s'écarte (art. 6.04 al. 1/1, 6.03/1 al. 1/1).</td></tr>
+ <tr><td>4</td><td>Entre menues embarcations : <b>voile</b> avant <b>rames</b> avant <b>moteur</b> (art. 6.03/1 al. 3, 6.04 al. 8). Deux voiliers : vent de bâbord s'écarte (6.04 al. 9, 6.03/1 al. 4 a) ; en croisement, même bord : celui qui est au vent s'écarte (6.03/1 al. 4 b).</td></tr>
+ <tr><td>+</td><td>Passage étroit : l'avalant passe (courant) ; sans courant, celui qui n'a pas d'obstacle à tribord passe (art. 6.07). On ne sort d'un port, ne vire, ne part qu'en ne dérangeant personne (art. 6.13, 6.14, 6.16).</td></tr></table>`,
+ M:`<h2>À retenir : en mer (RIPAM)</h2><table><tr><th>Cas</th><th>Règle</th></tr>
+ <tr><td>Toujours</td><td>Le <b>rattrapant</b> s'écarte, même un voilier (règle 13).</td></tr>
+ <tr><td>Échelle</td><td><b>Non maître</b> et <b>capacité restreinte</b> &gt; <b>pêche</b> &gt; <b>voile</b> &gt; <b>moteur</b> : chacun s'écarte de ceux qui sont plus haut (règle 18). On évite de gêner le navire <b>handicapé par son tirant d'eau</b> (18 d).</td></tr>
+ <tr><td>Deux moteurs</td><td>Face à face : les deux viennent sur tribord (14). Croisement : celui qui voit l'autre à droite s'écarte (15) ; l'autre garde cap et vitesse (17).</td></tr>
+ <tr><td>Deux voiliers</td><td>Vent de bâbord s'écarte ; même bord : au vent s'écarte (12).</td></tr>
+ <tr><td>Chenal étroit</td><td>Serrer à droite ; moins de 20 m et voiliers ne gênent pas les navires qui ne peuvent naviguer que dans le chenal ; ne pas traverser si on les gêne (9).</td></tr></table>`};
+let Z="I", idx=0, t0=performance.now(), paused=false, pauseAt=0;
+const DUR=8000, HOLD=1500;
+const sc=document.getElementById("sc");
+function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+const rad=d=>d*Math.PI/180;
+function lerpA(a,b,u){let d=((b-a+540)%360)-180;return a+d*u}
+function pose(k,u){ if(u<=k[0][0]) return k[0].slice(1); for(let i=1;i<k.length;i++){ if(u<=k[i][0]){ const a=k[i-1],b=k[i],v=(u-a[0])/(b[0]-a[0]); return [a[1]+(b[1]-a[1])*v,a[2]+(b[2]-a[2])*v,lerpA(a[3],b[3],v)]; } } return k[k.length-1].slice(1); }
+function decor(s){
+  const sea=s.scene==="mer"||s.scene==="chenal";
+  el("rect",{x:0,y:0,width:360,height:260,fill:css(sea?"--mer":"--eau")},sc);
+  if(!sea){
+    el("rect",{x:0,y:0,width:360,height:36,fill:css("--rive")},sc); el("rect",{x:0,y:224,width:360,height:36,fill:css("--rive")},sc);
+    el("line",{x1:0,y1:36,x2:360,y2:36,stroke:css("--rive2"),"stroke-width":2},sc); el("line",{x1:0,y1:224,x2:360,y2:224,stroke:css("--rive2"),"stroke-width":2},sc);
+    el("line",{x1:0,y1:130,x2:360,y2:130,stroke:"#ffffff","stroke-opacity":.55,"stroke-dasharray":"8 8"},sc);
+    el("text",{x:6,y:24,"font-size":11,fill:css("--ink")},sc).textContent="rive";
+    el("text",{x:6,y:250,"font-size":11,fill:css("--ink")},sc).textContent="rive";
+  }
+  (s.band||[]).forEach(b=>{ el("rect",{x:0,y:b.y1,width:360,height:b.y2-b.y1,fill:css("--keep"),opacity:.14},sc); el("text",{x:354,y:b.y2-6,"text-anchor":"end","font-size":10,fill:css("--ink"),opacity:.8},sc).textContent=b.lab; });
+  if(s.scene==="etroit"||s.scene==="etroitS"){
+    const top=s.scene==="etroit";
+    if(top){ el("path",{d:"M140 36 L160 106 L215 106 L235 36 Z",fill:css("--rive"),stroke:css("--rive2")},sc);
+      el("path",{d:"M140 224 L160 154 L215 154 L235 224 Z",fill:css("--rive"),stroke:css("--rive2")},sc); }
+    else { el("path",{d:"M130 224 L155 118 L220 118 L245 224 Z",fill:css("--rive"),stroke:css("--rive2")},sc);
+      el("text",{x:187,y:150,"text-anchor":"middle","font-size":10,fill:css("--ink")},sc).textContent="obstacle"; }
+    el("text",{x:187,y:top?70:60,"text-anchor":"middle","font-size":10,fill:css("--ink")},sc).textContent="passage étroit";
+  }
+  if(s.scene==="port"){ el("rect",{x:150,y:224,width:60,height:36,fill:css("--eau")},sc); el("text",{x:220,y:252,"font-size":11,fill:css("--ink")},sc).textContent="port"; }
+  if(s.scene==="chenal"){
+    [[90,"#d62828"],[175,"#1a9c46"]].forEach(([y,c])=>{ el("line",{x1:0,y1:y,x2:360,y2:y,stroke:"#ffffff","stroke-opacity":.6,"stroke-dasharray":"4 10"},sc); for(let x=20;x<360;x+=80) el("circle",{cx:x,cy:y,r:4,fill:c},sc); });
+    el("text",{x:354,y:84,"text-anchor":"end","font-size":10,fill:css("--ink")},sc).textContent="chenal étroit (eau profonde)";
+  }
+  if(s.flow!=null){ const g=el("g",{opacity:.75},sc); el("text",{x:300,y:216,"font-size":10,fill:css("--ink"),"text-anchor":"end"},g).textContent="courant"; el("path",{d:"M350 212 L306 212 M306 212 l8 -5 M306 212 l8 5",stroke:css("--ink"),"stroke-width":1.6,fill:"none"},g); }
+  if(s.wind!=null){ const cx=330,cy=sea?24:52, w=rad(s.wind); const g=el("g",{},sc);
+    el("circle",{cx,cy,r:17,fill:"#fff",opacity:.8},g);
+    el("path",{d:`M${cx-Math.cos(w)*11} ${cy-Math.sin(w)*11} L${cx+Math.cos(w)*11} ${cy+Math.sin(w)*11}`,stroke:"#14213d","stroke-width":2.2},g);
+    el("polygon",{points:`${cx+Math.cos(w)*13},${cy+Math.sin(w)*13} ${cx+Math.cos(w+2.6)*7+Math.cos(w)*6},${cy+Math.sin(w+2.6)*7+Math.sin(w)*6} ${cx+Math.cos(w-2.6)*7+Math.cos(w)*6},${cy+Math.sin(w-2.6)*7+Math.sin(w)*6}`,fill:"#14213d"},g);
+    el("text",{x:cx,y:cy+28,"text-anchor":"middle","font-size":10,fill:css("--ink")},g).textContent="vent"; }
+}
+const SIZE={m:[17,6.5],g:[40,10],v:[16,6],r:[12,4],p:[19,7],nuc:[26,8.5],ram:[26,8.5],tir:[44,11],rap:[24,7]};
+function boat(B,x,y,h,wind){
+  const [L,W]=SIZE[B.t]||[13,5], f=[Math.cos(rad(h)),Math.sin(rad(h))], s=[-f[1],f[0]];
+  const P=(a,b)=>`${x+f[0]*a+s[0]*b},${y+f[1]*a+s[1]*b}`;
+  const col=B.role==="k"?css("--keep"):B.role==="e"?css("--give"):"#8b97a8";
+  const g=el("g",{},sc);
+  if(B.t==="rap") el("path",{d:`M${x-f[0]*L} ${y-f[1]*L} L${x-f[0]*(L+26)+s[0]*7} ${y-f[1]*(L+26)+s[1]*7} M${x-f[0]*L} ${y-f[1]*L} L${x-f[0]*(L+26)-s[0]*7} ${y-f[1]*(L+26)-s[1]*7}`,stroke:"#fff","stroke-width":1.5,opacity:.8},g);
+  if(B.t==="p") for(let i=0;i<3;i++) el("line",{x1:x-f[0]*L,y1:y-f[1]*L,x2:x-f[0]*(L+34)+s[0]*(i-1)*9,y2:y-f[1]*(L+34)+s[1]*(i-1)*9,stroke:"#14213d","stroke-width":.8,"stroke-dasharray":"2 2"},g);
+  el("polygon",{points:[P(L,0),P(L*.4,W),P(-L,W*.9),P(-L,-W*.9),P(L*.4,-W)].join(" "),fill:col,stroke:"#14213d","stroke-width":1},g);
+  if(B.t==="v"){ const wd=rad(B.wind!=null?B.wind:(wind!=null?wind:90)), wt=[Math.cos(wd),Math.sin(wd)], side=(wt[0]*s[0]+wt[1]*s[1])>=0?1:-1;
+    const mx=x+f[0]*L*.3,my=y+f[1]*L*.3, bl=L*1.15, bx=mx+(-f[0]*Math.cos(.5)+s[0]*side*Math.sin(.5))*bl, by=my+(-f[1]*Math.cos(.5)+s[1]*side*Math.sin(.5))*bl;
+    el("path",{d:`M${mx} ${my} L${bx} ${by}`,stroke:"#fff","stroke-width":3.5},g); el("path",{d:`M${mx} ${my} L${bx} ${by}`,stroke:"#14213d","stroke-width":1},g); el("circle",{cx:mx,cy:my,r:2,fill:"#14213d"},g); }
+  if(B.t==="nuc"){ el("circle",{cx:x,cy:y-14,r:3.5,fill:"#111"},g); el("circle",{cx:x,cy:y-22,r:3.5,fill:"#111"},g); }
+  if(B.t==="ram"){ el("circle",{cx:x,cy:y-12,r:3,fill:"#111"},g); el("polygon",{points:`${x},${y-22} ${x+3.5},${y-18} ${x},${y-14} ${x-3.5},${y-18}`,fill:"#111"},g); el("circle",{cx:x,cy:y-26,r:3,fill:"#111"},g); }
+  if(B.t==="tir") el("rect",{x:x-3,y:y-24,width:6,height:12,fill:"#111"},g);
+  if(B.t==="r") el("path",{d:`M${x-s[0]*9} ${y-s[1]*9} L${x+s[0]*9} ${y+s[1]*9}`,stroke:"#14213d","stroke-width":1.2},g);
+  el("text",{x:x,y:y-(W+8)-(B.t==="nuc"||B.t==="ram"||B.t==="tir"?20:0),"text-anchor":"middle","font-size":12,"font-weight":800,fill:css("--ink"),stroke:css("--card"),"stroke-width":3,"paint-order":"stroke"},g).textContent=B.n;
+}
+function frame(now){
+  const s=SC[Z][idx];
+  let el_=paused?pauseAt:(now-t0); const cyc=DUR+HOLD; const u=Math.min((el_%cyc)/DUR,1);
+  sc.innerHTML=""; decor(s);
+  s.b.forEach(B=>{ const [x,y,h]=pose(B.k,u); boat(B,x,y,h,s.wind); });
+  requestAnimationFrame(frame);
+}
+function show(){
+  const s=SC[Z][idx];
+  document.getElementById("ttl").textContent=(idx+1)+"/"+SC[Z].length+" · "+s.t;
+  document.getElementById("sit").textContent=s.sit;
+  document.getElementById("keep").textContent=s.keep;
+  document.getElementById("give").textContent=s.give;
+  document.getElementById("why").textContent=s.why;
+  document.getElementById("ref").innerHTML=s.ref;
+  const p=document.getElementById("piege"); p.hidden=!s.piege; p.innerHTML=s.piege?("<b>Attention :</b> "+s.piege):"";
+  document.querySelectorAll("#chips button").forEach((b,i)=>b.classList.toggle("on",i===idx));
+  t0=performance.now(); pauseAt=0;
+}
+function onglet(z){ Z=z; idx=0; document.getElementById("tI").classList.toggle("on",z==="I"); document.getElementById("tM").classList.toggle("on",z==="M"); document.getElementById("noteM").hidden=z!=="M";
+  document.getElementById("chips").innerHTML=SC[z].map((s,i)=>`<button data-i="${i}">${s.chip}</button>`).join("");
+  document.querySelectorAll("#chips button").forEach(b=>b.onclick=()=>{idx=+b.dataset.i;show();});
+  document.getElementById("recap").innerHTML=RECAP[z]; show(); }
+document.getElementById("tI").onclick=()=>onglet("I");
+document.getElementById("tM").onclick=()=>onglet("M");
+document.getElementById("prev").onclick=()=>{idx=(idx-1+SC[Z].length)%SC[Z].length;show();};
+document.getElementById("next").onclick=()=>{idx=(idx+1)%SC[Z].length;show();};
+document.getElementById("play").onclick=()=>{ if(paused){paused=false;t0=performance.now()-pauseAt;document.getElementById("play").textContent="⏸ Pause";} else {paused=true;pauseAt=performance.now()-t0;document.getElementById("play").textContent="▶ Lecture";} };
+onglet("I"); requestAnimationFrame(frame);
+window.__cr={SC,pose,SIZE};
+})();
+</script>
+</body>
+</html>

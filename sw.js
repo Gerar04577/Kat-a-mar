@@ -1,12 +1,12 @@
 /* Kat-a-Mar — service worker — v115
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v133";
+const CACHE = "kat-a-mar-v134";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
 const FILES = ["./", "./index.html", "./permis-hauturier.html",
                "./permis-belge.html", "./permis-belge-m1.html",
                "./permis-belge-erreurs.html", "./permis-belge-qcm-fluvial.html", "./permis-belge-qcm-balises.html",
-               "./permis-belge-qcm-cotier.html", "./permis-belge-qcm-feux-sons.html", "./permis-belge-cotier-feux.html", "./permis-belge-cotier-sons.html", "./permis-belge-sons-animes.html", "./permis-belge-cotier-meteo.html", "./permis-belge-cotier-caps.html", "./permis-belge-erreurs-cotier.html", "./permis-belge-pratique-helice.html", "./permis-belge-cotier-port-ostende.html", "./permis-belge-longueurs.html",
+               "./permis-belge-qcm-cotier.html", "./permis-belge-qcm-feux-sons.html", "./permis-belge-cotier-feux.html", "./permis-belge-cotier-sons.html", "./permis-belge-sons-animes.html", "./permis-belge-cotier-meteo.html", "./permis-belge-cotier-caps.html", "./permis-belge-erreurs-cotier.html", "./permis-belge-pratique-helice.html", "./permis-belge-cotier-port-ostende.html", "./permis-belge-longueurs.html", "./permis-belge-croisements.html",
                "./permis-belge-balises.html", "./permis-belge-panneaux.html", "./permis-belge-feux-sons.html",
                "./certificat-vhf.html",
                "./manifest.json", "./icon-192.png", "./icon-512.png"];
