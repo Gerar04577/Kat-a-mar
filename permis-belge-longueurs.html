@@ -45,7 +45,7 @@ td.s{font-weight:800;white-space:nowrap}
 </head>
 <body>
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
-<div class="ver">Rappel animé · version 1.1 · les longueurs de bateau qui changent les règles, en fluvial et en mer</div>
+<div class="ver">Rappel animé · version 1.3 · les longueurs de bateau qui changent les règles, en fluvial et en mer</div>
 <h1>La longueur du bateau : ce qui change</h1>
 <p class="small">Choisissez fluvial ou mer, puis faites grandir le bateau (bouton ▶ ou curseur). À chaque seuil, la liste montre ce qui s'applique à un bateau de cette longueur.</p>
 
@@ -80,17 +80,18 @@ td.s{font-weight:800;white-space:nowrap}
   const R={
    fl:[
     {z:"fl",c:L=>L<2.5,t:"Moins de 2,5 m de coque : pas obligé de porter les marques d'identification (sauf un jet-ski ou une embarcation immatriculée).",r:"RGP art. 2.02, al. 4 g)"},
-    {z:"fl",c:L=>L>=2.5,t:L=>"Bateau de plaisance : à bord, deux cordes au moins aussi longues que le bateau (ici au moins "+String(L).replace(".",",")+" m chacune).",r:"RGP art. 9.02, al. 1 a3)"},
+    {z:"fl",c:L=>L>=2.5,t:L=>"Bateau de plaisance : à bord, deux cordes au moins aussi longues que le bateau (ici au moins "+String(L).replace(".",",")+" m chacune).",r:"RGP art. 9.02, al. 1 a3) — au programme fluvial, mais article abrogé pour les compétences fédérales par l'AR plaisance 2019 (art. 10.8)"},
     {z:"fl",c:L=>L<4,t:"Un jet-ski (moteur à turbine, on se tient dessus et non dedans) de moins de 4 m est un « véhicule nautique à moteur ».",r:"Règlement général de police (RGP), art. 1.01 d5)"},
     {z:"fl",c:L=>L<7,t:"À moteur, non ponté, 13 km/h au maximum : la nuit, un seul feu blanc visible de tous les côtés peut remplacer les feux normaux.",r:"RGP art. 3.13, al. 2"},
     {z:"fl",c:L=>L<7,t:"À voile : la nuit, un feu blanc visible de tous les côtés suffit. S'il y a risque d'abordage, il montre en plus un 2e feu blanc pour attirer l'attention.",r:"RGP art. 3.13, al. 5"},
-    {z:"fl",c:L=>L<7,t:"À moteur, plus de 20 km/h, non ponté ou barré depuis une passerelle : coupe-circuit obligatoire (le moteur s'arrête si le conducteur quitte sa place).",r:"RGP art. 9.02, al. 1 b4)"},
+    {z:"fl",c:L=>L<7,t:"À moteur, plus de 20 km/h, non ponté ou barré depuis une passerelle : coupe-circuit obligatoire (le moteur s'arrête si le conducteur quitte sa place).",r:"RGP art. 9.02, al. 1 b4) — au programme fluvial, mais article abrogé pour les compétences fédérales par l'AR plaisance 2019 (art. 10.8)"},
     {z:"fl",c:L=>L>7&&L<20,t:"Menue embarcation à moteur de plus de 7 m : radio VHF obligatoire, en état de marche, allumée sur la voie bateau à bateau pendant la route.",r:"RGP art. 4.05, al. 2/1"},
     {z:"fl",c:L=>L<20,t:"C'est une « menue embarcation ». Face à un grand bateau, quand les règles de route ne jouent pas entre eux, elle lui laisse la place pour passer et manœuvrer, et ne peut pas exiger qu'il s'écarte. Exception : le bateau rapide (plus de 40 km/h), qui lui-même laisse la place à tous les autres.",r:"RGP art. 1.01 a1) ; art. 6.02, al. 2 ; art. 6.01/1"},
     {z:"fl",c:L=>L<20,t:"Attention : restent toujours des grands bateaux, même sous 20 m : le bateau construit ou aménagé pour remorquer, assister ou pousser des grands bateaux, le bac, le bateau à passagers, le bateau en train de pêcher, la barge de poussage.",r:"RGP art. 1.01 a1)"},
     {z:"fl",c:L=>L>=20,t:"C'est un « grand bateau ». Les menues embarcations lui laissent la place pour passer et manœuvrer (sauf s'il est un bateau rapide).",r:"RGP art. 1.01 a2) ; art. 6.02, al. 2"},
     {z:"fl",c:L=>L>=20&&L<=110,t:"Grand bateau à moteur : un 2e feu de mât (plus haut, derrière le premier) est permis, pas obligatoire.",r:"RGP art. 3.08, al. 2"},
     {z:"fl",c:L=>L>110,t:"Bateau à moteur de plus de 110 m : le 2e feu de mât devient obligatoire.",r:"RGP art. 3.08, al. 2"},
+    {z:"hp",c:L=>true,t:"Bon à savoir : le règlement fluvial ne parle pas du pavillon. C'est l'arrêté plaisance qui oblige tout bateau à moteur (sauf le jet-ski), quelle que soit sa longueur, et tout bateau de plus de 6,5 m, à battre le pavillon belge à l'entrée et à la sortie des ports belges, et partout ailleurs quand les autorités le demandent (par exemple la police de la navigation).",r:"AR plaisance 2019, art. 2.19 § 1 — pas au programme fluvial"},
     {z:"hp",c:L=>L>15,t:"Bon à savoir : au-delà de 15 m de coque, il faut un brevet de conduite (même lent). En dessous, il en faut un si le bateau à moteur peut dépasser 20 km/h.",r:"AR du 28 juin 2019, art. 4.1 § 2 — pas une question d'examen"},
     {z:"hp",c:L=>L<=15,t:"Bon à savoir : brevet obligatoire si le bateau à moteur peut dépasser 20 km/h. Sinon, jusqu'à 15 m, pas de brevet exigé pour la plaisance.",r:"AR du 28 juin 2019, art. 4.1 § 2 — pas une question d'examen"}
    ],
@@ -102,8 +103,9 @@ td.s{font-weight:800;white-space:nowrap}
     {z:"mer",c:L=>L<12,t:"À moteur : un feu blanc visible de tous les côtés, avec les feux de côté, peut remplacer le feu de mât et le feu de poupe.",r:"RIPAM règle 23 d) i)"},
     {z:"ec",c:L=>L<20,t:"« Petite embarcation » : pas obligée d'avoir sifflet et cloche, mais un autre moyen de faire un signal sonore efficace. Elle n'est pas obligée de faire le signal du doute (au moins 5 brefs rapides).",r:"Escaut art. 33 § 2 et art. 34 § 1, 2 ; canal art. 33 § 2 et art. 34 § 1 b)"},
     {z:"ec",c:L=>L<20,t:"Réflecteur radar obligatoire (sauf la planche à voile sur l'Escaut). Au mouillage ou amarrée : un feu blanc visible de tous les côtés, sauf si les lumières de la rive l'éclairent assez.",r:"Escaut art. 41 § 7 et § 9 ; canal art. 29 § 7 et § 9"},
-    {z:"pl",c:L=>L<=6.5,t:"Voilier sans moteur ni cabine, de 6,5 m ou moins : pas obligé de porter son nom et son port d'attache, ni le pavillon belge ; son numéro d'enregistrement contient la lettre « S ».",r:"AR plaisance 2019, art. 2.19 § 1 ; 2.20 § 1, 3° et § 2"},
-    {z:"pl",c:L=>L>6.5,t:"Plus de 6,5 m (et tout bateau à moteur, sauf le jet-ski) : pavillon belge obligatoire à l'entrée et à la sortie des ports belges, du lever au coucher du soleil dans les eaux étrangères, et à la demande des autorités.",r:"AR plaisance 2019, art. 2.19 § 1"},
+    {z:"pl",c:L=>true,t:"Pavillon belge (arrêté plaisance) : obligatoire pour tout bateau de plaisance À MOTEUR, quelle que soit sa longueur (sauf le jet-ski), et pour tout bateau de PLUS DE 6,5 m. Où et quand : 1) à l'entrée et à la sortie des ports belges ; 2) dans les eaux étrangères, du lever au coucher du soleil ; 3) partout ailleurs, quand les autorités belges ou étrangères le demandent. Seul un bateau muni d'une lettre d'enregistrement valide peut battre pavillon belge.",r:"AR plaisance 2019, art. 2.19 § 1"},
+    {z:"pl",c:L=>L<=6.5,t:"Bateau SANS moteur de 6,5 m ou moins : l'arrêté plaisance ne l'oblige pas à battre pavillon (mais voir la règle des ports de la côte). Voilier sans moteur ni cabine de cette taille : pas obligé non plus de porter son nom et son port d'attache ; son numéro d'enregistrement contient la lettre « S ».",r:"AR plaisance 2019, art. 2.19 § 1 ; 2.20 § 1, 3° et § 2"},
+    {z:"port",c:L=>true,t:"Ports de la côte : TOUT bâtiment, quelle que soit sa longueur, même un petit voilier sans moteur (sauf le bateau de pêche qui fréquente habituellement un port belge), hisse son pavillon national à l'entrée et à la sortie du port, et quand les fonctionnaires ou agents de l'autorité le demandent.",r:"Règlement de la mer territoriale (AR 1981), art. 7 § 3"},
     {z:"mer",c:L=>L<7,t:"Voilier : s'il ne montre pas ses feux, il doit avoir une lampe ou un fanal blanc prêt à montrer.",r:"RIPAM règle 25 d) i)"},
     {z:"mer",c:L=>L<7,t:"Au mouillage, loin des chenaux, des zones de mouillage et des routes fréquentées : pas obligé de montrer les feux ni la boule de mouillage.",r:"RIPAM règle 30 e)"},
     {z:"mer",c:L=>L<12,t:"Pas obligé d'avoir sifflet ni cloche, mais il faut un autre moyen de faire un signal sonore efficace.",r:"RIPAM règle 33 b)"},
@@ -139,7 +141,7 @@ td.s{font-weight:800;white-space:nowrap}
        [20,"20 m","Moins de 20 m = menue embarcation ; 20 m ou plus = grand bateau (art. 1.01)"],
        [110,"plus de 110 m","2e feu de mât obligatoire (art. 3.08, al. 2)"]],
    mer:[[6,"moins de 6 m","Pas à plus de 2 milles de la côte si la houle dépasse 1 m (AR 2019, art. 5.2)"],
-        [6.5,"6,5 m","Au-delà (et tout bateau à moteur) : pavillon belge à l'entrée et à la sortie des ports belges (art. 2.19). Gilet : la dispense devient possible (art. 3.81)"],
+        [6.5,"6,5 m","Bateau sans moteur : au-delà de 6,5 m, pavillon belge obligatoire (un bateau à moteur l'est quelle que soit sa longueur ; dans les ports de la côte, tout bâtiment le hisse) (AR 2019 art. 2.19 ; AR 1981 art. 7 § 3). Gilet : la dispense devient possible (art. 3.81)"],
         [7,"moins de 7 m","À moteur lent ou à voile, un seul feu blanc ou une lampe ; mouillage hors zones fréquentées sans feux (règles 23 d, 25, 30)"],
         [12,"12 m","Sifflet obligatoire ; en dessous, allègements (règles 23 d, 27, 30, 33, 35). Escaut : moins de 12 m, hors du chenal si possible"],
         [15,"plus de 15 m","Brevet obligatoire (AR 2019, art. 4.1) — hors programme",1],
