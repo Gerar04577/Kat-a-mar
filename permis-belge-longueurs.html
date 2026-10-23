@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Longueurs de bateau</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--eau:#cfe3f2;--coque:#8fa1b8;--nuit:#0d1626;--ok:#1a9c46;--ko:#d62828;--hp:#8a6d00;--hpbg:#fff6d6;
+ --bMer:#0b5c8a;--bEsc:#6a3fb5;--bPort:#0f7d6b;--bPl:#9a4b00;--bCan:#3c6e1f;--bFl:#1d6fb8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--eau:#1d3448;--coque:#6b7b92;--hp:#f0c94a;--hpbg:#2e2810;
+ --bMer:#5fb0e8;--bEsc:#b79cf0;--bPort:#4fd1b8;--bPl:#f0a35e;--bCan:#9bd36f;--bFl:#7fb8ef}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--eau:#1d3448;--coque:#6b7b92;--hp:#f0c94a;--hpbg:#2e2810;
+ --bMer:#5fb0e8;--bEsc:#b79cf0;--bPort:#4fd1b8;--bPl:#f0a35e;--bCan:#9bd36f;--bFl:#7fb8ef}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:12px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;background:var(--bg);border-bottom:1px solid var(--line);color:var(--accent);text-decoration:none;font-weight:600;font-size:16px}
+.ver{font-size:12px;color:var(--mute);margin-top:8px}
+h1{font-size:20px;margin:4px 0 8px}
+p{margin:6px 0}.small{font-size:13px;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+.card h2{font-size:15px;margin:0 0 6px;color:var(--accent)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px system-ui;padding:6px}
+button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+svg{display:block;width:100%;height:auto}
+input[type=range]{width:100%;margin:8px 0 2px}
+.lng{font-size:26px;font-weight:800;text-align:center;margin:2px 0}
+.evt{min-height:2.8em;font-weight:700;text-align:center;color:var(--accent)}
+.ctl{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+ul.rg{list-style:none;padding:0;margin:6px 0}
+ul.rg li{border-left:4px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;margin:6px 0;font-size:15px}
+ul.rg li.new{animation:flash 1.4s ease-out}
+@keyframes flash{0%{background:var(--hpbg)}100%{background:var(--bg)}}
+ul.rg li .ref{display:block;font-size:12px;color:var(--mute);margin-top:2px}
+.bd{display:inline-block;font-size:11px;font-weight:700;color:#fff;border-radius:6px;padding:1px 6px;margin-right:6px;vertical-align:1px}
+.bd.mer{background:var(--bMer)}.bd.esc{background:var(--bEsc)}.bd.port{background:var(--bPort)}.bd.pl{background:var(--bPl)}.bd.can{background:var(--bCan)}.bd.fl{background:var(--bFl)}.bd.ec{background:var(--bEsc)}.bd.hp{background:var(--hp);color:#1a1300}
+li.hpi{background:var(--hpbg)!important;border-left-color:var(--hp)!important}
+.mer-b{border-left-color:var(--bMer)!important}.esc-b{border-left-color:var(--bEsc)!important}.port-b{border-left-color:var(--bPort)!important}.pl-b{border-left-color:var(--bPl)!important}.can-b{border-left-color:var(--bCan)!important}.fl-b{border-left-color:var(--bFl)!important}.ec-b{border-left-color:var(--bEsc)!important}
+table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--mute)}
+td.s{font-weight:800;white-space:nowrap}
+.hpbox{background:var(--hpbg);border-left:4px solid var(--hp);border-radius:8px;padding:8px 10px;font-size:14px;margin:10px 0}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="ver">Rappel animé · version 1.1 · les longueurs de bateau qui changent les règles, en fluvial et en mer</div>
+<h1>La longueur du bateau : ce qui change</h1>
+<p class="small">Choisissez fluvial ou mer, puis faites grandir le bateau (bouton ▶ ou curseur). À chaque seuil, la liste montre ce qui s'applique à un bateau de cette longueur.</p>
+
+<div class="seg"><button id="tFl" class="on">Fluvial (eaux intérieures)</button><button id="tMer">En mer (côtier)</button></div>
+
+<div class="card">
+  <svg id="sc" viewBox="0 0 340 190" aria-label="Le bateau et la règle graduée"></svg>
+  <div class="lng" id="lng"></div>
+  <p class="small" style="margin:0">Règle graduée comprimée : les petites longueurs sont étalées pour qu'on voie bien chaque seuil.</p>
+  <input id="cur" type="range" min="0" max="10" value="0" aria-label="Longueur du bateau">
+  <div class="evt" id="evt"></div>
+  <div class="ctl"><button id="play">▶ Faire grandir le bateau</button><button id="raz">↺ Début</button></div>
+</div>
+
+<div class="card">
+  <h2 id="hList"></h2>
+  <ul class="rg" id="list"></ul>
+</div>
+
+<div class="card">
+  <h2>Les seuils à retenir</h2>
+  <div id="tab"></div>
+</div>
+
+<div class="card" id="notes"></div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg", css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const BD={ec:"Escaut et canal",fl:"Eaux intérieures",mer:"Mer (RIPAM)",esc:"Escaut",port:"Ports de la côte",pl:"Plaisance",can:"Canal Gand-Terneuzen",hp:"Hors programme"};
+  // Chaque règle : z = zone, c = condition sur la longueur L (mètres), t = texte, r = référence.
+  const R={
+   fl:[
+    {z:"fl",c:L=>L<2.5,t:"Moins de 2,5 m de coque : pas obligé de porter les marques d'identification (sauf un jet-ski ou une embarcation immatriculée).",r:"RGP art. 2.02, al. 4 g)"},
+    {z:"fl",c:L=>L>=2.5,t:L=>"Bateau de plaisance : à bord, deux cordes au moins aussi longues que le bateau (ici au moins "+String(L).replace(".",",")+" m chacune).",r:"RGP art. 9.02, al. 1 a3)"},
+    {z:"fl",c:L=>L<4,t:"Un jet-ski (moteur à turbine, on se tient dessus et non dedans) de moins de 4 m est un « véhicule nautique à moteur ».",r:"Règlement général de police (RGP), art. 1.01 d5)"},
+    {z:"fl",c:L=>L<7,t:"À moteur, non ponté, 13 km/h au maximum : la nuit, un seul feu blanc visible de tous les côtés peut remplacer les feux normaux.",r:"RGP art. 3.13, al. 2"},
+    {z:"fl",c:L=>L<7,t:"À voile : la nuit, un feu blanc visible de tous les côtés suffit. S'il y a risque d'abordage, il montre en plus un 2e feu blanc pour attirer l'attention.",r:"RGP art. 3.13, al. 5"},
+    {z:"fl",c:L=>L<7,t:"À moteur, plus de 20 km/h, non ponté ou barré depuis une passerelle : coupe-circuit obligatoire (le moteur s'arrête si le conducteur quitte sa place).",r:"RGP art. 9.02, al. 1 b4)"},
+    {z:"fl",c:L=>L>7&&L<20,t:"Menue embarcation à moteur de plus de 7 m : radio VHF obligatoire, en état de marche, allumée sur la voie bateau à bateau pendant la route.",r:"RGP art. 4.05, al. 2/1"},
+    {z:"fl",c:L=>L<20,t:"C'est une « menue embarcation ». Face à un grand bateau, quand les règles de route ne jouent pas entre eux, elle lui laisse la place pour passer et manœuvrer, et ne peut pas exiger qu'il s'écarte. Exception : le bateau rapide (plus de 40 km/h), qui lui-même laisse la place à tous les autres.",r:"RGP art. 1.01 a1) ; art. 6.02, al. 2 ; art. 6.01/1"},
+    {z:"fl",c:L=>L<20,t:"Attention : restent toujours des grands bateaux, même sous 20 m : le bateau construit ou aménagé pour remorquer, assister ou pousser des grands bateaux, le bac, le bateau à passagers, le bateau en train de pêcher, la barge de poussage.",r:"RGP art. 1.01 a1)"},
+    {z:"fl",c:L=>L>=20,t:"C'est un « grand bateau ». Les menues embarcations lui laissent la place pour passer et manœuvrer (sauf s'il est un bateau rapide).",r:"RGP art. 1.01 a2) ; art. 6.02, al. 2"},
+    {z:"fl",c:L=>L>=20&&L<=110,t:"Grand bateau à moteur : un 2e feu de mât (plus haut, derrière le premier) est permis, pas obligatoire.",r:"RGP art. 3.08, al. 2"},
+    {z:"fl",c:L=>L>110,t:"Bateau à moteur de plus de 110 m : le 2e feu de mât devient obligatoire.",r:"RGP art. 3.08, al. 2"},
+    {z:"hp",c:L=>L>15,t:"Bon à savoir : au-delà de 15 m de coque, il faut un brevet de conduite (même lent). En dessous, il en faut un si le bateau à moteur peut dépasser 20 km/h.",r:"AR du 28 juin 2019, art. 4.1 § 2 — pas une question d'examen"},
+    {z:"hp",c:L=>L<=15,t:"Bon à savoir : brevet obligatoire si le bateau à moteur peut dépasser 20 km/h. Sinon, jusqu'à 15 m, pas de brevet exigé pour la plaisance.",r:"AR du 28 juin 2019, art. 4.1 § 2 — pas une question d'examen"}
+   ],
+   mer:[
+    {z:"pl",c:L=>L<6,t:"Moins de 6 m de coque : interdit d'aller à plus de 2 milles de la côte (laisse de basse mer) si la houle significative dépasse 1 m.",r:"AR plaisance 2019, art. 5.2"},
+    {z:"pl",c:L=>L<=6.5,t:"Gilet de sauvetage en mer (zones 4 à 7), à tout moment hors de la cabine, pour tous à bord (sauf bastingage fixe de plus de 110 cm). Jusqu'à 2 milles de la côte, une aide à la flottabilité peut le remplacer.",r:"AR plaisance 2019, art. 3.81"},
+    {z:"pl",c:L=>L>6.5&&L<=24,t:"Gilet de sauvetage en mer (zones 4 à 7), à tout moment hors de la cabine, pour tous à bord (sauf bastingage fixe de plus de 110 cm). Dispense seulement si TOUT est réuni : houle de moins de 1 m, de jour, du 16 mai au 15 octobre, passager de plus de 12 ans.",r:"AR plaisance 2019, art. 3.81"},
+    {z:"mer",c:L=>L<7,t:"À moteur, 7 nœuds au maximum : un seul feu blanc visible de tous les côtés peut remplacer les feux normaux ; feux de côté en plus si possible.",r:"RIPAM règle 23 d) ii)"},
+    {z:"mer",c:L=>L<12,t:"À moteur : un feu blanc visible de tous les côtés, avec les feux de côté, peut remplacer le feu de mât et le feu de poupe.",r:"RIPAM règle 23 d) i)"},
+    {z:"ec",c:L=>L<20,t:"« Petite embarcation » : pas obligée d'avoir sifflet et cloche, mais un autre moyen de faire un signal sonore efficace. Elle n'est pas obligée de faire le signal du doute (au moins 5 brefs rapides).",r:"Escaut art. 33 § 2 et art. 34 § 1, 2 ; canal art. 33 § 2 et art. 34 § 1 b)"},
+    {z:"ec",c:L=>L<20,t:"Réflecteur radar obligatoire (sauf la planche à voile sur l'Escaut). Au mouillage ou amarrée : un feu blanc visible de tous les côtés, sauf si les lumières de la rive l'éclairent assez.",r:"Escaut art. 41 § 7 et § 9 ; canal art. 29 § 7 et § 9"},
+    {z:"pl",c:L=>L<=6.5,t:"Voilier sans moteur ni cabine, de 6,5 m ou moins : pas obligé de porter son nom et son port d'attache, ni le pavillon belge ; son numéro d'enregistrement contient la lettre « S ».",r:"AR plaisance 2019, art. 2.19 § 1 ; 2.20 § 1, 3° et § 2"},
+    {z:"pl",c:L=>L>6.5,t:"Plus de 6,5 m (et tout bateau à moteur, sauf le jet-ski) : pavillon belge obligatoire à l'entrée et à la sortie des ports belges, du lever au coucher du soleil dans les eaux étrangères, et à la demande des autorités.",r:"AR plaisance 2019, art. 2.19 § 1"},
+    {z:"mer",c:L=>L<7,t:"Voilier : s'il ne montre pas ses feux, il doit avoir une lampe ou un fanal blanc prêt à montrer.",r:"RIPAM règle 25 d) i)"},
+    {z:"mer",c:L=>L<7,t:"Au mouillage, loin des chenaux, des zones de mouillage et des routes fréquentées : pas obligé de montrer les feux ni la boule de mouillage.",r:"RIPAM règle 30 e)"},
+    {z:"mer",c:L=>L<12,t:"Pas obligé d'avoir sifflet ni cloche, mais il faut un autre moyen de faire un signal sonore efficace.",r:"RIPAM règle 33 b)"},
+    {z:"mer",c:L=>L<12,t:"Par visibilité réduite : pas obligé de faire les signaux de brume normaux, mais alors un autre signal sonore efficace, toutes les 2 minutes au plus.",r:"RIPAM règle 35 j)"},
+    {z:"mer",c:L=>L<12,t:"Non maître de sa manœuvre ou à capacité de manœuvre restreinte : pas obligé d'en montrer les feux et marques (sauf en plongée).",r:"RIPAM règle 27 g)"},
+    {z:"mer",c:L=>L<12,t:"Échoué : pas obligé de montrer les 2 feux rouges ni les 3 boules.",r:"RIPAM règle 30 f)"},
+    {z:"mer",c:L=>L>=12,t:"Sifflet obligatoire.",r:"RIPAM règle 33 a)"},
+    {z:"mer",c:L=>L>=12&&L<20,t:"Au mouillage ou échoué par visibilité réduite : la cloche n'est pas obligatoire, mais alors un autre signal sonore efficace, toutes les 2 minutes au plus.",r:"RIPAM règle 35 i)"},
+    {z:"mer",c:L=>L<20,t:"Dans un chenal étroit : il ne doit pas gêner les navires qui ne peuvent naviguer qu'à l'intérieur du chenal.",r:"RIPAM règle 9 b)"},
+    {z:"mer",c:L=>L<20,t:"Les feux vert et rouge peuvent être réunis en un seul fanal à l'avant. Voilier : ses feux peuvent être réunis en un seul fanal en haut du mât.",r:"RIPAM règles 21 b) et 25 b)"},
+    {z:"mer",c:L=>L>=20,t:"Cloche obligatoire, en plus du sifflet.",r:"RIPAM règle 33 a)"},
+    {z:"mer",c:L=>L<50,t:"À moteur, en route : un 2e feu de mât est permis, pas obligatoire.",r:"RIPAM règle 23 a) ii)"},
+    {z:"mer",c:L=>L>=50,t:"À moteur, en route : 2e feu de mât obligatoire (à l'arrière, plus haut que le premier).",r:"RIPAM règle 23 a) ii)"},
+    {z:"mer",c:L=>L<50,t:"Au mouillage : un seul feu blanc visible de tous les côtés suffit.",r:"RIPAM règle 30 b)"},
+    {z:"mer",c:L=>L>=50,t:"Au mouillage : un feu blanc à l'avant et un 2e feu blanc, plus bas, à l'arrière.",r:"RIPAM règle 30 a)"},
+    {z:"mer",c:L=>L>=100,t:"Gong obligatoire, en plus du sifflet et de la cloche. Au mouillage par visibilité réduite : cloche à l'avant, puis aussitôt gong à l'arrière. Au mouillage, ponts éclairés obligatoires.",r:"RIPAM règles 33 a), 35 g) et 30 c)"},
+    {z:"port",c:L=>L<20,t:"Dans les ports de la côte : se tenir le plus près possible de la rive ou de l'estacade à tribord, et s'écarter à temps des autres bâtiments.",r:"Règlement de la mer territoriale (AR 1981), art. 10 § 8"},
+    {z:"esc",c:L=>L<12,t:"Se tenir hors du chenal quand c'est possible. Dans le chenal principal (sauf s'il est remorqué ou poussé) : moteur prêt à servir, capable d'au moins 6 km/h.",r:"Règlement de l'Escaut, art. 9 § 3 et art. 6 § 2, 2°"},
+    {z:"esc",c:L=>L>=12,t:"Dans le chenal principal (sauf s'il est remorqué ou poussé) : pouvoir avancer avec un moteur assez puissant, en état de marche.",r:"Règlement de l'Escaut, art. 6 § 2, 1°"},
+    {z:"esc",c:L=>L<20,t:"C'est une « petite embarcation » (sauf le remorqueur et le pousseur) : elle suit les règles particulières des petites embarcations.",r:"Règlement de l'Escaut, art. 2, 7° ; art. 40 à 42"},
+    {z:"esc",c:L=>L>110,t:"Bateau de navigation intérieure à moteur de plus de 110 m : 2e feu de mât obligatoire.",r:"Règlement de l'Escaut, art. 23 § 1"},
+    {z:"can",c:L=>L>=20,t:"Sifflet et cloche obligatoires. Interdit de naviguer à la voile.",r:"Règlement du canal de Gand à Terneuzen, art. 33 § 1 et art. 6 § 6"},
+    {z:"hp",c:L=>L>15,t:"Bon à savoir : au-delà de 15 m de coque, il faut un brevet de conduite (même lent). En dessous, il en faut un si le bateau à moteur peut dépasser 20 km/h.",r:"AR du 28 juin 2019, art. 4.1 § 2 (Escaut) et § 3 (côte et mer) — pas une question d'examen"},
+    {z:"hp",c:L=>L<=15,t:"Bon à savoir : brevet obligatoire si le bateau à moteur peut dépasser 20 km/h. Sinon, jusqu'à 15 m, pas de brevet exigé pour la plaisance.",r:"AR du 28 juin 2019, art. 4.1 § 2 (Escaut) et § 3 (côte et mer) — pas une question d'examen"}
+   ]};
+  // Seuils (tableau et repères de la règle graduée). hp = hors programme.
+  const SEUILS={
+   fl:[[2.5,"moins de 2,5 m","Pas de marques d'identification obligatoires (art. 2.02, al. 4 g)"],
+       [4,"moins de 4 m","Jet-ski = « véhicule nautique à moteur » (art. 1.01 d5)"],
+       [7,"moins de 7 m","Un seul feu blanc possible (moteur lent non ponté, ou voile) ; coupe-circuit si rapide (art. 3.13, 9.02)"],
+       [7.01,"plus de 7 m","Menue embarcation à moteur : VHF obligatoire (art. 4.05, al. 2/1)"],
+       [15,"plus de 15 m","Brevet obligatoire (AR 2019, art. 4.1) — hors programme",1],
+       [20,"20 m","Moins de 20 m = menue embarcation ; 20 m ou plus = grand bateau (art. 1.01)"],
+       [110,"plus de 110 m","2e feu de mât obligatoire (art. 3.08, al. 2)"]],
+   mer:[[6,"moins de 6 m","Pas à plus de 2 milles de la côte si la houle dépasse 1 m (AR 2019, art. 5.2)"],
+        [6.5,"6,5 m","Au-delà (et tout bateau à moteur) : pavillon belge à l'entrée et à la sortie des ports belges (art. 2.19). Gilet : la dispense devient possible (art. 3.81)"],
+        [7,"moins de 7 m","À moteur lent ou à voile, un seul feu blanc ou une lampe ; mouillage hors zones fréquentées sans feux (règles 23 d, 25, 30)"],
+        [12,"12 m","Sifflet obligatoire ; en dessous, allègements (règles 23 d, 27, 30, 33, 35). Escaut : moins de 12 m, hors du chenal si possible"],
+        [15,"plus de 15 m","Brevet obligatoire (AR 2019, art. 4.1) — hors programme",1],
+        [20,"20 m","Cloche obligatoire ; en dessous, ne pas gêner en chenal étroit (règle 9). Escaut et canal : petite embarcation (réflecteur radar). Ports de la côte : serrer à tribord. Canal : 20 m ou plus, pas de voile"],
+        [24,"24 m","Jusqu'à 24 m : règles du gilet de sauvetage (AR 2019, art. 3.81)"],
+        [50,"50 m","2e feu de mât obligatoire ; au mouillage, 2 feux (règles 23, 30)"],
+        [100,"100 m","Gong obligatoire ; ponts éclairés au mouillage (règles 30, 33, 35)"],
+        [110,"plus de 110 m","Escaut : bateau de navigation intérieure, 2e feu de mât obligatoire (art. 23)"]]};
+  const LS=[2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,9,10,11,12,13,14,15,16,18,20,22,25,30,35,40,45,50,55,60,70,80,90,100,105,110,115,120,140,160,180,200,230];
+  const MAXI={fl:120,mer:120};
+  let Z="fl", idx=0, timer=null, prev=new Set();
+  const cur=document.getElementById("cur"), sc=document.getElementById("sc");
+  const lens=()=>LS.filter(v=>v<=MAXI[Z]);
+  const LMIN=1.8, LMAX=130, X0=14, X1=326;
+  const xs=L=>X0+(X1-X0)*Math.log(L/LMIN)/Math.log(LMAX/LMIN);
+  const fmt=v=>String(v).replace(".",",");
+  function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+  const actives=L=>R[Z].map((r,i)=>[r,i]).filter(([r])=>r.c(L));
+  function etat(L){ // ce qu'on dessine : nombre de feux de mât obligatoires/permis, matériel sonore, VHF
+    if(Z==="fl") return {m2:L>110?"obl":L>=20?"perm":"non",snd:[],vhf:L>7&&L<20,cat:L<20?"menue embarcation":"grand bateau"};
+    const snd=[]; if(L>=12)snd.push("sifflet"); if(L>=20)snd.push("cloche"); if(L>=100)snd.push("gong");
+    return {m2:L>=50?"obl":"perm",snd,vhf:false,cat:L<12?"moins de 12 m":L<20?"de 12 à 20 m":L<50?"de 20 à 50 m":L<100?"de 50 à 100 m":"100 m ou plus"};
+  }
+  function draw(L){
+    sc.innerHTML="";
+    el("rect",{x:0,y:0,width:340,height:190,rx:12,fill:css("--nuit")},sc);
+    el("rect",{x:0,y:112,width:340,height:28,fill:"#13283d"},sc);
+    const xa=xs(LMIN+.01), xb=Math.max(xs(L),xa+50), e=etat(L), h=Math.min(14,6+L/12);
+    // coque
+    el("path",{d:`M${xa},${112-h} L${xb},${112-h} L${xb-14},116 L${xa+3},116 Z`,fill:"#56657a",stroke:"#8fa1b8","stroke-width":1},sc);
+    // mât avant + feu de mât (toujours pour un bateau à moteur en route)
+    const mx=Math.max(xa+8,xb-Math.max(14,(xb-xa)*.25)), my=112-h-22;
+    el("line",{x1:mx,y1:112-h,x2:mx,y2:my,stroke:"#8fa1b8","stroke-width":2},sc);
+    el("circle",{cx:mx,cy:my,r:5,fill:"#fffbe6"},sc); el("circle",{cx:mx,cy:my,r:10,fill:"#fffbe6",opacity:.18},sc);
+    if(e.m2!=="non"){ const m2x=Math.min(xa+(mx-xa)*.35,mx-14), m2y=my-14;
+      el("line",{x1:m2x,y1:112-h,x2:m2x,y2:m2y,stroke:"#8fa1b8","stroke-width":2,"stroke-dasharray":e.m2==="obl"?"":"3 3"},sc);
+      el("circle",{cx:m2x,cy:m2y,r:5,fill:e.m2==="obl"?"#fffbe6":"none",stroke:"#fffbe6","stroke-width":1.5,"stroke-dasharray":e.m2==="obl"?"":"2 2"},sc);
+      el("text",{x:Math.min(Math.max(m2x,62),278),y:m2y-10,"text-anchor":"middle","font-size":10,fill:"#c7d3e3"},sc).textContent=e.m2==="obl"?"2e feu de mât : obligatoire":"2e feu de mât : permis";
+    }
+    el("text",{x:Math.min(Math.max(mx,30),310),y:my-(e.m2==="non"?10:30),"text-anchor":"middle","font-size":10,fill:"#c7d3e3",display:e.m2==="non"?"":"none"},sc).textContent="feu de mât";
+    // matériel / statut
+    let tag=e.cat; if(Z==="mer") tag+=" · "+(e.snd.length?e.snd.join(" + "):"ni sifflet ni cloche obligatoires");
+    if(Z==="fl"&&e.vhf) tag+=" · VHF obligatoire";
+    el("text",{x:170,y:22,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#fff"},sc).textContent=tag;
+    // règle graduée (échelle logarithmique)
+    el("line",{x1:X0,y1:160,x2:X1,y2:160,stroke:"#c7d3e3","stroke-width":1},sc);
+    [2,5,10,30,50,100].forEach(v=>{el("line",{x1:xs(v),y1:157,x2:xs(v),y2:163,stroke:"#c7d3e3"},sc);});
+    SEUILS[Z].forEach(([v,lab,,hp],i)=>{ const x=xs(v), on=L>=v;
+      el("line",{x1:x,y1:146,x2:x,y2:166,stroke:hp?"#f0c94a":(on?"#5fb0e8":"#56657a"),"stroke-width":2},sc);
+      if(v===7.01) return; // même repère que 7 m
+      el("text",{x,y:i%2?187:177,"text-anchor":"middle","font-size":9.5,"font-weight":700,fill:hp?"#f0c94a":(on?"#5fb0e8":"#8a97a8")},sc).textContent=fmt(v);
+    });
+    el("polygon",{points:`${xb},150 ${xb-5},142 ${xb+5},142`,fill:"#ffcc00"},sc);
+  }
+  function render(anim){
+    const L=lens()[idx];
+    document.getElementById("lng").textContent="Bateau de "+fmt(L)+" m";
+    cur.max=lens().length-1; cur.value=idx;
+    draw(L);
+    const act=actives(L), now=new Set(act.map(([,i])=>i));
+    const nouv=[...now].filter(i=>!prev.has(i));
+    document.getElementById("hList").textContent="Ce qui s'applique à un bateau de "+fmt(L)+" m";
+    document.getElementById("list").innerHTML=act.map(([r,i])=>`<li class="${r.z}-b${r.z==="hp"?" hpi":""}${anim&&nouv.includes(i)&&prev.size?" new":""}"><span class="bd ${r.z}">${BD[r.z]}</span>${typeof r.t==="function"?r.t(L):r.t}<span class="ref">${r.r}</span></li>`).join("");
+    const ev=document.getElementById("evt");
+    const parties=[...prev].filter(i=>!now.has(i)).length;
+    if(anim&&prev.size&&(nouv.length||parties)){ ev.textContent="À "+fmt(L)+" m, ça change : "+(nouv.length?nouv.length+" règle"+(nouv.length>1?"s":"")+" en plus (surlignée"+(nouv.length>1?"s":"")+")":"")+(nouv.length&&parties?", ":"")+(parties?parties+" règle"+(parties>1?"s":"")+" en moins":"")+"."; }
+    else if(!anim) ev.textContent="";
+    const chg=prev.size&&(nouv.length||parties); prev=now; return chg;
+  }
+  function stop(){ if(timer){clearTimeout(timer);timer=null;} document.getElementById("play").textContent="▶ Faire grandir le bateau"; }
+  function step(){
+    if(idx>=lens().length-1){ stop(); return; }
+    idx++; const chg=render(true);
+    timer=setTimeout(step, chg?2600:320);
+  }
+  document.getElementById("play").onclick=()=>{
+    if(timer){stop();return;}
+    if(idx>=lens().length-1){idx=0;prev=new Set();render(false);}
+    document.getElementById("play").textContent="⏸ Pause"; timer=setTimeout(step,500);
+  };
+  document.getElementById("raz").onclick=()=>{stop();idx=0;prev=new Set();render(false);};
+  cur.oninput=()=>{stop();idx=+cur.value;render(true);};
+  function tableau(){
+    document.getElementById("tab").innerHTML="<table><tr><th>Seuil</th><th>Ce qui change</th></tr>"+
+      SEUILS[Z].map(([v,lab,t,hp])=>`<tr${hp?' style="background:var(--hpbg)"':""}><td class="s">${lab}</td><td>${t}</td></tr>`).join("")+"</table>";
+    document.getElementById("notes").innerHTML=Z==="fl"
+      ? `<h2>À noter</h2><p>• La longueur qui compte est celle de la <b>coque</b> (art. 1.01 a1).</p><p>• Les seuils de la mer (12 m, 50 m, 100 m) ne sont pas au programme fluvial pour la plaisance. Le grand seuil des eaux intérieures est <b>20 m</b> : menue embarcation ou grand bateau.</p>`
+      : `<h2>À noter</h2><p>• En mer (RIPAM) et dans les ports de la côte, la longueur est mesurée <b>hors tout</b> (règle 3 j) ; dans l\'arrêté plaisance, c\'est la longueur de <b>coque</b>.</p><p>• <b>Navire de grandes dimensions</b> (Escaut, ports de la côte) : il n'y a <b>pas de chiffre fixe</b>. C'est le service de pilotage qui le désigne, selon sa longueur ou son tirant d'eau (Escaut, art. 2, 4° ; mer territoriale, art. 3, 3°).</p><p>• <b>Train de remorque de plus de 200 m</b> (de l'arrière du remorqueur au bout de la remorque) : 3 feux de mât au lieu de 2, et une marque biconique (RIPAM règle 24 a). Ici, c'est la longueur de la remorque qui compte, pas celle du bateau.</p><p>• Sur le canal de Gand à Terneuzen, le seuil de la « petite embarcation » (20 m) existe aussi, mais sa définition n'est pas au programme.</p>`;
+  }
+  function onglet(z){ stop(); Z=z; idx=0; prev=new Set();
+    document.getElementById("tFl").classList.toggle("on",z==="fl"); document.getElementById("tMer").classList.toggle("on",z==="mer");
+    tableau(); render(false); }
+  document.getElementById("tFl").onclick=()=>onglet("fl");
+  document.getElementById("tMer").onclick=()=>onglet("mer");
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>render(false));
+  onglet("fl");
+  window.__lng={R,SEUILS,etat};
+})();
+</script>
+</body>
+</html>
