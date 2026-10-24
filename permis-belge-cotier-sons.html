@@ -102,7 +102,7 @@ h3{font-size:15px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <header>
   <h1>Signaux sonores qui se ressemblent</h1>
-  <span class="ver">version 2.12 · permis côtier · en mer (RIPAM), sauf mention « eaux intérieures »</span>
+  <span class="ver">version 2.13 · permis côtier · en mer (RIPAM), sauf mention « eaux intérieures »</span>
 </header>
 <p class="ctxban"><b>Cette page est celle de la MER</b> (RIPAM, permis côtier). Sous chaque signal, des pastilles disent s'il a le même sens sur l'<b>Escaut maritime inférieur</b> et sur le <b>canal de Gand à Terneuzen</b>. <b>En eaux intérieures</b> (fluvial, règlement général de police), plusieurs signaux ont un autre sens ou n'existent pas : c'est signalé ligne par ligne, dans les encadrés bleus « En eaux intérieures ».</p>
 
@@ -211,6 +211,8 @@ var FAM = [
           {c:"LLbb", z:"rbab", s:"Je compte vous rattraper par votre bâbord", q:"commence par 2 prolongés", hl:[0,1], tag:"2 prolongés devant"},
           {c:"bLb", z:"mouiW", s:"Au mouillage, par brume : « attention, je suis là, risque d'abordage »", q:"commence par un bref", paire:"· — · ou — · — · ?"},
           {c:"LbLb", z:"accord", s:"D'accord pour être dépassé", q:"commence par un prolongé, 4 sons", hl:[0], tag:"+1 prolongé devant"},
+          {c:"bbb", z:"arr", s:"Machine en arrière", q:"3 brefs", paire:"3 brefs ou 3 prolongés ?"},
+          {c:"LLL", z:"trav", s:"Eaux intérieures seulement : je vais traverser le chenal principal (en sortant d'un port ou d'une voie affluente)", q:"3 prolongés ; suivis de 1 bref = je vais me diriger vers tribord, de 2 brefs = vers bâbord (pour entrer ou après la sortie)", hl:[0,1,2], tag:"3 prolongés au lieu de 3 brefs"},
           {c:"bbb", z:"arr", s:"Machine en arrière", q:"3 brefs, puis rien", paire:"3 brefs ou SOS ?"},
           {c:"TTTDDDTTT", z:"sos", s:"SOS", q:"morse : 3 courts, 3 longs, 3 courts, d'un seul groupe ; ce sont les 3 longs du milieu qui le distinguent de 3 brefs", hl:[3,4,5], tag:"morse : 3 longs au milieu"},
           {c:"L|bbbb", z:"pil", s:"Identité du pilote (brume)", q:"4 brefs, en plus de son signal de brume (ici un prolongé : navire à moteur avec de l'erre ; le RIPAM ne fixe pas le moment)", paire:"4 brefs du pilote ou 5 brefs du doute ?"},
@@ -248,6 +250,7 @@ var Z = {
  cont:{esc:["=", "art. 37, 1°."], gt:["=", "art. 37 a)."], ei:["0", "n'existe pas. Détresse sonore : volées de cloche ou sons prolongés répétés (art. 4.04, al. 1)."]},
  sos:{esc:["=", "art. 37, 2°."], gt:["?", "pas cité tel quel : « un signal approprié émis par radiotélégraphie ou par tout autre moyen de signalisation » (art. 37 b))."], ei:["0", "pas de SOS sonore ; SOS y existe comme signal lumineux (art. 3.30, al. 1 e))."]},
  canon:{esc:["0"], gt:["0"], ei:["0", "n'existe pas."]},
+ trav:{mer:["0"], esc:["0", "n'existe pas."], gt:["0", "n'existe pas."], ei:["=", "« trois sons prolongés lorsque après la sortie, il veut traverser le chenal principal » ; 3 prolongés + 1 bref = se diriger vers tribord, + 2 brefs = vers bâbord, pour entrer ou après la sortie (art. 6.16, al. 2, hors programme fluvial ; appendice 6, E). Une menue embarcation n'utilise pas ces signaux (art. 4.02, al. 3).", {"=":"existe seulement ici"}]},
  nonL:{esc:["+", "un seul prolongé n'est pas de la détresse ; mais des sons prolongés RÉPÉTÉS, et des séries de coups de cloche, si (art. 37, 8°)."], gt:["+", "un seul prolongé n'est pas de la détresse ; mais des sons prolongés RÉPÉTÉS, et des séries de coups de cloche, si (art. 37 h))."], ei:["+", "un seul prolongé = « Attention » ; mais des sons prolongés RÉPÉTÉS, ou des volées de cloche, sont un signal de détresse (art. 4.04, al. 1)."]}
 };
 var ETAT = {"=":"même sens", "+":"aussi un autre sens", "≠":"sens différent", "0":"n'existe pas", "~":"cas particulier", "?":"pas cité tel quel"};
@@ -255,7 +258,7 @@ var CLS = {"=":"eq", "+":"plus", "≠":"dif", "0":"no", "~":"plus", "?":"plus"};
 function pastille(nom, e){ var lib = (e[2] && e[2][e[0]]) || ETAT[e[0]]; return '<span class="pill ' + CLS[e[0]] + '">' + nom + " : " + lib + "</span>"; }
 function ctxHTML(z){
   var x = Z[z]; if(!x) return "";
-  var h = '<div class="ctx"><span class="pill eq">Mer (RIPAM)</span>' + pastille("Escaut", x.esc) + pastille("Canal Gand-Terneuzen", x.gt) + pastille("Eaux intérieures", x.ei) + "</div>";
+  var h = '<div class="ctx">' + (x.mer ? pastille("Mer (RIPAM)", x.mer) : '<span class="pill eq">Mer (RIPAM)</span>') + pastille("Escaut", x.esc) + pastille("Canal Gand-Terneuzen", x.gt) + pastille("Eaux intérieures", x.ei) + "</div>";
   if(x.esc[1] && x.esc[1] === x.gt[1]) h += '<p class="zn"><b>Escaut et canal :</b> ' + x.esc[1] + "</p>";
   else { if(x.esc[1]) h += '<p class="zn"><b>Escaut :</b> ' + x.esc[1] + "</p>"; if(x.gt[1]) h += '<p class="zn"><b>Canal Gand-Terneuzen :</b> ' + x.gt[1] + "</p>"; }
   if(x.ei[1]) h += '<p class="ein"><b>En eaux intérieures :</b> ' + x.ei[1] + "</p>";
