@@ -39,7 +39,7 @@ th{font-size:13px;color:var(--mute)}
 </head>
 <body>
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
-<div class="ver">Animations · version 1.2 · qui passe en premier ? Croisements, rencontres et dépassements, en eaux intérieures et en mer</div>
+<div class="ver">Animations · version 1.3 · qui passe en premier ? Croisements, rencontres et dépassements, en eaux intérieures et en mer</div>
 <h1>Qui passe en premier ?</h1>
 <p class="small">Choisissez le règlement, puis une situation. Le bateau <b style="color:var(--keep)">vert garde sa route</b>, le bateau <b style="color:var(--give)">orange s'écarte</b>. Les règles ne sont <b>pas les mêmes</b> en eaux intérieures et en mer. « Le côté du chenal à tribord » d'un bateau = la moitié du chenal qui est à SA droite, dans son sens de marche (à ne pas confondre avec la « rive droite » ou le « côté droit » du balisage, qui se lisent en général en regardant vers l'aval).</p>
 
@@ -179,7 +179,16 @@ const SC={
   keep:"GV, le grand voilier, même s'il reçoit le vent de bâbord.",give:"V, la menue embarcation à voiles.",
   why:"Piège classique : entre deux voiliers, on pense « vent de bâbord s'écarte ». Mais cette règle ne vaut pas entre un petit et un grand voilier, et la règle « chacun vient sur tribord » non plus. Il reste la règle générale : le petit laisse la place au grand.",
   ref:"RGP art. 6.04, al. 9 (et art. 6.03/1, al. 4 pour un croisement) : <q>Cet alinéa n'est pas applicable entre une menue embarcation à voiles et un grand bateau à voiles.</q> Art. 6.04, al. 1/1 : <q>La présente disposition n'est pas applicable entre une menue embarcation et un grand bateau.</q> Donc art. 6.02, al. 2 : <q>la menue embarcation est obligée de laisser au grand bateau, sauf s'il s'agit d'un bateau rapide, l'espace nécessaire pour poursuivre sa route et pour manœuvrer</q>.",
-  piege:"Si V suivait le côté du chenal à son tribord, c'est lui qui garderait sa route (art. 6.04, al. 1), même face au grand voilier. Entre deux MENUES embarcations à voiles, la règle du vent s'applique normalement."}
+  piege:"Si V suivait le côté du chenal à son tribord, c'est lui qui garderait sa route (art. 6.04, al. 1), même face au grand voilier. Entre deux MENUES embarcations à voiles, la règle du vent s'applique normalement."},
+ {id:"I15",chip:"Dépasser ou attendre",t:"Dépasser quand un bateau arrive en face",scene:"etroit3",
+  b:[{n:"Y",t:"m",role:"k",k:[[0,70,172,0],[1,300,172,0]]},
+     {n:"Z",t:"g",role:"k",k:[[0,400,96,180],[1,-60,96,180]]},
+     {n:"X",t:"g",role:"e",k:[[0,-60,172,0],[.3,50,172,0],[.65,130,172,0],[.8,205,136,-15],[.95,305,140,0],[1,340,150,10]]}],
+  sit:"X (grand bateau) rattrape Y (menue embarcation à moteur). Z arrive en face. Les trois vont se retrouver au même moment dans une partie trop étroite pour passer ensemble.",
+  keep:"Y et Z gardent leur route et leur vitesse.",give:"X : il ralentit et reste derrière Y jusqu'à ce que Z soit passé. Ensuite seulement, il dépasse.",
+  why:"Le dépassement attend que la rencontre soit finie. C'est au bateau qui veut dépasser de renoncer tant que la place manque.",
+  ref:"RGP art. 6.03, al. 1 : <q>Le passage ou le dépassement de bateaux n'est permis que lorsque le chenal est suffisamment large pour permettre le passage simultané, compte tenu des circonstances locales et des mouvements des autres bateaux.</q> Art. 6.09, al. 1 : <q>Un bateau ne peut en dépasser un autre que lorsqu'il s'est assuré que cette manœuvre peut se faire sans danger.</q>",
+  piege:"Z n'a pas à ralentir pour laisser faire un dépassement interdit, et Y ne doit pas accélérer pour « passer avant » : on ne modifie pas sa route ou sa vitesse d'une manière qui crée un danger d'abordage (art. 6.03, al. 3)."}
  ],
  M:[
  {id:"M1",chip:"Face à face",t:"Face à face (routes opposées)",scene:"mer",
@@ -281,7 +290,7 @@ const RECAP={
  <tr><td>2</td><td><b>Menue embarcation</b> : elle laisse la place au <b>grand bateau</b>, sauf au bateau rapide (art. 6.02 al. 2).</td></tr>
  <tr><td>3</td><td>Personne sur le côté du chenal à son tribord : <b>rencontre</b> = chacun vient sur tribord ; <b>croisement</b> = celui qui voit l'autre à droite s'écarte (art. 6.04 al. 1/1, 6.03/1 al. 1/1).</td></tr>
  <tr><td>4</td><td>Entre menues embarcations : <b>voile</b> avant <b>rames</b> avant <b>moteur</b> (art. 6.03/1 al. 3, 6.04 al. 8). Deux voiliers (pas entre menue embarcation et grand bateau à voiles : là, le petit laisse la place au grand) : vent de bâbord s'écarte (6.04 al. 9, 6.03/1 al. 4 a) ; en croisement, même bord : celui qui est au vent s'écarte (6.03/1 al. 4 b).</td></tr>
- <tr><td>+</td><td>Passage étroit : l'avalant passe (courant) ; sans courant, celui qui n'a pas d'obstacle à tribord passe (art. 6.07). On ne sort d'un port, ne vire, ne part que sans obliger les autres à changer brusquement de route ou de vitesse (art. 6.13, 6.14, 6.16).</td></tr></table>`,
+ <tr><td>+</td><td>On ne dépasse que si le chenal est assez large pour tous, compte tenu des bateaux qui arrivent en face (art. 6.03 al. 1, 6.09). Passage étroit : l'avalant passe (courant) ; sans courant, celui qui n'a pas d'obstacle à tribord passe (art. 6.07). On ne sort d'un port, ne vire, ne part que sans obliger les autres à changer brusquement de route ou de vitesse (art. 6.13, 6.14, 6.16).</td></tr></table>`,
  M:`<h2>À retenir : en mer (RIPAM)</h2><table><tr><th>Cas</th><th>Règle</th></tr>
  <tr><td>Toujours</td><td>Le <b>rattrapant</b> s'écarte, même un voilier, quelles que soient les règles de barre et de route (règle 13).</td></tr>
  <tr><td>Échelle</td><td><b>Non maître</b> et <b>capacité restreinte</b> &gt; <b>pêche</b> &gt; <b>voile</b> &gt; <b>moteur</b> : chacun s'écarte de ceux qui sont plus haut (règle 18). On évite de gêner le navire <b>handicapé par son tirant d'eau</b> (18 d).</td></tr>
@@ -313,6 +322,11 @@ function decor(s){
     else { el("path",{d:"M130 224 L155 118 L220 118 L245 224 Z",fill:css("--rive"),stroke:css("--rive2")},sc);
       el("text",{x:187,y:150,"text-anchor":"middle","font-size":10,fill:css("--ink")},sc).textContent="obstacle"; }
     el("text",{x:187,y:top?70:60,"text-anchor":"middle","font-size":10,fill:css("--ink")},sc).textContent="passage étroit";
+  }
+  if(s.scene==="etroit3"){
+    el("path",{d:"M120 36 L150 70 L240 70 L270 36 Z",fill:css("--rive"),stroke:css("--rive2")},sc);
+    el("path",{d:"M120 224 L150 190 L240 190 L270 224 Z",fill:css("--rive"),stroke:css("--rive2")},sc);
+    el("text",{x:195,y:58,"text-anchor":"middle","font-size":10,fill:css("--ink")},sc).textContent="trop étroit pour trois";
   }
   if(s.scene==="port"){ el("rect",{x:150,y:224,width:60,height:36,fill:css("--eau")},sc); el("text",{x:220,y:252,"font-size":11,fill:css("--ink")},sc).textContent="port"; }
   if(s.scene==="chenal"){

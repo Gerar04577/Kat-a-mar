@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gisement et relèvement</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--cap:#0b5c8a;--gis:#d96a00;--rel:#1a9c46;--mer:#cfe3f2;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--cap:#5fb0e8;--gis:#ff9a3c;--rel:#3ccf6e;--mer:#173349;--warn:#2e2810;--warnb:#f0c94a}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--cap:#5fb0e8;--gis:#ff9a3c;--rel:#3ccf6e;--mer:#173349;--warn:#2e2810;--warnb:#f0c94a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:12px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));margin:-12px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;background:var(--bg);border-bottom:1px solid var(--line);color:var(--accent);text-decoration:none;font-weight:600;font-size:16px}
+.ver{font-size:12px;color:var(--mute);margin-top:8px}
+h1{font-size:20px;margin:4px 0 8px}
+h2{font-size:17px;margin:18px 0 6px}
+p{margin:6px 0}.small{font-size:13px;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+.card h3{font-size:16px;margin:0 0 6px}
+svg{display:block;width:100%;max-width:340px;height:auto;margin:6px auto}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--mute);justify-content:center}
+.leg i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:4px;vertical-align:3px}
+ol.sol{margin:6px 0 0;padding-left:22px}
+ol.sol li{margin:4px 0}
+.res{font-weight:800;color:var(--rel)}
+.formule{background:var(--bg);border-left:4px solid var(--accent);border-radius:8px;padding:8px 10px;margin:8px 0}
+.piege{background:var(--warn);border-left:4px solid var(--warnb);border-radius:8px;padding:8px 10px;font-size:14px;margin:8px 0}
+button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px system-ui;padding:6px 12px;width:100%;margin-top:6px}
+.rep{display:none;margin-top:6px;font-size:17px}
+.rep.on{display:block}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="ver">Exercices · version 1.0 · gisement et relèvement, 5 exercices résolus et 5 à faire</div>
+<h1>Gisement et relèvement</h1>
+
+<div class="card">
+  <h3>Les trois angles</h3>
+  <p>1. <b style="color:var(--cap)">Le cap</b> : l'angle entre le <b>Nord</b> et l'<b>avant du bateau</b>, compté dans le sens des aiguilles d'une montre, de 0° à 360°.</p>
+  <p>2. <b style="color:var(--gis)">Le gisement</b> : l'angle entre l'<b>avant du bateau</b> et l'<b>objet</b> (phare, clocher, bouée, autre bateau), compté lui aussi dans le sens des aiguilles d'une montre, de 0° à 360°. Il ne dépend pas du Nord : 90° = par le travers tribord, 180° = droit derrière, 270° = par le travers bâbord.</p>
+  <p>3. <b style="color:var(--rel)">Le relèvement</b> (Z) : l'angle entre le <b>Nord</b> et l'<b>objet</b>. C'est lui qu'on trace sur la carte.</p>
+  <div class="formule"><b>Relèvement = Cap + Gisement</b> (si le total dépasse 360°, on retire 360°).<br><b>Gisement = Relèvement − Cap</b> (si le résultat est négatif, on ajoute 360°).</div>
+  <div class="piege">Le relèvement est du même « genre » que le cap : avec un cap vrai, on obtient un relèvement vrai (celui de la carte). Si on part d'un cap compas, on le transforme d'abord en cap vrai : <b>Cv = Cc + déviation + déclinaison</b> (Est = +, Ouest = −). Le gisement, lui, ne se corrige jamais : il est mesuré par rapport au bateau.</div>
+  <p class="small">Source : manuel, Tome 2, p. 29 « Cap + Gisement = Relèvement » (exemple : cap 315°, gisement 60°, relèvement 15°) ; conversions p. 30. Le programme côtier demande les relèvements vrai, magnétique et compas ; le mot « gisement » vient du manuel.</p>
+  <div class="leg"><span><i style="background:var(--cap)"></i>cap</span><span><i style="background:var(--gis)"></i>gisement</span><span><i style="background:var(--rel)"></i>relèvement</span></div>
+</div>
+
+<h2>Exercices résolus</h2>
+<div id="resolus"></div>
+<h2>À vous : seulement la réponse</h2>
+<p class="small">Faites le calcul, puis touchez « Voir la réponse ».</p>
+<div id="afaire"></div>
+
+<script>
+(function(){
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const n=a=>((a%360)+360)%360;
+const deg=a=>String(Math.round(n(a))).padStart(3,"0")+"°";
+/* cap = cap vrai utilisé pour le dessin ; g = gisement ; obj = nom de l'objet */
+const EX=[
+ {cap:40,g:30,obj:"phare",q:"Votre cap vrai est 040°. Vous voyez un phare au gisement 30°. Quel est le relèvement vrai du phare ?",
+  sol:["Relèvement = Cap + Gisement","= 040 + 30 = 70"],r:"Relèvement vrai : <span class='res'>070°</span>"},
+ {cap:315,g:60,obj:"clocher",q:"Votre cap vrai est 315°. Vous relevez un clocher au gisement 60°. Quel est son relèvement ? (exemple du manuel)",
+  sol:["Relèvement = 315 + 60 = 375","375 dépasse 360 : on retire 360 → 375 − 360 = 15"],r:"Relèvement vrai : <span class='res'>015°</span>"},
+ {cap:120,g:270,obj:"tourelle",q:"Cap vrai 120°. Une tourelle est exactement par votre travers bâbord. Quel est son relèvement ?",
+  sol:["Par le travers bâbord = gisement 270°","Relèvement = 120 + 270 = 390","390 − 360 = 30"],r:"Relèvement vrai : <span class='res'>030°</span>"},
+ {cap:200,g:90,obj:"phare",given:"Z",q:"Cap vrai 200°. Vous relevez un phare au 290° (vrai). À quel gisement le voyez-vous ? Où est-il par rapport au bateau ?",
+  sol:["Gisement = Relèvement − Cap","= 290 − 200 = 90","Gisement 90° = par le travers tribord"],r:"Gisement : <span class='res'>090°</span>, par le travers tribord"},
+ {cap:81,g:45,obj:"bouée",cc:80,dev:"2° E",dec:"1° W",q:"Cap compas 080°. Déviation 2° E, déclinaison 1° W. Une bouée est au gisement 45°. Quel relèvement vrai tracez-vous sur la carte ?",
+  sol:["D'abord le cap vrai : Cv = Cc + déviation + déclinaison = 080 + 2 − 1 = 081","Le gisement ne se corrige pas : 45°","Relèvement vrai = 081 + 45 = 126"],r:"Relèvement vrai : <span class='res'>126°</span>"},
+ {cap:250,g:140,obj:"phare",q:"Cap vrai 250°. Un phare est au gisement 140°. Relèvement vrai du phare ?",r:"<span class='res'>030°</span> (250 + 140 = 390 − 360)"},
+ {cap:10,g:350,obj:"clocher",q:"Cap vrai 010°. Un clocher est au gisement 350° (un peu à gauche de l'avant). Relèvement vrai du clocher ?",r:"<span class='res'>000°</span> (10 + 350 = 360, soit 0°, plein Nord)"},
+ {cap:135,g:270,obj:"phare",given:"Z",q:"Cap vrai 135°. Vous relevez un phare au 045° (vrai). À quel gisement est-il, et de quel côté ?",r:"Gisement <span class='res'>270°</span> (45 − 135 = −90, + 360), par le travers bâbord"},
+ {cap:300,g:180,obj:"tourelle",q:"Cap vrai 300°. Une tourelle est droit derrière vous. Relèvement vrai de la tourelle ?",r:"<span class='res'>120°</span> (gisement 180° : 300 + 180 = 480 − 360)"},
+ {cap:156,g:75,obj:"bouée",cc:160,dev:"3° W",dec:"1° W",q:"Cap compas 160°. Déviation 3° W, déclinaison 1° W. Une bouée est au gisement 75°. Relèvement vrai à tracer ?",r:"<span class='res'>231°</span> (Cv = 160 − 3 − 1 = 156 ; 156 + 75 = 231)"}
+];
+function schema(e,showRel){
+  const W=320,H=300,cx=160,cy=160,R=110;
+  const P=(a,r)=>[cx+r*Math.sin(a*Math.PI/180),cy-r*Math.cos(a*Math.PI/180)];
+  const arc=(a1,a2,r,col,lab,ld)=>{ // de a1 vers a2 dans le sens horaire
+    const sweep=n(a2-a1); if(sweep<0.5) return "";
+    const [x1,y1]=P(a1,r),[x2,y2]=P(a1+sweep,r), big=sweep>180?1:0;
+    const [lx,ly]=P(a1+sweep/2,r+(ld||14));
+    return `<path d="M${x1} ${y1} A${r} ${r} 0 ${big} 1 ${x2} ${y2}" fill="none" stroke="${col}" stroke-width="3"/>`+
+      `<text x="${lx}" y="${ly+4}" text-anchor="middle" font-size="12" font-weight="700" fill="${col}">${lab}</text>`;
+  };
+  const z=n(e.cap+e.g), [ox,oy]=P(z,R), [nx,ny]=P(0,R+18), [bx,by]=P(e.cap,R-6);
+  const cap=css("--cap"),gis=css("--gis"),rel=css("--rel"),ink=css("--ink");
+  // bateau orienté au cap
+  const f=[Math.sin(e.cap*Math.PI/180),-Math.cos(e.cap*Math.PI/180)], s=[-f[1],f[0]];
+  const Q=(a,b)=>`${cx+f[0]*a+s[0]*b},${cy+f[1]*a+s[1]*b}`;
+  let h=`<svg viewBox="0 0 ${W} ${H}" aria-label="Schéma">`;
+  h+=`<circle cx="${cx}" cy="${cy}" r="${R+4}" fill="${css("--mer")}"/>`;
+  h+=`<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${ink}" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${nx}" y="${ny-6}" text-anchor="middle" font-size="14" font-weight="800" fill="${ink}">N</text>`;
+  h+=`<line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${cap}" stroke-width="2"/>`;
+  h+=`<line x1="${cx}" y1="${cy}" x2="${ox}" y2="${oy}" stroke="${(showRel||e.given==="Z")?rel:gis}" stroke-width="2"/>`;
+  h+=arc(0,e.cap,36,cap,"cap",14);
+  const hideG=!showRel&&e.given==="Z", hideZ=!showRel&&e.given!=="Z";
+  if(!hideG) h+=arc(e.cap,z,58,gis,"gisement",16);
+  if(!hideZ) h+=arc(0,z,82,rel,"relèvement",18);
+  h+=`<polygon points="${[Q(26,0),Q(8,10),Q(-22,10),Q(-22,-10),Q(8,-10)].join(" ")}" fill="#f08a24" stroke="${ink}" stroke-width="1"/>`;
+  h+=`<circle cx="${ox}" cy="${oy}" r="7" fill="${ink}"/><text x="${(z<20||z>340)?ox+12:ox}" y="${(z<20||z>340)?oy+4:oy+(oy>cy?22:-12)}" text-anchor="${(z<20||z>340)?"start":"middle"}" font-size="12" font-weight="700" fill="${ink}">${e.obj}</text>`;
+  return h+`</svg>`;
+}
+const box1=document.getElementById("resolus"), box2=document.getElementById("afaire");
+function render(){
+  box1.innerHTML=EX.slice(0,5).map((e,i)=>`<div class="card"><h3>Exercice ${i+1}</h3><p>${e.q}</p>${schema(e,true)}<ol class="sol">${e.sol.map(x=>`<li>${x}</li>`).join("")}</ol><p>${e.r}</p></div>`).join("");
+  box2.innerHTML=EX.slice(5).map((e,i)=>`<div class="card"><h3>Exercice ${i+6}</h3><p>${e.q}</p>${schema(e,false)}<button data-i="${i}">Voir la réponse</button><div class="rep" id="rep${i}">${e.r}</div></div>`).join("");
+  box2.querySelectorAll("button").forEach(b=>b.onclick=()=>{const r=document.getElementById("rep"+b.dataset.i); r.classList.toggle("on"); b.textContent=r.classList.contains("on")?"Cacher la réponse":"Voir la réponse";});
+}
+render();
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",render);
+window.__ex=EX;
+})();
+</script>
+</body>
+</html>
