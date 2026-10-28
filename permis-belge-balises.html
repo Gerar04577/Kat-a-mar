@@ -69,9 +69,9 @@ button:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
 
 
 <div class="wrap">
-  <header><h1>Descente balisée</h1><span class="ver">version 3.2 · permis fluvial belge</span></header>
+  <header><h1>Descente balisée</h1><span class="ver">version 3.3 · permis fluvial belge</span></header>
   <div class="stage">
-    <svg id="river" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rivière puis lac vus de dessus ; un bateau descend et rencontre les balises">
+    <svg id="river" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Chenal puis mer vus de dessus ; un bateau descend et rencontre les balises">
       <g id="world"></g>
     </svg>
     <div class="hud"><span id="hudL">Rive gauche</span><span id="hudR">Rive droite</span></div>
@@ -163,7 +163,7 @@ const RH={
  Fl3R:{l:'Fl(3) R 20s : 3 éclats rouges toutes les 20 s',s:[[1,'#ff3b30'],[1,null],[1,'#ff3b30'],[1,null],[1,'#ff3b30'],[15,null]]},
 };
 
-/* parcours : fleuve (berges x 58 et 342) jusqu'à y=-6300, puis mer */
+/* parcours : chenal (berges x 58 et 342) jusqu'à y=-6300, puis mer */
 const PATH=[[200,60],[200,-1850],[140,-2100],[150,-2650],[140,-2950],[265,-3350],[260,-3700],[250,-4050],[258,-4350],[230,-4600],[284,-4800],[286,-5200],[232,-5450],[232,-5580],[150,-5800],[128,-6150],[220,-6600],[232,-7000],[250,-7350],[300,-7500],[262,-7700],[280,-7900],[330,-8300],[330,-8600],[230,-8800],[220,-9000],[280,-9300],[230,-9650],[260,-10000],[240,-10400],[230,-10750]];
 const S=[
  {th:1,y:-120,t:'Avalant, montant, rives',d:"Avalant = vers l'aval, dans le sens du courant. Montant = vers la source. Les rives se nomment en regardant vers l'aval : rive gauche à gauche, rive droite à droite.",p:"Le nom des rives ne change jamais, même quand vous remontez.",r:'Cours p. 15-20'},
@@ -178,7 +178,7 @@ const S=[
  {k:'losVB',x:32,y:-2050,lamp:'OcG',t:'Panneau losange vert et blanc (rive gauche)',d:"Le chenal se rapproche de la rive gauche : longez ce côté.",p:"Losange = rive GAUCHE ; carré = rive DROITE. La couleur dit ce que fait le chenal.",r:'Règl. app. 8, III.A.2'},
  {k:'obsVB',x:96,y:-2380,lamp:'IsoG',t:'Balise à bandes vertes et blanches',d:"Balise flottante qui signale un point dangereux ou un obstacle du côté GAUCHE du chenal (par exemple une épave ou un objet immergé). Voyant cône vert. En descendant, laissez-la à bâbord (votre gauche), au large.",p:"Bandes blanches = OBSTACLE. Passez côté chenal, jamais entre la balise et la rive.",r:'Règl. app. 8, IV.B.2'},
  {k:'epiG',x:112,y:-2700,lamp:'IsoG',t:'Épi sur la rive gauche',d:"Digue de pierres qui avance dans l'eau depuis la rive gauche, signalée au bout par un cône vert pointe en haut (feu vert éventuel). En descendant, laissez-la à bâbord (votre gauche).",p:"La partie immergée de l'épi est dangereuse : passez au large.",r:'Règl. app. 8, IV.A.2'},
- {k:'losJ',x:32,y:-2950,lamp:'OcY',t:'Losange jaune à bande noire (rive gauche)',d:"Le chenal traverse ici : traversez la rivière en diagonale vers la rive droite.",p:"Sur la rive gauche, le losange peut être remplacé par une latte jaune en croix de Saint-André. De nuit : feu jaune à occultations régulières.",r:'Règl. app. 8, III.B.2'},
+ {k:'losJ',x:32,y:-2950,lamp:'OcY',t:'Losange jaune à bande noire (rive gauche)',d:"Le chenal traverse ici : traversez le chenal en diagonale vers la rive droite.",p:"Sur la rive gauche, le losange peut être remplacé par une latte jaune en croix de Saint-André. De nuit : feu jaune à occultations régulières.",r:'Règl. app. 8, III.B.2'},
  {k:'carJ',x:368,y:-3350,lamp:'OcY',t:'Carré jaune à bande noire (rive droite)',d:"Arrivée de la traversée. Deux panneaux l'un derrière l'autre forment un alignement qui donne l'axe.",p:"Visez l'alignement : quand les deux panneaux se superposent, vous êtes sur l'axe. Feux d'alignement jaunes (le feu arrière peut être fixe).",r:'Règl. app. 8, III.B.1 et 3.2'},
  {k:'carRB',x:368,y:-3700,lamp:'OcR',t:'Carré rouge et blanc (rive droite)',d:"Le chenal longe maintenant la rive droite.",p:"Officiel : panneau carré rouge avec deux bandes horizontales blanches ; feu rouge à occultations.",r:'Règl. app. 8, III.A.1'},
  {k:'epiD',x:290,y:-4050,lamp:'IsoR',t:'Épi sur la rive droite',d:"Digue de pierres qui avance dans l'eau depuis la rive droite, signalée au bout par un cône rouge pointe en bas (feu rouge éventuel). En descendant, laissez-la à tribord (votre droite).",p:"Les cônes peuvent être remplacés par des panneaux triangulaires blancs bordés de rouge ou de vert.",r:'Règl. app. 8, IV.A.1'},
@@ -187,7 +187,7 @@ const S=[
  {k:'bifFixe',x:200,y:-4790,lamp:'IsoW2',t:'Balise fixe de bifurcation',d:"Balise plantée sur la pointe du banc, là où le chenal se divise en deux : elle montre l'endroit à ne pas couper. Cône rouge pointe en bas AU-DESSUS d'un cône vert pointe en haut.",p:"Choisissez une branche et suivez ses limites ; ne coupez jamais par-dessus le banc.",r:'Règl. app. 8, IV.A.3'},
  {th:1,y:-5300,t:'Entrée de port',d:"Aux abords des entrées de ports, embouchures et dérivations, les protections de berges peuvent être signalées des deux côtés par les balises fixes (cônes).",p:"La navigation qui ENTRE dans le port est considérée comme MONTANTE.",r:'Règl. app. 8, IV.A.4'},
  {k:'bifCyl',x:200,y:-5560,lamp:'QR',t:'Bifurcation avec voyant cylindre rouge',d:"Le voyant indique le côté où il est préférable de passer (chenal principal). Lisez-la comme une marque de côté DROIT : en descendant, laissez-la à tribord, donc passez à sa gauche.",p:"Avec voyant, le feu devient scintillant continu, rouge (cylindre) ou vert (cône).",r:'Règl. app. 8, II.3'},
- {th:1,y:-6420,sea:1,t:'Vous débouchez sur un lac',d:"Sur les lacs et les voies navigables de grande largeur, le règlement prévoit un balisage supplémentaire : marques cardinales, danger isolé, eaux saines, et balisage particulier jaune.",p:"Ces marques sont dans le règlement des eaux intérieures (appendice 8, VI et VII) : elles sont au programme. Les régions A et B, l'épave et le « chenal préféré » de mer ne le sont pas.",r:'Règl. app. 8, VI et VII'},
+ {th:1,y:-6420,sea:1,t:'Vous débouchez en mer',d:"Le chenal s'ouvre sur la mer. On y rencontre les marques cardinales, le danger isolé, le balisage spécial jaune et les eaux saines (système de balisage IALA, région A en Europe). Le règlement des eaux intérieures prévoit exactement les mêmes marques pour les lacs et les voies navigables de grande largeur : elles sont au programme.",p:"En sortant vers la mer, les bouées latérales gardent le même côté : rouge à tribord, vert à bâbord. En mer, le sens du balisage va de la mer vers la terre : en ENTRANT au port, c'est l'inverse (rouge à bâbord).",r:'Règl. app. 8, VI et VII · balisage IALA, région A'},
  {th:1,y:-7150,sea:1,t:'Lire une cardinale',d:"Le nom indique le quadrant où passer par rapport à la marque. Imaginez les cônes comme la pointe d'un crayon : la mine montre où est le NOIR.",p:"Ouest : cônes en « W » (pointe à pointe). Est : en « E »/losange (base à base). Il faut connaître le nord réel (compas).",r:'Règl. app. 8, VI.A.1 · cours p. 22-24'},
  {k:'cardN',x:140,y:-7420,lamp:'N',sea:1,t:'Cardinale NORD',d:"Cônes pointes en haut, noir sur jaune. Le danger est au sud : passez au NORD.",p:"Le cours écrit « Nord : 12 scintillements » ; le règlement dit : scintillant CONTINU. Le 12 h n'est qu'un repère d'horloge.",r:'Règl. app. 8, VI.A.1'},
  {k:'cardE',x:212,y:-7900,lamp:'E',sea:1,t:'Cardinale EST',d:"Cônes opposés par la base, noir / jaune / noir. Le danger est à l'ouest : passez à l'EST.",p:"Scintillements groupés par 3 = 3 h sur l'horloge.",r:'Règl. app. 8, VI.A.1'},
@@ -197,8 +197,8 @@ const S=[
  {k:'speciale',x:300,y:-9620,lamp:'FlY',sea:1,t:'Balisage particulier (jaune)',d:"Jaune, voyant en croix de Saint-André jaune. Signale une zone : navigation interdite, dragage, ancrage, ski nautique, grande vitesse, câbles…",p:"Passez-la du MÊME CÔTÉ qu'un balisage normal. Feu jaune à éclats (jamais groupés par 2).",r:'Règl. app. 8, VII · cours p. 22'},
  {k:'saines',x:200,y:-10380,lamp:'LFl',sea:1,t:'Eaux saines',d:"Bandes verticales rouges et blanches, une sphère rouge. Axe ou milieu de chenal : l'eau est saine tout autour.",p:"Feu blanc : isophase, occultations, un éclat long toutes les 10 s, ou « A » en morse.",r:'Règl. app. 8, VI.B'},
 ];
-const INTRO={t:'Descente de la rivière jusqu’au lac',d:"Vous êtes un bateau avalant. Le bateau s'arrête 10 secondes à chaque balise et à chaque rappel théorique. Le petit voyant en haut à gauche montre le feu de la balise la nuit.",p:'',r:''};
-const END={t:'Fin du parcours',d:"Vous avez vu le balisage des eaux intérieures : marques de chenal, panneaux de rive, traversées, obstacles, bifurcations, puis le balisage des lacs (cardinales, danger isolé, balisage particulier, eaux saines).",p:"En remontant (montant), la rivière se lit à l'envers : vert à tribord, rouge à bâbord.",r:''};
+const INTRO={t:'Descente du chenal jusqu’à la mer',d:"Vous êtes un bateau avalant. Le bateau s'arrête 10 secondes à chaque balise et à chaque rappel théorique. Le petit voyant en haut à gauche montre le feu de la balise la nuit.",p:'',r:''};
+const END={t:'Fin du parcours',d:"Vous avez vu le balisage des eaux intérieures : marques de chenal, panneaux de rive, traversées, obstacles, bifurcations, puis, en mer, les cardinales, le danger isolé, le balisage spécial et les eaux saines.",p:"En remontant (montant), ou en entrant au port depuis la mer, tout se lit à l'envers : vert à tribord, rouge à bâbord.",r:''};
 
 /* monde */
 const world=document.getElementById('world'); let h='';
@@ -226,7 +226,7 @@ function setLamp(k){ lampKey=k||null; lampT=0; $('lamp').hidden=!lampKey; if(lam
 function lampTick(dt){ if(!lampKey) return; const seq=RH[lampKey].s; const per=seq.reduce((a,b)=>a+b[0],0); lampT=(lampT+dt)%per; let t=lampT, col=null; for(const [d,c] of seq){ if(t<d){col=c;break;} t-=d; }
   const dot=$('lampDot'); dot.style.background=col||'#2a2f36'; dot.style.boxShadow=col?`0 0 12px ${col}`:'none'; }
 function render(){ const p=at(s); boat.setAttribute('transform',`translate(${p.x} ${p.y}) rotate(${p.a})`); world.setAttribute('transform',`translate(0 ${BOAT_SCREEN_Y-p.y})`);
-  const sea=p.y<-6350; $('hudL').textContent=sea?'Lac':'Rive gauche'; $('hudR').textContent=sea?'Lac':'Rive droite'; $('flow').textContent=sea?'↑ vous traversez le lac':'↑ sens du courant · vous descendez (avalant)';
+  const sea=p.y<-6350; $('hudL').textContent=sea?'Mer':'Rive gauche'; $('hudR').textContent=sea?'Mer':'Rive droite'; $('flow').textContent=sea?'↑ vous êtes en mer':'↑ sens du courant · vous descendez (avalant)';
   S.forEach((st,i)=>{ if(!st.k) return; const el=$('m'+i); el.classList.toggle('on',p.y-st.y<520); el.classList.toggle('cur',i===idx&&mode==='read'); }); }
 function show(c,label){ $('step').textContent=label; $('ttl').textContent=c.t; $('txt').textContent=c.d; $('trap').hidden=!c.p; $('trap').textContent=c.p?('À retenir : '+c.p):''; $('ref').textContent=c.r||''; }
 function startRead(i){ idx=i; mode='read'; timer=READ; const st=S[i]; const nb=S.filter(x=>x.k).length; const kn=S.slice(0,i+1).filter(x=>x.k).length;
