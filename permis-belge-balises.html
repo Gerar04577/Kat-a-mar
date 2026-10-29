@@ -69,7 +69,7 @@ button:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
 
 
 <div class="wrap">
-  <header><h1>Descente balisée</h1><span class="ver">version 3.3 · permis fluvial belge</span></header>
+  <header><h1>Descente balisée</h1><span class="ver">version 3.4 · permis fluvial belge</span></header>
   <div class="stage">
     <svg id="river" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Chenal puis mer vus de dessus ; un bateau descend et rencontre les balises">
       <g id="world"></g>
@@ -164,7 +164,7 @@ const RH={
 };
 
 /* parcours : chenal (berges x 58 et 342) jusqu'à y=-6300, puis mer */
-const PATH=[[200,60],[200,-1850],[140,-2100],[150,-2650],[140,-2950],[265,-3350],[260,-3700],[250,-4050],[258,-4350],[230,-4600],[284,-4800],[286,-5200],[232,-5450],[232,-5580],[150,-5800],[128,-6150],[220,-6600],[232,-7000],[250,-7350],[300,-7500],[262,-7700],[280,-7900],[330,-8300],[330,-8600],[230,-8800],[220,-9000],[280,-9300],[230,-9650],[260,-10000],[240,-10400],[230,-10750]];
+const PATH=[[200,60],[200,-1850],[140,-2100],[150,-2650],[140,-2950],[265,-3350],[260,-3700],[250,-4050],[258,-4350],[230,-4600],[284,-4800],[286,-5200],[160,-5450],[150,-5580],[145,-5800],[128,-6150],[220,-6600],[232,-7000],[320,-7250],[320,-7480],[140,-7560],[262,-7700],[280,-7900],[320,-8250],[236,-8300],[100,-8330],[100,-8650],[230,-8800],[220,-9000],[280,-9300],[230,-9650],[260,-10000],[240,-10400],[230,-10750]];
 const S=[
  {th:1,y:-120,t:'Avalant, montant, rives',d:"Avalant = vers l'aval, dans le sens du courant. Montant = vers la source. Les rives se nomment en regardant vers l'aval : rive gauche à gauche, rive droite à droite.",p:"Le nom des rives ne change jamais, même quand vous remontez.",r:'Cours p. 15-20'},
  {k:'rouge',x:292,y:-450,lamp:'IsoR',t:'Bouée rouge : côté droit du chenal',d:"Rouge, cylindrique (ou voyant cylindre). En descendant, laissez-la à tribord (votre droite).",p:"En remontant, elle est à bâbord : la couleur suit la RIVE, pas votre bord.",r:'Règl. app. 8, II.1'},
