@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Premiers secours</title>
+<style>
+:root{
+  --bg:#EEF2F1; --surface-1:#E2E8E6; --surface-2:#FFFFFF; --text-primary:#13232B; --text-secondary:#4E5E66; --text-muted:#6F7D84;
+  --accent:#1F5F7A; --text-accent:#1A5068; --bg-accent:#DCEBF1; --border-accent:#3D7F9B;
+  --text-danger:#A3342A; --bg-danger:#F8E6E3; --text-ok:#2B6646; --bg-ok:#E1F0E6;
+  --border:#D3DBD8; --border-strong:#AEB9B5; --border-stronger:#7E8B87; --radius:8px;
+  --cg-f:#E1E6E4; --cg-s:#88938F; --cp-f:#EEEDFE; --cp-s:#534AB7; --ct-f:#E1F5EE; --ct-s:#0F6E56; --ct-t:#085041;
+  --cr-f:#FCEBEB; --cr-s:#A32D2D; --cr-t:#791F1F; --cc-f:#FAECE7; --cc-s:#993C1D; --cc-t:#712B13;
+  --f-body:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif; --f-mono:ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font:400 16px/1.55 var(--f-body)}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg);color:var(--text-accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--border)}
+.wrap{max-width:680px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));display:grid;gap:24px}
+header{display:grid;gap:8px}
+.ver{font:500 12px/1.4 var(--f-mono);color:var(--text-muted)}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+h1{font-size:24px;line-height:1.15;margin:0}
+h2{font-size:20px;line-height:1.2;margin:0}
+p{margin:0}
+.lead{color:var(--text-secondary)}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{font:500 13px var(--f-mono);color:var(--text-accent);text-decoration:none;border:1px solid var(--border-strong);border-radius:999px;padding:4px 11px;background:var(--surface-2)}
+section{display:grid;gap:14px;padding-top:20px;border-top:1px solid var(--border-strong);scroll-margin-top:56px}
+.q{font-weight:600}
+.ans{display:grid;gap:6px;font-size:15px}
+.ans div{padding:8px 12px;border-radius:var(--radius)}
+.trap{background:var(--surface-1)}
+.trap ul{margin:4px 0 0;padding-left:18px;display:grid;gap:6px}
+.trap b{color:var(--text-danger);font-weight:600}
+.ok{background:var(--bg-ok);color:var(--text-ok)}
+.warn{background:var(--bg-accent);color:var(--text-accent)}
+.tag{font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;display:block;opacity:.85}
+.stage{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;display:grid;gap:10px;min-width:0}
+svg{display:block;width:100%;height:auto}
+svg .th{font:600 14px var(--f-body);fill:var(--text-primary)}
+svg .ts{font:400 12px var(--f-body);fill:var(--text-secondary)}
+rect.c-gray{fill:var(--cg-f);stroke:var(--cg-s)}
+.c-purple rect,rect.c-purple{fill:var(--cp-f);stroke:var(--cp-s)}
+.c-teal rect,rect.c-teal{fill:var(--ct-f);stroke:var(--ct-s)} .c-teal text{fill:var(--ct-t)}
+.c-red rect{fill:var(--cr-f);stroke:var(--cr-s)} .c-red text{fill:var(--cr-t)}
+.c-coral rect{fill:var(--cc-f);stroke:var(--cc-s)} .c-coral text{fill:var(--cc-t)}
+.pbar{height:4px;background:var(--surface-1);border-radius:2px;overflow:hidden}
+.pbar div{height:4px;width:0;background:var(--accent)}
+.box{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;min-height:130px;background:var(--bg)}
+.st{font-weight:700;font-size:16px;line-height:1.3}
+.tx{font-size:15px;color:var(--text-secondary);margin-top:4px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer}
+.dh{font:500 12px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted)}
+.dl{display:flex;flex-wrap:wrap;gap:6px}
+.df{font:inherit;font-size:13px;min-height:36px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-1);color:var(--text-primary);cursor:pointer}
+.df.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent)}
+.dx{font-size:15px;color:var(--text-secondary);border-left:2px solid var(--border-accent);padding-left:10px;min-height:44px}
+.src{font-size:13px;color:var(--text-muted)}
+@media (prefers-reduced-motion:no-preference){.hl{animation:hl .45s ease-in-out infinite}@keyframes hl{50%{opacity:.18}}}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="wrap">
+<header>
+  <div class="ver">Premiers secours · version 1.12 · côtier · piqûre de méduse</div>
+  <h1>Premiers secours : piqûre de méduse</h1>
+  <p class="lead">Les premiers secours sont au programme du complément côtier (« Soins des blessures »). L'animation tourne seule ; « Pause » et les boutons d'étape permettent d'aller à votre rythme. Touchez un mot pour sa définition.</p>
+</header>
+
+<section id="q30">
+  <span class="eyebrow">Sécurité · premiers secours</span>
+  <h2>Piqûre de méduse</h2>
+  <p class="q">Votre partenaire est allé nager et a senti un coup soudain à la jambe. À la sortie de l'eau, sa jambe brûle, démange et fait mal. Que faites-vous ?</p>
+  <div class="ans">
+    <div class="ok"><span class="tag">Les bons gestes</span>Rincer à l'eau de mer, couvrir de sable sec sans frotter, laisser sécher puis racler avec une carte rigide, rincer à nouveau à l'eau de mer. Surveiller.</div>
+    <div class="trap"><span class="tag">Les pièges</span><ul>
+      <li><b>« Rincer avec de l'eau » :</b> sans préciser « de mer », c'est faux. L'eau douce fait éclater les cellules urticantes restées sur la peau.</li>
+      <li><b>Frotter ou toucher à mains nues :</b> cela fait éclater d'autres cellules. On racle avec une carte rigide.</li>
+      <li><b>Le sel :</b> ce n'est pas un geste recommandé. Le sable sec sert à piéger les filaments.</li>
+      <li><b>Uriner sur la piqûre, inciser, aspirer le venin :</b> à proscrire.</li>
+      <li><b>Pommade ou gel :</b> l'ARS Nouvelle-Aquitaine les déconseille sur la piqûre. Certaines fiches parlent d'une crème apaisante une fois les filaments retirés : si la douleur persiste, demandez conseil à un pharmacien ou à un médecin.</li>
+    </ul></div>
+  </div>
+  <div class="stage" data-m="q30">
+<svg viewBox="0 0 380 250" role="img"><title>Soins d'une piqûre de méduse</title>
+<text id="tg1" class="th" x="40" y="30" style="fill:var(--text-accent)" opacity="0">Eau de mer : oui</text>
+<text id="tg2" class="th" x="340" y="30" text-anchor="end" style="fill:var(--text-danger)" opacity="0">Eau douce : non</text>
+<g id="drops"></g>
+<rect id="leg" x="30" y="110" width="320" height="60" rx="30" fill="#E8B48F"/>
+<text class="ts" x="60" y="196" text-anchor="middle">Cheville</text>
+<text class="ts" x="320" y="196" text-anchor="middle">Genou</text>
+<g id="wh" fill="#E24B4A" opacity=".55"><ellipse cx="150" cy="140" rx="22" ry="6"/><ellipse cx="195" cy="132" rx="26" ry="5"/><ellipse cx="240" cy="146" rx="20" ry="5"/></g>
+<g id="fil" fill="none" stroke="#534AB7" stroke-width="1.5"><path d="M120 138 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0"/><path d="M135 150 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0"/><path d="M150 126 q10 -6 20 0 t20 0 t20 0 t20 0"/></g>
+<g id="sand"></g>
+<rect id="card" x="0" y="96" width="36" height="88" rx="5" fill="#85B7EB" stroke="#185FA5" stroke-width="1" opacity="0"/>
+<g id="sos" class="c-red" opacity="0"><rect x="140" y="206" width="100" height="32" rx="6" stroke-width="0.5"/><text class="th" x="190" y="222" text-anchor="middle" dominant-baseline="central">112</text></g>
+</svg>
+<div class="ui"></div>
+  </div>
+</section>
+<p class="src">Sources : communiqué de l'ARS Nouvelle-Aquitaine sur les piqûres de méduse (rincer à l'eau de mer ; sable sec puis raclage avec une carte ; ne pas frotter, ne pas rincer à l'eau douce, pas d'urine, pas de pommade ni de gel) ; RTBF, « Baignade estivale en mer : ne restez pas médusés ». Matière : complément au brevet général, « Premiers secours ». Question tirée du QCM booost-permis.</p>
+</div>
+
+<script>
+const UI='<div class="pbar"><div></div></div><div class="box"><div class="st"></div><div class="tx"></div></div><div class="ctl"><button class="btn" data-a="p">◀ Précédente</button><button class="btn" data-a="pp">Pause</button><button class="btn" data-a="n">Suivante ▶</button></div><div class="dh">Définitions — touchez un mot</div><div class="dl"></div><div class="dx">Choisissez un mot ci-dessus.</div>';
+const sg=(t,a,b)=>Math.min(1,Math.max(0,(t-a)/(b-a))),ez=u=>u<.5?2*u*u:1-2*(1-u)*(1-u),L=(a,b,u)=>a+(b-a)*u;
+function mod(name,{T,END,C,D,draw,init}){
+  const root=document.querySelector('[data-m="'+name+'"]');root.querySelector('.ui').innerHTML=UI;
+  const $=id=>root.querySelector('#'+id),q=s=>root.querySelector(s);
+  let t=0,last=null,run=true,vis=true;
+  try{new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(root)}catch(e){}
+  if(init)init($);
+  const ph=()=>{let p=0;T.forEach((v,k)=>{if(t>=v-0.01)p=k});return p;};
+  function frame(ts){if(last!==null&&run&&vis){t+=Math.min(.1,(ts-last)/1000);if(t>=END)t=0;}last=ts;draw(t,$);const p=ph();q('.st').textContent=C[p][0];q('.tx').textContent=C[p][1];q('.pbar div').style.width=(t/END*100)+'%';requestAnimationFrame(frame);}
+  q('[data-a="pp"]').onclick=e=>{run=!run;e.target.textContent=run?'Pause':'Lecture';};
+  q('[data-a="n"]').onclick=()=>{const p=ph();t=p<T.length-1?T[p+1]:0;};
+  q('[data-a="p"]').onclick=()=>{const p=ph();t=(t-T[p]>1||p===0)?T[p]:T[p-1];};
+  let cur=[],tm;
+  Object.keys(D).forEach(k=>{const b=document.createElement('button');b.className='df';b.textContent=k;b.onclick=()=>{root.querySelectorAll('.df').forEach(x=>x.classList.remove('on'));b.classList.add('on');q('.dx').textContent=D[k][0];cur.forEach(i=>$(i).classList.remove('hl'));cur=D[k][1];if(D[k][2]!==undefined)t=D[k][2];cur.forEach(i=>$(i).classList.add('hl'));clearTimeout(tm);tm=setTimeout(()=>cur.forEach(i=>$(i).classList.remove('hl')),3500);};q('.dl').appendChild(b);});
+  draw(0,$);requestAnimationFrame(frame);
+}
+
+(function(){
+const NS='http://www.w3.org/2000/svg';let dr=[];
+mod('q30',{T:[0,4,9,14,19,25],END:31,
+C:[["1. Reconnaître et sortir de l'eau","Douleur brutale, brûlure, démangeaisons, traces rouges en lignes : piqûre de méduse probable. On sort de l'eau, on reste calme, on ne frotte pas : frotter fait éclater d'autres cellules urticantes."],["2. Rincer à l'eau de mer","Jamais à l'eau douce : elle fait éclater les cellules urticantes restées sur la peau, qui injectent encore du venin. Une réponse qui dit seulement « rincer avec de l'eau » est donc fausse."],["3. Sable sec, sans frotter","On recouvre la zone de sable sec et on le laisse sécher : les filaments presque invisibles se collent dedans. Pas de sel : ce n'est pas un geste recommandé."],["4. Racler avec une carte rigide","On racle doucement avec une carte (carte bancaire, carton rigide), jamais à mains nues. Les filaments partent avec le sable."],["5. Rincer à nouveau à l'eau de mer","Nouveau rinçage à l'eau de mer. Pas de pommade ni de gel sur la piqûre ; si la douleur persiste, demandez conseil à un pharmacien ou à un médecin."],["6. Surveiller","Malaise, perte de connaissance, cœur qui s'accélère, vertiges, vomissements, difficulté à respirer : appeler le 112 sans attendre."]],
+D:{"Cellules urticantes":["Minuscules capsules sur les filaments de la méduse. Au contact, elles éclatent et injectent un venin qui brûle. Beaucoup restent collées à la peau sans avoir encore éclaté.",["fil"],1],"Filaments":["Les longs fils (tentacules) de la méduse, souvent presque invisibles. Ce sont eux qui piquent (lignes violettes).",["fil"],1],"Eau douce":["Eau du robinet ou eau en bouteille, sans sel. Elle fait éclater les cellules urticantes restantes : à éviter.",["tg2"],5],"Eau de mer":["Elle rince sans faire éclater les cellules urticantes : c'est elle qu'on utilise.",["tg1"],5],"Carte rigide":["Carte bancaire ou carton rigide, pour racler le sable et les filaments sans les toucher.",["card"],15],"112":["Numéro d'urgence européen, valable en Belgique, en France et en Espagne.",["sos"],26]},
+init($){for(let i=0;i<7;i++){const c=document.createElementNS(NS,'circle');c.setAttribute('r',3.5);c.setAttribute('fill','#378ADD');$('drops').appendChild(c);dr.push(c);}
+ for(let i=0;i<70;i++){const c=document.createElementNS(NS,'circle');c.setAttribute('cx',115+Math.random()*150);c.setAttribute('cy',120+Math.random()*40);c.setAttribute('r',1.6);c.setAttribute('fill','#BA7517');$('sand').appendChild(c);}},
+draw(t,$){
+ const w=(t>=4&&t<9)||(t>=19&&t<22.5);
+ dr.forEach((c,i)=>{c.setAttribute('cx',125+i*22);c.setAttribute('cy',42+((t*110+i*23)%62));c.setAttribute('opacity',w?1:0);});
+ $('tg1').setAttribute('opacity',w?1:0);$('tg2').setAttribute('opacity',t>=4&&t<9?1:0);
+ const sd=sg(t,9.5,12),cl=sg(t,14.5,18.5);
+ $('sand').setAttribute('opacity',t<14?sd:1-cl);$('fil').setAttribute('opacity',1-cl);
+ const cd=$('card');cd.setAttribute('opacity',t>=14&&t<19?1:0);cd.setAttribute('x',95+cl*165);
+ $('wh').setAttribute('opacity',.55-.3*sg(t,22.5,24.5));
+ $('sos').setAttribute('opacity',t>=25?1:0);}});
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manœuvres de port</title>
+<style>
+:root{
+  --bg:#EEF2F1; --surface-1:#E2E8E6; --surface-2:#FFFFFF; --text-primary:#13232B; --text-secondary:#4E5E66; --text-muted:#6F7D84;
+  --accent:#1F5F7A; --text-accent:#1A5068; --bg-accent:#DCEBF1; --border-accent:#3D7F9B;
+  --text-danger:#A3342A; --bg-danger:#F8E6E3; --text-ok:#2B6646; --bg-ok:#E1F0E6;
+  --border:#D3DBD8; --border-strong:#AEB9B5; --border-stronger:#7E8B87; --radius:8px;
+  --cg-f:#E1E6E4; --cg-s:#88938F; --cp-f:#EEEDFE; --cp-s:#534AB7; --ct-f:#E1F5EE; --ct-s:#0F6E56; --ct-t:#085041;
+  --cr-f:#FCEBEB; --cr-s:#A32D2D; --cr-t:#791F1F; --cc-f:#FAECE7; --cc-s:#993C1D; --cc-t:#712B13;
+  --f-body:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif; --f-mono:ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font:400 16px/1.55 var(--f-body)}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg);color:var(--text-accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--border)}
+.wrap{max-width:680px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));display:grid;gap:24px}
+header{display:grid;gap:8px}
+.ver{font:500 12px/1.4 var(--f-mono);color:var(--text-muted)}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+h1{font-size:24px;line-height:1.15;margin:0}
+h2{font-size:20px;line-height:1.2;margin:0}
+p{margin:0}
+.lead{color:var(--text-secondary)}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{font:500 13px var(--f-mono);color:var(--text-accent);text-decoration:none;border:1px solid var(--border-strong);border-radius:999px;padding:4px 11px;background:var(--surface-2)}
+section{display:grid;gap:14px;padding-top:20px;border-top:1px solid var(--border-strong);scroll-margin-top:56px}
+.q{font-weight:600}
+.ans{display:grid;gap:6px;font-size:15px}
+.ans div{padding:8px 12px;border-radius:var(--radius)}
+.trap{background:var(--surface-1)}
+.trap ul{margin:4px 0 0;padding-left:18px;display:grid;gap:6px}
+.trap b{color:var(--text-danger);font-weight:600}
+.ok{background:var(--bg-ok);color:var(--text-ok)}
+.warn{background:var(--bg-accent);color:var(--text-accent)}
+.tag{font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;display:block;opacity:.85}
+.stage{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;display:grid;gap:10px;min-width:0}
+svg{display:block;width:100%;height:auto}
+svg .th{font:600 14px var(--f-body);fill:var(--text-primary)}
+svg .ts{font:400 12px var(--f-body);fill:var(--text-secondary)}
+rect.c-gray{fill:var(--cg-f);stroke:var(--cg-s)}
+.c-purple rect,rect.c-purple{fill:var(--cp-f);stroke:var(--cp-s)}
+.c-teal rect,rect.c-teal{fill:var(--ct-f);stroke:var(--ct-s)} .c-teal text{fill:var(--ct-t)}
+.c-red rect{fill:var(--cr-f);stroke:var(--cr-s)} .c-red text{fill:var(--cr-t)}
+.c-coral rect{fill:var(--cc-f);stroke:var(--cc-s)} .c-coral text{fill:var(--cc-t)}
+.pbar{height:4px;background:var(--surface-1);border-radius:2px;overflow:hidden}
+.pbar div{height:4px;width:0;background:var(--accent)}
+.box{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;min-height:130px;background:var(--bg)}
+.st{font-weight:700;font-size:16px;line-height:1.3}
+.tx{font-size:15px;color:var(--text-secondary);margin-top:4px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer}
+.dh{font:500 12px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted)}
+.dl{display:flex;flex-wrap:wrap;gap:6px}
+.df{font:inherit;font-size:13px;min-height:36px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-1);color:var(--text-primary);cursor:pointer}
+.df.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent)}
+.dx{font-size:15px;color:var(--text-secondary);border-left:2px solid var(--border-accent);padding-left:10px;min-height:44px}
+.src{font-size:13px;color:var(--text-muted)}
+@media (prefers-reduced-motion:no-preference){.hl{animation:hl .45s ease-in-out infinite}@keyframes hl{50%{opacity:.18}}}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="wrap">
+<header>
+  <div class="ver">Manœuvres de port · version 1.9 · pratique · départ sur garde montante · accostage en écluse</div>
+  <h1>Manœuvres de port animées</h1>
+  <p class="lead">Deux manœuvres où l'effet du pas de l'hélice décide de tout. Chaque animation tourne seule ; « Pause » et les boutons d'étape permettent d'aller à votre rythme. Touchez un mot pour sa définition.</p>
+  <nav aria-label="Manœuvres"><a href="#q28">Départ sur garde montante</a><a href="#q29">Écluse, vent arrière</a></nav>
+</header>
+
+<section id="q28">
+  <span class="eyebrow">Manœuvre · hélice à pas gauche</span>
+  <h2>Départ sur garde montante</h2>
+  <p class="q">Un voilier de 12 m avec une hélice à pas gauche est amarré côté tribord ; un vent de travers de 25 nœuds le pousse contre le ponton. Pour écarter le navire du ponton :</p>
+  <div class="ans">
+    <div class="ok"><span class="tag">Bonne réponse</span>Marche arrière sur la garde montante, puis marche avant safran à bâbord.</div>
+    <div class="trap"><span class="tag">Les pièges</span><ul>
+      <li><b>Marche arrière sur la garde descendante :</b> la garde descendante empêche d'avancer, pas de reculer. En marche arrière elle se détend : rien ne retient l'arrière, le bateau recule le long du ponton sans pivoter.</li>
+      <li><b>Marche avant sur la garde montante :</b> en marche avant, la garde montante se détend à son tour. L'avant reste plaqué par le vent, le bateau n'ouvre pas.</li>
+      <li><b>Confondre montante et descendante :</b> la garde montante part de l'arrière du bateau vers l'avant sur le quai et empêche de reculer ; la descendante part de l'avant du bateau vers l'arrière sur le quai et empêche d'avancer.</li>
+    </ul></div>
+  </div>
+  <div class="stage" data-m="q28">
+<svg viewBox="0 0 380 400" role="img"><title>Départ sur garde montante avec largage</title>
+<defs><marker id="arrow28" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect class="c-gray" x="258" y="30" width="40" height="350" rx="4" stroke-width="0.5"/>
+<text class="ts" x="278" y="20" text-anchor="middle">Ponton</text>
+<g id="tq"><rect x="260" y="144" width="9" height="12" rx="2" fill="#5F5E5A"/><rect x="260" y="284" width="9" height="12" rx="2" fill="#5F5E5A"/></g>
+<text class="ts" x="12" y="178">Vent 25 nd</text>
+<g id="wind" stroke="#888780" stroke-width="1.5"><line x1="12" y1="200" x2="52" y2="200" marker-end="url(#arrow28)"/><line x1="12" y1="250" x2="52" y2="250" marker-end="url(#arrow28)"/><line x1="12" y1="300" x2="52" y2="300" marker-end="url(#arrow28)"/></g>
+<g id="bt">
+<path d="M210 60 Q250 120 250 200 L250 330 L170 330 L170 200 Q170 120 210 60 Z" fill="var(--surface-1)" stroke="var(--border-stronger)" stroke-width="1"/>
+<text class="ts" x="210" y="128" text-anchor="middle">Avant</text>
+<g id="sides"><text class="ts" x="188" y="230" text-anchor="middle">Bâbord</text><text class="ts" x="232" y="230" text-anchor="middle">Tribord</text></g>
+<text class="ts" x="210" y="296" text-anchor="middle">Arrière</text>
+<rect x="234" y="105" width="8" height="10" rx="2" fill="#5F5E5A"/><rect x="240" y="312" width="8" height="10" rx="2" fill="#5F5E5A"/>
+<circle id="hp" cx="210" cy="322" r="5" fill="none" stroke="#BA7517" stroke-width="1.5"/>
+<line id="rd" x1="210" y1="330" x2="210" y2="354" stroke="#185FA5" stroke-width="4" stroke-linecap="round"/>
+<line id="pw" x1="218" y1="370" x2="248" y2="370" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arrow28)" opacity="0"/>
+<line id="ma" x1="158" y1="280" x2="158" y2="330" stroke="#534AB7" stroke-width="2" marker-end="url(#arrow28)" opacity="0"/>
+<line id="mv" x1="158" y1="190" x2="158" y2="130" stroke="#534AB7" stroke-width="2" marker-end="url(#arrow28)" opacity="0"/>
+</g>
+<path id="rgd" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+<circle id="egd" r="4" fill="none" stroke="#D85A30" stroke-width="2"/>
+<circle id="cgd" r="6" fill="none" stroke="#D85A30" stroke-width="2" opacity="0"/>
+<path id="rgm" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+<circle id="egm" r="4" fill="none" stroke="#1D9E75" stroke-width="2"/>
+<circle id="cgm" r="6" fill="none" stroke="#1D9E75" stroke-width="2" opacity="0"/>
+<g id="lgd" class="c-coral" opacity="0"><rect x="304" y="278" width="72" height="24" rx="4" stroke-width="0.5"/><text class="th" x="340" y="290" text-anchor="middle" dominant-baseline="central">Largage</text></g>
+<g id="lgm" class="c-teal" opacity="0"><rect x="304" y="138" width="72" height="24" rx="4" stroke-width="0.5"/><text class="th" x="340" y="150" text-anchor="middle" dominant-baseline="central">Largage</text></g>
+</svg>
+<div class="ui"></div>
+  </div>
+</section>
+
+<section id="q29">
+  <span class="eyebrow">Manœuvre · hélice à pas droit</span>
+  <h2>Accoster dans une écluse, vent arrière</h2>
+  <p class="q">Vous accostez dans une écluse avec un voilier dont l'hélice est à pas droit ; vent de 20 nœuds venant de l'arrière.</p>
+  <div class="ans">
+    <div class="ok"><span class="tag">Bonne réponse</span>J'accoste par bâbord. J'amarre d'abord par l'arrière, ensuite par l'avant.</div>
+    <div class="trap"><span class="tag">Les pièges</span><ul>
+      <li><b>Amarrer l'avant d'abord :</b> tenu par l'avant seulement, le bateau pivote sous le vent arrière comme une girouette et l'arrière part vers le milieu de l'écluse.</li>
+      <li><b>Accoster par tribord :</b> avec une hélice à pas droit, le coup de marche arrière envoie l'arrière vers bâbord. Accosté à tribord, il l'écarterait du mur.</li>
+      <li><b>Confondre pas droit et pas gauche :</b> pas gauche = effet inverse, l'arrière part vers tribord en marche arrière (voir « Effet du pas de l'hélice »).</li>
+      <li><b>Règle à retenir :</b> on amarre d'abord le bout du bateau qui reçoit le vent ou le courant.</li>
+    </ul></div>
+  </div>
+  <div class="stage" data-m="q29">
+<svg viewBox="0 0 380 420" role="img"><title>Accostage dans une écluse</title>
+<defs><marker id="arrow29" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect id="wl" class="c-gray" x="30" y="24" width="30" height="396" stroke-width="0.5"/>
+<rect class="c-gray" x="320" y="24" width="30" height="396" stroke-width="0.5"/>
+<text class="ts" x="45" y="16" text-anchor="middle">Bâbord</text>
+<text class="ts" x="190" y="16" text-anchor="middle">Écluse</text>
+<text class="ts" x="335" y="16" text-anchor="middle">Tribord</text>
+<g id="bol"><circle cx="45" cy="165" r="6" fill="#444441"/><circle cx="45" cy="262" r="6" fill="#444441"/></g>
+<g id="wind" stroke="#888780" stroke-width="1.5"><line x1="265" y1="410" x2="265" y2="360" marker-end="url(#arrow29)"/><line x1="298" y1="400" x2="298" y2="350" marker-end="url(#arrow29)"/></g>
+<text class="ts" x="282" y="338" text-anchor="middle">Vent</text>
+<g id="real">
+<g id="boat">
+<path d="M0 -80 Q25 -45 25 0 L25 70 Q25 80 15 80 L-15 80 Q-25 80 -25 70 L-25 0 Q-25 -45 0 -80 Z" fill="var(--surface-1)" stroke="var(--border-stronger)" stroke-width="1"/>
+<text class="ts" x="0" y="-40" text-anchor="middle">Avant</text>
+<text class="ts" x="0" y="62" text-anchor="middle">Arrière</text>
+<line id="rev" x1="0" y1="-18" x2="0" y2="30" stroke="#534AB7" stroke-width="2.5" marker-end="url(#arrow29)" opacity="0"/>
+<line id="kick" x1="18" y1="96" x2="-26" y2="96" stroke="#BA7517" stroke-width="2" marker-end="url(#arrow29)" opacity="0"/>
+</g>
+<line id="ls" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" opacity="0"/>
+<line id="lb" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" opacity="0"/>
+</g>
+<g id="ghost" opacity="0"><path d="M0 -80 Q25 -45 25 0 L25 70 Q25 80 15 80 L-15 80 Q-25 80 -25 70 L-25 0 Q-25 -45 0 -80 Z" fill="none" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 3"/></g>
+<line id="gl" x1="74" y1="164" x2="45" y2="165" stroke="#E24B4A" stroke-width="3" opacity="0"/>
+<text id="gt" class="ts" x="215" y="318" text-anchor="middle" style="fill:var(--text-danger)" opacity="0">L'arrière s'écarte du mur</text>
+</svg>
+<div class="ui"></div>
+  </div>
+</section>
+<p class="src">Sources : définitions des gardes (« la garde montante, de l'arrière du bateau vers l'avant sur le quai, empêche le bateau de reculer ») : fiche « Amarrage » du club YCSF ; effet du pas de l'hélice : page Kat-a-Mar « Effet du pas de l'hélice » (Tome 3). Questions tirées du QCM booost-permis.</p>
+</div>
+
+<script>
+const UI='<div class="pbar"><div></div></div><div class="box"><div class="st"></div><div class="tx"></div></div><div class="ctl"><button class="btn" data-a="p">◀ Précédente</button><button class="btn" data-a="pp">Pause</button><button class="btn" data-a="n">Suivante ▶</button></div><div class="dh">Définitions — touchez un mot</div><div class="dl"></div><div class="dx">Choisissez un mot ci-dessus.</div>';
+const sg=(t,a,b)=>Math.min(1,Math.max(0,(t-a)/(b-a))),ez=u=>u<.5?2*u*u:1-2*(1-u)*(1-u),L=(a,b,u)=>a+(b-a)*u;
+function mod(name,{T,END,C,D,draw,init}){
+  const root=document.querySelector('[data-m="'+name+'"]');root.querySelector('.ui').innerHTML=UI;
+  const $=id=>root.querySelector('#'+id),q=s=>root.querySelector(s);
+  let t=0,last=null,run=true,vis=true;
+  try{new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(root)}catch(e){}
+  if(init)init($);
+  const ph=()=>{let p=0;T.forEach((v,k)=>{if(t>=v-0.01)p=k});return p;};
+  function frame(ts){if(last!==null&&run&&vis){t+=Math.min(.1,(ts-last)/1000);if(t>=END)t=0;}last=ts;draw(t,$);const p=ph();q('.st').textContent=C[p][0];q('.tx').textContent=C[p][1];q('.pbar div').style.width=(t/END*100)+'%';requestAnimationFrame(frame);}
+  q('[data-a="pp"]').onclick=e=>{run=!run;e.target.textContent=run?'Pause':'Lecture';};
+  q('[data-a="n"]').onclick=()=>{const p=ph();t=p<T.length-1?T[p+1]:0;};
+  q('[data-a="p"]').onclick=()=>{const p=ph();t=(t-T[p]>1||p===0)?T[p]:T[p-1];};
+  let cur=[],tm;
+  Object.keys(D).forEach(k=>{const b=document.createElement('button');b.className='df';b.textContent=k;b.onclick=()=>{root.querySelectorAll('.df').forEach(x=>x.classList.remove('on'));b.classList.add('on');q('.dx').textContent=D[k][0];cur.forEach(i=>$(i).classList.remove('hl'));cur=D[k][1];if(D[k][2]!==undefined)t=D[k][2];cur.forEach(i=>$(i).classList.add('hl'));clearTimeout(tm);tm=setTimeout(()=>cur.forEach(i=>$(i).classList.remove('hl')),3500);};q('.dl').appendChild(b);});
+  draw(0,$);requestAnimationFrame(frame);
+}
+
+(function(){
+let a=0,tx=0,ty=0;
+const W=(x,y)=>{const r=a*Math.PI/180,dx=x-245,dy=y-320;return[245+dx*Math.cos(r)-dy*Math.sin(r)+tx,320+dx*Math.sin(r)+dy*Math.cos(r)+ty];};
+function rope($,id,P,Q,s,h,vis,taut){const p=$('r'+id),e=$('e'+id);
+ if(!vis){p.setAttribute('d','');e.setAttribute('opacity',0);return;}
+ const qx=Q[0]+(P[0]-Q[0])*h,qy=Q[1]+(P[1]-Q[1])*h,k=s*(1-h)*32,mx=(P[0]+qx)/2-k,my=(P[1]+qy)/2+k*.5;
+ p.setAttribute('d',`M${P[0]} ${P[1]} Q${mx} ${my} ${qx} ${qy}`);p.setAttribute('stroke-width',taut?4:2.5);
+ e.setAttribute('cx',qx);e.setAttribute('cy',qy);e.setAttribute('opacity',h>0&&h<1?1:0);}
+mod('q28',{T:[0,5,12,18,25],END:32,
+C:[["1. La situation","Le bateau touche le ponton par son flanc tribord. Deux amarres le tiennent : la garde descendante (orange) et la garde montante (verte). Le vent le plaque contre le ponton : en avançant tout droit, l'arrière frotterait et le bateau ne décollerait pas."],["2. Largage de la garde descendante","On détend l'amarre orange, on la défait du taquet du ponton, et l'équipier la ramène à bord où elle est lovée (enroulée). Il ne reste que la garde montante."],["3. Marche arrière, doucement","Le bateau veut reculer (flèche violette). La garde montante se tend et le retient par l'arrière : il pivote, l'avant s'écarte du ponton malgré le vent. L'hélice à pas gauche pousse en plus l'arrière vers tribord (flèche orange), ce qui aide le pivot."],["4. Largage de la garde montante, safran à bâbord","L'avant pointe vers le large. On détend la garde verte, on la défait du taquet, on la ramène à bord. Puis on oriente le safran (bleu) vers bâbord."],["5. Marche avant : départ","En marche avant, safran à bâbord, le bateau s'éloigne du ponton. La garde descendante ne retient pas en marche arrière ; en marche avant, la garde montante se détend : ce sont les deux pièges."]],
+D:{"Larguer":["Détacher une amarre du taquet et la ramener à bord. C'est ce que montrent les étiquettes « Largage » qui clignotent.",["lgd","lgm"],6],"Taquet":["Pièce métallique (petits rectangles gris) sur laquelle on fixe une amarre, sur le ponton et sur le bateau.",["tq"]],"Lover":["Enrouler proprement l'amarre à bord une fois larguée (petit cercle près du taquet du bateau).",["cgd","cgm"],24],"Garde montante":["Amarre verte : de l'arrière du bateau vers l'avant du ponton. Elle empêche de reculer, donc sert de pivot en marche arrière.",["rgm"],1],"Garde descendante":["Amarre orange : de l'avant du bateau vers l'arrière du ponton. Elle empêche d'avancer.",["rgd"],1],"Safran":["Pale du gouvernail (bleue), sous l'arrière. Safran à bâbord : la pale va vers la gauche, le bateau tourne à gauche en marche avant.",["rd"],24],"Bâbord / tribord":["En regardant vers l'avant : bâbord = gauche, tribord = droite.",["sides"]],"Hélice à pas gauche":["En marche arrière, elle pousse l'arrière vers tribord (flèche orange).",["hp","pw"],14]},
+draw(t,$){
+ a=-25*ez(sg(t,13,17));const m=ez(sg(t,25.5,30.5));tx=-60*m;ty=-50*m;
+ $('bt').setAttribute('transform',`translate(${tx} ${ty}) rotate(${a} 245 320)`);
+ const B=W(238,110),S=W(244,317);
+ rope($,'gd',B,[264,290],sg(t,6,7.5),ez(sg(t,7.8,10.5)),t<10.6,false);
+ const cd=$('cgd');cd.setAttribute('cx',B[0]-10);cd.setAttribute('cy',B[1]+8);cd.setAttribute('opacity',t>=10.5?1:0);
+ rope($,'gm',S,[264,150],sg(t,19,20.5),ez(sg(t,20.8,23.3)),t<23.4,t>=13&&t<17.5);
+ const cm=$('cgm');cm.setAttribute('cx',S[0]-12);cm.setAttribute('cy',S[1]-6);cm.setAttribute('opacity',t>=23.3?1:0);
+ const bl=v=>v?(Math.floor(t*3)%2?1:.35):0;
+ $('lgd').setAttribute('opacity',bl(t>=6&&t<10.5));$('lgm').setAttribute('opacity',bl(t>=19&&t<23.3));
+ $('rd').setAttribute('transform',`rotate(${30*sg(t,23.5,24.5)} 210 330)`);
+ const mo=t>=13&&t<17.5;$('ma').setAttribute('opacity',mo?1:0);$('pw').setAttribute('opacity',mo?1:0);
+ $('mv').setAttribute('opacity',t>=25.5&&t<31?1:0);}});
+})();
+(function(){
+const W=(cx,cy,a,x,y)=>{const r=a*Math.PI/180;return[cx+x*Math.cos(r)-y*Math.sin(r),cy+x*Math.sin(r)+y*Math.cos(r)]};
+function seg($,id,P,Q,u){const l=$(id);if(u<=0){l.setAttribute('opacity',0);return;}l.setAttribute('opacity',1);l.setAttribute('x1',P[0]);l.setAttribute('y1',P[1]);l.setAttribute('x2',P[0]+(Q[0]-P[0])*u);l.setAttribute('y2',P[1]+(Q[1]-P[1])*u);}
+mod('q29',{T:[0,6,10.3,15.3,20],END:31,
+C:[["1. Entrée dans l'écluse","On entre lentement, l'avant légèrement tourné vers le mur de gauche (bâbord). Le vent de 20 nœuds souffle de l'arrière et pousse le bateau vers l'avant de l'écluse."],["2. Coup de marche arrière","Pour s'arrêter, on donne un coup de marche arrière (flèche violette). Avec une hélice à pas droit, la marche arrière envoie l'arrière vers bâbord (flèche orange) : l'arrière vient se coller au mur de gauche. C'est pourquoi on accoste par bâbord."],["3. On amarre d'abord l'arrière","L'équipier passe l'amarre arrière autour de la bitte. Le vent ne peut plus pousser le bateau vers l'avant, et l'arrière reste contre le mur."],["4. Puis l'avant","On amarre ensuite l'avant. Le bateau est tenu aux deux bouts : c'est la bonne réponse."],["5. Et si on amarrait l'avant d'abord ?","Tenu seulement par l'avant, le bateau pivote sous le vent arrière autour de son amarre avant, comme une girouette : l'arrière part vers le milieu de l'écluse. On amarre donc en premier le bout qui reçoit le vent, ici l'arrière."]],
+D:{"Écluse":["Bassin fermé par deux portes, qui fait monter ou descendre les bateaux d'un niveau d'eau à l'autre. Les murs latéraux s'appellent les bajoyers.",["wl"]],"Bitte":["Gros plot métallique fixé sur le mur de l'écluse, autour duquel on passe l'amarre (points sombres).",["bol"]],"Hélice à pas droit":["Vue de l'arrière, l'hélice tourne dans le sens des aiguilles d'une montre en marche avant. En marche arrière, l'arrière du bateau part vers bâbord (gauche).",["kick"],6.5],"Effet de pas":["Poussée latérale de l'hélice, surtout forte en marche arrière : l'arrière du bateau part sur le côté au lieu de reculer bien droit.",["kick"],6.5],"Accoster":["Venir se placer le long d'un mur ou d'un quai. « Accoster par bâbord » : le côté gauche du bateau touche le mur.",["boat"]],"Vent arrière":["Vent qui vient de derrière le bateau et le pousse vers l'avant.",["wind"]]},
+draw(t,$){
+ const p1=ez(sg(t,0.5,6)),p2=ez(sg(t,6,10));let cx=L(210,110,p1),cy=L(400,236,p1),a=-10;
+ if(t>=6){cx=L(110,90,p2);cy=L(236,220,p2);a=L(-10,0,p2);}
+ $('boat').setAttribute('transform',`translate(${cx} ${cy}) rotate(${a})`);
+ const m=t>=6&&t<10;$('rev').setAttribute('opacity',m?1:0);$('kick').setAttribute('opacity',m?1:0);
+ seg($,'ls',W(cx,cy,a,-18,60),[45,262],sg(t,10.5,13));seg($,'lb',W(cx,cy,a,-16,-56),[45,165],sg(t,15.5,18));
+ const g=t>=20;$('real').setAttribute('opacity',g?.25:1);$('ghost').setAttribute('opacity',g?1:0);$('gl').setAttribute('opacity',g?1:0);$('gt').setAttribute('opacity',t>=24?1:0);
+ $('ghost').setAttribute('transform',`rotate(${-35*ez(sg(t,21.5,26))} 74 164) translate(90 220)`);}});
+})();
+
+</script>
+</body>
+</html>
