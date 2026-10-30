@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Lecture · Kat-a-Mar</title>
+<!-- Lecteur PDF de Kat-a-Mar — v1.0
+     v1.0 : création. Ouvre un PDF du dépôt DANS l'application, avec une barre « ‹ Retour »
+            toujours visible en haut (au lieu d'ouvrir le PDF hors de l'application, sans retour).
+            Adresse : lire.html?f=<fichier.pdf>&t=<titre>&back=<page de retour>
+            Affichage par PDF.js 3.11.174 (Mozilla, licence Apache 2.0), copié dans le dépôt
+            (pdfjs-3.11.174.min.js et pdfjs-3.11.174.worker.min.js) : aucun fichier externe. -->
+<style>
+:root{--bg:#f2f5f6;--paper:#ffffff;--ink:#14263a;--muted:#566a7c;--line:#cfd9e0;--navy:#1d4e89}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1720;--paper:#16212d;--ink:#e4ecf2;--muted:#9db0c0;--line:#2f4052;--navy:#86b6ee;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
+.kam-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px}
+.kam-bar a{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:7px 12px;font-size:15px;white-space:nowrap}
+.kam-bar span{font-weight:700;flex:1;text-align:center;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#pages{padding:10px 8px 40px;max-width:900px;margin:0 auto}
+#pages canvas{display:block;width:100%;height:auto;margin:0 0 10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);border-radius:4px}
+#msg{padding:24px 16px;color:var(--muted);text-align:center;font-size:16px}
+#msg a{color:var(--navy);font-weight:700}
+</style>
+</head>
+<body>
+<div class="kam-bar"><a id="back" href="./permis-espagnol.html">‹ Retour</a><span id="titre">Lecture</span></div>
+<div id="msg">Chargement…</div>
+<div id="pages"></div>
+<script src="./pdfjs-3.11.174.min.js"></script>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  var f = q.get('f') || '';
+  var t = q.get('t') || '';
+  var back = q.get('back') || 'permis-espagnol.html';
+  // Seuls les fichiers du dépôt (nom simple) sont acceptés.
+  if (!/^[A-Za-z0-9_.-]+\.pdf$/.test(f)) f = '';
+  if (!/^[A-Za-z0-9_.-]+\.html(#[A-Za-z0-9_-]*)?$/.test(back)) back = 'permis-espagnol.html';
+  document.getElementById('back').href = './' + back;
+  if (t) { document.getElementById('titre').textContent = t; document.title = t + ' · Kat-a-Mar'; }
+  var msg = document.getElementById('msg');
+  if (!f) { msg.textContent = 'Document introuvable.'; return; }
+  var lien = '<br><br><a href="./' + f + '">Ouvrir le PDF directement</a>';
+  if (!window.pdfjsLib) { msg.innerHTML = 'Le lecteur n’a pas pu se charger.' + lien; return; }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs-3.11.174.worker.min.js';
+  var box = document.getElementById('pages');
+  pdfjsLib.getDocument('./' + f).promise.then(function(pdf){
+    msg.style.display = 'none';
+    var dpr = Math.min(window.devicePixelRatio || 1, 3);
+    var largeur = Math.min(box.clientWidth || window.innerWidth, 900);
+    var file = Promise.resolve();
+    for (var n = 1; n <= pdf.numPages; n++) {
+      (function(n){
+        var c = document.createElement('canvas');
+        box.appendChild(c);
+        file = file.then(function(){ return pdf.getPage(n); }).then(function(page){
+          var v1 = page.getViewport({scale:1});
+          var vp = page.getViewport({scale: largeur * dpr / v1.width});
+          c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+          return page.render({canvasContext: c.getContext('2d'), viewport: vp}).promise;
+        });
+      })(n);
+    }
+    return file;
+  }).catch(function(){
+    msg.style.display = 'block';
+    msg.innerHTML = 'Impossible d’afficher ce document.' + lien;
+  });
+})();
+</script>
+</body>
+</html>

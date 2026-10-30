@@ -1,6 +1,6 @@
-/* Kat-a-Mar — service worker — v145
+/* Kat-a-Mar — service worker — v150
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v149";
+const CACHE = "kat-a-mar-v150";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
 const FILES = ["./", "./index.html", "./permis-hauturier.html",
@@ -8,7 +8,7 @@ const FILES = ["./", "./index.html", "./permis-hauturier.html",
                "./permis-belge-erreurs.html", "./permis-belge-qcm-fluvial.html", "./permis-belge-qcm-balises.html",
                "./permis-belge-qcm-cotier.html", "./permis-belge-qcm-feux-sons.html", "./permis-belge-cotier-feux.html", "./permis-belge-cotier-sons.html", "./permis-belge-sons-animes.html", "./permis-belge-cotier-meteo.html", "./permis-belge-cotier-caps.html", "./permis-belge-erreurs-cotier.html", "./permis-belge-pratique-helice.html", "./permis-belge-pratique-manoeuvres.html", "./permis-belge-cotier-secours.html", "./permis-belge-cotier-port-ostende.html", "./permis-belge-longueurs.html", "./permis-belge-croisements.html", "./permis-belge-cotier-gisements.html",
                "./permis-belge-balises.html", "./permis-belge-panneaux.html", "./permis-belge-feux-sons.html",
-               "./certificat-vhf.html", "./permis-espagnol.html", "./per-01-nomenclatura-bilingue-v1.6.pdf", "./per-02-amarre-fondeo-bilingue-v1.6.pdf", "./per-03-seguridad-bilingue-v1.5.pdf", "./per-04-legislacion-bilingue-v1.6.pdf", "./per-05-balizamiento-bilingue-v1.0.pdf", "./per-06-ripa-bilingue-v1.0.pdf", "./per-07-maniobra-bilingue-v1.0.pdf", "./per-08-emergencias-bilingue-v1.0.pdf", "./per-09-meteorologia-bilingue-v1.0.pdf", "./per-10-teoria-navegacion-bilingue-v1.0.pdf", "./per-11-carta-navegacion-bilingue-v1.0.pdf",
+               "./certificat-vhf.html", "./permis-espagnol.html", "./lire.html", "./pdfjs-3.11.174.min.js", "./pdfjs-3.11.174.worker.min.js", "./per-01-nomenclatura-bilingue-v1.6.pdf", "./per-02-amarre-fondeo-bilingue-v1.6.pdf", "./per-03-seguridad-bilingue-v1.5.pdf", "./per-04-legislacion-bilingue-v1.6.pdf", "./per-05-balizamiento-bilingue-v1.0.pdf", "./per-06-ripa-bilingue-v1.0.pdf", "./per-07-maniobra-bilingue-v1.0.pdf", "./per-08-emergencias-bilingue-v1.0.pdf", "./per-09-meteorologia-bilingue-v1.0.pdf", "./per-10-teoria-navegacion-bilingue-v1.0.pdf", "./per-11-carta-navegacion-bilingue-v1.0.pdf",
                "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -60,7 +60,7 @@ self.addEventListener("fetch", (event) => {
         /* Secours hors ligne : la page demandée, puis l'application. On ne
            renvoie l'application à la place d'une autre page que si cette
            page n'a jamais été vue. */
-        .catch(() => caches.match(req).then((r) => r || caches.match("./index.html")))
+        .catch(() => caches.match(req).then((r) => r || caches.match(req, { ignoreSearch: true })).then((r) => r || caches.match("./index.html")))
     );
     return;
   }
