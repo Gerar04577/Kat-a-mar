@@ -648,7 +648,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./permis-belge.html">‹ Retour</a><span>Module 1 · Fluvial</span></div>
 <main>
 <header>
-  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v31 · chapitres 1 à 6</div>
+  <div class="ver">MODULE 1 · BREVET RESTREINT (FLUVIAL) · v32 · chapitres 1 à 6</div>
   <h1>Fluvial — le cours</h1>
   <p>Le brevet restreint, chapitre par chapitre. Chaque notion a son animation, ses pièges et ses questions.</p>
   <p class="note">Les écarts entre ton manuel et le règlement sont signalés dans les encadrés rouges, et rassemblés dans la page <a href="./permis-belge-erreurs.html">Erreurs du manuel</a>.</p>
@@ -1343,7 +1343,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
   <h2>Les questions du balisage</h2>
   <p>Vingt-quatre questions. C'est le chapitre le plus interrogé de l'examen — et celui qui fait couler la catégorie à 50 %.</p>
 
-  <div class="qcm" data-cat="Balisage" data-bonne="B">
+  <div class="qcm" data-cat="Balisage" data-bonne="B" data-hors>
     <p class="qn">QCM 13</p>
     <p class="qt">En région A, dans le sens conventionnel, la marque bâbord est :</p>
     <div class="choix">
@@ -1359,7 +1359,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="cat">Catégorie : balisage</p>
   </div>
 
-  <div class="qcm" data-cat="Balisage" data-bonne="C">
+  <div class="qcm" data-cat="Balisage" data-bonne="C" data-hors>
     <p class="qn">QCM 14</p>
     <p class="qt">Le sens conventionnel du balisage, c'est :</p>
     <div class="choix">
@@ -1391,7 +1391,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="cat">Catégorie : balisage</p>
   </div>
 
-  <div class="qcm" data-cat="Balisage" data-bonne="B">
+  <div class="qcm" data-cat="Balisage" data-bonne="B" data-hors>
     <p class="qn">QCM 16</p>
     <p class="qt">En région B, la marque tribord est :</p>
     <div class="choix">
@@ -1407,7 +1407,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="cat">Catégorie : balisage</p>
   </div>
 
-  <div class="qcm" data-cat="Balisage" data-bonne="C">
+  <div class="qcm" data-cat="Balisage" data-bonne="C" data-hors>
     <p class="qn">QCM 17</p>
     <p class="qt">La Belgique se trouve en :</p>
     <div class="choix">
@@ -1455,7 +1455,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="cat">Catégorie : balisage</p>
   </div>
 
-  <div class="qcm" data-cat="Balisage" data-bonne="C">
+  <div class="qcm" data-cat="Balisage" data-bonne="C" data-hors>
     <p class="qn">QCM 20</p>
     <p class="qt">Les bouées portant un numéro pair sont :</p>
     <div class="choix">
@@ -1636,12 +1636,12 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="qt">Une marque jaune portant une croix de Saint-André signale :</p>
     <div class="choix">
       <button type="button" data-l="A"><span class="l">A</span><span>une épave dangereuse</span></button>
-      <button type="button" data-l="B"><span class="l">B</span><span>une zone particulière, sans danger pour la navigation</span></button>
+      <button type="button" data-l="B"><span class="l">B</span><span>une zone ou un objet particulier (zone interdite, dragage, câble, ski nautique…)</span></button>
       <button type="button" data-l="C"><span class="l">C</span><span>le début d'un chenal</span></button>
     </div>
     <div class="corr" hidden><p class="verdict"></p><ul>
-      <li class="ko"><b>A</b> — faux. L'épave d'urgence est bleue et jaune depuis 2006.</li>
-      <li class="ok"><b>B</b> — juste : câble, oléoduc, zone d'exercice militaire, zone interdite à la navigation.</li>
+      <li class="ko"><b>A</b> — faux. En eaux intérieures, un obstacle se signale par les marques de points dangereux ou les cardinales.</li>
+      <li class="ok"><b>B</b> — juste : zone interdite, dragage, déversement, ancrage, exercices, pêche, ski nautique, câbles… On la passe du même côté qu'un balisage normal (appendice 8, VII). Le texte ne dit pas qu'elle est « sans danger ».</li>
       <li class="ko"><b>C</b> — faux, ce serait une marque d'eaux saines ou une latérale.</li>
     </ul></div>
     <p class="cat">Catégorie : balisage</p>
@@ -3715,12 +3715,12 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="qn">QCM 98</p>
     <p class="qt">Un bateau à moteur de plus de 110 m doit porter :</p>
     <div class="choix">
-      <button type="button" data-l="A"><span class="l">A</span><span>un second feu de mât, derrière le premier, au moins 3 m plus haut</span></button>
+      <button type="button" data-l="A"><span class="l">A</span><span>un second feu de mât, derrière le premier et plus haut</span></button>
       <button type="button" data-l="B"><span class="l">B</span><span>deux feux de poupe</span></button>
       <button type="button" data-l="C"><span class="l">C</span><span>des feux de côté doublés</span></button>
     </div>
     <div class="corr" hidden><p class="verdict"></p><ul>
-      <li class="ok"><b>A</b> — juste. Les bateaux plus courts peuvent le porter ; au-delà de 110 m, ils le doivent.</li>
+      <li class="ok"><b>A</b> — juste. Les bateaux plus courts peuvent le porter ; au-delà de 110 m, ils le doivent (art. 3.08 al. 2). La distance entre les feux n'est pas demandée à l'examen.</li>
       <li class="ko"><b>B</b> — faux.</li>
       <li class="ko"><b>C</b> — faux.</li>
     </ul></div>
@@ -3967,7 +3967,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     <p class="cat">Catégorie : signaux particuliers</p>
   </div>
 
-  <div class="qcm" data-cat="Signaux particuliers" data-bonne="A">
+  <div class="qcm" data-cat="Signaux particuliers" data-bonne="A" data-hors>
     <p class="qn">QCM 114</p>
     <p class="qt">Un convoi poussé transporte, dans deux barges, des matières inflammables et des matières explosives. Il montre :</p>
     <div class="choix">
