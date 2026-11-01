@@ -1,4 +1,4 @@
-# Audit fluvial de Kat-a-Mar — version 1 (01/11/2026)
+# Audit fluvial de Kat-a-Mar — version 2 (01/11/2026)
 
 Contrôle des pages du brevet de conduite restreint (fluvial) par rapport aux textes officiels. Le règlement et la matière du ministère font foi.
 
@@ -23,6 +23,8 @@ Cours M1 v32 : QCM 13, 14, 16, 17, 20 (balisage de mer), QCM 114 (art. 3.14 al. 
 
 QCM fluvial v23 : R250 (art. 1.03), R251 (art. 1.23), R252 (art. 7.09), R253 (art. 7.10), R254 (art. 12.01), R255 (AR 1935, art. 29 : voiles amenées à 200 m des ponts et écluses), S229 (couverture anti-feu).
 
+QCM fluvial v24 : R256 (app. 7, C.4, avec le piège A.1), R257 (art. 9.02 : ancre avec 10 m de corde pour tout bateau de plaisance à moteur).
+
 Panneaux v1.15 : A.4.1, A.11.1, E.5.2, E.12, E.102, E.103 (images de l'appendice 7) et les aires réservées aux bateaux à cônes bleus (E.5.5 à E.5.15).
 
 ## 4. Invérifiable dans les textes officiels
@@ -38,6 +40,7 @@ S026 et S034 (Tome 3, non reçu), S072, S211 et S226 (Tome 1 seulement).
 | 3 | App d'examen | Passage étroit : la rame avant la voile | Art. 6.07 al. 1 d ii |
 | 4 | App d'examen ; Tome 1 p. 62 et 73 | VHF au-delà de 7 m, sans « motorisée » | Art. 4.05 al. 2/1 |
 | 5 | Tome 1 p. 73 | « 30 cm de chaque côté » aux ponts et écluses | AR 15/10/1935, art. 1 |
+| 6 | App d'examen, C.4 | « Un panonceau ou un panneau voisin en précise la nature » : le texte dit seulement « renseignez-vous » | App. 7, C.4 |
 
 ## Sources
 
