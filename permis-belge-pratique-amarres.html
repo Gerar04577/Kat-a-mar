@@ -104,7 +104,7 @@ table.am th{background:var(--surface-1);font-weight:600}
 <a class="retour" href="./permis-belge.html">‹ Retour</a>
 <div class="wrap">
 <header>
-  <div class="ver">Larguer les amarres · version 1.0 · pratique · courant de l'avant, de l'arrière, vent qui plaque, vent qui écarte · QCM 12 questions</div>
+  <div class="ver">Larguer les amarres · version 1.1 · pratique · courant de l'avant, de l'arrière, vent qui plaque, vent qui écarte · QCM 12 questions</div>
   <div class="eyebrow">Permis belge · pratique</div>
   <h1>Larguer les amarres : dans quel ordre ?</h1>
   <p class="lead">Choisissez la situation, puis avancez étape par étape : la maquette montre quelles amarres travaillent, lesquelles on largue d'abord, et comment le bateau quitte le quai. Un QCM suit.</p>
@@ -169,41 +169,56 @@ table.am th{background:var(--surface-1);font-weight:600}
 <script>
 (function(){
 "use strict";
-var NS="http://www.w3.org/2000/svg", ROUGE="#c0392b", MOU="#8a969c", BLEU="#2e7dba", VIOLET="#7a6fc9";
+var NS="http://www.w3.org/2000/svg", ROUGE="#c0392b", MOU="#7d8a90", BLEU="#2e7dba", VIOLET="#7a6fc9", ORANGE="#d98a00";
 function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
 function txt(p,x,y,s,cls,anc){var t=el("text",{x:x,y:y,"class":cls||"ts","text-anchor":anc||"middle"},p);t.textContent=s;return t;}
 var NOMS={AV:"Amarre avant",GAV:"Garde avant",GAR:"Garde arrière",AR:"Amarre arrière"};
-/* bateau : arrière à gauche, avant à droite ; quai en bas */
-var PT={AV:[452,176],GAV:[420,190],GAR:[196,190],AR:[160,176]};
-var BIT={AV:[580,222],GAV:[292,222],GAR:[324,222],AR:[30,222]};
-var COQUE="M150,150 L420,150 C470,150 492,170 498,180 C492,190 470,206 420,206 L150,206 Z";
-function decor(svg,quaiTxt){
-  el("rect",{x:0,y:0,width:640,height:216,fill:"#cfe3f1"},svg);
-  el("rect",{x:0,y:216,width:640,height:84,fill:"#b9b2a2"},svg);
-  el("rect",{x:0,y:212,width:640,height:6,fill:"#8d8576"},svg);
-  txt(svg,320,282,quaiTxt||"quai","ts");
-  ["AV","GAV","GAR","AR"].forEach(function(k){el("circle",{cx:BIT[k][0],cy:BIT[k][1]+4,r:7,fill:"#3d3d3d"},svg);});
+var K4=["AV","GAV","GAR","AR"];
+/* bateau : arrière à gauche, avant à droite ; quai en bas ; taquets sur le bord côté quai */
+var PT={AV:[462,198],GAV:[412,205],GAR:[205,205],AR:[160,200]};
+var BIT={AV:[604,252],GAV:[276,252],GAR:[344,252],AR:[34,252]};
+var COQUE="M150,150 L420,150 C470,150 492,170 500,178 C492,190 470,206 420,206 L150,206 Z";
+function marqueurs(svg){
+  var d=el("defs",{},svg);
+  [["fB",BLEU],["fV",VIOLET],["fO",ORANGE]].forEach(function(m){
+    var mk=el("marker",{id:svg.id+m[0],viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:5,markerHeight:5,orient:"auto"},d);
+    el("path",{d:"M1 1L9 5L1 9z",fill:m[1]},mk);
+  });
+}
+function decor(svg){
+  el("rect",{x:0,y:0,width:640,height:238,fill:"#cfe3f1"},svg);
+  el("rect",{x:0,y:238,width:640,height:82,fill:"#b9b2a2"},svg);
+  el("rect",{x:0,y:234,width:640,height:6,fill:"#8d8576"},svg);
+  txt(svg,320,306,"quai","ts");
+  K4.forEach(function(k){el("circle",{cx:BIT[k][0],cy:BIT[k][1],r:8,fill:"#3d3d3d"},svg);});
 }
 function bateau(p){
   var g=el("g",{},p);
+  [190,300,380].forEach(function(x){el("rect",{x:x,y:206,width:26,height:28,rx:9,fill:"#e8eef2",stroke:"#5b6b74","stroke-width":1.5},g);});
   el("path",{d:COQUE,fill:"#ffffff",stroke:"#1d3557","stroke-width":2.5},g);
-  el("rect",{x:250,y:160,width:110,height:36,rx:6,fill:"#1d3557"},g);
-  for(var i=0;i<3;i++)el("rect",{x:262+i*32,y:168,width:22,height:12,rx:2,fill:"#bfe0ff"},g);
-  el("rect",{x:136,y:168,width:14,height:20,rx:3,fill:"#374151"},g);
-  txt(g,445,184,"avant","ts","end"); txt(g,165,184,"arrière","ts","start");
+  el("rect",{x:250,y:160,width:110,height:30,rx:6,fill:"#1d3557"},g);
+  for(var i=0;i<3;i++)el("rect",{x:262+i*32,y:167,width:22,height:12,rx:2,fill:"#bfe0ff"},g);
+  el("rect",{x:136,y:166,width:14,height:22,rx:3,fill:"#374151"},g);
+  txt(g,440,172,"avant","ts","end"); txt(g,168,172,"arrière","ts","start");
+  K4.forEach(function(k){el("circle",{cx:PT[k][0],cy:PT[k][1],r:4.5,fill:"#1d3557"},g);});
   return g;
+}
+function corde(a,b,mou){
+  if(!mou) return "M"+a[0]+","+a[1]+" L"+b[0]+","+b[1];
+  var mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2+18;
+  return "M"+a[0]+","+a[1]+" Q"+mx+","+my+" "+b[0]+","+b[1];
 }
 /* ---------- schéma des noms ---------- */
 (function(){
-  var s=document.getElementById("svgNoms"); s.setAttribute("viewBox","0 0 640 300");
+  var s=document.getElementById("svgNoms"); s.setAttribute("viewBox","0 0 640 320");
   decor(s); bateau(s);
-  var lab={AV:[630,252,"end"],GAV:[282,252,"end"],GAR:[334,252,"start"],AR:[10,252,"start"]};
-  ["AV","GAV","GAR","AR"].forEach(function(k){
-    el("line",{x1:PT[k][0],y1:PT[k][1],x2:BIT[k][0],y2:BIT[k][1],stroke:"#d98a00","stroke-width":3},s);
+  var lab={AV:[634,282,"end"],GAV:[268,282,"end"],GAR:[352,282,"start"],AR:[6,282,"start"]};
+  K4.forEach(function(k){
+    el("path",{d:corde(PT[k],BIT[k],false),fill:"none",stroke:ORANGE,"stroke-width":4,"stroke-linecap":"round"},s);
+    el("circle",{cx:BIT[k][0],cy:BIT[k][1],r:8,fill:"#3d3d3d"},s);
     txt(s,lab[k][0],lab[k][1],NOMS[k],"th",lab[k][2]);
   });
 })();
-/* ---------- scénarios ---------- */
 var SC=[
  {id:"cav",nom:"Courant de l'avant",el:"courant",sens:-1,tend:["AV","GAR"],ordre:["GAV","AR","AV","GAR"],
   piv:"AR",ang:-10,
@@ -239,66 +254,77 @@ var SC=[
        ["5. Partir","On largue l'amarre avant : le vent écarte tout le bateau. On part en douceur."]]}
 ];
 var cur=SC[0], pas=0, anim=null, jeu=null;
-var svg=document.getElementById("svgM");
+var svg=document.getElementById("svgM"); svg.setAttribute("viewBox","0 0 640 320");
+marqueurs(svg); decor(svg);
+var gFl=el("g",{},svg);
+var gB=bateau(svg);
+var LG={}; K4.forEach(function(k){ LG[k]=el("path",{fill:"none","stroke-linecap":"round"},svg); });
+K4.forEach(function(k){ el("circle",{cx:BIT[k][0],cy:BIT[k][1],r:8,fill:"#3d3d3d"},svg); });
+var gMot=el("g",{},svg);
+var mArr=el("line",{x1:150,y1:178,x2:92,y2:178,stroke:ORANGE,"stroke-width":5,"marker-end":"url(#svgMfO)"},gMot);
+txt(gMot,20,140,"marche arrière","th","start");
 function rot(p,c,a){var r=a*Math.PI/180;var x=p[0]-c[0],y=p[1]-c[1];return[c[0]+x*Math.cos(r)-y*Math.sin(r),c[1]+x*Math.sin(r)+y*Math.cos(r)];}
-function fleches(g){
-  var col=cur.el==="courant"?BLEU:VIOLET;
+function fleches(){
+  gFl.textContent="";
   if(cur.el==="courant"){
-    [60,170,280].forEach(function(x){ [40,95].forEach(function(y){
-      var x1=cur.sens<0?x+120:x, x2=cur.sens<0?x:x+120;
-      el("line",{x1:x1,y1:y,x2:x2,y2:y,stroke:col,"stroke-width":3,"marker-end":"url(#fl)"},g);});});
-    txt(g,560,72,"courant","th");
+    [40,95].forEach(function(y){ [60,190,320].forEach(function(x){
+      var x1=cur.sens<0?x+110:x, x2=cur.sens<0?x:x+110;
+      el("line",{x1:x1,y1:y,x2:x2,y2:y,stroke:BLEU,"stroke-width":3,"marker-end":"url(#svgMfB)"},gFl);});});
+    txt(gFl,560,72,"courant","th");
   }else{
     [90,250,410].forEach(function(x){
-      var y1=cur.sens>0?20:110, y2=cur.sens>0?110:20;
-      el("line",{x1:x,y1:y1,x2:x,y2:y2,stroke:col,"stroke-width":3,"marker-end":"url(#fl)"},g);});
-    txt(g,560,72,"vent","th");
+      var y1=cur.sens>0?18:118, y2=cur.sens>0?118:18;
+      el("line",{x1:x,y1:y1,x2:x,y2:y2,stroke:VIOLET,"stroke-width":3,"marker-end":"url(#svgMfV)"},gFl);});
+    txt(gFl,560,72,"vent","th");
   }
 }
-function dessiner(prog){
-  svg.textContent="";
-  var d=el("defs",{},svg);
-  var m=el("marker",{id:"fl",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:6,markerHeight:6,orient:"auto"},d);
-  el("path",{d:"M1 1L9 5L1 9z",fill:"context-stroke"},m);
-  decor(svg);
-  fleches(svg);
-  var ang=0, dy=0;
-  if(pas>=4) ang=cur.ang*(pas===4?prog:1);
+function rendu(prog){
+  var ang=0, dy=0, pivot=PT[cur.piv];
+  if(pas===4) ang=cur.ang*prog; else if(pas===5) ang=cur.ang;
   if(pas===5) dy=-40*prog;
-  var pivot=PT[cur.piv];
-  var g=bateau(svg);
-  g.setAttribute("transform","translate(0,"+dy+") rotate("+ang+" "+pivot[0]+" "+pivot[1]+")");
-  var largues=cur.ordre.slice(0,Math.min(pas,3));
+  gB.setAttribute("transform","translate(0,"+dy+") rotate("+ang+" "+pivot[0]+" "+pivot[1]+")");
   var der=cur.ordre[3];
-  ["AV","GAV","GAR","AR"].forEach(function(k){
-    if(largues.indexOf(k)>=0) return;
-    if(pas===5 && k===der) return;
+  K4.forEach(function(k){
+    var l=LG[k], idx=cur.ordre.indexOf(k);
+    var largue = (idx<3 && idx<pas) || (k===der && pas===5);
+    if(largue){ l.setAttribute("visibility","hidden"); return; }
+    l.setAttribute("visibility","visible");
     var p=rot(PT[k],pivot,ang); p=[p[0],p[1]+dy];
-    var tendue=(pas>=3&&pas<5&&k===der)||(pas<3&&cur.tend.indexOf(k)>=0)||(pas===4&&k===der);
-    if(cur.moteur&&pas<3) tendue=false;
-    var l=el("line",{x1:p[0],y1:p[1],x2:BIT[k][0],y2:BIT[k][1],stroke:tendue?ROUGE:MOU,"stroke-width":tendue?4:2.5,"stroke-dasharray":tendue?"":"6 4"},svg);
-    if(pas>=1&&pas<=3&&k===cur.ordre[pas]) l.setAttribute("class","hl");
+    var tendue = (pas>=3 && k===der) || (pas<3 && !cur.moteur && cur.tend.indexOf(k)>=0);
+    l.setAttribute("d",corde(p,BIT[k],!tendue));
+    l.setAttribute("stroke",tendue?ROUGE:MOU);
+    l.setAttribute("stroke-width",tendue?4.5:3);
+    l.setAttribute("stroke-dasharray",tendue?"none":"7 5");
   });
-  if(cur.moteur&&pas===4){ el("line",{x1:150,y1:178,x2:90,y2:178,stroke:"#d98a00","stroke-width":4,"marker-end":"url(#fl)",transform:"rotate("+ang+" "+pivot[0]+" "+pivot[1]+")"},svg); txt(svg,20,128,"marche arrière","th","start"); }
+  gMot.setAttribute("visibility",(cur.moteur&&pas===4)?"visible":"hidden");
+  gMot.setAttribute("transform","rotate("+ang+" "+pivot[0]+" "+pivot[1]+")");
+}
+function textes(){
   var P=cur.pas[pas];
   document.getElementById("st").textContent=P[0];
   document.getElementById("tx").textContent=P[1];
   document.getElementById("pb").style.width=(pas/5*100)+"%";
   var ol=document.getElementById("ordre"); ol.textContent="";
-  cur.ordre.forEach(function(k,i){var li=document.createElement("li");li.textContent=NOMS[k];if(i<pas&&(i<3||pas===5))li.className="fait";else if(i===3)li.className="der";ol.appendChild(li);});
+  cur.ordre.forEach(function(k,i){var li=document.createElement("li");li.textContent=NOMS[k];
+    if(i<3&&i<pas) li.className="fait"; else if(i===3) li.className=(pas===5?"fait":"der"); ol.appendChild(li);});
 }
 function aller(n){
-  if(n<0||n>5) return; pas=n;
-  if(anim) cancelAnimationFrame(anim);
-  if(pas>=4 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-    var t0=null; var f=function(t){ if(!t0)t0=t; var u=Math.min(1,(t-t0)/1200); dessiner(u); if(u<1) anim=requestAnimationFrame(f); }; anim=requestAnimationFrame(f);
-  } else dessiner(1);
+  if(n<0||n>5) return;
+  pas=n;
+  if(anim){ cancelAnimationFrame(anim); anim=null; }
+  textes();
+  var calme=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(pas>=4 && !calme){
+    var t0=null;
+    var f=function(t){ if(t0===null)t0=t; var u=Math.min(1,(t-t0)/1200); rendu(u); anim = u<1 ? requestAnimationFrame(f) : null; };
+    rendu(0); anim=requestAnimationFrame(f);
+  } else rendu(1);
 }
-function stop(){ if(jeu){clearInterval(jeu);jeu=null;document.getElementById("bPlay").textContent="▶ Lecture";} }
+function stop(){ if(jeu){clearInterval(jeu);jeu=null;} document.getElementById("bPlay").textContent="▶ Lecture"; }
 var zone=document.getElementById("scn");
 SC.forEach(function(s){
   var b=document.createElement("button"); b.type="button"; b.textContent=s.nom; if(s===cur)b.className="on";
-  b.addEventListener("click",function(){ stop(); cur=s; Array.prototype.forEach.call(zone.children,function(x){x.className="";}); b.className="on"; aller(0); });
+  b.addEventListener("click",function(){ stop(); cur=s; Array.prototype.forEach.call(zone.children,function(x){x.className="";}); b.className="on"; fleches(); aller(0); });
   zone.appendChild(b);
 });
 document.getElementById("bNext").addEventListener("click",function(){stop();aller(pas+1);});
@@ -310,6 +336,7 @@ document.getElementById("bPlay").addEventListener("click",function(){
   this.textContent="❚❚ Pause";
   jeu=setInterval(function(){ if(pas>=5){stop();return;} aller(pas+1); },2600);
 });
+fleches();
 aller(0);
 
 /* ---------- QCM ---------- */
