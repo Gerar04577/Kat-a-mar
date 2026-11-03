@@ -646,7 +646,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v128 · cours officiels · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc · QCM côtier, QCM feux et sons, animations côtières feux et sons, météo, maquette des trois nords, erreurs du manuel côtier</div>
+  <div class="ver">SOMMAIRE · v129 · cours officiels · QCM révision (fluvial et côtier) · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc · QCM côtier, QCM feux et sons, animations côtières feux et sons, météo, maquette des trois nords, erreurs du manuel côtier</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -984,6 +984,33 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
             </span>
             <span class="etat">Consulter</span>
           </a>
+    </div>
+
+    <button type="button" class="menu-item pret groupe" data-groupe="revision">
+      <span class="num">3</span>
+      <span class="txt">
+        <span class="t">QCM révision</span>
+        <span class="s">Les questions booost envoyées à Claude, corrigées d'après les textes officiels : bonne réponse, piège et dessin</span>
+      </span>
+      <span class="etat">2 PDF</span>
+    </button>
+    <div class="sousmenu" id="groupe-revision" hidden>
+      <a class="menu-item pret tome-local" data-local="./qcm-revision-fluvial-v1.0.pdf" href="#" target="_blank" rel="noopener" aria-disabled="true">
+        <span class="num">F</span>
+        <span class="txt">
+          <span class="t">QCM révision — Fluvial</span>
+          <span class="s">Brevet restreint · 32 questions · 4 erreurs booost, 6 discutables · v1.0</span>
+        </span>
+        <span class="etat">…</span>
+      </a>
+      <a class="menu-item pret tome-local" data-local="./qcm-revision-cotier-v1.0.pdf" href="#" target="_blank" rel="noopener" aria-disabled="true">
+        <span class="num">C</span>
+        <span class="txt">
+          <span class="t">QCM révision — Côtier</span>
+          <span class="s">Complément brevet général · 36 questions · 6 discutables · v1.0</span>
+        </span>
+        <span class="etat">…</span>
+      </a>
     </div>
   </div>
 </section>
@@ -1423,6 +1450,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
     cible.hidden = !ouvrir;
     b.setAttribute("aria-expanded", ouvrir ? "true" : "false");
     if(ouvrir && b.dataset.groupe === "officiel"){ locPreparer(); odPreparer(false); }
+    if(ouvrir && b.dataset.groupe === "revision"){ locPreparer(); }
   }
   var boutonsGroupe = Array.prototype.slice.call(document.querySelectorAll("[data-groupe]"));
   boutonsGroupe.forEach(function(b){
