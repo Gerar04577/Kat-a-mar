@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Larguer les amarres</title>
+<style>
+:root{
+  --bg:#EEF2F1; --surface-1:#E2E8E6; --surface-2:#FFFFFF; --text-primary:#13232B; --text-secondary:#4E5E66; --text-muted:#6F7D84;
+  --accent:#1F5F7A; --text-accent:#1A5068; --bg-accent:#DCEBF1; --border-accent:#3D7F9B;
+  --text-danger:#A3342A; --bg-danger:#F8E6E3; --text-ok:#2B6646; --bg-ok:#E1F0E6;
+  --border:#D3DBD8; --border-strong:#AEB9B5; --border-stronger:#7E8B87; --radius:8px;
+  --cg-f:#E1E6E4; --cg-s:#88938F; --cp-f:#EEEDFE; --cp-s:#534AB7; --ct-f:#E1F5EE; --ct-s:#0F6E56; --ct-t:#085041;
+  --cr-f:#FCEBEB; --cr-s:#A32D2D; --cr-t:#791F1F; --cc-f:#FAECE7; --cc-s:#993C1D; --cc-t:#712B13;
+  --f-body:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif; --f-mono:ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font:400 16px/1.55 var(--f-body)}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg);color:var(--text-accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--border)}
+.wrap{max-width:680px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));display:grid;gap:24px}
+header{display:grid;gap:8px}
+.ver{font:500 12px/1.4 var(--f-mono);color:var(--text-muted)}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+h1{font-size:24px;line-height:1.15;margin:0}
+h2{font-size:20px;line-height:1.2;margin:0}
+p{margin:0}
+.lead{color:var(--text-secondary)}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{font:500 13px var(--f-mono);color:var(--text-accent);text-decoration:none;border:1px solid var(--border-strong);border-radius:999px;padding:4px 11px;background:var(--surface-2)}
+section{display:grid;gap:14px;padding-top:20px;border-top:1px solid var(--border-strong);scroll-margin-top:56px}
+.q{font-weight:600}
+.ans{display:grid;gap:6px;font-size:15px}
+.ans div{padding:8px 12px;border-radius:var(--radius)}
+.trap{background:var(--surface-1)}
+.trap ul{margin:4px 0 0;padding-left:18px;display:grid;gap:6px}
+.trap b{color:var(--text-danger);font-weight:600}
+.ok{background:var(--bg-ok);color:var(--text-ok)}
+.warn{background:var(--bg-accent);color:var(--text-accent)}
+.tag{font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;display:block;opacity:.85}
+.stage{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;display:grid;gap:10px;min-width:0}
+svg{display:block;width:100%;height:auto}
+svg .th{font:600 14px var(--f-body);fill:var(--text-primary)}
+svg .ts{font:400 12px var(--f-body);fill:var(--text-secondary)}
+rect.c-gray{fill:var(--cg-f);stroke:var(--cg-s)}
+.c-purple rect,rect.c-purple{fill:var(--cp-f);stroke:var(--cp-s)}
+.c-teal rect,rect.c-teal{fill:var(--ct-f);stroke:var(--ct-s)} .c-teal text{fill:var(--ct-t)}
+.c-red rect{fill:var(--cr-f);stroke:var(--cr-s)} .c-red text{fill:var(--cr-t)}
+.c-coral rect{fill:var(--cc-f);stroke:var(--cc-s)} .c-coral text{fill:var(--cc-t)}
+.pbar{height:4px;background:var(--surface-1);border-radius:2px;overflow:hidden}
+.pbar div{height:4px;width:0;background:var(--accent)}
+.box{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;min-height:130px;background:var(--bg)}
+.st{font-weight:700;font-size:16px;line-height:1.3}
+.tx{font-size:15px;color:var(--text-secondary);margin-top:4px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer}
+.dh{font:500 12px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted)}
+.dl{display:flex;flex-wrap:wrap;gap:6px}
+.df{font:inherit;font-size:13px;min-height:36px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-1);color:var(--text-primary);cursor:pointer}
+.df.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent)}
+.dx{font-size:15px;color:var(--text-secondary);border-left:2px solid var(--border-accent);padding-left:10px;min-height:44px}
+.src{font-size:13px;color:var(--text-muted)}
+@media (prefers-reduced-motion:no-preference){.hl{animation:hl .45s ease-in-out infinite}@keyframes hl{50%{opacity:.18}}}
+.scn{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.scn button{font:inherit;font-size:14px;min-height:44px;padding:6px 8px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer;text-align:left}
+.scn button.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent);font-weight:600}
+.ordre{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none;counter-reset:o}
+.ordre li{counter-increment:o;font-size:14px;padding:5px 10px;border-radius:999px;background:var(--surface-1);border:1px solid var(--border)}
+.ordre li::before{content:counter(o) ". ";font-weight:700}
+.ordre li.fait{opacity:.45;text-decoration:line-through}
+.ordre li.der{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent);font-weight:600}
+.leg{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--text-secondary)}
+.leg span::before{content:"";display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle;background:var(--c)}
+table.am{width:100%;border-collapse:collapse;font-size:14px}
+table.am td,table.am th{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+table.am th{background:var(--surface-1);font-weight:600}
+.qz{display:grid;gap:10px}
+.qn{font:500 12px var(--f-mono);color:var(--text-muted)}
+.qo{display:grid;gap:6px}
+.qo button{font:inherit;font-size:15px;text-align:left;min-height:44px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer}
+.qo button.bon{border-color:var(--text-ok);background:var(--bg-ok);color:var(--text-ok);font-weight:600}
+.qo button.faux{border-color:var(--text-danger);background:var(--bg-danger);color:var(--text-danger)}
+.qx{font-size:15px;border-radius:var(--radius);padding:8px 12px;background:var(--surface-1)}
+.qs{font:500 12px var(--f-mono);color:var(--text-muted)}
+.score{font-weight:700;font-size:18px}
+#svgM .ts,#svgNoms .ts{font-size:17px}
+#svgM .th,#svgNoms .th{font-size:19px}
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="wrap">
+<header>
+  <div class="ver">Larguer les amarres · version 1.0 · pratique · courant de l'avant, de l'arrière, vent qui plaque, vent qui écarte · QCM 12 questions</div>
+  <div class="eyebrow">Permis belge · pratique</div>
+  <h1>Larguer les amarres : dans quel ordre ?</h1>
+  <p class="lead">Choisissez la situation, puis avancez étape par étape : la maquette montre quelles amarres travaillent, lesquelles on largue d'abord, et comment le bateau quitte le quai. Un QCM suit.</p>
+  <nav><a href="#noms">Les 4 amarres</a><a href="#maquette">Maquette</a><a href="#regle">La règle</a><a href="#textes">Matières d'examen</a><a href="#qcm">QCM</a></nav>
+</header>
+
+<section id="noms">
+  <h2>Les 4 amarres</h2>
+  <div class="stage"><svg id="svgNoms" viewBox="0 0 640 250" role="img" aria-label="Les quatre amarres d'un bateau à quai"></svg></div>
+  <table class="am">
+    <tr><th>Amarre</th><th>Elle part…</th><th>Elle empêche…</th></tr>
+    <tr><td><b>Amarre avant</b> (pointe avant)</td><td>de l'avant du bateau, vers l'avant sur le quai</td><td>l'avant de s'écarter, le bateau de reculer</td></tr>
+    <tr><td><b>Garde avant</b> (garde descendante)</td><td>de l'avant du bateau, vers l'arrière sur le quai</td><td>le bateau d'<b>avancer</b></td></tr>
+    <tr><td><b>Garde arrière</b> (garde montante)</td><td>de l'arrière du bateau, vers l'avant sur le quai</td><td>le bateau de <b>reculer</b></td></tr>
+    <tr><td><b>Amarre arrière</b> (pointe arrière)</td><td>de l'arrière du bateau, vers l'arrière sur le quai</td><td>l'arrière de s'écarter, le bateau d'avancer</td></tr>
+  </table>
+  <p class="src">Les deux noms des gardes (avant / descendante, arrière / montante) sont ceux de la page « Manœuvres de port animées ».</p>
+</section>
+
+<section id="maquette">
+  <h2>La maquette</h2>
+  <div class="scn" id="scn"></div>
+  <div class="stage">
+    <svg id="svgM" viewBox="0 0 640 300" role="img" aria-label="Bateau à quai et ses amarres"></svg>
+    <div class="leg"><span style="--c:#c0392b">amarre qui travaille (tendue)</span><span style="--c:#8a969c">amarre molle</span><span style="--c:#2e7dba">courant</span><span style="--c:#7a6fc9">vent</span></div>
+    <div class="pbar"><div id="pb"></div></div>
+    <div class="box"><div class="st" id="st"></div><div class="tx" id="tx"></div></div>
+    <ol class="ordre" id="ordre"></ol>
+    <div class="ctl"><button class="btn" id="bPrev">‹ Étape</button><button class="btn" id="bNext">Étape suivante ›</button><button class="btn" id="bPlay">▶ Lecture</button><button class="btn" id="bZero">Recommencer</button></div>
+  </div>
+</section>
+
+<section id="regle">
+  <h2>La règle, en trois phrases</h2>
+  <div class="ans">
+    <div class="ok"><span class="tag">1 · D'abord les amarres molles</span>Une amarre qui ne travaille pas peut être larguée sans que le bateau bouge.</div>
+    <div class="ok"><span class="tag">2 · Ensuite celles qui tiennent le bateau</span>On garde pour la fin l'amarre qui va servir de pivot.</div>
+    <div class="ok"><span class="tag">3 · On part face à l'élément</span>Le courant (ou le vent) ouvre le bout qui le reçoit ; on part face à lui, on garde ainsi le contrôle.</div>
+  </div>
+  <div class="ans">
+    <div class="trap"><span class="tag">Courant et vent ensemble ?</span>Sur une rivière, c'est en général le courant qui décide : il agit sur toute la coque immergée. Dans un port sans courant, c'est le vent.</div>
+    <div class="trap"><span class="tag">Pour accoster</span>C'est l'inverse : on arrive face au courant ou au vent, et on amarre d'abord le bout du bateau qui le reçoit (règle déjà donnée dans « Manœuvres de port animées »).</div>
+  </div>
+</section>
+
+<section id="textes">
+  <h2>Ce que disent les matières d'examen</h2>
+  <div class="ans">
+    <div class="warn"><span class="tag">Matières théoriques</span>Ni le règlement (RGP) ni la matière du complément pour le brevet général ne donnent l'ordre des amarres. C'est une manœuvre de l'<b>examen pratique</b> (Tome 3 de l'école). Les ordres ci-dessus suivent la règle de base des manœuvres de port, et non un article de loi.</div>
+    <div class="trap"><span class="tag">Règlement, art. 7.04 — au programme</span>« Un bateau […] ne peut pas amarrer: […] b) dans les parties de la voie navigable indiquées par le signal A.7 (appendice 7); l'interdiction s'applique alors du côté de la voie où ce signal est placé. » · « Lors de l'amarrage ou d'un déplacement, un bateau […] ne peut pas utiliser d'autres objets ou dispositifs que ceux destinés à cet effet. »</div>
+    <div class="trap"><span class="tag">Matière du complément — au programme</span>« Manœuvres — Généralités — Description de l'engin d'ancrage, technique de mouillage et les principaux types d'ancres ». Le mouillage est au programme ; l'ordre des amarres au quai, non.</div>
+  </div>
+</section>
+
+<section id="qcm">
+  <h2>QCM</h2>
+  <div class="qz" id="qz"></div>
+  <p class="src">Sources : règlement général de police pour la navigation sur les eaux intérieures (AR du 24/09/2006), art. 7.04 ; matière d'examen du complément pour le brevet de conduite général (SPF Mobilité, version 1) ; page Kat-a-Mar « Manœuvres de port animées ». La question 1 reprend une question du site qruiz.net.</p>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var NS="http://www.w3.org/2000/svg", ROUGE="#c0392b", MOU="#8a969c", BLEU="#2e7dba", VIOLET="#7a6fc9";
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function txt(p,x,y,s,cls,anc){var t=el("text",{x:x,y:y,"class":cls||"ts","text-anchor":anc||"middle"},p);t.textContent=s;return t;}
+var NOMS={AV:"Amarre avant",GAV:"Garde avant",GAR:"Garde arrière",AR:"Amarre arrière"};
+/* bateau : arrière à gauche, avant à droite ; quai en bas */
+var PT={AV:[452,176],GAV:[420,190],GAR:[196,190],AR:[160,176]};
+var BIT={AV:[580,222],GAV:[292,222],GAR:[324,222],AR:[30,222]};
+var COQUE="M150,150 L420,150 C470,150 492,170 498,180 C492,190 470,206 420,206 L150,206 Z";
+function decor(svg,quaiTxt){
+  el("rect",{x:0,y:0,width:640,height:216,fill:"#cfe3f1"},svg);
+  el("rect",{x:0,y:216,width:640,height:84,fill:"#b9b2a2"},svg);
+  el("rect",{x:0,y:212,width:640,height:6,fill:"#8d8576"},svg);
+  txt(svg,320,282,quaiTxt||"quai","ts");
+  ["AV","GAV","GAR","AR"].forEach(function(k){el("circle",{cx:BIT[k][0],cy:BIT[k][1]+4,r:7,fill:"#3d3d3d"},svg);});
+}
+function bateau(p){
+  var g=el("g",{},p);
+  el("path",{d:COQUE,fill:"#ffffff",stroke:"#1d3557","stroke-width":2.5},g);
+  el("rect",{x:250,y:160,width:110,height:36,rx:6,fill:"#1d3557"},g);
+  for(var i=0;i<3;i++)el("rect",{x:262+i*32,y:168,width:22,height:12,rx:2,fill:"#bfe0ff"},g);
+  el("rect",{x:136,y:168,width:14,height:20,rx:3,fill:"#374151"},g);
+  txt(g,445,184,"avant","ts","end"); txt(g,165,184,"arrière","ts","start");
+  return g;
+}
+/* ---------- schéma des noms ---------- */
+(function(){
+  var s=document.getElementById("svgNoms"); s.setAttribute("viewBox","0 0 640 300");
+  decor(s); bateau(s);
+  var lab={AV:[630,252,"end"],GAV:[282,252,"end"],GAR:[334,252,"start"],AR:[10,252,"start"]};
+  ["AV","GAV","GAR","AR"].forEach(function(k){
+    el("line",{x1:PT[k][0],y1:PT[k][1],x2:BIT[k][0],y2:BIT[k][1],stroke:"#d98a00","stroke-width":3},s);
+    txt(s,lab[k][0],lab[k][1],NOMS[k],"th",lab[k][2]);
+  });
+})();
+/* ---------- scénarios ---------- */
+var SC=[
+ {id:"cav",nom:"Courant de l'avant",el:"courant",sens:-1,tend:["AV","GAR"],ordre:["GAV","AR","AV","GAR"],
+  piv:"AR",ang:-10,
+  pas:[["Situation","Le courant arrive par l'avant et pousse le bateau vers l'arrière. Ce sont l'amarre avant et la garde arrière qui le retiennent : elles sont tendues."],
+       ["1. Larguer la garde avant","Elle est molle : le courant ne pousse pas le bateau vers l'avant. Le bateau ne bouge pas."],
+       ["2. Larguer l'amarre arrière","Molle elle aussi. Le bateau tient toujours sur l'amarre avant et la garde arrière."],
+       ["3. Larguer l'amarre avant","Le bateau ne tient plus que par la garde arrière. Le courant s'engouffre entre l'avant et le quai."],
+       ["4. L'avant s'ouvre","Retenu par l'arrière, le bateau pivote : l'avant s'écarte du quai, poussé par le courant."],
+       ["5. Partir face au courant","Petite marche avant, on largue la garde arrière et on s'éloigne face au courant, avec du contrôle."]]},
+ {id:"car",nom:"Courant de l'arrière",el:"courant",sens:1,tend:["AR","GAV"],ordre:["GAR","AV","AR","GAV"],
+  piv:"AV",ang:10,
+  pas:[["Situation","Le courant arrive par l'arrière et pousse le bateau vers l'avant. Ce sont l'amarre arrière et la garde avant qui le retiennent."],
+       ["1. Larguer la garde arrière","Elle est molle : rien ne pousse le bateau vers l'arrière."],
+       ["2. Larguer l'amarre avant","Molle aussi. Le bateau tient sur l'amarre arrière et la garde avant."],
+       ["3. Larguer l'amarre arrière","Le bateau ne tient plus que par la garde avant. Le courant entre entre l'arrière et le quai."],
+       ["4. L'arrière s'ouvre","Retenu par l'avant, le bateau pivote : l'arrière s'écarte du quai."],
+       ["5. Partir face au courant","Petite marche arrière, on largue la garde avant et on recule face au courant ; on vire une fois dégagé."]]},
+ {id:"vpl",nom:"Vent qui plaque au quai",el:"vent",sens:1,tend:[],ordre:["GAV","AR","AV","GAR"],
+  piv:"AR",ang:-10,moteur:"arriere",
+  pas:[["Situation","Le vent pousse le bateau contre le quai (sur les pare-battages). Aucune amarre ne travaille vraiment : le vent suffit à tenir le bateau collé."],
+       ["1. Larguer la garde avant","Le bateau reste plaqué par le vent."],
+       ["2. Larguer l'amarre arrière","Toujours plaqué."],
+       ["3. Larguer l'amarre avant","Il ne reste que la garde arrière (garde montante)."],
+       ["4. Marche arrière lente sur la garde arrière","La garde retient l'arrière : le bateau pivote et l'avant s'écarte du quai, malgré le vent."],
+       ["5. Partir","Quand l'avant est assez écarté : on largue la garde, marche avant, cap vers le large."]]},
+ {id:"vec",nom:"Vent qui écarte du quai",el:"vent",sens:-1,tend:["AV","AR"],ordre:["GAV","GAR","AR","AV"],
+  piv:"AV",ang:9,
+  pas:[["Situation","Le vent pousse le bateau vers le large. Ce sont surtout l'amarre avant et l'amarre arrière qui le retiennent."],
+       ["1. Larguer la garde avant","Elle ne travaille presque pas."],
+       ["2. Larguer la garde arrière","Le bateau tient sur ses deux pointes."],
+       ["3. Larguer l'amarre arrière","Il ne reste que l'amarre avant."],
+       ["4. L'arrière s'ouvre","Le vent pousse l'arrière vers le large ; l'avant est encore tenu."],
+       ["5. Partir","On largue l'amarre avant : le vent écarte tout le bateau. On part en douceur."]]}
+];
+var cur=SC[0], pas=0, anim=null, jeu=null;
+var svg=document.getElementById("svgM");
+function rot(p,c,a){var r=a*Math.PI/180;var x=p[0]-c[0],y=p[1]-c[1];return[c[0]+x*Math.cos(r)-y*Math.sin(r),c[1]+x*Math.sin(r)+y*Math.cos(r)];}
+function fleches(g){
+  var col=cur.el==="courant"?BLEU:VIOLET;
+  if(cur.el==="courant"){
+    [60,170,280].forEach(function(x){ [40,95].forEach(function(y){
+      var x1=cur.sens<0?x+120:x, x2=cur.sens<0?x:x+120;
+      el("line",{x1:x1,y1:y,x2:x2,y2:y,stroke:col,"stroke-width":3,"marker-end":"url(#fl)"},g);});});
+    txt(g,560,72,"courant","th");
+  }else{
+    [90,250,410].forEach(function(x){
+      var y1=cur.sens>0?20:110, y2=cur.sens>0?110:20;
+      el("line",{x1:x,y1:y1,x2:x,y2:y2,stroke:col,"stroke-width":3,"marker-end":"url(#fl)"},g);});
+    txt(g,560,72,"vent","th");
+  }
+}
+function dessiner(prog){
+  svg.textContent="";
+  var d=el("defs",{},svg);
+  var m=el("marker",{id:"fl",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:6,markerHeight:6,orient:"auto"},d);
+  el("path",{d:"M1 1L9 5L1 9z",fill:"context-stroke"},m);
+  decor(svg);
+  fleches(svg);
+  var ang=0, dy=0;
+  if(pas>=4) ang=cur.ang*(pas===4?prog:1);
+  if(pas===5) dy=-40*prog;
+  var pivot=PT[cur.piv];
+  var g=bateau(svg);
+  g.setAttribute("transform","translate(0,"+dy+") rotate("+ang+" "+pivot[0]+" "+pivot[1]+")");
+  var largues=cur.ordre.slice(0,Math.min(pas,3));
+  var der=cur.ordre[3];
+  ["AV","GAV","GAR","AR"].forEach(function(k){
+    if(largues.indexOf(k)>=0) return;
+    if(pas===5 && k===der) return;
+    var p=rot(PT[k],pivot,ang); p=[p[0],p[1]+dy];
+    var tendue=(pas>=3&&pas<5&&k===der)||(pas<3&&cur.tend.indexOf(k)>=0)||(pas===4&&k===der);
+    if(cur.moteur&&pas<3) tendue=false;
+    var l=el("line",{x1:p[0],y1:p[1],x2:BIT[k][0],y2:BIT[k][1],stroke:tendue?ROUGE:MOU,"stroke-width":tendue?4:2.5,"stroke-dasharray":tendue?"":"6 4"},svg);
+    if(pas>=1&&pas<=3&&k===cur.ordre[pas]) l.setAttribute("class","hl");
+  });
+  if(cur.moteur&&pas===4){ el("line",{x1:150,y1:178,x2:90,y2:178,stroke:"#d98a00","stroke-width":4,"marker-end":"url(#fl)",transform:"rotate("+ang+" "+pivot[0]+" "+pivot[1]+")"},svg); txt(svg,20,128,"marche arrière","th","start"); }
+  var P=cur.pas[pas];
+  document.getElementById("st").textContent=P[0];
+  document.getElementById("tx").textContent=P[1];
+  document.getElementById("pb").style.width=(pas/5*100)+"%";
+  var ol=document.getElementById("ordre"); ol.textContent="";
+  cur.ordre.forEach(function(k,i){var li=document.createElement("li");li.textContent=NOMS[k];if(i<pas&&(i<3||pas===5))li.className="fait";else if(i===3)li.className="der";ol.appendChild(li);});
+}
+function aller(n){
+  if(n<0||n>5) return; pas=n;
+  if(anim) cancelAnimationFrame(anim);
+  if(pas>=4 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    var t0=null; var f=function(t){ if(!t0)t0=t; var u=Math.min(1,(t-t0)/1200); dessiner(u); if(u<1) anim=requestAnimationFrame(f); }; anim=requestAnimationFrame(f);
+  } else dessiner(1);
+}
+function stop(){ if(jeu){clearInterval(jeu);jeu=null;document.getElementById("bPlay").textContent="▶ Lecture";} }
+var zone=document.getElementById("scn");
+SC.forEach(function(s){
+  var b=document.createElement("button"); b.type="button"; b.textContent=s.nom; if(s===cur)b.className="on";
+  b.addEventListener("click",function(){ stop(); cur=s; Array.prototype.forEach.call(zone.children,function(x){x.className="";}); b.className="on"; aller(0); });
+  zone.appendChild(b);
+});
+document.getElementById("bNext").addEventListener("click",function(){stop();aller(pas+1);});
+document.getElementById("bPrev").addEventListener("click",function(){stop();aller(pas-1);});
+document.getElementById("bZero").addEventListener("click",function(){stop();aller(0);});
+document.getElementById("bPlay").addEventListener("click",function(){
+  if(jeu){stop();return;}
+  if(pas>=5) aller(0);
+  this.textContent="❚❚ Pause";
+  jeu=setInterval(function(){ if(pas>=5){stop();return;} aller(pas+1); },2600);
+});
+aller(0);
+
+/* ---------- QCM ---------- */
+var Q=[
+ {q:"Vous êtes amarré avec l'étrave face au courant et vous souhaitez appareiller. Le meilleur ordre pour larguer vos amarres est :",
+  o:["Garde avant, amarre arrière, amarre avant, garde arrière","Amarre arrière, garde arrière, garde avant, amarre avant","Garde arrière, amarre arrière, garde avant, amarre avant","Garde avant, garde arrière, amarre avant, amarre arrière"],
+  x:"D'abord les amarres molles (garde avant, amarre arrière), puis l'amarre avant. La garde arrière en dernier : le courant ouvre l'avant et l'on part face à lui.",s:"Pratique · question qruiz.net"},
+ {q:"Le courant vient de l'arrière. Quel est le meilleur ordre pour larguer ?",
+  o:["Garde arrière, amarre avant, amarre arrière, garde avant","Garde avant, amarre arrière, amarre avant, garde arrière","Amarre avant, amarre arrière, garde avant, garde arrière","Amarre arrière, garde avant, garde arrière, amarre avant"],
+  x:"C'est l'ordre inverse du courant de l'avant. La garde avant reste en dernier : le courant ouvre l'arrière, et l'on part en marche arrière, face au courant.",s:"Pratique"},
+ {q:"Le courant vient de l'avant. Quelles amarres travaillent (sont tendues) ?",
+  o:["L'amarre avant et la garde arrière","L'amarre arrière et la garde avant","Les deux gardes","Aucune"],
+  x:"Le courant pousse le bateau vers l'arrière : ce sont les amarres qui l'empêchent de reculer, l'amarre avant et la garde arrière.",s:"Pratique"},
+ {q:"La garde arrière (garde montante) empêche le bateau :",
+  o:["de reculer","d'avancer","de s'écarter du quai par l'arrière","de gîter"],
+  x:"Elle part de l'arrière du bateau vers l'avant sur le quai : elle se tend dès que le bateau recule.",s:"Pratique"},
+ {q:"La garde avant (garde descendante) empêche le bateau :",
+  o:["d'avancer","de reculer","de s'écarter du quai par l'avant","de tourner"],
+  x:"Elle part de l'avant du bateau vers l'arrière sur le quai : elle se tend dès que le bateau avance.",s:"Pratique"},
+ {q:"Pourquoi larguer d'abord les amarres molles ?",
+  o:["Parce qu'elles ne retiennent rien : le bateau ne bouge pas quand on les largue","Parce qu'elles sont plus faciles à lover","Parce que le règlement l'impose","Parce qu'elles sont plus courtes"],
+  x:"On garde le contrôle : tant que les amarres qui travaillent sont en place, le bateau reste immobile.",s:"Pratique"},
+ {q:"Le vent vous plaque contre le quai, sans courant. Comment décoller l'avant ?",
+  o:["Garder la garde arrière et faire une marche arrière lente : l'avant pivote vers le large","Larguer tout et faire marche avant toute","Garder l'amarre avant et faire marche avant","Attendre que le vent tombe : c'est impossible"],
+  x:"La garde arrière (montante) retient l'arrière pendant la marche arrière : le bateau pivote autour de l'arrière et l'avant s'ouvre. Voir aussi « Manœuvres de port animées ».",s:"Pratique"},
+ {q:"Le vent vous écarte du quai. Que se passe-t-il si vous larguez tout ?",
+  o:["Le vent éloigne le bateau du quai : le départ est facile","Le bateau reste collé au quai","Le bateau part en avant tout seul","Le bateau chavire"],
+  x:"C'est la situation la plus simple : le vent fait le travail. On largue en gardant une pointe en dernier pour garder la main.",s:"Pratique"},
+ {q:"Vous accostez avec le courant de l'avant. Quelle amarre passer en premier ?",
+  o:["L'amarre avant (ou la garde arrière) : le bout qui reçoit le courant","L'amarre arrière","La garde avant","Peu importe"],
+  x:"On amarre d'abord le bout du bateau qui reçoit le courant ou le vent ; sinon le courant fait pivoter le bateau.",s:"Pratique"},
+ {q:"Sur un fleuve, on manœuvre de préférence :",
+  o:["Face au courant","Courant dans le dos","Travers au courant","Peu importe"],
+  x:"Face au courant, le bateau garde de la vitesse sur l'eau (donc du contrôle de barre) tout en avançant lentement par rapport au quai.",s:"Pratique"},
+ {q:"Un panneau A.7 est planté sur la rive. Vous pouvez :",
+  o:["Vous amarrer sur l'autre rive, mais pas sur celle du panneau","Vous amarrer sur les deux rives","Ne vous amarrer nulle part","Seulement mouiller l'ancre devant le panneau"],
+  x:"Art. 7.04 : l'interdiction du A.7 « s'applique alors du côté de la voie où ce signal est placé ».",s:"Règlement · art. 7.04 · au programme"},
+ {q:"Pour vous amarrer, vous pouvez utiliser :",
+  o:["Uniquement les bittes, anneaux et dispositifs prévus pour l'amarrage","Un arbre solide de la berge","Une balise du chenal","Un panneau de signalisation"],
+  x:"Art. 7.04 : on ne peut pas utiliser « d'autres objets ou dispositifs que ceux destinés à cet effet ».",s:"Règlement · art. 7.04 · au programme"}
+];
+var qz=document.getElementById("qz"), bons=0, faits=0;
+var sc=document.createElement("p"); sc.className="score";
+function maj(){ sc.textContent="Score : "+bons+" / "+faits+(faits===Q.length?" — terminé":""); }
+Q.forEach(function(it,i){
+  var box=document.createElement("div"); box.className="stage";
+  var n=document.createElement("div"); n.className="qn"; n.textContent="Question "+(i+1)+" / "+Q.length; box.appendChild(n);
+  var q=document.createElement("p"); q.className="q"; q.textContent=it.q; box.appendChild(q);
+  var ord=it.o.map(function(t,k){return[t,k];}); for(var j=ord.length-1;j>0;j--){var r=Math.floor(Math.random()*(j+1));var t=ord[j];ord[j]=ord[r];ord[r]=t;}
+  var zo=document.createElement("div"); zo.className="qo"; box.appendChild(zo);
+  var ex=document.createElement("div"); ex.className="qx"; ex.hidden=true; box.appendChild(ex);
+  var so=document.createElement("div"); so.className="qs"; so.textContent=it.s; box.appendChild(so);
+  var fini=false;
+  ord.forEach(function(p){
+    var b=document.createElement("button"); b.type="button"; b.textContent=p[0];
+    b.addEventListener("click",function(){
+      if(fini) return; fini=true; faits++;
+      if(p[1]===0){bons++;b.className="bon";ex.textContent="Juste. "+it.x;}
+      else{b.className="faux";Array.prototype.forEach.call(zo.children,function(c,ix){if(ord[ix][1]===0)c.className="bon";});ex.textContent="Non. "+it.x;}
+      ex.hidden=false; maj();
+    });
+    zo.appendChild(b);
+  });
+  qz.appendChild(box);
+});
+maj(); qz.appendChild(sc);
+})();
+</script>
+</body>
+</html>
