@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bouée de chenal préféré</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.5 -apple-system,system-ui,sans-serif;padding:14px 16px 30px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:#5b6577}h1{font-size:22px;margin:4px 0 8px}h2{font-size:18px;margin:0 0 6px}
+.card{background:#fff;border:1px solid #d9dee7;border-radius:16px;padding:12px 14px;margin:12px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+figure{margin:0;text-align:center;font-size:14px;color:#5b6577}
+svg{width:100%;height:auto;border-radius:12px;display:block}
+.ok{background:#e6f5ea;border-left:5px solid #1a9c46;border-radius:0 10px 10px 0;padding:10px 12px;font-weight:600}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Dessin · version 1.0 · balisage AISM région A</div>
+<h1>La bouée rouge à bande verte</h1>
+
+<div class="card">
+<div class="two">
+<figure>
+<svg viewBox="0 0 200 260">
+ <rect width="200" height="260" fill="#cfe3f2"/>
+ <path d="M0 215 Q50 207 100 215 T200 215 V260 H0Z" fill="#9cc3e3"/>
+ <!-- voyant cylindre rouge -->
+ <line x1="100" y1="96" x2="100" y2="62" stroke="#14213d" stroke-width="3"/>
+ <rect x="86" y="30" width="28" height="32" fill="#d62828" stroke="#14213d" stroke-width="2"/>
+ <!-- corps cylindrique : rouge / bande verte / rouge -->
+ <rect x="60" y="96" width="80" height="40" fill="#d62828"/>
+ <rect x="60" y="136" width="80" height="34" fill="#1a9c46"/>
+ <rect x="60" y="170" width="80" height="40" fill="#d62828"/>
+ <rect x="60" y="96" width="80" height="114" fill="none" stroke="#14213d" stroke-width="2"/>
+ <text x="150" y="122" font-size="12" fill="#14213d">rouge</text>
+ <text x="146" y="157" font-size="12" fill="#1a7a3a" font-weight="700">verte</text>
+ <text x="150" y="194" font-size="12" fill="#14213d">rouge</text>
+ <text x="122" y="44" font-size="12" fill="#14213d">cylindre</text>
+</svg>
+<figcaption>de jour</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 200 260">
+ <rect width="200" height="260" fill="#0b1424"/>
+ <path d="M0 215 Q50 207 100 215 T200 215 V260 H0Z" fill="#14233a"/>
+ <circle id="halo" cx="100" cy="110" r="40" fill="#ff3b30" opacity="0"/>
+ <circle id="lamp" cx="100" cy="110" r="14" fill="#2a2f36"/>
+ <text x="100" y="190" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">Fl(2+1) R</text>
+ <text x="100" y="210" text-anchor="middle" font-size="12" fill="#c8d2e0">2 éclats · pause · 1 éclat</text>
+</svg>
+<figcaption>de nuit (le feu clignote)</figcaption>
+</figure>
+</div>
+</div>
+
+<div class="card">
+<h2>Où passer ? (vu d'en haut, en entrant au port)</h2>
+<svg viewBox="0 0 400 300">
+ <rect width="400" height="300" fill="#e8c98f"/>
+ <!-- chenal en Y : entrée en bas, branche principale à droite, secondaire à gauche -->
+ <path d="M160 300 L160 170 L40 40 L120 0 L205 120 L260 0 L360 0 L240 170 L240 300 Z" fill="#9cc9ea"/>
+ <!-- bouée -->
+ <g transform="translate(205 150)"><rect x="-9" y="-14" width="18" height="10" fill="#d62828"/><rect x="-9" y="-4" width="18" height="8" fill="#1a9c46"/><rect x="-9" y="4" width="18" height="10" fill="#d62828"/><rect x="-9" y="-14" width="18" height="28" fill="none" stroke="#14213d" stroke-width="1.5"/></g>
+ <!-- bateau qui entre -->
+ <g transform="translate(200 275)"><path d="M0 -16 Q8 -4 7 12 L-7 12 Q-8 -4 0 -16Z" fill="#fff" stroke="#14213d" stroke-width="2"/></g>
+ <!-- route principale -->
+ <path d="M205 258 Q230 200 300 40" fill="none" stroke="#1a9c46" stroke-width="5" marker-end="url(#a1)"/>
+ <path d="M195 258 Q175 200 80 50" fill="none" stroke="#7a8696" stroke-width="3" stroke-dasharray="7 6" marker-end="url(#a2)"/>
+ <defs><marker id="a1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1a9c46"/></marker>
+ <marker id="a2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7a8696"/></marker></defs>
+ <text x="310" y="70" font-size="14" font-weight="800" fill="#137a37">chenal</text><text x="310" y="86" font-size="14" font-weight="800" fill="#137a37">principal</text>
+ <text x="14" y="90" font-size="13" fill="#4a5568">chenal</text><text x="14" y="105" font-size="13" fill="#4a5568">secondaire</text>
+ <text x="225" y="150" font-size="12" font-weight="700" fill="#14213d">bouée à</text><text x="225" y="164" font-size="12" font-weight="700" fill="#14213d">votre gauche</text>
+ <text x="200" y="298" text-anchor="middle" font-size="12" fill="#14213d">vous entrez</text>
+</svg>
+<p class="ok">Le rouge domine → traitez-la comme une bouée rouge : laissez-la à votre <b>gauche</b> (bâbord). Le chenal <b>principal</b> continue alors à <b>droite</b> (tribord). La bande verte rappelle qu'une autre branche existe à gauche.</p>
+</div>
+
+<div class="card">
+<h2>Son contraire</h2>
+<svg viewBox="0 0 200 150" style="max-width:220px;margin:0 auto">
+ <rect width="200" height="150" fill="#cfe3f2"/>
+ <line x1="100" y1="44" x2="100" y2="28" stroke="#14213d" stroke-width="3"/>
+ <polygon points="100,6 114,28 86,28" fill="#1a9c46" stroke="#14213d" stroke-width="2"/>
+ <polygon points="100,44 132,130 68,130" fill="#1a9c46" stroke="#14213d" stroke-width="2"/>
+ <polygon points="84,86 116,86 122,102 78,102" fill="#d62828"/>
+</svg>
+<p>Bouée <b>verte à bande rouge</b> (conique), feu <b>vert</b> Fl(2+1) : laissez-la à votre <b>droite</b> ; le chenal principal continue à <b>gauche</b>.</p>
+</div>
+</div>
+<script>
+const seq=[500,500,500,1500,500,6500];const per=seq.reduce((a,b)=>a+b,0);
+function lit(t){let x=t%per;for(let i=0;i<seq.length;i++){if(x<seq[i])return i%2===0;x-=seq[i];}return false;}
+function tick(n){const on=lit(n);document.getElementById('lamp').setAttribute('fill',on?'#ff3b30':'#2a2f36');document.getElementById('halo').setAttribute('opacity',on?.35:0);requestAnimationFrame(tick);}
+requestAnimationFrame(tick);
+</script>
+</body></html>

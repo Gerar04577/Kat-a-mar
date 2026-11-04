@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Priorités mer, Escaut, Terneuzen</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00;--sea:#e3f0fb;--riv:#eaf6ee}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810;--sea:#13263a;--riv:#142a1e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,sans-serif;padding:14px 12px 30px}
+.w{max-width:720px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:22px;margin:4px 0 6px}h2{font-size:19px;margin:0 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:12px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.col{border-radius:12px;padding:8px}
+.col.mer{background:var(--sea)}.col.esc{background:var(--riv)}.col.ter{background:var(--riv)}
+.col h3{margin:0 0 2px;font-size:16px;text-align:center}
+.col .src{font-size:11px;text-align:center;color:var(--mute);margin-bottom:6px}
+.rung{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px 6px;margin:4px 0;font-size:13.5px;line-height:1.25}
+.rung .num{flex:0 0 20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.rung svg,.rung .em{flex:0 0 26px;width:26px;height:30px;font-size:20px;text-align:center}
+.rung.hl{border:2px solid var(--ko);background:var(--kobg)}
+.rung small{display:block;color:var(--mute);font-size:11.5px}
+.arrow{text-align:center;font-size:12px;color:var(--mute);margin:4px 0}
+.ret{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px;font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}th{background:var(--bg)}
+td b.r{color:var(--ko)}
+.leg{font-size:13px;color:var(--mute)}
+.q{border-top:1px solid var(--line);padding:10px 0}.q:first-child{border-top:0}
+.q p{margin:0 0 6px;font-weight:700}
+.q .opts{display:grid;gap:6px}
+.q .opts button{text-align:left;min-height:44px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 15px system-ui;cursor:pointer;padding:6px 10px}
+.q .opts button.good{background:var(--okbg);border-color:var(--ok)}.q .opts button.bad{background:var(--kobg);border-color:var(--ko)}
+.q .ex{display:none;font-size:14px;color:var(--mute);margin-top:6px}.q .ex.show{display:block}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Maquette · version 1.3 · règles de priorité (revérifiée 4 fois) au programme du complément côtier</div>
+<h1>Qui s'écarte de qui ? Mer, Escaut, Terneuzen</h1>
+<p>Chaque échelle va du <b>plus prioritaire (1)</b> au <b>moins prioritaire</b>. Un bateau s'écarte de tous ceux qui sont <b>au-dessus</b> de lui. Les cases <b style="color:var(--ko)">rouges</b> sont celles qui changent d'une échelle à l'autre.</p>
+
+<section class="card">
+<h2>1. La mer et l'Escaut côte à côte</h2>
+<div class="two">
+ <div class="col mer"><h3>🌊 MER</h3><div class="src">RIPAM règle 18</div><div id="mer"></div></div>
+ <div class="col esc"><h3>🏞️ ESCAUT</h3><div class="src">Escaut maritime inférieur, art. 18</div><div id="esc"></div></div>
+</div>
+<div class="arrow">↓ chacun s'écarte de ceux qui sont au-dessus</div>
+<div class="ret"><b>Les 3 grandes différences :</b><br>
+1. <b>Moteur et voilier sont inversés.</b> En mer, le moteur s'écarte du voilier. Sur l'Escaut, le voilier s'écarte du moteur (art. 18 § 2)… <b>sauf entre deux bateaux de moins de 20 m</b> : là, c'est le moteur qui s'écarte du voilier (art. 42 § 2).<br>
+2. <b>Le gros navire</b> : en mer, le « handicapé par son tirant d'eau » est <b>sous</b> le bateau à capacité restreinte. Sur l'Escaut, le « navire de grandes dimensions » est <b>au-dessus</b> : c'est le bateau à capacité restreinte qui s'écarte de lui.<br>
+3. <b>Petite embarcation</b> (moins de 20 m, sauf remorqueur et pousseur) : sur l'Escaut, elle s'écarte de tout bateau qui n'est pas une petite embarcation (§ 6). En mer, cette règle n'existe pas, sauf dans un chenal étroit ou un dispositif de séparation du trafic (règles 9 et 10).</div>
+<p class="leg">En mer, la règle 18 commence par « Sauf dispositions contraires des règles 9, 10 et 13 » : chenal étroit, dispositif de séparation du trafic, rattrapage. Escaut : au programme, seuls les § 1 à 3 et 6 de l'art. 18 ; les § 4 (grand navire) et 5 (capacité restreinte) sont <b>hors liste officielle</b>, mais le site booost les interroge. Entre deux voiliers sur l'Escaut, l'art. 12 § 1 passe d'abord : celui qui tient la droite du chenal (ou, hors du chenal, le côté à son tribord) continue. Entre deux voiliers de moins de 20 m, voir l'art. 42 (même principe).</p>
+</section>
+
+<section class="card">
+<h2>2. Le canal de Gand à Terneuzen</h2>
+<div class="col ter"><h3>🚢 CANAL GAND-TERNEUZEN</h3><div class="src">Règlement de navigation, art. 18 et 6 § 6 (partie belge du canal)</div><div id="ter"></div></div>
+<div class="ret"><b>Plus simple que l'Escaut :</b> après les 3 premiers, le canal ne distingue plus moteur, voile ou pêche. Tous les autres bateaux sont au même niveau, et la <b>petite embarcation</b> s'écarte de tout bateau qui n'est pas une petite embarcation (§ 1 d).</div>
+<h3 style="font-size:16px;margin:12px 0 4px">Entre deux petites embarcations (§ 4 à 8)</h3>
+<table>
+<tr><th>Situation</th><th>Qui s'écarte ?</th></tr>
+<tr><td>Règle n°1 (§ 4)</td><td>Celle qui n'est <b>pas</b> du côté tribord du canal. Celle qui tient sa droite continue.</td></tr>
+<tr><td>Moteur / rames / voile (§ 5)</td><td><b>Moteur</b> s'écarte des deux autres ; <b>rames</b> s'écartent de la voile.</td></tr>
+<tr><td>Deux moteurs face à face (§ 6 a)</td><td><b>Les deux</b> viennent sur tribord.</td></tr>
+<tr><td>Deux moteurs, routes qui se croisent (§ 6 b)</td><td>Celle qui a l'autre <b>à sa droite</b>.</td></tr>
+<tr><td>Deux voiliers, amures différentes (§ 8 a)</td><td><b>Bâbord amure</b>.</td></tr>
+<tr><td>Deux voiliers, même amure (§ 8 b)</td><td>Celui <b>au vent</b>.</td></tr>
+</table>
+<p class="leg">Attention : l'édition du règlement de Terneuzen que j'ai est à jour au 17/09/2005 ; elle peut avoir été modifiée depuis.</p>
+</section>
+
+<section class="card">
+<h2>3. Les pièges en un tableau</h2>
+<table>
+<tr><th></th><th>🌊 Mer</th><th>🏞️ Escaut</th><th>🚢 Terneuzen</th></tr>
+<tr><td>Moteur ↔ voilier (deux grands)</td><td>moteur s'écarte</td><td><b class="r">voilier s'écarte</b></td><td><b class="r">à 20 m et plus, naviguer à la voile est interdit</b> (art. 6 § 6)</td></tr>
+<tr><td>Capacité restreinte ↔ gros navire</td><td>le handicapé par son tirant d'eau (un navire à moteur) <b>s'écarte</b> de la capacité restreinte (18 a ii et 18 d)</td><td><b class="r">capacité restreinte s'écarte</b></td><td><b class="r">capacité restreinte s'écarte</b></td></tr>
+<tr><td>Petite embarcation (&lt; 20 m)</td><td>pas de règle générale</td><td><b class="r">s'écarte de tout plus grand</b></td><td><b class="r">s'écarte de tout plus grand</b></td></tr>
+<tr><td>Bateau qui pêche</td><td>prioritaire sur voile et moteur</td><td><b class="r">dépend : hors chenal ou dans le chenal</b></td><td>pas de rang à part</td></tr>
+<tr><td>Non maître de sa manœuvre</td><td colspan="3">Il n'a <b>jamais</b> à s'écarter. N°1 sur l'Escaut et à Terneuzen ; en mer, il est <b>à égalité</b> avec le navire à capacité restreinte (la règle 18 ne dit pas que l'un s'écarte de l'autre).</td></tr>
+<tr><td>Celui qui rattrape</td><td colspan="3"><b>S'écarte</b> (RIPAM 13 ; Escaut et Terneuzen art. 13). Sur l'Escaut, la règle ne joue pas entre un bateau dans le chenal et un bateau hors du chenal ; à Terneuzen, on ne dépasse pas un navire de grandes dimensions sans autorisation.</td></tr>
+</table>
+</section>
+
+<section class="card">
+<h2>3 bis. Sur l'Escaut, entre deux petites embarcations (moins de 20 m)</h2>
+<p>Le chapitre VI du règlement (art. 40 à 42) donne des règles <b>dérogatoires</b> pour les petites embarcations. Elles passent avant l'art. 18 quand les deux bateaux font moins de 20 m :</p>
+<table>
+<tr><th>Situation</th><th>Qui s'écarte ?</th></tr>
+<tr><td>Règle n°1 (art. 42 § 1)</td><td>Celle qui n'est <b>pas</b> du côté tribord de la voie navigable. Celle qui tient sa droite continue, quel que soit son mode de propulsion.</td></tr>
+<tr><td>Moteur / rames / voile (§ 2)</td><td>Le <b>moteur</b> s'écarte des deux autres ; les <b>rames</b> s'écartent du voilier.</td></tr>
+<tr><td>Deux moteurs face à face (§ 3, 1°)</td><td><b>Les deux</b> viennent sur tribord.</td></tr>
+<tr><td>Deux moteurs, routes qui se croisent (§ 3, 2°)</td><td>Celui qui voit l'autre <b>sur tribord</b>.</td></tr>
+<tr><td>Deux voiliers (§ 5)</td><td>Bâbord amure s'écarte ; même amure : celui <b>au vent</b> s'écarte.</td></tr>
+</table>
+<p class="leg">Ce sont les mêmes règles que sur le canal de Gand à Terneuzen (art. 18 § 4 à 8). Attention : la matière d'examen liste l'art. 42 parmi les articles de l'Escaut au programme.</p>
+</section>
+
+<section class="card">
+<h2>4. Comment les reconnaître de jour</h2>
+<div id="marks" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+</section>
+
+<section class="card">
+<h2>5. Testez-vous</h2>
+<div id="test"></div>
+</section>
+<p class="leg">Sources : RIPAM règles 9, 13, 18 et 28 ; règlement de navigation de l'Escaut maritime inférieur (AR 23/09/1992, Justel) art. 2, 18 et 28 ; règlement de navigation du canal de Gand à Terneuzen (AR 23/09/1992, éd. 2005) art. 2, 6 § 6, 13, 18 et 28 ; Escaut art. 12 et 13. Programme : matière d'examen du complément au brevet général (RIPAM règle 18 a-d ; Escaut art. 18 § 1-3 et 6 ; Terneuzen art. 18 § 1 et 4-8).</p>
+</div>
+<script>
+const I={
+ nuc:'<svg viewBox="0 0 26 30"><line x1="13" y1="0" x2="13" y2="30" stroke="#999"/><circle cx="13" cy="8" r="6" fill="#111"/><circle cx="13" cy="22" r="6" fill="#111"/></svg>',
+ ram:'<svg viewBox="0 0 26 30"><circle cx="13" cy="5" r="4.5" fill="#111"/><polygon points="13,10 18,15 13,20 8,15" fill="#111"/><circle cx="13" cy="25" r="4.5" fill="#111"/></svg>',
+ cyl:'<svg viewBox="0 0 26 30"><rect x="7" y="5" width="12" height="20" rx="2" fill="#111"/></svg>',
+ pec:'<svg viewBox="0 0 26 30"><polygon points="6,2 20,2 13,15" fill="#111"/><polygon points="13,15 20,28 6,28" fill="#111"/></svg>',
+ voi:'<span class="em">⛵</span>',mot:'<span class="em">🛥️</span>',pet:'<span class="em">🚣</span>',all:'<span class="em">🚢</span>'
+};
+function lad(id,rows){document.getElementById(id).innerHTML=rows.map((r,i)=>`<div class="rung${r[3]?' hl':''}"><span class="num">${i+1}</span>${I[r[0]]}<span>${r[1]}${r[2]?`<small>${r[2]}</small>`:''}</span></div>`).join('');}
+lad('mer',[
+ ['nuc','Non maître de sa manœuvre','2 boules noires'],
+ ['ram','Capacité de manœuvre restreinte','boule-losange-boule · à égalité avec le n°1 : aucun ne s\'écarte de l\'autre'],
+ ['cyl','Handicapé par son tirant d\'eau','cylindre · on évite de le gêner',1],
+ ['pec','En train de pêcher','2 cônes pointe à pointe'],
+ ['voi','Voilier','',1],
+ ['mot','Bateau à moteur','s\'écarte du voilier',1]
+]);
+lad('esc',[
+ ['nuc','Non maître de sa manœuvre',''],
+ ['cyl','Navire de grandes dimensions','cylindre · 3 feux rouges',1],
+ ['ram','Capacité de manœuvre restreinte','s\'écarte du grand navire',1],
+ ['pec','Pêche hors du chenal',''],
+ ['mot','Bateau à moteur','',1],
+ ['voi','Voilier','s\'écarte du moteur (sauf entre bateaux < 20 m : art. 42)',1],
+ ['pec','Pêche dans le chenal','s\'écarte aussi du moteur et du voilier'],
+ ['pet','Petite embarcation (< 20 m)','s\'écarte de tout bateau qui n\'est pas une petite embarcation',1]
+]);
+lad('ter',[
+ ['nuc','Non maître de sa manœuvre',''],
+ ['cyl','Navire de grandes dimensions','cylindre · 3 feux rouges'],
+ ['ram','Capacité de manœuvre restreinte','s\'écarte du grand navire'],
+ ['all','Tous les autres bateaux','aucune priorité entre eux par l\'art. 18 ; à 20 m et plus, la voile est interdite',1],
+ ['pet','Petite embarcation (< 20 m)','s\'écarte de tout plus grand',1]
+]);
+document.getElementById('marks').innerHTML=[
+ ['nuc','Non maître de sa manœuvre','2 boules noires · nuit : 2 feux rouges'],
+ ['ram','Capacité restreinte','boule-losange-boule · nuit : rouge-blanc-rouge'],
+ ['cyl','Gros navire','cylindre · nuit : 3 feux rouges (mer : tirant d\'eau ; Escaut/Terneuzen : grandes dimensions)'],
+ ['pec','En train de pêcher','2 cônes pointe à pointe']
+].map(m=>`<div class="rung" style="align-items:flex-start">${I[m[0]]}<span><b>${m[1]}</b><small>${m[2]}</small></span></div>`).join('');
+
+const T=[
+ ["EN MER, un grand bateau à moteur et un grand voilier se croisent. Qui s'écarte ?",["Le bateau à moteur","Le voilier"],0,"RIPAM 18 a iv : le navire à propulsion mécanique s'écarte d'un navire à voile."],
+ ["SUR L'ESCAUT, un bateau à moteur de 40 m et un voilier de 25 m se croisent. Qui s'écarte ?",["Le bateau à moteur","Le voilier"],1,"Escaut art. 18 § 2 : le bateau à voile s'écarte des bateaux du § 1, « y compris un bateau à propulsion mécanique »."],
+ ["SUR L'ESCAUT, un bateau à capacité de manœuvre restreinte (qui fait route) rencontre un navire de grandes dimensions. Qui s'écarte ?",["Le navire de grandes dimensions","Le bateau à capacité restreinte"],1,"Escaut art. 18 § 5, 1° : le bateau à capacité de manœuvre restreinte s'écarte du navire de grandes dimensions."],
+ ["Dans les trois zones, qui n'a jamais à s'écarter selon les règles de priorité ?",["Le navire de grandes dimensions","Le non maître de sa manœuvre","Le voilier"],1,"Le non maître de sa manœuvre ne peut pas manœuvrer : aucune règle de priorité ne lui demande de s'écarter. (En mer, le navire à capacité restreinte n'a pas non plus à s'écarter de lui : ils sont à égalité.)"],
+ ["SUR L'ESCAUT, votre bateau de 9 m à moteur rencontre une péniche. Qui s'écarte ?",["La péniche","Votre bateau"],1,"Escaut art. 18 § 6 : une petite embarcation (moins de 20 m) s'écarte de tout bateau autre qu'une petite embarcation."],
+ ["SUR L'ESCAUT, deux bateaux de 20 m ou plus : qui s'écarte, un voilier ou un bateau qui pêche DANS le chenal ?",["Le voilier","Le bateau qui pêche"],1,"Escaut art. 18 § 3, 1° : le bateau qui pêche dans le chenal s'écarte aussi des bateaux à moteur et à voile."],
+ ["CANAL DE TERNEUZEN, deux petites embarcations : un moteur et un voilier. Qui s'écarte (hors cas du § 4) ?",["Le moteur","Le voilier"],0,"Terneuzen art. 18 § 5 a : la petite embarcation à propulsion mécanique s'écarte de l'autre."],
+ ["CANAL DE TERNEUZEN, deux petites embarcations se rapprochent. Règle n°1 ?",["Celle du côté tribord du canal continue","La plus rapide continue"],0,"Terneuzen art. 18 § 4 : celle qui se trouve du côté tribord de la voie navigable poursuit sa route."],
+ ["EN MER, un voilier de 8 m dans un chenal étroit rencontre un cargo qui ne peut naviguer que dans ce chenal. Qui s'écarte ?",["Le cargo, car le moteur s'écarte du voilier","Le voilier"],1,"RIPAM 9 b : les navires de moins de 20 m et les voiliers ne doivent pas gêner un navire qui ne peut naviguer qu'à l'intérieur du chenal étroit. La règle 18 commence par « Sauf dispositions contraires des règles 9, 10 et 13 »."],
+ ["Un navire de grandes dimensions de nuit montre en plus de ses feux :",["3 feux rouges superposés","2 feux rouges superposés","rouge-blanc-rouge"],0,"Escaut et Terneuzen art. 28 : trois feux rouges puissants visibles de tous les côtés ; de jour, un cylindre."]
+];
+document.getElementById('test').innerHTML=T.map((t,i)=>`<div class="q" data-i="${i}"><p>${i+1}. ${t[0]}</p><div class="opts">${t[1].map((o,j)=>`<button data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="ex">${t[3]}</div></div>`).join('');
+document.querySelectorAll('#test .q').forEach(q=>{const t=T[+q.dataset.i];q.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;q.querySelectorAll('button').forEach(x=>{if(+x.dataset.j===t[2])x.classList.add('good')});if(+b.dataset.j!==t[2])b.classList.add('bad');q.querySelector('.ex').classList.add('show');});});
+</script>
+</body></html>

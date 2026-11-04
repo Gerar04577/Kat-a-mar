@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>En route ou fait route</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.5 -apple-system,system-ui,sans-serif;padding:14px 16px 30px}
+.w{max-width:620px;margin:0 auto}.v{font-size:12px;color:#5b6577}
+h1{font-size:22px;margin:4px 0 10px}svg{width:100%;height:auto;background:#fff;border-radius:16px;border:1px solid #d9dee7}
+.c{background:#fff;border:1px solid #d9dee7;border-radius:14px;padding:12px 14px;margin:12px 0}
+.ok{color:#1a9c46;font-weight:800}.ko{color:#c92a2a;font-weight:800}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Schéma · version 1.0</div>
+<h1>« En route » et « fait route » : deux cercles</h1>
+<svg viewBox="0 0 400 430" font-family="system-ui,sans-serif">
+ <!-- dehors -->
+ <text x="200" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#5b6577">DEHORS : ni l'un ni l'autre</text>
+ <text x="20" y="58" font-size="22">⚓</text><text x="46" y="56" font-size="13" fill="#5b6577">à l'ancre</text>
+ <text x="300" y="58" font-size="22">🪢</text><text x="326" y="56" font-size="13" fill="#5b6577">amarré</text>
+ <text x="160" y="418" font-size="22">🪨</text><text x="186" y="416" font-size="13" fill="#5b6577">échoué</text>
+ <!-- grand cercle -->
+ <circle cx="200" cy="235" r="160" fill="#dbeafe" stroke="#0b5c8a" stroke-width="3"/>
+ <text x="200" y="104" text-anchor="middle" font-size="18" font-weight="800" fill="#0b5c8a">GRAND CERCLE : EN ROUTE</text>
+ <text x="200" y="124" text-anchor="middle" font-size="13" fill="#0b5c8a">ni ancré, ni amarré, ni échoué</text>
+ <text x="200" y="152" text-anchor="middle" font-size="22">⛵</text>
+ <text x="200" y="172" text-anchor="middle" font-size="13" fill="#14213d">moteur coupé, il dérive</text>
+ <!-- petit cercle -->
+ <circle cx="200" cy="285" r="85" fill="#bbf7d0" stroke="#1a9c46" stroke-width="3"/>
+ <text x="200" y="250" text-anchor="middle" font-size="17" font-weight="800" fill="#137a37">PETIT CERCLE :</text>
+ <text x="200" y="270" text-anchor="middle" font-size="17" font-weight="800" fill="#137a37">FAIT ROUTE</text>
+ <text x="200" y="304" text-anchor="middle" font-size="24">🚤 ➜</text>
+ <text x="200" y="330" text-anchor="middle" font-size="13" fill="#14213d">il avance dans l'eau</text>
+</svg>
+<div class="c">
+<p>Le <b>petit cercle est dedans le grand</b>. Donc :</p>
+<p>🚤 Un bateau dans le petit cercle (<b>fait route</b>) est forcément aussi dans le grand (<b>en route</b>). → <span class="ok">C est juste</span></p>
+<p>⛵ Mais un bateau du grand cercle n'est pas forcément dans le petit : celui qui dérive moteur coupé est <b>en route</b> sans <b>faire route</b>. → <span class="ko">D est faux</span></p>
+<p>⛵ Ce bateau immobile qui dérive est bien <b>dans</b> le grand cercle. → <span class="ko">A est faux</span>, et « tout bateau en route avance » aussi. → <span class="ko">B est faux</span></p>
+</div>
+<div class="c">Pareil que : <b>tout Belge est Européen</b>, mais tout Européen n'est pas Belge. Belge = petit cercle (fait route), Européen = grand cercle (en route).</div>
+</div></body></html>

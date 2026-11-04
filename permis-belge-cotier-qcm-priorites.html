@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>QCM Priorités</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,sans-serif;padding:max(12px,env(safe-area-inset-top)) 16px 40px}
+.w{max-width:660px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:22px;margin:4px 0 8px}h2{font-size:18px;margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.tabs button,.btn{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 14px system-ui;cursor:pointer;padding:6px 10px}
+.tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.danger{color:var(--ko);border-color:var(--ko)}
+.counters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.counters div{background:var(--bg);border-radius:10px;padding:6px 2px}
+.counters b{display:block;font-size:20px}.counters span{font-size:11.5px;color:var(--mute)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:8px;background:var(--accent)}
+.tag{display:inline-block;font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;background:var(--bg);color:var(--accent);letter-spacing:.3px}
+.qq{font-size:19px;font-weight:700;margin:8px 0 10px}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;min-height:52px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:500 16px system-ui;padding:8px 12px;cursor:pointer}
+.opts button.good{background:var(--okbg);border-color:var(--ok)}.opts button.bad{background:var(--kobg);border-color:var(--ko)}
+.exp{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);display:none}.exp.show{display:block}
+.exp .src{font-size:13px;color:var(--mute);margin-top:6px}
+.nav{display:flex;gap:8px;margin-top:12px}.nav .btn{flex:1}
+.statrow{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;margin:8px 0}
+.statrow .sb{grid-column:1/-1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}.statrow .sb i{display:block;height:10px}
+.hist{font-size:14px;width:100%;border-collapse:collapse}.hist td,.hist th{border-bottom:1px solid var(--line);padding:5px 4px;text-align:left}
+.err{border-left:4px solid var(--ko);padding:6px 10px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:15px}
+.err small{display:block;color:var(--mute)}
+.confirm{display:none;background:var(--kobg);border-radius:10px;padding:10px;margin-top:8px}.confirm.show{display:block}
+.big{font-size:30px;font-weight:900;text-align:center;margin:6px 0}
+.mute{color:var(--mute);font-size:14px}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">QCM · version 1.2 · 50 questions · priorités en mer, sur l'Escaut et sur le canal de Gand à Terneuzen</div>
+<h1>QCM — Qui s'écarte de qui ?</h1>
+<div class="tabs" id="tabs"><button data-t="qcm" class="on">QCM</button><button data-t="stats">Statistiques</button><button data-t="err">Mes erreurs</button></div>
+
+<!-- QCM -->
+<section id="v-qcm">
+<div class="card">
+ <div class="counters"><div><b id="cNum">0</b><span>question</span></div><div><b id="cOk" style="color:var(--ok)">0</b><span>justes</span></div><div><b id="cKo" style="color:var(--ko)">0</b><span>fausses</span></div><div><b id="cPct">–</b><span>réussite</span></div></div>
+ <div class="bar"><i id="prog" style="width:0"></i></div>
+ <div class="mute" id="progTxt"></div>
+</div>
+<div class="card" id="qbox"></div>
+<div class="card">
+ <h2>Choisir une série</h2>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+  <button class="btn" data-s="all">Les 50 questions</button>
+  <button class="btn" data-s="mer">🌊 Mer (RIPAM)</button>
+  <button class="btn" data-s="esc">🏞️ Escaut</button>
+  <button class="btn" data-s="ter">🚢 Terneuzen</button>
+  <button class="btn" data-s="mar">👁️ Marques & pièges</button>
+  <button class="btn" data-s="errs">❌ Seulement mes erreurs</button>
+ </div>
+ <p class="mute">Les questions et les réponses sont mélangées à chaque nouvelle série.</p>
+</div>
+</section>
+
+<!-- STATS -->
+<section id="v-stats" style="display:none">
+<div class="card"><h2>Toutes séries confondues</h2><div class="big" id="gPct">–</div><p class="mute" style="text-align:center" id="gTxt"></p></div>
+<div class="card"><h2>Par thème</h2><div id="byCat"></div></div>
+<div class="card"><h2>Historique des séries terminées</h2><div id="hist"></div></div>
+<div class="card"><h2>Remise à zéro</h2>
+ <p class="mute">Efface le compteur, les statistiques, l'historique et la liste des erreurs.</p>
+ <button class="btn danger" id="reset">Tout remettre à zéro</button>
+ <div class="confirm" id="conf"><b>Êtes-vous sûr ?</b> Tout sera effacé.<div class="nav"><button class="btn danger" id="yes">Oui, effacer</button><button class="btn" id="no">Annuler</button></div></div>
+</div>
+</section>
+
+<!-- ERREURS -->
+<section id="v-err" style="display:none"><div class="card"><h2>Les questions que vous avez ratées</h2><div id="errList"></div></div></section>
+
+<p class="mute" style="font-size:12px">Sources : RIPAM règles 3, 9, 12, 13, 18, 26 à 28 ; règlement de navigation de l'Escaut maritime inférieur (AR 23/09/1992) art. 2, 12, 13, 18, 26 à 28, 42 ; règlement de navigation du canal de Gand à Terneuzen (AR 23/09/1992, édition à jour au 17/09/2005) art. 2, 6, 13, 18, 28. Les résultats sont gardés dans ce navigateur, sur cet appareil.</p>
+</div>
+<script>
+const CAT={mer:'🌊 Mer (RIPAM)',esc:'🏞️ Escaut',ter:'🚢 Terneuzen',mar:'👁️ Marques & pièges'};
+const Q=[
+/* ---------- MER ---------- */
+{c:'mer',q:"En pleine mer, un grand bateau à moteur et un grand voilier (à la voile seule) se croisent. Qui s'écarte ?",o:["Le bateau à moteur","Le voilier","Le plus petit des deux"],a:0,e:"Le navire à propulsion mécanique s'écarte du navire à voile. La taille ne compte pas.",s:"RIPAM 18 a iv"},
+{c:'mer',q:"En mer, un voilier rencontre un bateau en train de pêcher. Qui s'écarte ?",o:["Le voilier","Le bateau qui pêche"],a:0,e:"Le navire à voile s'écarte d'un navire en train de pêcher.",s:"RIPAM 18 b iii"},
+{c:'mer',q:"En mer, un bateau à moteur rencontre un bateau en train de pêcher. Qui s'écarte ?",o:["Le bateau qui pêche","Le bateau à moteur"],a:1,e:"Le navire à propulsion mécanique s'écarte d'un navire en train de pêcher.",s:"RIPAM 18 a iii"},
+{c:'mer',q:"En mer, un bateau en train de pêcher rencontre un bateau non maître de sa manœuvre. Que fait le bateau qui pêche ?",o:["Il s'écarte, dans la mesure du possible","Il garde sa route : il est prioritaire"],a:0,e:"Le navire en train de pêcher s'écarte, dans la mesure du possible, du non maître de sa manœuvre et du bateau à capacité restreinte.",s:"RIPAM 18 c"},
+{c:'mer',q:"En mer, qui n'est PAS tenu d'éviter de gêner un navire handicapé par son tirant d'eau ?",o:["Le voilier","Le bateau en train de pêcher","Le non maître de sa manœuvre et le bateau à capacité restreinte"],a:2,e:"Tout navire autre qu'un non maître de sa manœuvre ou qu'un navire à capacité de manœuvre restreinte doit éviter de gêner le navire handicapé par son tirant d'eau.",s:"RIPAM 18 d i"},
+{c:'mer',q:"En mer, un navire handicapé par son tirant d'eau (navire à moteur) rencontre un bateau à capacité de manœuvre restreinte. Qui s'écarte ?",o:["Le bateau à capacité restreinte","Le navire handicapé par son tirant d'eau"],a:1,e:"Il est un navire à propulsion mécanique : il s'écarte du bateau à capacité restreinte. Et celui-ci est dispensé d'éviter de le gêner.",s:"RIPAM 18 a ii et 18 d i"},
+{c:'mer',q:"En mer, un voilier rattrape un bateau à moteur plus lent. Qui s'écarte ?",o:["Le bateau à moteur, car le moteur s'écarte du voilier","Le voilier, car il rattrape"],a:1,e:"Celui qui rattrape s'écarte toujours. La règle 13 passe avant la règle 18.",s:"RIPAM 13 a ; 18 « sauf règles 9, 10 et 13 »"},
+{c:'mer',q:"Quand êtes-vous un « navire qui en rattrape un autre » ?",o:["Quand vous arrivez par plus de 22,5° sur l'arrière de son travers","Quand vous allez plus vite que lui","Quand vous voyez ses feux de côté"],a:0,e:"De nuit, vous ne voyez que son feu de poupe, aucun feu de côté.",s:"RIPAM 13 b"},
+{c:'mer',q:"Vous ne savez pas si vous rattrapez un autre bateau. Que faites-vous ?",o:["Je me considère comme celui qui rattrape","J'applique la règle des routes qui se croisent","Je garde ma route"],a:0,e:"Dans le doute, on se considère comme le navire qui rattrape et on s'écarte.",s:"RIPAM 13 c"},
+{c:'mer',q:"Chenal étroit en mer : votre bateau de 9 m rencontre un cargo qui ne peut naviguer qu'à l'intérieur du chenal. Que faites-vous ?",o:["Je ne le gêne pas","Il doit m'éviter : je suis plus petit","Il doit ralentir pour moi"],a:0,e:"Les navires de moins de 20 m et les voiliers ne doivent pas gêner un navire qui ne peut naviguer en toute sécurité qu'à l'intérieur du chenal.",s:"RIPAM 9 b"},
+{c:'mer',q:"Dans un chenal étroit, de quel côté naviguez-vous ?",o:["Le plus près possible du bord à ma droite (tribord)","Au milieu","Le plus près possible du bord à ma gauche"],a:0,e:"Aussi près que possible de la limite extérieure droite du chenal, lorsque cela peut se faire sans danger.",s:"RIPAM 9 a"},
+{c:'mer',q:"Pouvez-vous traverser un chenal étroit devant un cargo qui ne peut naviguer qu'à l'intérieur ?",o:["Oui, si je ne le gêne pas","Oui, toujours : il doit m'éviter","Jamais"],a:0,e:"Un navire ne doit pas traverser un chenal étroit si, ce faisant, il gêne le passage de ce navire.",s:"RIPAM 9 d"},
+{c:'mer',q:"Dans un chenal étroit, un bateau en train de pêcher…",o:["ne doit pas gêner les autres navires qui naviguent dans le chenal","est prioritaire sur tous"],a:0,e:"Les navires en train de pêcher ne doivent pas gêner le passage des autres navires naviguant à l'intérieur d'un chenal étroit.",s:"RIPAM 9 c"},
+{c:'mer',q:"La règle 18 (moteur s'écarte du voilier, etc.) commence par « Sauf dispositions contraires des règles… »",o:["9, 10 et 13","5, 6 et 7","14 et 15"],a:0,e:"Chenaux étroits (9), dispositifs de séparation du trafic (10) et rattrapage (13) passent avant.",s:"RIPAM 18"},
+{c:'mer',q:"En mer, deux voiliers reçoivent le vent de bords différents. Qui s'écarte ?",o:["Celui qui reçoit le vent de bâbord","Celui qui reçoit le vent de tribord","Celui qui est au vent"],a:0,e:"Bâbord amure s'écarte de tribord amure.",s:"RIPAM 12 a i"},
+{c:'mer',q:"En mer, deux voiliers reçoivent le vent du même bord. Qui s'écarte ?",o:["Celui qui est au vent","Celui qui est sous le vent"],a:0,e:"Celui qui est au vent s'écarte de celui qui est sous le vent.",s:"RIPAM 12 a ii"},
+{c:'mer',q:"Comment savoir de quel côté un voilier reçoit le vent ?",o:["C'est le côté opposé à la grand-voile (la bôme)","C'est le côté de la grand-voile","C'est le côté de son pavillon"],a:0,e:"Le côté d'où vient le vent est le bord opposé au bord de brassage de la grand-voile.",s:"RIPAM 12 b"},
+{c:'mer',q:"En mer, un voilier avance à la voile ET au moteur. Pour les priorités, c'est…",o:["un navire à propulsion mécanique","un navire à voile","au choix du skipper"],a:0,e:"Un navire n'est « à voile » que si sa machine n'est pas utilisée.",s:"RIPAM 3 c"},
+/* ---------- ESCAUT ---------- */
+{c:'esc',q:"Sur l'Escaut maritime, un bateau à moteur de 40 m et un voilier de 25 m se croisent. Qui s'écarte ?",o:["Le bateau à moteur","Le voilier"],a:1,e:"Le bateau à voile s'écarte des bateaux du § 1, « y compris un bateau à propulsion mécanique ». C'est l'inverse de la mer ! (Entre deux bateaux de moins de 20 m, c'est différent : voir art. 42.)",s:"Escaut art. 18 § 2"},
+{c:'esc',q:"Sur l'Escaut, votre bateau de 9 m rencontre une péniche. Qui s'écarte ?",o:["La péniche","Votre bateau"],a:1,e:"Une petite embarcation s'écarte de tout bateau autre qu'une petite embarcation.",s:"Escaut art. 18 § 6"},
+{c:'esc',q:"Sur l'Escaut, une « petite embarcation » est un bateau de moins de 20 m…",o:["sauf un remorqueur et un pousseur","sans exception","à moteur uniquement"],a:0,e:"Définition : « un bateau dont la longueur est inférieure à 20 m, à l'exception d'un remorqueur et d'un pousseur ».",s:"Escaut art. 2 § 1, 7°"},
+{c:'esc',q:"Sur l'Escaut, deux bateaux de 20 m ou plus : un bateau à moteur rencontre un bateau qui pêche EN DEHORS du chenal. Qui s'écarte ?",o:["Le bateau à moteur","Le bateau qui pêche"],a:0,e:"Le bateau à propulsion mécanique s'écarte d'un bateau en train de pêcher en dehors du chenal.",s:"Escaut art. 18 § 1"},
+{c:'esc',q:"Sur l'Escaut, deux bateaux de 20 m ou plus : un bateau qui pêche DANS le chenal rencontre un bateau à moteur. Qui s'écarte ?",o:["Le bateau qui pêche","Le bateau à moteur"],a:0,e:"Le bateau en train de pêcher dans le chenal s'écarte aussi des bateaux à moteur et à voile.",s:"Escaut art. 18 § 3, 1°"},
+{c:'esc',q:"Sur l'Escaut, deux bateaux de 20 m ou plus : un voilier rencontre un bateau qui pêche en dehors du chenal. Qui s'écarte ?",o:["Le voilier","Le bateau qui pêche"],a:0,e:"Le voilier s'écarte de tous les bateaux visés au § 1, dont le bateau qui pêche en dehors du chenal.",s:"Escaut art. 18 § 1 et 2"},
+{c:'esc',q:"Sur l'Escaut, un navire de grandes dimensions rencontre un bateau non maître de sa manœuvre. Qui s'écarte ?",o:["Le navire de grandes dimensions","Le non maître de sa manœuvre"],a:0,e:"Le navire de grandes dimensions s'écarte du bateau qui n'est pas maître de sa manœuvre. (§ 4 : hors liste officielle de l'examen.)",s:"Escaut art. 18 § 4, 1°"},
+{c:'esc',q:"Sur l'Escaut, un bateau à capacité de manœuvre restreinte (qui fait route) rencontre un navire de grandes dimensions. Qui s'écarte ?",o:["Le bateau à capacité restreinte","Le navire de grandes dimensions"],a:0,e:"Le bateau à capacité restreinte s'écarte du non maître et du navire de grandes dimensions. (§ 5 : hors liste officielle de l'examen.)",s:"Escaut art. 18 § 5, 1°"},
+{c:'esc',q:"Sur l'Escaut, un navire de grandes dimensions est gêné par un bateau à capacité restreinte À L'ANCRE dans le chenal. Quel signal donne-t-il ?",o:["3 sons brefs + 1 son prolongé","1 son prolongé","5 sons brefs"],a:0,e:"Il annonce qu'il va passer ; le bateau à capacité restreinte doit se porter au plus vite à la limite du chenal.",s:"Escaut art. 18 § 4, 2°"},
+{c:'esc',q:"Sur l'Escaut, qui désigne un « navire de grandes dimensions » ?",o:["Le service de pilotage","Le capitaine lui-même","Tout navire de plus de 100 m"],a:0,e:"C'est un navire qui, par sa longueur ou son tirant d'eau, est désigné comme tel par le service de pilotage.",s:"Escaut art. 2 § 1, 4°"},
+{c:'esc',q:"Un navire de grandes dimensions qui fait route montre, en plus de ses feux de bateau à moteur :",o:["3 feux rouges superposés, et de jour un cylindre","2 feux rouges superposés, et de jour 2 boules","rouge-blanc-rouge, et de jour boule-losange-boule"],a:0,e:"Trois feux rouges puissants visibles de tous les côtés, alignés verticalement ; de jour, un cylindre.",s:"Escaut art. 28 ; Terneuzen art. 28"},
+{c:'esc',q:"Sur l'Escaut, votre voilier rattrape un bateau à moteur plus lent. Qui s'écarte ?",o:["Le voilier","Le bateau à moteur"],a:0,e:"Tout bateau qui en rattrape un autre s'écarte de la route du rattrapé. L'art. 18 commence par « Sauf dispositions contraires de l'article 13 ».",s:"Escaut art. 13 § 1 et art. 18"},
+{c:'esc',q:"Sur l'Escaut, un bateau à moteur qui en rattrape un autre doit le dépasser…",o:["à bâbord (par la gauche du rattrapé)","à tribord","du côté de son choix"],a:0,e:"Un bateau à propulsion mécanique qui en rattrape un autre doit dépasser ce dernier à bâbord.",s:"Escaut art. 13 § 4"},
+{c:'esc',q:"Sur l'Escaut, deux voiliers : l'un tient la droite du chenal. Qui s'écarte ?",o:["L'autre voilier","Celui qui tient la droite","Celui qui est sous le vent"],a:0,e:"Lorsqu'un des bateaux à voile tient la droite du chenal (ou navigue en dehors, du côté de son tribord), l'autre doit s'en écarter. Cette règle passe avant les amures.",s:"Escaut art. 12 § 1"},
+{c:'esc',q:"Sur l'Escaut, deux voiliers ; aucun ne tient la droite du chenal ; même amure. Qui s'écarte ?",o:["Celui qui est au vent","Celui qui est sous le vent"],a:0,e:"Quand les deux reçoivent le vent du même bord, celui qui est au vent s'écarte.",s:"Escaut art. 12 § 2, 2°"},
+{c:'esc',q:"Sur l'Escaut, votre bateau à moteur de 9 m croise un voilier de 10 m ; aucun des deux ne tient le côté tribord de la voie navigable. Qui s'écarte ?",o:["Votre bateau à moteur","Le voilier, car sur l'Escaut le voilier s'écarte du moteur"],a:0,e:"Entre petites embarcations (moins de 20 m), l'art. 42 déroge à l'art. 18 : la petite embarcation à moteur s'écarte du voilier de moins de 20 m. La règle « le voilier s'écarte du moteur » ne vaut que face à un bateau de 20 m ou plus.",s:"Escaut art. 42 § 2"},
+/* ---------- TERNEUZEN ---------- */
+{c:'ter',q:"Canal de Gand à Terneuzen : de qui TOUT bateau faisant route doit-il s'écarter ?",o:["Non maître de sa manœuvre, navire de grandes dimensions, capacité restreinte","Voiliers et bateaux qui pêchent","Seulement des bateaux de police"],a:0,e:"Tout bateau faisant route s'écarte de ces trois catégories.",s:"Terneuzen art. 18 § 1 a"},
+{c:'ter',q:"Canal de Terneuzen : votre bateau de 12 m rencontre un cargo. Qui s'écarte ?",o:["Votre bateau","Le cargo"],a:0,e:"Toute petite embarcation faisant route s'écarte de tout bateau autre qu'une petite embarcation.",s:"Terneuzen art. 18 § 1 d"},
+{c:'ter',q:"Canal de Terneuzen : deux petites embarcations risquent l'abordage. Première règle : qui poursuit sa route ?",o:["Celle qui est du côté tribord du canal","La plus grande","Celle qui va le plus vite"],a:0,e:"Celle qui se trouve du côté tribord de la voie navigable poursuit sa route ; l'autre s'écarte.",s:"Terneuzen art. 18 § 4"},
+{c:'ter',q:"Canal de Terneuzen, deux petites embarcations (hors cas du § 4) : un moteur et un voilier. Qui s'écarte ?",o:["Le moteur","Le voilier"],a:0,e:"La petite embarcation à propulsion mécanique s'écarte de l'autre.",s:"Terneuzen art. 18 § 5"},
+{c:'ter',q:"Canal de Terneuzen, deux petites embarcations : une barque à rames et un voilier. Qui s'écarte ?",o:["La barque à rames","Le voilier"],a:0,e:"La petite embarcation mue par la force musculaire s'écarte de l'embarcation à voile.",s:"Terneuzen art. 18 § 5"},
+{c:'ter',q:"Canal de Terneuzen : deux petites embarcations à moteur arrivent face à face. Que font-elles ?",o:["Les deux viennent sur tribord","Les deux viennent sur bâbord","La plus petite s'arrête"],a:0,e:"Toutes deux viennent sur tribord pour passer bâbord sur bâbord.",s:"Terneuzen art. 18 § 6 a"},
+{c:'ter',q:"Canal de Terneuzen : les routes de deux petites embarcations à moteur se croisent. Qui s'écarte ?",o:["Celle qui a l'autre à sa droite (tribord)","Celle qui a l'autre à sa gauche"],a:0,e:"La petite embarcation qui a l'autre à son tribord doit s'écarter.",s:"Terneuzen art. 18 § 6 b"},
+{c:'ter',q:"Canal de Terneuzen : deux petits voiliers reçoivent le vent de bords différents. Qui s'écarte ?",o:["Celui qui reçoit le vent de bâbord","Celui qui reçoit le vent de tribord"],a:0,e:"Celui qui reçoit le vent de bâbord s'écarte.",s:"Terneuzen art. 18 § 8 a"},
+{c:'ter',q:"Canal de Terneuzen : un voilier de 22 m veut naviguer à la voile. Est-ce permis ?",o:["Non, c'est interdit dès 20 m","Oui","Oui, mais seulement de jour"],a:0,e:"Il est interdit à tout bateau d'une longueur égale ou supérieure à 20 m de porter des voiles ou de naviguer à la voile.",s:"Terneuzen art. 6 § 6"},
+{c:'ter',q:"Canal de Terneuzen : une petite embarcation qui doit s'écarter manœuvre…",o:["à temps et sur tribord","au dernier moment","sur bâbord"],a:0,e:"Elle manœuvre à temps et sur tribord et, si possible, évite de croiser la route de l'autre sur l'avant.",s:"Terneuzen art. 18 § 7"},
+{c:'ter',q:"Canal de Terneuzen : un bateau en rattrape un autre. Qui s'écarte ?",o:["Celui qui rattrape","Celui qui est rattrapé","Le plus petit"],a:0,e:"Tout bateau qui en rattrape un autre doit s'écarter de la route de ce dernier.",s:"Terneuzen art. 13 § 1"},
+/* ---------- MARQUES & PIÈGES ---------- */
+{c:'mar',q:"De jour, deux boules noires superposées signalent :",o:["un bateau non maître de sa manœuvre","un bateau à capacité de manœuvre restreinte","un bateau au mouillage"],a:0,e:"De nuit : deux feux rouges superposés visibles de tous les côtés.",s:"RIPAM 27 a ; Escaut art. 27 § 1"},
+{c:'mar',q:"De jour, boule – losange – boule signale :",o:["un bateau à capacité de manœuvre restreinte","un bateau qui pêche","un remorqueur"],a:0,e:"De nuit : rouge – blanc – rouge.",s:"RIPAM 27 b ; Escaut art. 27 § 2"},
+{c:'mar',q:"En mer, de jour, un cylindre noir signale :",o:["un navire handicapé par son tirant d'eau","un navire au mouillage","un voilier au moteur"],a:0,e:"De nuit : trois feux rouges superposés. (Sur l'Escaut et à Terneuzen, le même signal désigne le navire de grandes dimensions.)",s:"RIPAM 28 ; Escaut et Terneuzen art. 28"},
+{c:'mar',q:"Sur l'Escaut, un bateau de pêche de moins de 20 m peut montrer, au lieu des deux cônes pointe à pointe :",o:["un panier","une boule noire","un cylindre"],a:0,e:"Un bateau de moins de 20 m peut, au lieu de cette marque, montrer un panier.",s:"Escaut art. 26, 1°"},
+{c:'mar',q:"Quelle affirmation est JUSTE ?",o:["En mer, le moteur s'écarte du voilier ; sur l'Escaut, entre bateaux de 20 m ou plus, le voilier s'écarte du moteur","Partout, le moteur s'écarte du voilier","Partout, le voilier s'écarte du moteur"],a:0,e:"C'est le piège n°1 entre la mer et l'Escaut.",s:"RIPAM 18 a iv ; Escaut art. 18 § 2"}
+];
+/* ---------- état ---------- */
+const KEY='qcmPrioritesV1_2';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function fresh(){return {per:{},hist:[],run:null};}
+let st=load()||fresh();
+// per[i] = {ok:n, ko:n, last:bool}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function newRun(kind){
+ let ids=Q.map((_,i)=>i);
+ if(kind==='errs') ids=ids.filter(i=>st.per[i]&&st.per[i].last===false);
+ else if(kind!=='all') ids=ids.filter(i=>Q[i].c===kind);
+ if(!ids.length){ids=Q.map((_,i)=>i);kind='all';}
+ st.run={kind,ids:shuffle(ids),pos:0,ok:0,ko:0,ans:null,ord:null};save();showQ();show('qcm');
+}
+function cur(){return st.run.ids[st.run.pos];}
+function counters(){
+ const r=st.run;const done=r.ok+r.ko;
+ document.getElementById('cNum').textContent=Math.min(r.pos+1,r.ids.length)+'/'+r.ids.length;
+ document.getElementById('cOk').textContent=r.ok;document.getElementById('cKo').textContent=r.ko;
+ document.getElementById('cPct').textContent=done?Math.round(r.ok/done*100)+' %':'–';
+ document.getElementById('prog').style.width=(done/r.ids.length*100)+'%';
+ document.getElementById('progTxt').textContent='Série : '+(r.kind==='all'?'les 50 questions':r.kind==='errs'?'mes erreurs':CAT[r.kind]);
+}
+function showQ(){
+ const r=st.run,box=document.getElementById('qbox');counters();
+ if(r.pos>=r.ids.length){return end();}
+ const i=cur(),q=Q[i];
+ if(!r.ord||r.ord.qi!==i){r.ord={qi:i,o:shuffle(q.o.map((_,k)=>k))};r.ans=null;save();}
+ box.innerHTML=`<span class="tag">${CAT[q.c]}</span><div class="qq">${q.q}</div><div class="opts">${r.ord.o.map((k,n)=>`<button data-k="${k}">${String.fromCharCode(65+n)}. ${q.o[k]}</button>`).join('')}</div><div class="exp" id="exp"></div><div class="nav"><button class="btn primary" id="next" disabled>Question suivante →</button></div>`;
+ box.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>answer(+b.dataset.k));
+ document.getElementById('next').onclick=()=>{r.pos++;r.ord=null;r.ans=null;save();showQ();window.scrollTo({top:0,behavior:'smooth'});};
+ if(r.ans!==null) paint(r.ans);
+}
+function paint(k){
+ const i=cur(),q=Q[i],box=document.getElementById('qbox');const ok=k===q.a;
+ box.querySelectorAll('.opts button').forEach(b=>{const kk=+b.dataset.k;if(kk===q.a)b.classList.add('good');else if(kk===k)b.classList.add('bad');b.disabled=true;});
+ const ex=document.getElementById('exp');ex.innerHTML=`<b style="color:${ok?'var(--ok)':'var(--ko)'}">${ok?'✓ Juste !':'✗ Faux.'}</b> ${q.e}<div class="src">Texte : ${q.s}</div>`;ex.classList.add('show');
+ document.getElementById('next').disabled=false;
+}
+function answer(k){
+ const r=st.run;if(r.ans!==null)return;const i=cur(),ok=k===Q[i].a;
+ r.ans=k;if(ok)r.ok++;else r.ko++;
+ const p=st.per[i]||{ok:0,ko:0,last:null};if(ok)p.ok++;else p.ko++;p.last=ok;st.per[i]=p;
+ save();paint(k);counters();
+}
+function end(){
+ const r=st.run,done=r.ok+r.ko,pct=done?Math.round(r.ok/done*100):0;
+ if(!r.saved){st.hist.unshift({d:new Date().toLocaleString('fr-BE',{dateStyle:'short',timeStyle:'short'}),k:r.kind,n:r.ids.length,ok:r.ok,pct});st.hist=st.hist.slice(0,30);r.saved=true;save();}
+ document.getElementById('qbox').innerHTML=`<div class="big">${r.ok} / ${r.ids.length}</div><p style="text-align:center"><b>${pct} %</b> — ${pct>=80?'Très bien !':pct>=60?'Encore un effort.':'Revoyez la maquette des priorités, puis recommencez.'}</p><div class="nav"><button class="btn primary" id="again">Recommencer la même série</button><button class="btn" id="errs">Refaire mes erreurs</button></div>`;
+ document.getElementById('again').onclick=()=>newRun(r.kind);document.getElementById('errs').onclick=()=>newRun('errs');
+}
+/* ---------- stats ---------- */
+function stats(){
+ let tok=0,tko=0,seen=0;const by={};Object.keys(CAT).forEach(c=>by[c]={ok:0,ko:0,seen:0,tot:0});
+ Q.forEach((q,i)=>{by[q.c].tot++;const p=st.per[i];if(p){tok+=p.ok;tko+=p.ko;seen++;by[q.c].ok+=p.ok;by[q.c].ko+=p.ko;by[q.c].seen++;}});
+ const t=tok+tko;document.getElementById('gPct').textContent=t?Math.round(tok/t*100)+' %':'–';
+ document.getElementById('gTxt').textContent=t?`${tok} réponses justes sur ${t} · ${seen} questions différentes vues sur ${Q.length}`:'Aucune réponse pour le moment.';
+ document.getElementById('byCat').innerHTML=Object.keys(CAT).map(c=>{const b=by[c],n=b.ok+b.ko,p=n?Math.round(b.ok/n*100):0,col=p>=80?'var(--ok)':p>=60?'var(--warnb)':'var(--ko)';return `<div class="statrow"><span>${CAT[c]} <span class="mute">(${b.seen}/${b.tot} vues)</span></span><b>${n?p+' %':'–'}</b><div class="sb"><i style="width:${p}%;background:${col}"></i></div></div>`;}).join('');
+ document.getElementById('hist').innerHTML=st.hist.length?`<table class="hist"><tr><th>Date</th><th>Série</th><th>Score</th></tr>${st.hist.map(h=>`<tr><td>${h.d}</td><td>${h.k==='all'?'50 questions':h.k==='errs'?'erreurs':CAT[h.k]}</td><td><b>${h.ok}/${h.n}</b> (${h.pct} %)</td></tr>`).join('')}</table>`:'<p class="mute">Aucune série terminée.</p>';
+}
+function errs(){
+ const L=Q.map((q,i)=>({q,i,p:st.per[i]})).filter(x=>x.p&&x.p.last===false);
+ document.getElementById('errList').innerHTML=L.length?L.map(x=>`<div class="err"><b>${x.q.q}</b><br>✓ ${x.q.o[x.q.a]}<small>${x.q.e} — ${x.q.s} · ratée ${x.p.ko} fois</small></div>`).join('')+`<button class="btn primary" style="width:100%;margin-top:8px" onclick="newRun('errs')">Refaire ces ${L.length} questions</button>`:'<p class="mute">Aucune erreur en cours. 👍</p>';
+}
+function show(t){['qcm','stats','err'].forEach(x=>document.getElementById('v-'+x).style.display=x===t?'':'none');document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='stats')stats();if(t==='err')errs();}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>show(b.dataset.t));
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>newRun(b.dataset.s));
+document.getElementById('reset').onclick=()=>document.getElementById('conf').classList.add('show');
+document.getElementById('no').onclick=()=>document.getElementById('conf').classList.remove('show');
+document.getElementById('yes').onclick=()=>{st=fresh();save();document.getElementById('conf').classList.remove('show');newRun('all');show('stats');};
+if(!st.run) newRun('all'); else showQ();
+</script>
+</body></html>

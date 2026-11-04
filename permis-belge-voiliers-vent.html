@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Au vent, sous le vent</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,sans-serif;padding:14px 16px 30px}
+.w{max-width:660px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:22px;margin:4px 0 6px}h2{font-size:19px;margin:0 0 6px}
+h2 .n{display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;align-items:center;justify-content:center;font-size:15px;margin-right:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:12px 0}
+svg{width:100%;height:auto;border-radius:12px;display:block;margin:8px 0}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns button{flex:1;min-height:46px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 15px system-ui;cursor:pointer;padding:6px}
+.btns button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.res{border-radius:10px;padding:10px 12px;margin-top:8px;font-weight:600}
+.res.ko{background:var(--kobg);border-left:5px solid var(--ko)}.res.ok{background:var(--okbg);border-left:5px solid var(--ok)}
+.ret{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px}
+.q{border-top:1px solid var(--line);padding:10px 0}.q:first-of-type{border-top:0}
+.q p{margin:0 0 6px;font-weight:700}
+.q .opts{display:flex;gap:8px;flex-wrap:wrap}
+.q .opts button{flex:1;min-height:44px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 15px system-ui;cursor:pointer}
+.q .opts button.good{background:var(--okbg);border-color:var(--ok)}.q .opts button.bad{background:var(--kobg);border-color:var(--ko)}
+.q .ex{display:none;font-size:15px;color:var(--mute);margin-top:6px}.q .ex.show{display:block}
+@keyframes bump{0%,100%{transform:translateY(0)}45%,55%{transform:translateY(10px)}}
+@keyframes hold{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes flow{0%{stroke-dashoffset:40}100%{stroke-dashoffset:0}}
+.bump{animation:bump 2.2s ease-in-out infinite}.hold{animation:hold 3s ease-in-out infinite}
+.flow{stroke-dasharray:10 10;animation:flow 1s linear infinite}
+@media (prefers-reduced-motion:reduce){.bump,.hold,.flow{animation:none}}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Maquette · version 1.0 · au vent / sous le vent, voiliers et quai</div>
+<h1>Au vent, sous le vent : voiliers et quai</h1>
+
+<section class="card">
+<h2><span class="n">1</span>Les deux mots</h2>
+<p><b>Au vent</b> = du côté <b>d'où vient</b> le vent. <b>Sous le vent</b> = du côté <b>où il va</b>.</p>
+<p>Ces mots se disent toujours <b>par rapport à quelque chose</b> : « A est au vent <u>de B</u> ». Sans le « de B », la phrase ne veut rien dire.</p>
+<svg viewBox="0 0 400 210" id="def"></svg>
+<div class="ret">Sur un voilier, le vent pousse la voile (et sa bôme) <b>de l'autre côté</b>. Donc : <b>la bôme est toujours sous le vent</b>.</div>
+</section>
+
+<section class="card">
+<h2><span class="n">2</span>Deux voiliers et un quai</h2>
+<p>Le voilier <b>A</b> est amarré au quai. Le voilier <b>B</b> navigue un peu plus loin. Changez le vent :</p>
+<div class="btns"><button id="w1" class="on">Vent vers le quai</button><button id="w2">Vent qui vient du quai</button></div>
+<svg viewBox="0 0 400 330" id="quai"></svg>
+<div id="quaiTxt"></div>
+</section>
+
+<section class="card">
+<h2><span class="n">3</span>Qui doit s'écarter ? (deux voiliers)</h2>
+<p>Les deux voiliers reçoivent le vent <b>du même côté</b> (la bôme du même côté).</p>
+<svg viewBox="0 0 400 300" id="prio"></svg>
+<div class="res ok">Celui qui est <b>au vent</b> (A) doit s'écarter de celui qui est <b>sous le vent</b> (B).</div>
+<p style="font-size:14px;color:var(--mute)">RIPAM règle 12 a) ii : « celui qui est au vent doit s'écarter de la route de celui qui est sous le vent ». Même règle sur les eaux intérieures : RGP art. 6.03/1, al. 4 b).</p>
+<div class="ret"><b>Pourquoi ?</b> A, au vent, « vole » le vent de B (il lui fait de l'ombre) et B, sous le vent, peut difficilement remonter vers lui. C'est donc A, le plus libre, qui manœuvre.</div>
+</section>
+
+<section class="card">
+<h2><span class="n">4</span>Testez-vous</h2>
+<div id="test"></div>
+</section>
+
+<p style="font-size:13px;color:var(--mute)">Sources : RIPAM règle 12 (navires à voile) ; RGP consolidé v1.1, art. 6.03/1 al. 4 (bateaux à voiles dont les routes se croisent).</p>
+</div>
+<script>
+const SEA='#9cc9ea', WIND='#1565c0';
+/* voilier vu d'en haut. cx,cy centre ; rot : cap en degrés (0 = vers le haut) ; side : 1 = bôme à droite du bateau, -1 = à gauche */
+function voilier(cx,cy,rot,side,lab,col){
+  col=col||'#fff';
+  const boomX=side*22;
+  return `<g transform="translate(${cx} ${cy}) rotate(${rot})">
+   <path d="M0 -38 Q16 -14 14 26 L-14 26 Q-16 -14 0 -38Z" fill="${col}" stroke="#14213d" stroke-width="2"/>
+   <path d="M0 -8 Q${boomX*0.75} 10 ${boomX} 22" fill="none" stroke="#e8e8e8" stroke-width="5" opacity=".9"/>
+   <line x1="0" y1="-8" x2="${boomX}" y2="22" stroke="#7a4b14" stroke-width="3.5" stroke-linecap="round"/>
+   <circle cx="0" cy="-8" r="3.5" fill="#14213d"/>
+  </g>${lab?`<text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="15" font-weight="900" fill="#c92a2a">${lab}</text>`:''}`;
+}
+function vent(x1,y1,x2,y2,n,dx,dy){let s='';for(let i=0;i<n;i++){s+=`<line x1="${x1+i*dx}" y1="${y1+i*dy}" x2="${x2+i*dx}" y2="${y2+i*dy}" stroke="${WIND}" stroke-width="4" marker-end="url(#ah)" class="flow"/>`;}return s;}
+const DEFS=`<defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="${WIND}"/></marker></defs>`;
+
+/* 1. définition : vent de gauche */
+document.getElementById('def').innerHTML=DEFS+`<rect width="400" height="210" fill="${SEA}"/>
+ ${vent(10,60,70,60,3,0,45)}
+ <text x="10" y="30" font-size="14" font-weight="800" fill="${WIND}">VENT →</text>
+ <rect x="95" y="40" width="80" height="150" fill="#fff" opacity=".35" rx="10"/><text x="135" y="200" text-anchor="middle" font-size="14" font-weight="800" fill="#14213d">AU VENT</text>
+ <rect x="245" y="40" width="110" height="150" fill="#14213d" opacity=".12" rx="10"/><text x="300" y="200" text-anchor="middle" font-size="14" font-weight="800" fill="#14213d">SOUS LE VENT</text>
+ ${voilier(205,110,0,1)}
+ <text x="135" y="115" text-anchor="middle" font-size="12" fill="#14213d">le vent arrive</text><text x="135" y="130" text-anchor="middle" font-size="12" fill="#14213d">de ce côté</text>
+ <text x="300" y="100" text-anchor="middle" font-size="12" fill="#14213d">la bôme part</text><text x="300" y="115" text-anchor="middle" font-size="12" fill="#14213d">de ce côté</text>`;
+
+/* 2. quai */
+function quai(fromSea){
+  const s=document.getElementById('quai');
+  const w = fromSea ? vent(60,20,60,70,5,70,0) : vent(60,215,60,160,5,70,0);
+  // A amarré : cap vers la droite (90°). bôme : côté sous le vent. Vent vers le quai (vers le bas) => sous le vent = bas = bâbord? cap 90 => droite du bateau = bas
+  const sideA = fromSea ? 1 : -1;
+  const sideB = fromSea ? 1 : -1;
+  s.innerHTML=DEFS+`<rect width="400" height="330" fill="${SEA}"/>${w}
+   <text x="10" y="${fromSea?16:150}" font-size="14" font-weight="800" fill="${WIND}">VENT ${fromSea?'↓':'↑'}</text>
+   ${voilier(300,110,90,sideB,'B')}
+   <g class="${fromSea?'bump':'hold'}">${voilier(170,232,90,sideA,'A')}
+     ${fromSea?'':'<line x1="140" y1="246" x2="100" y2="270" stroke="#7a4b14" stroke-width="3"/><line x1="205" y1="246" x2="250" y2="270" stroke="#7a4b14" stroke-width="3"/>'}</g>
+   ${fromSea?'<text x="170" y="290" text-anchor="middle" font-size="18" font-weight="900" fill="#c92a2a" style="paint-order:stroke" stroke="#fff" stroke-width="3">BANG !</text>':''}
+   <rect x="0" y="268" width="400" height="62" fill="#8d8d8d"/><rect x="0" y="268" width="400" height="5" fill="#5d5d5d"/>
+   <text x="200" y="315" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">QUAI</text>`;
+  document.getElementById('quaiTxt').innerHTML = fromSea
+   ? `<div class="res ko">Nuit agitée : A est plaqué contre le quai.</div>
+      <ul><li>Le <b>quai</b> est <b>sous le vent de A</b>.</li><li>A est <b>au vent du quai</b>.</li><li>B est <b>au vent de A</b> (le vent passe d'abord par B).</li><li>Pour repartir à la voile, A est coincé : le vent le repousse sans cesse contre le quai.</li></ul>`
+   : `<div class="res ok">Nuit calme : le vent écarte A du quai ; les amarres le retiennent.</div>
+      <ul><li>Le <b>quai</b> est <b>au vent de A</b>.</li><li>A est <b>sous le vent du quai</b>.</li><li>B est maintenant <b>sous le vent de A</b>.</li><li>Pour partir, A n'a qu'à larguer : le vent l'éloigne tout seul.</li></ul>`;
+  document.getElementById('w1').classList.toggle('on',fromSea);document.getElementById('w2').classList.toggle('on',!fromSea);
+}
+document.getElementById('w1').onclick=()=>quai(true);document.getElementById('w2').onclick=()=>quai(false);quai(true);
+
+/* 3. priorité : vent de gauche, deux voiliers vers le haut, bômes à droite */
+document.getElementById('prio').innerHTML=DEFS+`<rect width="400" height="300" fill="${SEA}"/>
+ ${vent(10,60,60,60,4,0,60)}<text x="10" y="30" font-size="14" font-weight="800" fill="${WIND}">VENT →</text>
+ ${voilier(140,170,10,1,'A')}${voilier(270,150,10,1,'B')}
+ <path d="M140 120 Q135 80 95 45" fill="none" stroke="#c92a2a" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#ah2)"/>
+ <defs><marker id="ah2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#c92a2a"/></marker></defs>
+ <text x="140" y="240" text-anchor="middle" font-size="13" font-weight="800" fill="#14213d">A : AU VENT de B</text>
+ <text x="140" y="256" text-anchor="middle" font-size="13" fill="#c92a2a" font-weight="800">→ s'écarte</text>
+ <text x="280" y="220" text-anchor="middle" font-size="13" font-weight="800" fill="#14213d">B : SOUS LE VENT de A</text>
+ <text x="280" y="236" text-anchor="middle" font-size="13" fill="#1a9c46" font-weight="800">→ garde sa route</text>`;
+
+/* 4. test */
+const T=[
+ ["Le vent souffle vers le quai. Le quai est…",["au vent du bateau","sous le vent du bateau"],1,"Le vent va vers le quai : le quai est du côté où va le vent, donc sous le vent."],
+ ["Toujours le vent vers le quai. Le bateau amarré est…",["au vent du quai","sous le vent du quai"],0,"Le vent passe d'abord par le bateau, puis arrive au quai : le bateau est au vent du quai. C'est la même situation, vue de l'autre côté !"],
+ ["Pour une nuit calme, on évite de s'amarrer le long d'un quai…",["au vent","sous le vent"],1,"Un quai sous le vent : le vent vous pousse dessus toute la nuit."],
+ ["Sur un voilier, de quel côté est la bôme ?",["au vent","sous le vent"],1,"Le vent pousse la voile de l'autre côté : la bôme est toujours sous le vent."],
+ ["Deux voiliers, vent reçu du même côté. Lequel s'écarte ?",["celui au vent","celui sous le vent"],0,"RIPAM 12 a) ii et RGP 6.03/1 al. 4 b) : celui qui est au vent s'écarte."],
+ ["Un voilier est amarré contre un quai sous le vent. Pour partir à la voile, c'est…",["facile","difficile"],1,"Le vent le repousse contre le quai : il faut souvent le moteur ou une amarre de déhalage."]
+];
+document.getElementById('test').innerHTML=T.map((t,i)=>`<div class="q" data-i="${i}"><p>${i+1}. ${t[0]}</p><div class="opts">${t[1].map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div><div class="ex">${t[3]}</div></div>`).join('');
+document.querySelectorAll('#test .q').forEach(q=>{const t=T[+q.dataset.i];q.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;q.querySelectorAll('button').forEach(x=>{if(+x.dataset.j===t[2])x.classList.add('good')});if(+b.dataset.j!==t[2])b.classList.add('bad');q.querySelector('.ex').classList.add('show');});});
+</script>
+</body></html>

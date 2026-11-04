@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quai au vent, quai sous le vent</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,sans-serif;padding:14px 16px 30px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:22px;margin:4px 0 6px}h2{font-size:19px;margin:0 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:12px 0}
+.ko{border-left:6px solid var(--ko)}.ok{border-left:6px solid var(--ok)}
+.tag{display:inline-block;font-weight:800;border-radius:8px;padding:2px 10px;font-size:15px}
+.tko{background:var(--kobg);color:var(--ko)}.tok{background:var(--okbg);color:var(--ok)}
+svg{width:100%;height:auto;border-radius:12px;display:block;margin:8px 0}
+.mot{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid var(--line);padding:6px 8px;text-align:left}th{background:var(--bg)}
+/* animations */
+@keyframes bump{0%,100%{transform:translateY(0)}45%{transform:translateY(14px)}55%{transform:translateY(14px) rotate(-1deg)}}
+@keyframes hold{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes wind{0%{transform:translateY(-30px);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateY(40px);opacity:0}}
+@keyframes windUp{0%{transform:translateY(30px);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateY(-40px);opacity:0}}
+@keyframes boom{0%,40%,60%,100%{opacity:0}48%,52%{opacity:1}}
+.bump{animation:bump 2.4s ease-in-out infinite}
+.hold{animation:hold 3s ease-in-out infinite}
+.wd{animation:wind 2.4s linear infinite}.wd2{animation-delay:.8s}.wd3{animation-delay:1.6s}
+.wu{animation:windUp 2.4s linear infinite}
+.boom{animation:boom 2.4s linear infinite}
+@media (prefers-reduced-motion:reduce){.bump,.hold,.wd,.wu,.boom{animation:none}}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Animation · version 1.0 · Question 24 qruiz</div>
+<h1>Où amarrer pour passer une nuit tranquille ?</h1>
+<p>On regarde le bateau d'en haut. Le quai est la bande grise. Les flèches bleues montrent le vent.</p>
+
+<!-- MAUVAIS -->
+<div class="card ko">
+<h2><span class="tag tko">✗ Nuit agitée</span></h2>
+<p>Le vent souffle <b>vers le quai</b>. Il pousse le bateau <b>contre</b> le quai : ça cogne toute la nuit.</p>
+<svg viewBox="0 0 400 300">
+ <rect width="400" height="300" fill="#9cc9ea"/>
+ <g fill="none" stroke="#1565c0" stroke-width="4" stroke-linecap="round">
+  <g class="wd"><path d="M70 20 v40 M60 50 l10 12 l10-12"/><path d="M200 20 v40 M190 50 l10 12 l10-12"/><path d="M330 20 v40 M320 50 l10 12 l10-12"/></g>
+  <g class="wd wd2"><path d="M135 20 v40 M125 50 l10 12 l10-12"/><path d="M265 20 v40 M255 50 l10 12 l10-12"/></g>
+ </g>
+ <text x="12" y="18" font-size="14" font-weight="700" fill="#0d47a1">VENT ↓</text>
+ <g class="bump">
+  <path d="M110 170 L270 170 Q320 185 270 200 L110 200 Q100 185 110 170Z" fill="#fff" stroke="#14213d" stroke-width="2"/>
+  <rect x="150" y="176" width="70" height="18" rx="4" fill="#cfd8e3"/>
+ </g>
+ <g class="boom" fill="#c92a2a" font-size="20" font-weight="900"><text x="120" y="235">BANG !</text><text x="245" y="235">BANG !</text></g>
+ <rect x="0" y="240" width="400" height="60" fill="#8d8d8d"/><rect x="0" y="240" width="400" height="6" fill="#5d5d5d"/>
+ <text x="200" y="280" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">QUAI</text>
+</svg>
+</div>
+
+<!-- BON -->
+<div class="card ok">
+<h2><span class="tag tok">✓ Nuit calme</span></h2>
+<p>Le vent vient <b>du quai</b>. Il écarte le bateau du quai ; les amarres le retiennent. Le bateau reste calme.</p>
+<svg viewBox="0 0 400 300">
+ <rect width="400" height="300" fill="#9cc9ea"/>
+ <g fill="none" stroke="#1565c0" stroke-width="4" stroke-linecap="round">
+  <g class="wu"><path d="M70 120 v-40 M60 90 l10-12 l10 12"/><path d="M200 120 v-40 M190 90 l10-12 l10 12"/><path d="M330 120 v-40 M320 90 l10-12 l10 12"/></g>
+ </g>
+ <text x="12" y="18" font-size="14" font-weight="700" fill="#0d47a1">VENT ↑</text>
+ <g class="hold">
+  <path d="M110 150 L270 150 Q320 165 270 180 L110 180 Q100 165 110 150Z" fill="#fff" stroke="#14213d" stroke-width="2"/>
+  <rect x="150" y="156" width="70" height="18" rx="4" fill="#cfd8e3"/>
+  <line x1="115" y1="180" x2="70" y2="242" stroke="#7a4b14" stroke-width="3"/>
+  <line x1="290" y1="168" x2="340" y2="242" stroke="#7a4b14" stroke-width="3"/>
+ </g>
+ <rect x="0" y="240" width="400" height="60" fill="#8d8d8d"/><rect x="0" y="240" width="400" height="6" fill="#5d5d5d"/>
+ <text x="200" y="280" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">QUAI</text>
+</svg>
+</div>
+
+<!-- MOTS -->
+<div class="card">
+<h2>Le mot du QCM : « sous le vent »</h2>
+<p><b>Sous le vent</b> = l'endroit <b>vers lequel</b> le vent souffle. <b>Au vent</b> = l'endroit <b>d'où</b> il vient.</p>
+<table>
+<tr><th></th><th>✗ Nuit agitée</th><th>✓ Nuit calme</th></tr>
+<tr><td>Le quai est…</td><td><b>sous le vent</b></td><td>au vent</td></tr>
+<tr><td>Le bateau est…</td><td>au vent du quai</td><td>sous le vent du quai</td></tr>
+</table>
+<div class="mot"><b>C'est pour ça que vous avez été piégé.</b> Dans la mauvaise situation, le <b>quai</b> est sous le vent, mais votre <b>bateau</b> est au vent du quai. Vous avez pensé au bateau (« au vent ») ; le site pense au quai (« sous le vent »). Les deux décrivent <b>la même mauvaise situation</b> : la question est mal posée.</div>
+<p style="margin-top:10px"><b>À l'examen, répondez « Sous le vent ».</b> Truc : on parle toujours de l'endroit où l'on s'amarre. Un quai (ou une côte) <b>sous le vent</b> est celui sur lequel le vent vous pousse : à éviter.</p>
+</div>
+</div></body></html>

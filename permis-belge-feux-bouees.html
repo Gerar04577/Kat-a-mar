@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feux des bouées</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00;--sky:#0b1424}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810;--warnb:#f0c94a}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810;--warnb:#f0c94a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:max(12px,env(safe-area-inset-top)) 16px 40px}
+.wrap{max-width:720px;margin:0 auto}
+.ver{font-size:12px;color:var(--mute)}
+h1{font-size:24px;margin:4px 0 4px}
+h2{font-size:20px;margin:0 0 8px}
+h2 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;align-items:center;justify-content:center;font-size:16px;margin-right:8px;vertical-align:2px}
+p{margin:6px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:14px 0}
+.lead{color:var(--mute)}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+nav a{font-size:14px;color:var(--accent);border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;text-decoration:none;font-weight:600}
+.retiens{background:var(--okbg);border-left:5px solid var(--ok);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px;font-weight:600}
+.piege{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px}
+/* rythmes */
+.rows{display:grid;gap:12px}
+.ry{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px}
+.lampe{width:76px;height:76px;border-radius:12px;background:var(--sky);display:flex;align-items:center;justify-content:center}
+.lampe i{display:block;width:26px;height:26px;border-radius:50%;background:#2a2f36;transition:none}
+.ry b.code{font-family:ui-monospace,Menlo,monospace;background:var(--bg);border-radius:6px;padding:1px 7px;margin-left:6px;font-size:15px}
+.ry .nom{font-weight:800;font-size:17px}
+.ry .exp{font-size:15px;color:var(--mute)}
+.strip{display:block;width:100%;height:26px;margin-top:6px}
+.legende{font-size:13px;color:var(--mute);margin-top:4px}
+/* couleurs */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col{border-radius:12px;padding:12px;border:1px solid var(--line)}
+.col .big{width:34px;height:34px;border-radius:50%;margin-bottom:6px;box-shadow:0 0 14px currentColor;border:1px solid #0002}
+.col b{font-size:17px}
+.col p{font-size:15px;margin:4px 0 0}
+/* horloge */
+.horloge{display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:center}
+@media (max-width:520px){.horloge{grid-template-columns:1fr}.horloge svg{max-width:240px;margin:0 auto}}
+.horloge svg{width:100%}
+/* fiches */
+.choix{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.choix button,.btn{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 15px system-ui;padding:6px 12px;cursor:pointer}
+.choix button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fiche{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fiche figure{margin:0;text-align:center;font-size:14px;color:var(--mute)}
+.fiche svg{width:100%;border-radius:12px}
+.fiche .info{grid-column:1/-1}
+.fiche .info h3{margin:4px 0;font-size:19px}
+/* QCM */
+.qbar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0 10px}.qbar i{display:block;height:8px;background:var(--accent);width:0}
+.qhead{display:flex;justify-content:space-between;font-size:14px;color:var(--mute)}
+.qq{font-size:19px;font-weight:700;margin:8px 0}
+.qvis{display:flex;gap:12px;align-items:center;margin:8px 0}
+.qvis .lampe{width:110px;height:110px}.qvis .lampe i{width:36px;height:36px}
+.qopts{display:grid;gap:8px}
+.qopts button{text-align:left;min-height:50px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:500 16px system-ui;padding:8px 12px;cursor:pointer}
+.qopts button.good{background:var(--okbg);border-color:var(--ok)}
+.qopts button.bad{background:var(--kobg);border-color:var(--ko)}
+.qexp{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);display:none}
+.qexp.show{display:block}
+.qnav{display:flex;gap:8px;margin-top:12px}
+.qnav .primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.score{font-size:22px;font-weight:800;text-align:center;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a>
+<div class="wrap">
+<div class="ver">Maquette · version 1.1 · reconnaître une bouée la nuit grâce à son feu</div>
+<h1>Les feux des bouées, expliqués simplement</h1>
+<p class="lead">La nuit, on ne voit pas la bouée : on ne voit que sa lumière. Pour savoir quelle bouée c'est, on se pose <b>deux questions</b> : <b>de quelle couleur</b> est la lumière, et <b>comment elle clignote</b>.</p>
+<nav><a href="#e1">1. Le rythme</a><a href="#e2">2. La couleur</a><a href="#e3">3. Les feux blancs</a><a href="#e4">4. Chaque bouée</a><a href="#qcm">QCM 30 questions</a></nav>
+
+<!-- ======================= ÉTAPE 1 ======================= -->
+<section class="card" id="e1">
+<h2><span class="n">1</span>Comment la lumière clignote (le rythme)</h2>
+<p>Chaque lumière ci-dessous clignote à son vrai rythme. Sous chacune, une <b>bande du temps</b> montre 12 secondes : <b style="color:#e0a800">jaune = allumé</b>, gris = éteint.</p>
+<div class="rows" id="rythmes"></div>
+<div class="retiens">À retenir : <b>Iso</b> = autant allumé qu'éteint · <b>Fl</b> = petits flashs · <b>Oc</b> = surtout allumé · <b>Q</b> = clignote vite, sans arrêt · <b>LFl</b> = un long flash.</div>
+</section>
+
+<!-- ======================= ÉTAPE 2 ======================= -->
+<section class="card" id="e2">
+<h2><span class="n">2</span>Ce que dit la couleur</h2>
+<div class="cols">
+  <div class="col"><div class="big" style="background:#ff3b30;color:#ff3b30"></div><b>Rouge</b><p>Un <b>bord du chenal</b>. En descendant une rivière : à garder à votre <b>droite</b> (tribord).</p></div>
+  <div class="col"><div class="big" style="background:#2fd158;color:#2fd158"></div><b>Vert</b><p>L'<b>autre bord du chenal</b>. En descendant : à garder à votre <b>gauche</b> (bâbord).</p></div>
+  <div class="col"><div class="big" style="background:#ffd60a;color:#ffd60a"></div><b>Jaune</b><p>Une <b>zone spéciale</b> (baignade, ski nautique, travaux, câble…). On la contourne comme un balisage normal.</p></div>
+  <div class="col"><div class="big" style="background:#ffffff;color:#9aa8b5"></div><b>Blanc</b><p>Un <b>cas particulier</b> : danger à contourner, eau saine, ou bifurcation. Le <b>rythme</b> dit lequel (étape 3).</p></div>
+</div>
+<div class="piege"><b>En mer</b> (balisage AISM région A, au programme côtier), c'est le même code, mais on raisonne <b>en entrant au port</b> : le <b>rouge</b> se laisse à <b>gauche</b> (bâbord), le <b>vert</b> à <b>droite</b> (tribord).</div>
+</section>
+
+<!-- ======================= ÉTAPE 3 ======================= -->
+<section class="card" id="e3">
+<h2><span class="n">3</span>Les feux blancs : 4 familles</h2>
+<p><b>a) Ça scintille vite → une cardinale.</b> Pensez à une <b>horloge</b> : le nombre de scintillements donne l'heure, l'heure donne la direction.</p>
+<div class="horloge">
+<svg viewBox="0 0 200 200">
+ <circle cx="100" cy="100" r="92" fill="#eef4f9" stroke="#14213d" stroke-width="2"/>
+ <text x="100" y="34" text-anchor="middle" font-size="15" font-weight="800" fill="#14213d">12 = NORD</text>
+ <text x="100" y="52" text-anchor="middle" font-size="11" fill="#5b6577">sans arrêt</text>
+ <text x="186" y="98" text-anchor="end" font-size="15" font-weight="800" fill="#14213d">3 = EST</text>
+ <text x="186" y="114" text-anchor="end" font-size="11" fill="#5b6577">3 flashs</text>
+ <text x="100" y="170" text-anchor="middle" font-size="15" font-weight="800" fill="#14213d">6 = SUD</text>
+ <text x="100" y="186" text-anchor="middle" font-size="11" fill="#5b6577">6 flashs + 1 long</text>
+ <text x="14" y="98" font-size="15" font-weight="800" fill="#14213d">9 = OUEST</text>
+ <text x="14" y="114" font-size="11" fill="#5b6577">9 flashs</text>
+ <line x1="100" y1="100" x2="100" y2="62" stroke="#14213d" stroke-width="3"/><line x1="100" y1="100" x2="136" y2="100" stroke="#14213d" stroke-width="3"/><circle cx="100" cy="100" r="5" fill="#14213d"/>
+</svg>
+<div>
+ <p>La bouée porte le nom du côté où <b>vous devez passer</b>. Le danger est <b>de l'autre côté</b>.</p>
+ <p>Exemple : cardinale <b>Sud</b> → vous passez <b>au sud</b> ; le danger est <b>au nord</b>.</p>
+ <p>Le Sud a en plus <b>un éclat long</b> (au moins 2 s) après ses 6 flashs, pour ne pas le confondre avec l'Est (3) ou l'Ouest (9) quand on compte mal.</p>
+</div>
+</div>
+<p><b>b) Deux flashs, puis une pause → danger isolé.</b> Un petit rocher ou une épave, avec de l'eau saine tout autour : on passe au large, d'un côté ou de l'autre. Truc : <b>2 flashs = 2 boules noires</b> en haut de la bouée.</p>
+<p><b>c) Allumé aussi longtemps qu'éteint, en 2 secondes → bifurcation</b> (eaux intérieures) : le chenal se divise en deux.</p>
+<p><b>d) Long et calme → eaux saines</b> (milieu du chenal, eau saine tout autour). Rythmes possibles : isophase (autre que 2 s), occultations, un éclat long toutes les 10 s, ou la lettre « A » en morse (· —).</p>
+<div class="piege"><b>Le piège du QCM :</b> un feu blanc <b>isophase</b> peut être la bifurcation <b>ou</b> l'eau saine. La bifurcation a toujours <b>Iso 2 s</b>. Si vous lisez <b>Iso 6 s</b>, c'est l'<b>eau saine</b>.</div>
+</section>
+
+<!-- ======================= ÉTAPE 4 ======================= -->
+<section class="card" id="e4">
+<h2><span class="n">4</span>Chaque bouée, de jour et de nuit</h2>
+<p>Touchez une bouée : à gauche ce que vous voyez <b>de jour</b>, à droite <b>de nuit</b>.</p>
+<div class="choix" id="choix"></div>
+<div class="fiche" id="fiche"></div>
+</section>
+
+<!-- ======================= QCM ======================= -->
+<section class="card" id="qcm">
+<h2><span class="n">✓</span>QCM — 30 questions</h2>
+<div class="qhead"><span id="qnum"></span><span id="qsc"></span></div>
+<div class="qbar"><i id="qprog"></i></div>
+<div id="qbox"></div>
+</section>
+
+<p class="lead" style="font-size:13px">Sources : RGP consolidé v1.1, appendice 8 (définitions des feux, I.2 ; balisage latéral et bifurcation, II ; cardinales, danger isolé et eaux saines, VI ; balisage particulier, VII). Mer : balisage AISM région A (matière du complément côtier).</p>
+</div>
+
+<script>
+(function(){
+const COL={R:"#ff3b30",G:"#2fd158",W:"#ffffff",Y:"#ffd60a"};
+const rep=(n,a)=>Array.from({length:n},()=>a).flat();
+/* séquences : allumé, éteint, allumé, éteint… (millisecondes) */
+const SEQ={
+ Iso:[2000,2000], Fl:[500,3500], Fl2:[500,500,500,3500], Q:[500,500], VQ:[250,250], Oc:[3000,1000], LFl:[2000,8000],
+ Iso2:[1000,1000], Iso6:[3000,3000], MoA:[400,400,1200,6000],
+ N:[500,500], E:[...rep(2,[500,500]),500,7500], S:[...rep(6,[500,500]),2000,7000], W:[...rep(8,[500,500]),500,6500],
+ Fl2p1:[500,500,500,1500,500,6500]
+};
+function lit(seq,t){const per=seq.reduce((a,b)=>a+b,0);let x=t%per;for(let i=0;i<seq.length;i++){if(x<seq[i])return i%2===0;x-=seq[i];}return false;}
+function strip(seq,color){ // 12 s
+  let s='<svg class="strip" viewBox="0 0 240 26" preserveAspectRatio="none">';
+  let t=0,i=0; const per=seq.reduce((a,b)=>a+b,0);
+  s+='<rect x="0" y="4" width="240" height="14" fill="#d9dee7" rx="3"/>';
+  while(t<12000){ const d=seq[i%seq.length]; if(i%2===0){ const x=t/50, w=Math.min(d,12000-t)/50; s+=`<rect x="${x}" y="4" width="${w}" height="14" fill="${color==='#ffffff'?'#e0a800':color}" rx="2"/>`; } t+=d; i++; }
+  for(let k=0;k<=12;k+=2) s+=`<text x="${Math.min(k*20,232)}" y="26" font-size="7" fill="#5b6577">${k}s</text>`;
+  return s+'</svg>';
+}
+/* ---------- étape 1 : rythmes ---------- */
+const RY=[
+ ["Isophase","Iso","Allumé aussi longtemps qu'éteint. Calme et régulier.",SEQ.Iso,"W"],
+ ["Éclats","Fl","De petits flashs, puis une pause plus longue.",SEQ.Fl,"W"],
+ ["Éclats groupés par 2","Fl(2)","Deux flashs rapprochés, puis une pause.",SEQ.Fl2,"W"],
+ ["Occultations","Oc","Surtout allumé ; s'éteint brièvement. L'inverse des éclats.",SEQ.Oc,"W"],
+ ["Scintillant","Q","Clignote vite et sans arrêt : 50 à 60 fois par minute.",SEQ.Q,"W"],
+ ["Scintillant rapide","VQ","Encore plus vite : 100 à 120 fois par minute.",SEQ.VQ,"W"],
+ ["Éclat long","LFl","Un seul flash long (au moins 2 s), puis une longue pause.",SEQ.LFl,"W"]
+];
+document.getElementById('rythmes').innerHTML=RY.map((r,k)=>`<div class="ry"><div class="lampe"><i data-seq="ry${k}" data-c="${r[4]}"></i></div><div><div class="nom">${r[0]}<b class="code">${r[1]}</b></div><div class="exp">${r[2]}</div>${strip(r[3],COL[r[4]])}</div></div>`).join('');
+RY.forEach((r,k)=>SEQ['ry'+k]=r[3]);
+
+/* ---------- étape 4 : fiches ---------- */
+function bouee(d){
+  // d: {f:forme, cols:[], vert, v:voyant}
+  let s=`<svg viewBox="0 0 160 160"><rect width="160" height="160" fill="#cfe3f2"/><path d="M0 132 Q40 124 80 132 T160 132 V160 H0Z" fill="#9cc3e3"/>`;
+  const n=d.cols.length, id='c'+Math.random().toString(36).slice(2);
+  if(d.f==="cyl"){ d.cols.forEach((c,i)=>s+=`<rect x="56" y="${72+i*60/n}" width="48" height="${60/n}" fill="${c}"/>`); s+='<rect x="56" y="72" width="48" height="60" fill="none" stroke="#14213d" stroke-width="1.5"/>'; }
+  if(d.f==="cone") s+=`<polygon points="80,64 108,132 52,132" fill="${d.cols[0]}" stroke="#14213d" stroke-width="1.5"/>`;
+  if(d.f==="sph"){ s+=`<clipPath id="${id}"><circle cx="80" cy="102" r="30"/></clipPath>`; d.cols.forEach((c,i)=>s+= d.vert?`<rect x="${50+i*60/n}" y="72" width="${60/n}" height="60" fill="${c}" clip-path="url(#${id})"/>`:`<rect x="50" y="${72+i*60/n}" width="60" height="${60/n}" fill="${c}" clip-path="url(#${id})"/>`); s+='<circle cx="80" cy="102" r="30" fill="none" stroke="#14213d" stroke-width="1.5"/>'; }
+  if(d.f==="esp"){ d.cols.forEach((c,i)=>s+=`<rect x="69" y="${66+i*66/n}" width="22" height="${66/n}" fill="${c}"/>`); s+='<rect x="69" y="66" width="22" height="66" fill="none" stroke="#14213d" stroke-width="1.5"/>'; }
+  s+='<line x1="80" y1="66" x2="80" y2="44" stroke="#14213d" stroke-width="2.5"/>';
+  const V={cyl:'<rect x="70" y="28" width="20" height="17" fill="#d62828" stroke="#14213d"/>',cone:'<polygon points="80,22 93,44 67,44" fill="#1a9c46" stroke="#14213d"/>',
+   sph:'<circle cx="80" cy="36" r="9" fill="#d62828" stroke="#14213d"/>',rsph:'<circle cx="80" cy="36" r="9" fill="#d62828"/>',X:'<path d="M69 26 L91 46 M91 26 L69 46" stroke="#e6b800" stroke-width="6"/>',
+   N:'<polygon points="80,10 92,28 68,28" fill="#111"/><polygon points="80,28 92,46 68,46" fill="#111"/>',S:'<polygon points="80,28 92,10 68,10" fill="#111"/><polygon points="80,46 92,28 68,28" fill="#111"/>',
+   E:'<polygon points="80,10 92,27 68,27" fill="#111"/><polygon points="80,46 92,29 68,29" fill="#111"/>',W:'<polygon points="80,28 92,10 68,10" fill="#111"/><polygon points="80,28 92,46 68,46" fill="#111"/>',
+   "2sph":'<circle cx="80" cy="38" r="7" fill="#111"/><circle cx="80" cy="22" r="7" fill="#111"/>'};
+  return s+(V[d.v]||'')+'</svg>';
+}
+function nuit(seqKey,c){return `<svg viewBox="0 0 160 160"><rect width="160" height="160" fill="#0b1424"/><path d="M0 132 Q40 124 80 132 T160 132 V160 H0Z" fill="#14233a"/><circle cx="80" cy="60" r="34" class="halo" data-seq="${seqKey}" data-c="${c}" opacity="0" fill="${COL[c]}"/><circle cx="80" cy="60" r="13" class="core" data-seq="${seqKey}" data-c="${c}" fill="#2a2f36"/></svg>`;}
+const B=[
+ {k:"rouge",t:"Bord droit du chenal (rouge)",d:{f:"cyl",cols:["#d62828"],v:"cyl"},s:"Iso",c:"R",code:"Iso R ou Fl R",faire:"En descendant la rivière : laissez-la à votre DROITE (tribord). En remontant : à votre gauche. En mer, en entrant au port : à votre gauche (bâbord)."},
+ {k:"vert",t:"Bord gauche du chenal (vert)",d:{f:"cone",cols:["#1a9c46"],v:"cone"},s:"Fl",c:"G",code:"Iso G ou Fl G",faire:"En descendant : laissez-la à votre GAUCHE (bâbord). En mer, en entrant au port : à votre droite (tribord)."},
+ {k:"bif",t:"Bifurcation",d:{f:"sph",cols:["#d62828","#1a9c46","#d62828","#1a9c46"],v:"sph"},s:"Iso2",c:"W",code:"Iso 2s blanc",faire:"Le chenal se divise : les deux branches sont possibles. (Eaux intérieures.)"},
+ {k:"bifR",t:"Bifurcation, voyant cylindre rouge",d:{f:"sph",cols:["#d62828","#1a9c46","#d62828","#1a9c46"],v:"cyl"},s:"Q",c:"R",code:"Q R (scintillant rouge)",faire:"Le voyant montre le chenal principal : lisez-la comme un bord droit (rouge). En descendant, laissez-la à droite."},
+ {k:"N",t:"Cardinale Nord",d:{f:"esp",cols:["#111","#ffd60a"],v:"N"},s:"N",c:"W",code:"Q blanc continu",faire:"Passez au NORD de la bouée. Le danger est au sud. (12 h)"},
+ {k:"E",t:"Cardinale Est",d:{f:"esp",cols:["#111","#ffd60a","#111"],v:"E"},s:"E",c:"W",code:"Q(3) 10s",faire:"Passez à l'EST. Le danger est à l'ouest. (3 h)"},
+ {k:"S",t:"Cardinale Sud",d:{f:"esp",cols:["#ffd60a","#111"],v:"S"},s:"S",c:"W",code:"Q(6) + éclat long 15s",faire:"Passez au SUD. Le danger est au nord. (6 h)"},
+ {k:"W",t:"Cardinale Ouest",d:{f:"esp",cols:["#ffd60a","#111","#ffd60a"],v:"W"},s:"W",c:"W",code:"Q(9) 15s",faire:"Passez à l'OUEST. Le danger est à l'est. (9 h)"},
+ {k:"iso",t:"Danger isolé",d:{f:"esp",cols:["#111","#d62828","#111"],v:"2sph"},s:"Fl2",c:"W",code:"Fl(2) blanc",faire:"Petit danger entouré d'eau saine : passez au large, d'un côté ou de l'autre."},
+ {k:"saine",t:"Eaux saines",d:{f:"sph",cols:["#d62828","#fff","#d62828","#fff"],vert:true,v:"rsph"},s:"Iso6",c:"W",code:"Iso, Oc, éclat long 10s ou « A » morse",faire:"Milieu ou axe du chenal : l'eau est saine tout autour."},
+ {k:"spe",t:"Marque spéciale (jaune)",d:{f:"cyl",cols:["#ffd60a"],v:"X"},s:"Fl",c:"Y",code:"Fl jaune (jamais 2 éclats groupés)",faire:"Zone ou objet particulier : passez-la du même côté qu'un balisage normal."}
+];
+const ch=document.getElementById('choix'),fi=document.getElementById('fiche');
+ch.innerHTML=B.map((b,i)=>`<button data-i="${i}" class="${i===0?'on':''}">${b.t.replace(/ \(.*\)/,'')}</button>`).join('');
+function showF(i){const b=B[i];fi.innerHTML=`<figure>${bouee(b.d)}<figcaption>de jour</figcaption></figure><figure>${nuit(b.s,b.c)}<figcaption>de nuit · ${b.code}</figcaption></figure><div class="info"><h3>${b.t}</h3><p>${b.faire}</p>${strip(SEQ[b.s],COL[b.c])}</div>`;
+ ch.querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.i===i));}
+ch.querySelectorAll('button').forEach(x=>x.onclick=()=>showF(+x.dataset.i)); showF(0);
+
+/* ---------- QCM ---------- */
+const Q=[
+ {l:"N",q:"Vous voyez ce feu blanc qui scintille sans arrêt. Quelle bouée ?",o:["Cardinale Nord","Cardinale Sud","Danger isolé","Eaux saines"],a:0,e:"Scintillant continu, sans pause = 12 h sur l'horloge = cardinale Nord."},
+ {l:"E",q:"Ce feu blanc : 3 scintillements, puis une pause. Quelle bouée ?",o:["Cardinale Ouest","Cardinale Est","Danger isolé","Bifurcation"],a:1,e:"3 scintillements = 3 h = Est."},
+ {l:"S",q:"Ce feu blanc : 6 scintillements suivis d'un éclat long. Quelle bouée ?",o:["Cardinale Sud","Cardinale Est","Eaux saines","Cardinale Ouest"],a:0,e:"6 scintillements + 1 éclat long = 6 h = Sud."},
+ {l:"W",q:"Ce feu blanc : 9 scintillements, puis une pause. Quelle bouée ?",o:["Cardinale Nord","Cardinale Est","Cardinale Ouest","Cardinale Sud"],a:2,e:"9 scintillements = 9 h = Ouest."},
+ {l:"Fl2",q:"Ce feu blanc : 2 éclats rapprochés, puis une pause. Quelle bouée ?",o:["Marque spéciale","Danger isolé","Cardinale Est","Bord du chenal"],a:1,e:"Fl(2) blanc = danger isolé. Truc : 2 éclats = 2 boules noires sur la bouée."},
+ {l:"Iso6",c:"W",q:"Feu blanc Iso 6s (3 s allumé, 3 s éteint). Il s'agit très probablement :",o:["d'un danger isolé","d'une bifurcation","d'une marque spéciale","d'une bouée d'eaux saines"],a:3,e:"Blanc isophase = eaux saines. La bifurcation est aussi blanche isophase, mais toujours en 2 s : 6 s n'est donc pas elle."},
+ {l:"LFl",c:"W",q:"Feu blanc : un éclat long toutes les 10 secondes. Quelle bouée ?",o:["Eaux saines","Cardinale Sud","Danger isolé","Bifurcation"],a:0,e:"Un éclat long toutes les 10 s est un des rythmes des eaux saines. (La cardinale Sud a 6 scintillements AVANT son éclat long.)"},
+ {l:"Iso2",c:"W",q:"Sur une rivière, feu blanc isophase de 2 s. Quelle bouée ?",o:["Eaux saines","Bifurcation du chenal","Cardinale Nord","Bord droit du chenal"],a:1,e:"Le règlement fixe pour la bifurcation : « feu blanc isophase (2s) » (RGP, appendice 8, II.3)."},
+ {l:"Fl",c:"Y",q:"Un feu jaune à éclats. Quelle bouée ?",o:["Une marque spéciale","Un bord du chenal","Un danger isolé","Une cardinale"],a:0,e:"Le jaune est réservé au balisage particulier (zones spéciales)."},
+ {l:"Iso",c:"R",q:"Vous DESCENDEZ une rivière. Un feu rouge isophase se présente. De quel côté le laisser ?",o:["À gauche (bâbord)","À droite (tribord)","Des deux côtés","On s'arrête"],a:1,e:"Rouge = bord droit du chenal, vu en descendant : laissez-le à droite (tribord)."},
+ {l:"Iso",c:"R",q:"Vous REMONTEZ la rivière. Même feu rouge. De quel côté le laisser ?",o:["À gauche (bâbord)","À droite (tribord)"],a:0,e:"La bouée ne bouge pas ; c'est vous qui avez tourné. En remontant, le bord droit est à votre gauche."},
+ {l:"Fl",c:"G",q:"En descendant une rivière, un feu vert à éclats. De quel côté le laisser ?",o:["À droite (tribord)","À gauche (bâbord)"],a:1,e:"Vert = bord gauche du chenal, vu en descendant : laissez-le à gauche."},
+ {l:"Iso",c:"G",q:"En mer (AISM région A), vous ENTREZ au port. Un feu vert. De quel côté le laisser ?",o:["À droite (tribord)","À gauche (bâbord)"],a:0,e:"En entrant au port : vert à droite."},
+ {l:"Q",c:"R",q:"Sur une bouée de bifurcation, un feu rouge scintillant (Q R). Que signifie-t-il ?",o:["Le chenal principal : lisez-la comme un bord droit (rouge)","Un danger isolé","Une zone interdite","Rien de spécial"],a:0,e:"Avec un voyant cylindre rouge, la bifurcation montre le chenal principal et porte un feu scintillant rouge (RGP, appendice 8, II.3)."},
+ {q:"Que veut dire « Iso » ?",o:["La lumière dure aussi longtemps que l'obscurité","La lumière est plus courte que l'obscurité","La lumière ne s'éteint jamais","La lumière clignote très vite"],a:0,e:"« Les périodes de lumière sont aussi longues que les périodes d'obscurité » (RGP, appendice 8, I.2)."},
+ {q:"Que veut dire « Fl » (éclats) ?",o:["La lumière est plus courte que l'obscurité","La lumière est plus longue que l'obscurité","Lumière et obscurité égales"],a:0,e:"Un éclat est un petit flash : plus de noir que de lumière."},
+ {q:"Que veut dire « Oc » (occultations) ?",o:["Surtout allumé, avec de courtes extinctions","Surtout éteint, avec de petits flashs","Toujours allumé"],a:0,e:"Occulter = cacher : la lumière est cachée un court instant. C'est l'inverse des éclats."},
+ {q:"Un feu scintillant (Q), c'est combien d'éclats par minute ?",o:["10 à 20","50 à 60","100 à 120","200"],a:1,e:"Scintillant : 50 à 60 éclats par minute. Scintillant rapide (VQ) : 100 à 120."},
+ {q:"Un feu scintillant RAPIDE (VQ), c'est combien d'éclats par minute ?",o:["50 à 60","100 à 120","20 à 30"],a:1,e:"VQ = 100 à 120 éclats par minute (RGP, appendice 8, I.2)."},
+ {q:"Combien de scintillements pour la cardinale Ouest ?",o:["3","6","9","12"],a:2,e:"Ouest = 9 h sur l'horloge = 9 scintillements."},
+ {q:"Pourquoi la cardinale Sud a-t-elle un éclat long après ses 6 scintillements ?",o:["Pour ne pas la confondre avec l'Est ou l'Ouest","Pour indiquer la profondeur","Parce qu'elle est plus grande"],a:0,e:"Compter 6 scintillements de nuit est difficile ; l'éclat long évite de la prendre pour une Est (3) ou une Ouest (9)."},
+ {l:"S",q:"Vous voyez ce feu (6 scintillements + éclat long). Où est le danger ?",o:["Au sud de la bouée","Au nord de la bouée","Juste sous la bouée"],a:1,e:"C'est une cardinale Sud : on passe au sud, donc le danger est au NORD. Le nom dit où passer, pas où est le danger."},
+ {l:"Fl2",q:"Ce feu blanc Fl(2). Que faites-vous ?",o:["Je passe au large, d'un côté ou de l'autre","Je passe tout près pour le voir","Je dois passer au nord"],a:0,e:"Danger isolé : un petit danger entouré d'eau saine. On passe au large, de n'importe quel côté."},
+ {q:"Une bouée d'eaux saines indique :",o:["Le milieu ou l'axe du chenal, eau saine tout autour","Un danger","Une zone de baignade","La fin du chenal"],a:0,e:"Elle balise les axes des chenaux, les milieux de chenal et les atterrissages (RGP, appendice 8, VI.B)."},
+ {q:"De quelle couleur est le feu d'une cardinale ?",o:["Rouge","Vert","Blanc","Jaune"],a:2,e:"Toutes les cardinales ont un feu BLANC ; c'est le rythme qui les distingue."},
+ {q:"Un feu jaune à 2 éclats groupés, Fl(2) Y, existe-t-il pour une marque spéciale ?",o:["Oui","Non, il est exclu"],a:1,e:"Le règlement l'exclut : « à l'exclusion d'un feu à éclats groupés de 2 éclats » (RGP, appendice 8, VII). Fl(2) fait penser au danger isolé."},
+ {l:"Fl2p1",c:"R",q:"En mer, un feu rouge Fl(2+1). Quelle marque ?",o:["Une marque de chenal préféré (bifurcation en mer)","Un danger isolé","Une cardinale","Une marque spéciale"],a:0,e:"En mer (AISM), le rythme Fl(2+1), rouge ou vert, est celui de la marque de chenal préféré."},
+ {q:"Un feu blanc donne la lettre « A » en morse (· —). Quelle bouée ?",o:["Eaux saines","Danger isolé","Cardinale Est","Bifurcation"],a:0,e:"Le « A » en morse est un des rythmes des eaux saines."},
+ {q:"Quel est le voyant (la forme posée au sommet) du danger isolé ?",o:["Deux boules noires","Deux cônes noirs","Un cylindre rouge","Une croix jaune"],a:0,e:"Deux sphères noires superposées. Truc : 2 boules = 2 éclats, Fl(2)."},
+ {l:"E",q:"Ce feu Q(3) 10s : que veut dire « 10s » ?",o:["Le groupe de 3 scintillements revient toutes les 10 secondes","Il y a 10 scintillements","On le voit à 10 milles"],a:0,e:"Le nombre de secondes est la période : le temps au bout duquel tout le rythme recommence."}
+];
+let k=0,score=0,done=false;const box=document.getElementById('qbox');
+let qSeq=null,qC="W";
+function shuffleIdx(n){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let order=shuffleIdx(Q.length);
+function showQ(){
+  const q=Q[order[k]]; done=false;
+  document.getElementById('qnum').textContent=`Question ${k+1} / ${Q.length}`;
+  document.getElementById('qsc').textContent=`Score : ${score}`;
+  document.getElementById('qprog').style.width=(k/Q.length*100)+'%';
+  qSeq=q.l?SEQ[q.l]:null; qC=q.c||"W";
+  const opts=shuffleIdx(q.o.length).map(i=>({t:q.o[i],i}));
+  box.innerHTML=`<div class="qq">${q.q}</div>${q.l?`<div class="qvis"><div class="lampe"><i id="qlamp"></i></div><div style="flex:1">${strip(SEQ[q.l],COL[qC])}<div class="legende">bande du temps : 12 secondes</div></div></div>`:''}
+  <div class="qopts">${opts.map(o=>`<button data-i="${o.i}">${String.fromCharCode(65+opts.indexOf(o))}. ${o.t}</button>`).join('')}</div>
+  <div class="qexp" id="qexp"></div><div class="qnav"><button class="btn primary" id="qnext" disabled>Question suivante</button></div>`;
+  box.querySelectorAll('.qopts button').forEach(b=>b.onclick=()=>{ if(done) return; done=true; const ok=+b.dataset.i===q.a; if(ok) score++;
+    box.querySelectorAll('.qopts button').forEach(x=>{ if(+x.dataset.i===q.a) x.classList.add('good'); }); if(!ok) b.classList.add('bad');
+    const ex=document.getElementById('qexp'); ex.innerHTML=`<b>${ok?'Juste !':'Pas tout à fait.'}</b> ${q.e}`; ex.classList.add('show');
+    document.getElementById('qsc').textContent=`Score : ${score}`; document.getElementById('qnext').disabled=false; });
+  document.getElementById('qnext').onclick=()=>{ k++; if(k<Q.length) showQ(); else end(); };
+}
+function end(){ qSeq=null; document.getElementById('qprog').style.width='100%'; document.getElementById('qnum').textContent='Terminé';
+  const pct=Math.round(score/Q.length*100);
+  box.innerHTML=`<div class="score">${score} / ${Q.length} (${pct} %)</div><p style="text-align:center">${pct>=80?'Très bien : vous reconnaissez les feux.':'Relisez les étapes 1 et 3, puis recommencez.'}</p><div class="qnav" style="justify-content:center"><button class="btn primary" id="qre">Recommencer (autre ordre)</button></div>`;
+  document.getElementById('qre').onclick=()=>{k=0;score=0;order=shuffleIdx(Q.length);showQ();};
+}
+showQ();
+
+/* ---------- animation de toutes les lampes ---------- */
+function tick(now){
+  document.querySelectorAll('.lampe i[data-seq]').forEach(el=>{const on=lit(SEQ[el.dataset.seq],now);const c=COL[el.dataset.c];el.style.background=on?c:'#2a2f36';el.style.boxShadow=on?`0 0 18px 6px ${c}`:'none';});
+  document.querySelectorAll('.core[data-seq]').forEach(el=>{const on=lit(SEQ[el.dataset.seq],now);el.setAttribute('fill',on?COL[el.dataset.c]:'#2a2f36');});
+  document.querySelectorAll('.halo[data-seq]').forEach(el=>{el.setAttribute('opacity',lit(SEQ[el.dataset.seq],now)?.35:0);});
+  const ql=document.getElementById('qlamp'); if(ql&&qSeq){const on=lit(qSeq,now);const c=COL[qC];ql.style.background=on?c:'#2a2f36';ql.style.boxShadow=on?`0 0 22px 8px ${c}`:'none';}
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

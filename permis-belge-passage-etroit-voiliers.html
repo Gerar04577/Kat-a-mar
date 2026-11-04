@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Priorités des voiliers</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,sans-serif;padding:14px 16px 30px}
+.w{max-width:680px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:22px;margin:4px 0 6px}h2{font-size:19px;margin:0 0 6px}
+h2 .n{display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;align-items:center;justify-content:center;font-size:15px;margin-right:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:12px 0}
+svg{width:100%;height:auto;border-radius:12px;display:block;margin:8px 0}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btns button{min-height:48px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 14px system-ui;cursor:pointer;padding:6px}
+.btns button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.res{border-radius:10px;padding:10px 12px;margin-top:8px;background:var(--okbg);border-left:5px solid var(--ok)}
+.ret{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px}
+.err{background:var(--kobg);border-left:5px solid var(--ko);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:10px}
+.src{font-size:13px;color:var(--mute)}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}th{background:var(--bg)}
+.q{border-top:1px solid var(--line);padding:10px 0}.q:first-child{border-top:0}
+.q p{margin:0 0 6px;font-weight:700}
+.q .opts{display:grid;gap:6px}
+.q .opts button{text-align:left;min-height:44px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 15px system-ui;cursor:pointer;padding:6px 10px}
+.q .opts button.good{background:var(--okbg);border-color:var(--ok)}.q .opts button.bad{background:var(--kobg);border-color:var(--ko)}
+.q .ex{display:none;font-size:15px;color:var(--mute);margin-top:6px}.q .ex.show{display:block}
+</style></head><body>
+<a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Maquette · version 1.0 · priorités entre voiliers selon le vent (RGP)</div>
+<h1>Voiliers : qui passe en premier ?</h1>
+<p>Tout dépend de <b>deux questions</b> : <b>où</b> se trouve-t-on (passage étroit ou eau libre) et <b>d'où vient le vent</b>.</p>
+
+<section class="card">
+<h2><span class="n">1</span>Trois mots à connaître</h2>
+<svg viewBox="0 0 400 230" id="vocab"></svg>
+<p><b>Au vent / sous le vent</b> (entre deux bateaux) : le bateau <b>au vent</b> est celui que le vent touche <b>en premier</b>. L'autre est <b>sous le vent</b>.</p>
+<p><b>Tribord amure</b> : le vent arrive par le côté <b>droit</b> (tribord) du voilier. <b>Bâbord amure</b> : par le côté <b>gauche</b>.</p>
+<div class="ret">Pour savoir d'où vient le vent sur un voilier : regardez la <b>bôme</b> (la barre en bas de la voile). Elle part toujours <b>du côté opposé</b> au vent. Bôme à gauche → vent par la droite → <b>tribord amure</b>.</div>
+</section>
+
+<section class="card">
+<h2><span class="n">2</span>Dans un passage étroit (pas de place pour deux)</h2>
+<p>Choisissez une situation. Le bateau <b style="color:#1a9c46">vert passe</b>, le bateau <b style="color:#c92a2a">rouge attend</b> avant le rétrécissement.</p>
+<div class="btns" id="scBtns"></div>
+<svg viewBox="0 0 400 260" id="scene"></svg>
+<div class="res" id="scTxt"></div>
+<p class="src" id="scSrc"></p>
+</section>
+
+<section class="card">
+<h2><span class="n">3</span>⚠️ Le grand piège : passage étroit ≠ eau libre</h2>
+<p>En <b>eau libre</b>, quand deux voiliers ont des routes qui se croisent, la règle des « au vent » est <b>à l'envers</b> :</p>
+<svg viewBox="0 0 400 250" id="libre"></svg>
+<table>
+<tr><th>Les deux voiliers reçoivent le vent du même côté</th><th>Qui cède ?</th></tr>
+<tr><td><b>Eau libre</b>, routes qui se croisent<br><span class="src">RGP art. 6.03/1 al. 4 b · RIPAM règle 12</span></td><td>Celui <b>AU VENT</b> s'écarte</td></tr>
+<tr><td><b>Passage étroit</b><br><span class="src">RGP art. 6.07 al. 1 d iii</span></td><td>Celui <b>SOUS LE VENT</b> attend</td></tr>
+</table>
+<div class="ret"><b>Pourquoi cette différence ?</b> En eau libre, le bateau au vent a toute la place pour s'écarter. Dans un passage étroit, il ne peut pas s'arrêter : il est poussé par le vent dans le dos. Celui sous le vent, qui avance contre le vent, s'arrête facilement. C'est le conseil de votre fiche : <b>« qui s'arrêtera le plus facilement ? »</b></div>
+<p><b>Dans les deux cas</b> (même règle partout) : si le vent arrive de côtés différents, le voilier <b>bâbord amure</b> cède au <b>tribord amure</b>.</p>
+</section>
+
+<section class="card">
+<h2><span class="n">4</span>Ce que la fiche de l'école dit mal</h2>
+<div class="err"><b>Image 1 : « Le bateau à rames a priorité sur un bateau à voiles qui remonte au vent. » → FAUX selon le RGP.</b><br>Art. 6.07 al. 1 d ii : « en cas de rencontre entre une menue embarcation à voile et une menue embarcation à moteur ou une menue embarcation mue par la force musculaire, […] la menue embarcation à voile doit poursuivre sa route et l'autre embarcation doit laisser le passage ». Le règlement ne fait <b>aucune exception</b> pour un voilier qui remonte au vent. Le croquis officiel (appendice 12) montre la barque qui s'écarte.</div>
+<div class="ret"><b>Image 4 : « sous le vent de l'obstacle ».</b> Le RGP ne parle pas de l'obstacle : il compare <b>les deux voiliers entre eux</b>. Celui qui est sous le vent <b>de l'autre</b> attend.</div>
+<div class="ret"><b>Image 2 : « qui suit le côté du chenal à tribord ».</b> Le texte dit : le bateau « qui ne rencontre pas d'obstacle à tribord » passe. Cette règle vaut seulement <b>sans courant</b>. Avec du courant, c'est le bateau qui <b>descend</b> (avalant) qui passe (6.07 al. 1 c).</div>
+<p>Les images 3 (tout faire pour éviter l'abordage, al. 2) et 5 (tribord amure prioritaire, al. 1 d iii) sont justes.</p>
+</section>
+
+<section class="card">
+<h2><span class="n">5</span>Testez-vous</h2>
+<div id="test"></div>
+</section>
+
+<p class="src">Sources : RGP consolidé v1.1 — art. 6.07 (rencontre dans un passage étroit) et ses croquis (appendice 12, p. 139-140 du document du ministère) ; art. 6.03/1 al. 4 (routes qui se croisent) ; RIPAM règle 12.</p>
+</div>
+<script>
+const SEA='#9cc9ea',WIND='#1565c0',BANK='#e8c98f';
+const DEFS=`<defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="${WIND}"/></marker><marker id="ak" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#14213d"/></marker></defs>`;
+const rad=d=>d*Math.PI/180;
+/* bôme : côté sous le vent. h = cap (0 = haut, 90 = droite), w = direction VERS laquelle va le vent */
+function boomSide(h,w){const R=[Math.cos(rad(h)),Math.sin(rad(h))],W=[Math.sin(rad(w)),-Math.cos(rad(w))];const d=R[0]*W[0]+R[1]*W[1];return d>=0?1:-1;}
+function voilier(x,y,h,w,col,big){const s=big?1.35:1,side=boomSide(h,w),bx=side*20;
+ return `<g transform="translate(${x} ${y}) rotate(${h}) scale(${s})"><path d="M0 -26 Q11 -8 10 18 L-10 18 Q-11 -8 0 -26Z" fill="#fff" stroke="${col}" stroke-width="3"/><path d="M0 -6 Q${bx*.75} 6 ${bx} 16" fill="none" stroke="#dfe6ee" stroke-width="5"/><line x1="0" y1="-6" x2="${bx}" y2="16" stroke="#7a4b14" stroke-width="3" stroke-linecap="round"/><circle cx="0" cy="-6" r="3" fill="#14213d"/></g>`;}
+function barque(x,y,h,col){return `<g transform="translate(${x} ${y}) rotate(${h})"><path d="M0 -20 Q9 -6 8 14 L-8 14 Q-9 -6 0 -20Z" fill="#c8a06a" stroke="${col}" stroke-width="3"/><line x1="-20" y1="0" x2="20" y2="0" stroke="#5a3a10" stroke-width="3"/></g>`;}
+function vent(w,x,y,n,gap){let s='';const dx=Math.sin(rad(w))*40,dy=-Math.cos(rad(w))*40;for(let i=0;i<n;i++){const px=x+(w%180===0?i*gap:0),py=y+(w%180===0?0:i*gap);s+=`<line x1="${px}" y1="${py}" x2="${px+dx}" y2="${py+dy}" stroke="${WIND}" stroke-width="4" marker-end="url(#ah)"/>`;}return s;}
+
+/* 1. vocabulaire : vent vers la droite, deux voiliers vers le haut */
+document.getElementById('vocab').innerHTML=DEFS+`<rect width="400" height="230" fill="${SEA}"/>${vent(90,15,60,3,0)}${vent(90,15,120,1,0)}${vent(90,15,180,1,0)}
+<text x="12" y="30" font-size="14" font-weight="800" fill="${WIND}">VENT →</text>
+${voilier(140,125,0,90,'#14213d')}${voilier(280,125,0,90,'#14213d')}
+<text x="140" y="180" text-anchor="middle" font-size="14" font-weight="900" fill="#14213d">AU VENT</text><text x="140" y="197" text-anchor="middle" font-size="12" fill="#14213d">touché en premier</text>
+<text x="280" y="180" text-anchor="middle" font-size="14" font-weight="900" fill="#14213d">SOUS LE VENT</text><text x="280" y="197" text-anchor="middle" font-size="12" fill="#14213d">touché ensuite</text>
+<text x="210" y="222" text-anchor="middle" font-size="12" fill="#14213d">Vent par la gauche, bôme à droite : bâbord amure</text>`;
+
+/* 2. passage étroit animé */
+const SC=[
+ {b:"Vent dans l'axe du chenal",w:90,A:'voile',B:'voile',win:'A',t:"Le vent souffle de gauche à droite. A (à gauche) est AU VENT de B : A passe. B, SOUS LE VENT, remonte contre le vent et peut s'arrêter facilement : B attend.",s:"RGP 6.07 al. 1 d iii : « le bateau qui est au vent […] doit poursuivre sa route et l'autre doit attendre ». Croquis officiel : « Une menue embarcation à voiles sous le vent doit laisser le passage à une menue embarcation à voiles au vent »."},
+ {b:"Vent de travers",w:0,A:'voile',B:'voile',win:'A',t:"Le vent vient du bas, en travers du chenal : aucun des deux n'est au vent de l'autre. A reçoit le vent par sa droite (tribord amure) : A passe. B reçoit le vent par sa gauche (bâbord amure) : B attend.",s:"RGP 6.07 al. 1 d iii : « dans le cas où tous les deux naviguent au vent, […] celui qui reçoit le vent de tribord doit poursuivre sa route »."},
+ {b:"Voilier contre barque",w:300,A:'voile',B:'rames',win:'A',t:"Petit voilier contre barque à rames (deux menues embarcations) : le voilier passe, même s'il remonte contre le vent. La barque attend.",s:"RGP 6.07 al. 1 d ii : « la menue embarcation à voile doit poursuivre sa route et l'autre embarcation doit laisser le passage ». Même règle pour une petite embarcation à moteur."},
+ {b:"Petit voilier contre grand voilier",w:90,A:'voile',B:'grand',win:'B',t:"Le petit voilier A est pourtant au vent… mais face à un GRAND bateau (20 m ou plus), la menue embarcation cède toujours. A attend, le grand voilier B passe.",s:"RGP 6.07 al. 1 d iii : « Cette disposition ne s'applique pas [entre] une menue embarcation à voile et un grand bateau à voile ». Croquis officiel : « Une menue embarcation s'écarte pour un grand bateau »."}
+];
+let cur=0,t0=performance.now();
+document.getElementById('scBtns').innerHTML=SC.map((s,i)=>`<button data-i="${i}" class="${i?'':'on'}">${s.b}</button>`).join('');
+document.querySelectorAll('#scBtns button').forEach(b=>b.onclick=()=>{cur=+b.dataset.i;t0=performance.now();document.querySelectorAll('#scBtns button').forEach(x=>x.classList.toggle('on',x===b));txt();});
+function txt(){const s=SC[cur];document.getElementById('scTxt').innerHTML=s.t;document.getElementById('scSrc').textContent=s.s;}txt();
+function bank(){return `<rect x="0" y="0" width="400" height="60" fill="${BANK}"/><rect x="0" y="200" width="400" height="60" fill="${BANK}"/><path d="M165 60 L185 98 L215 98 L235 60Z" fill="${BANK}"/><path d="M165 200 L185 162 L215 162 L235 200Z" fill="${BANK}"/><text x="200" y="35" text-anchor="middle" font-size="13" font-weight="800" fill="#7a5a20">PASSAGE ÉTROIT</text>`;}
+function boat(kind,x,y,h,w,col){return kind==='rames'?barque(x,y,h,col):voilier(x,y,h,w,col,kind==='grand');}
+function frame(now){
+ const s=SC[cur],T=((now-t0)/1000)%9;
+ // vainqueur : traverse de 0 à 5 s ; perdant : arrive au point d'attente (2 s), attend, repart après 5,5 s
+ const win=s.win,G='#1a9c46',Rd='#c92a2a';
+ const ease=v=>Math.max(0,Math.min(1,v));
+ let ax,bx;
+ const pW=ease(T/5.2), pL1=ease(T/2), pL2=ease((T-5.6)/3.2);
+ if(win==='A'){ax=30+pW*340; bx=370-(370-290)*pL1-(290-30)*pL2;}
+ else{bx=370-pW*340; ax=30+(110-30)*pL1+(370-110)*pL2;}
+ const wv=s.w%180===0?vent(s.w,60,s.w===0?250:110,6,55):vent(s.w,s.w===90?8:390,s.w===90?90:150,3,22);
+ let svg=DEFS+`<rect width="400" height="260" fill="${SEA}"/>${bank()}${wv}`;
+ svg+=`<text x="${s.w===300?320:8}" y="${s.w===0?195:78}" font-size="13" font-weight="800" fill="${WIND}">VENT ${s.w===90?'→':s.w===300?'↖':'↑'}</text>`;
+ const ly=148+28*pL1-28*pL2, wy=118, ay=win==='A'?wy:ly, by=win==='B'?wy:ly;
+ svg+=boat(s.A,ax,ay,90,s.w,win==='A'?G:Rd)+boat(s.B,bx,by,270,s.w,win==='B'?G:Rd);
+ svg+=`<text x="${ax}" y="${ay+(s.A==='grand'?40:32)}" text-anchor="middle" font-size="14" font-weight="900" fill="#14213d">A</text><text x="${bx}" y="${by+(s.B==='grand'?42:34)}" text-anchor="middle" font-size="14" font-weight="900" fill="#14213d">B</text>`;
+ document.getElementById('scene').innerHTML=svg;
+ requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* 3. eau libre : vent vers la droite, A au vent, routes qui se croisent */
+document.getElementById('libre').innerHTML=DEFS+`<rect width="400" height="250" fill="${SEA}"/>${vent(90,12,60,1,0)}${vent(90,12,130,1,0)}${vent(90,12,200,1,0)}
+<text x="12" y="30" font-size="14" font-weight="800" fill="${WIND}">VENT →</text>
+${voilier(120,190,20,90,'#c92a2a')}${voilier(300,190,-25,90,'#1a9c46')}
+<line x1="130" y1="160" x2="205" y2="45" stroke="#14213d" stroke-width="2" stroke-dasharray="5 5"/><line x1="290" y1="160" x2="215" y2="45" stroke="#14213d" stroke-width="2" stroke-dasharray="5 5"/>
+<path d="M118 160 Q95 110 140 70" fill="none" stroke="#c92a2a" stroke-width="3" marker-end="url(#ak)"/>
+<text x="120" y="235" text-anchor="middle" font-size="13" font-weight="900" fill="#c92a2a">A au vent : s'écarte</text>
+<text x="300" y="235" text-anchor="middle" font-size="13" font-weight="900" fill="#1a9c46">B sous le vent : garde sa route</text>`;
+
+/* 5. test */
+const T=[
+ ["Passage étroit, vent dans l'axe du chenal. Deux petits voiliers. Lequel passe ?",["Celui qui est au vent","Celui qui est sous le vent"],0,"6.07 al. 1 d iii : le voilier au vent passe ; celui sous le vent attend."],
+ ["Eau libre, routes qui se croisent, vent reçu du même côté. Lequel s'écarte ?",["Celui qui est au vent","Celui qui est sous le vent"],0,"6.03/1 al. 4 b et RIPAM 12 : le voilier au vent s'écarte. C'est l'inverse du passage étroit !"],
+ ["Passage étroit, vent de travers. A reçoit le vent par tribord, B par bâbord. Qui passe ?",["A (tribord amure)","B (bâbord amure)"],0,"Tribord amure passe, bâbord amure attend."],
+ ["Passage étroit : une barque à rames et un petit voilier qui remonte au vent. Qui passe ?",["La barque","Le voilier"],1,"6.07 al. 1 d ii : la menue embarcation à voile poursuit sa route. La fiche de l'école dit le contraire : elle se trompe."],
+ ["Passage étroit : un petit voilier au vent et un grand voilier (25 m). Qui passe ?",["Le petit voilier, car il est au vent","Le grand voilier"],1,"La règle au vent / sous le vent ne s'applique pas entre une menue embarcation et un grand bateau : le petit cède."],
+ ["Passage étroit sur une rivière à courant. Qui passe ?",["Le bateau qui descend (avalant)","Le bateau qui remonte (montant)"],0,"6.07 al. 1 c : sur une voie à courant, l'avalant poursuit et le montant laisse le passage."],
+ ["La bôme d'un voilier est à sa droite. D'où vient le vent ?",["De sa droite (tribord amure)","De sa gauche (bâbord amure)"],1,"La bôme part du côté opposé au vent : bôme à droite → vent par la gauche → bâbord amure."]
+];
+document.getElementById('test').innerHTML=T.map((t,i)=>`<div class="q" data-i="${i}"><p>${i+1}. ${t[0]}</p><div class="opts">${t[1].map((o,j)=>`<button data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="ex">${t[3]}</div></div>`).join('');
+document.querySelectorAll('#test .q').forEach(q=>{const t=T[+q.dataset.i];q.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;q.querySelectorAll('button').forEach(x=>{if(+x.dataset.j===t[2])x.classList.add('good')});if(+b.dataset.j!==t[2])b.classList.add('bad');q.querySelector('.ex').classList.add('show');});});
+</script>
+</body></html>
