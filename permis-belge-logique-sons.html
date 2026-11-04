@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Logique signaux sonores</title>
+<style>
+:root{
+  --bg:#EEF2F1; --surface-1:#E2E8E6; --surface-2:#FFFFFF; --text-primary:#13232B; --text-secondary:#4E5E66; --text-muted:#6F7D84;
+  --accent:#1F5F7A; --text-accent:#1A5068; --bg-accent:#DCEBF1; --border-accent:#3D7F9B;
+  --text-danger:#A3342A; --bg-danger:#F8E6E3; --text-ok:#2B6646; --bg-ok:#E1F0E6;
+  --border:#D3DBD8; --border-strong:#AEB9B5; --border-stronger:#7E8B87; --radius:8px;
+  --cg-f:#E1E6E4; --cg-s:#88938F; --cp-f:#EEEDFE; --cp-s:#534AB7; --ct-f:#E1F5EE; --ct-s:#0F6E56; --ct-t:#085041;
+  --cr-f:#FCEBEB; --cr-s:#A32D2D; --cr-t:#791F1F; --cc-f:#FAECE7; --cc-s:#993C1D; --cc-t:#712B13;
+  --f-body:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif; --f-mono:ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1A1F; --surface-1:#1A282E; --surface-2:#15232A; --text-primary:#E4ECEA; --text-secondary:#A9B8B6; --text-muted:#86959A;
+  --accent:#7CB8D2; --text-accent:#9CCDE2; --bg-accent:#183746; --border-accent:#5A9DBA;
+  --text-danger:#F0A39A; --bg-danger:#3A1E1B; --text-ok:#8FD1AA; --bg-ok:#173326;
+  --border:#2A3A40; --border-strong:#40545B; --border-stronger:#6A7F86;
+  --cg-f:#2A363A; --cg-s:#7E8B87; --cp-f:#3C3489; --cp-s:#AFA9EC; --ct-f:#085041; --ct-s:#5DCAA5; --ct-t:#E1F5EE;
+  --cr-f:#791F1F; --cr-s:#F09595; --cr-t:#FCEBEB; --cc-f:#712B13; --cc-s:#F0997B; --cc-t:#FAECE7; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font:400 16px/1.55 var(--f-body)}
+.retour{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;padding:calc(env(safe-area-inset-top,0px) + 6px) max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg);color:var(--text-accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--border)}
+.wrap{max-width:680px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));display:grid;gap:24px}
+header{display:grid;gap:8px}
+.ver{font:500 12px/1.4 var(--f-mono);color:var(--text-muted)}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+h1{font-size:24px;line-height:1.15;margin:0}
+h2{font-size:20px;line-height:1.2;margin:0}
+p{margin:0}
+.lead{color:var(--text-secondary)}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{font:500 13px var(--f-mono);color:var(--text-accent);text-decoration:none;border:1px solid var(--border-strong);border-radius:999px;padding:4px 11px;background:var(--surface-2)}
+section{display:grid;gap:14px;padding-top:20px;border-top:1px solid var(--border-strong);scroll-margin-top:56px}
+.q{font-weight:600}
+.ans{display:grid;gap:6px;font-size:15px}
+.ans div{padding:8px 12px;border-radius:var(--radius)}
+.trap{background:var(--surface-1)}
+.trap ul{margin:4px 0 0;padding-left:18px;display:grid;gap:6px}
+.trap b{color:var(--text-danger);font-weight:600}
+.ok{background:var(--bg-ok);color:var(--text-ok)}
+.warn{background:var(--bg-accent);color:var(--text-accent)}
+.tag{font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;display:block;opacity:.85}
+.stage{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;display:grid;gap:10px;min-width:0}
+svg{display:block;width:100%;height:auto}
+svg .th{font:600 14px var(--f-body);fill:var(--text-primary)}
+svg .ts{font:400 12px var(--f-body);fill:var(--text-secondary)}
+rect.c-gray{fill:var(--cg-f);stroke:var(--cg-s)}
+.c-purple rect,rect.c-purple{fill:var(--cp-f);stroke:var(--cp-s)}
+.c-teal rect,rect.c-teal{fill:var(--ct-f);stroke:var(--ct-s)} .c-teal text{fill:var(--ct-t)}
+.c-red rect{fill:var(--cr-f);stroke:var(--cr-s)} .c-red text{fill:var(--cr-t)}
+.c-coral rect{fill:var(--cc-f);stroke:var(--cc-s)} .c-coral text{fill:var(--cc-t)}
+.pbar{height:4px;background:var(--surface-1);border-radius:2px;overflow:hidden}
+.pbar div{height:4px;width:0;background:var(--accent)}
+.box{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;min-height:130px;background:var(--bg)}
+.st{font-weight:700;font-size:16px;line-height:1.3}
+.tx{font-size:15px;color:var(--text-secondary);margin-top:4px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer}
+.dh{font:500 12px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted)}
+.dl{display:flex;flex-wrap:wrap;gap:6px}
+.df{font:inherit;font-size:13px;min-height:36px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-1);color:var(--text-primary);cursor:pointer}
+.df.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent)}
+.dx{font-size:15px;color:var(--text-secondary);border-left:2px solid var(--border-accent);padding-left:10px;min-height:44px}
+.src{font-size:13px;color:var(--text-muted)}
+@media (prefers-reduced-motion:no-preference){.hl{animation:hl .45s ease-in-out infinite}@keyframes hl{50%{opacity:.18}}}
+.grid{display:grid;grid-template-columns:92px repeat(3,minmax(0,1fr));gap:6px}
+.gh{font:500 12px/1.3 var(--f-mono);color:var(--text-muted);text-align:center;align-self:end;padding:2px}
+.gr{font-weight:600;font-size:14px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.gr small{font-weight:400;font-size:12px;color:var(--text-secondary)}
+.cel{font:inherit;color:var(--text-primary);text-align:center;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 5px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;min-width:0;font-size:13px;line-height:1.3}
+.cel.vide{cursor:default;color:var(--text-muted);background:transparent;border-style:dashed}
+.cel.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent)}
+.sg{display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:center;min-height:16px}
+.sg i{display:block;height:8px;border-radius:4px;background:currentColor}
+.sg i.b{width:9px}.sg i.q{width:7px}.sg i.L{width:30px}.sg i.K{width:80px}.sg i.sp{width:8px;background:none}
+.sg i.C{width:16px;height:16px;border-radius:50%;background:none;border:2.5px solid currentColor}
+.sg i.G{width:16px;height:16px;border-radius:3px;opacity:.6}
+.sg i.x{width:6px;height:6px;border-radius:50%}
+.sg i.T{width:4px;height:6px}
+.liste{display:grid;gap:6px}
+.li{display:grid;grid-template-columns:44px 130px minmax(0,1fr);gap:10px;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px}
+.li .sg{justify-content:flex-start}
+.li b{font-weight:600}
+.li span{font-size:14px;color:var(--text-secondary)}
+.play{width:40px;height:40px;border-radius:50%;border:2px solid var(--border-accent);background:var(--surface-2);color:var(--text-accent);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.play.on{background:var(--accent);color:var(--surface-2)}
+.cle{background:var(--bg-ok);color:var(--text-ok);border-radius:var(--radius);padding:10px 12px;font-size:15px}
+.cle b{font-weight:700}
+table.pg{width:100%;border-collapse:collapse;font-size:14px}
+table.pg th,table.pg td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+table.pg th{background:var(--surface-1);font-weight:600}
+.qz-feux{display:grid;grid-template-columns:repeat(30,1fr);gap:3px}
+.qz-feux span{height:9px;border-radius:3px;background:var(--border)}
+.qz-feux span.cur{background:var(--text-accent)} .qz-feux span.ok{background:var(--text-ok)} .qz-feux span.ko{background:var(--text-danger)}
+.qcard{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;display:grid;gap:12px}
+.qmeta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font:500 12px var(--f-mono);color:var(--text-muted)}
+.qtag{padding:2px 9px;border-radius:999px;background:var(--bg-accent);color:var(--text-accent)}
+.qsig{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;color:var(--text-primary)}
+.qo{display:grid;gap:7px}
+.qo button{font:inherit;font-size:15px;text-align:left;min-height:46px;padding:9px 12px;border:1.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer;display:flex;gap:9px}
+.qo button b{font:600 13px var(--f-mono);color:var(--text-muted);padding-top:2px}
+.qo button.bon{border-color:var(--text-ok);background:var(--bg-ok);color:var(--text-ok)}
+.qo button.faux{border-color:var(--text-danger);background:var(--bg-danger);color:var(--text-danger)}
+.qo button[disabled]{cursor:default}
+.qx{border-radius:var(--radius);padding:10px 12px;display:grid;gap:5px;font-size:15px}
+.qx.ok{background:var(--bg-ok)} .qx.ko{background:var(--bg-danger)}
+.qx strong{font-size:15.5px} .qx.ok strong{color:var(--text-ok)} .qx.ko strong{color:var(--text-danger)}
+.qref{font:400 12px var(--f-mono);color:var(--text-muted)}
+.st4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.st4 div{background:var(--surface-1);border-radius:var(--radius);padding:8px 10px}
+.st4 .v{font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+.st4 .k{font-size:12.5px;color:var(--text-secondary)}
+table.th{width:100%;border-collapse:collapse;font-size:14px}
+table.th td,table.th th{padding:6px 5px;border-bottom:1px solid var(--border);text-align:left}
+table.th th{font:500 11.5px var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted)}
+table.th td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.jg{height:7px;border-radius:4px;background:var(--border);min-width:50px;overflow:hidden}.jg div{height:7px;background:var(--text-ok)}
+.er{padding:8px 0;border-bottom:1px solid var(--border);display:grid;gap:3px;font-size:14.5px}
+@media (max-width:480px){ .grid{grid-template-columns:70px repeat(3,minmax(0,1fr))} .li{grid-template-columns:40px minmax(0,1fr)} .li .play{grid-row:span 2} .li .sg{grid-column:2} .li > div:last-child{grid-column:2} .st4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+</style>
+</head>
+<body>
+<a class="retour" href="./permis-belge.html">‹ Retour</a>
+<div class="wrap">
+<header>
+  <div class="ver">Logique signaux sonores · version 1.0 · fluvial (RGP) et côtier (RIPAM) · grille, brume, pièges · QCM 30 questions</div>
+  <div class="eyebrow">Permis belge · signaux sonores</div>
+  <h1>Logique signaux sonores</h1>
+  <p class="lead">Au lieu d'apprendre trente signaux un par un, apprenez la logique qui les fabrique. Touchez ▶ ou une case pour écouter (sur iPhone, coupez le mode silencieux).</p>
+  <nav><a href="#briques">Les briques</a><a href="#grille">La grille</a><a href="#hors">Hors grille</a><a href="#brume">Par brume</a><a href="#pieges">Pièges</a><a href="#qcm">QCM</a></nav>
+</header>
+
+<section id="briques">
+  <h2>1 · Les briques</h2>
+  <p>Tous les signaux au sifflet sont faits de deux sons, séparés d'environ une seconde.</p>
+  <div class="liste" id="lBriques"></div>
+</section>
+
+<section id="grille">
+  <h2>2 · La grille des manœuvres (rivière)</h2>
+  <div class="cle"><b>Les prolongés disent QUOI, les brefs disent DE QUEL CÔTÉ.</b> On compte les prolongés du début (aucun = je le fais ; 1 = je vire ; 2 = je dépasse ; 3 = port ou voie affluente), puis les brefs de la fin (1 = tribord, 2 = bâbord).</div>
+  <div class="grid" id="grille9"></div>
+  <div class="box"><div class="st" id="gSt">Touchez une case</div><div class="tx" id="gTx">Chaque case joue son signal et donne l'article du règlement.</div></div>
+  <div class="trap"><span class="tag">En mer aussi</span>Dans un chenal étroit, le RIPAM suit la même logique pour dépasser : deux prolongés + un bref = « je compte vous rattraper par votre tribord », + deux brefs = par votre bâbord. L'accord du rattrapé est différent : prolongé, bref, prolongé, bref (règle 34 c).</div>
+  <p class="src">Une menue embarcation (moins de 20 m) n'émet pas les signaux de rencontre, de dépassement, de virement ni de port (RGP art. 4.02, al. 3). Elle doit les comprendre, pas les émettre.</p>
+</section>
+
+<section id="hors">
+  <h2>3 · Les signaux hors grille</h2>
+  <p>Ceux-là ne suivent pas la grille : on les apprend tels quels.</p>
+  <div class="liste" id="lHors"></div>
+</section>
+
+<section id="brume">
+  <h2>4 · Par brume : on dit ce qu'on est</h2>
+  <div class="cle"><b>On ne se voit plus : on n'annonce plus de manœuvre, on dit si on bouge et si on est gêné.</b> En mer : prolongés seuls = navire à moteur (1 il avance, 2 il est arrêté) ; un prolongé + des brefs = navire gêné (2 brefs) ou remorqué (3 brefs) ; la cloche = navire immobile sur le fond.</div>
+  <h3 class="dh">En mer (RIPAM)</h3>
+  <div class="liste" id="lMer"></div>
+  <h3 class="dh">En rivière (RGP) : beaucoup plus simple</h3>
+  <div class="liste" id="lRiv"></div>
+</section>
+
+<section id="pieges">
+  <h2>5 · Même son, autre sens</h2>
+  <table class="pg">
+    <tr><th>Signal</th><th>En rivière (RGP)</th><th>En mer (RIPAM)</th></tr>
+    <tr><td>prolongé + 2 brefs</td><td>je vais virer sur bâbord</td><td>par brume : voilier, pêcheur, remorqueur, navire gêné</td></tr>
+    <tr><td>4 brefs</td><td>je suis incapable de manœuvrer</td><td>par brume : identité du bateau-pilote</td></tr>
+    <tr><td>5 brefs</td><td>le rattrapé : on ne peut pas me dépasser</td><td>au moins 5 brefs rapides : je doute de vos intentions</td></tr>
+    <tr><td>1 prolongé</td><td>attention ; par brume : je fais route sans radar</td><td>coude masqué ; par brume : navire à moteur qui avance</td></tr>
+    <tr><td>prolongé + 4 brefs / 4 brefs + prolongé</td><td>bac par brume / demande d'aide médicale</td><td>—</td></tr>
+    <tr><td>bref, prolongé, bref</td><td>bateau à l'arrêt par brume qui vient de la mer (en plus)</td><td>navire au mouillage : attention, je suis là</td></tr>
+  </table>
+</section>
+
+<section id="qcm">
+  <h2>6 · QCM : 30 questions</h2>
+  <div class="qz-feux" id="feux" aria-hidden="true"></div>
+  <div class="qcard" id="carte" aria-live="polite"></div>
+  <h3 class="dh">Statistiques</h3>
+  <div class="st4"><div><div class="v" id="sRep">0/30</div><div class="k">répondues</div></div><div><div class="v" id="sOk">0</div><div class="k">justes</div></div><div><div class="v" id="sPc">–</div><div class="k">réussite</div></div><div><div class="v" id="sT">0:00</div><div class="k">temps</div></div></div>
+  <div style="overflow-x:auto"><table class="th" id="tTheme"></table></div>
+  <div id="erreurs"></div>
+  <div id="histo"></div>
+  <p class="src">Sources : règlement général de police pour la navigation sur les eaux intérieures (AR du 24/09/2006), art. 4.01 à 4.04/1, 6.03, 6.10, 6.13, 6.16, 6.31 à 6.33 et appendice 6 ; RIPAM règles 32 à 35 et 37 ; pages Kat-a-Mar « Signaux sonores côtier » et cours amélioré du module 1. Aucune question ne porte sur la fréquence de répétition des signaux, exclue des matières d'examen.</p>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- codes : b bref · q bref rapide · L prolongé · P pause 1 s · | pause 2 s · T série de sons très brefs · K son continu · C cloche · G gong · x coup de cloche */
+function sg(code){
+  var d=document.createElement("div");d.className="sg";
+  code.split("").forEach(function(c){
+    if(c==="T"){for(var n=0;n<6;n++){var t=document.createElement("i");t.className="T";d.appendChild(t);}return;}
+    var i=document.createElement("i"); i.className=(c==="P"||c==="|")?"sp":c; d.appendChild(i);
+  });
+  return d;
+}
+var ctx=null, enCours=null;
+function jouer(code,btn){
+  if(enCours) return;
+  try{ ctx=ctx||new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==="suspended")ctx.resume(); }catch(e){ return; }
+  var t=ctx.currentTime+0.1, g=ctx.createGain(); g.gain.value=0; g.connect(ctx.destination);
+  var o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=200; o.connect(g); o.start(t);
+  function son(a,dur){ g.gain.setValueAtTime(0,a); g.gain.linearRampToValueAtTime(0.18,a+0.03); g.gain.setValueAtTime(0.18,a+dur-0.04); g.gain.linearRampToValueAtTime(0,a+dur); }
+  function tinte(a,f,nb,pas){ for(var n=0;n<nb;n++){ var b=ctx.createOscillator(),bg=ctx.createGain(); b.type="triangle"; b.frequency.value=f; b.connect(bg); bg.connect(ctx.destination); var tt=a+n*pas, d=Math.min(pas,0.9); bg.gain.setValueAtTime(0.25,tt); bg.gain.exponentialRampToValueAtTime(0.001,tt+d); b.start(tt); b.stop(tt+d+0.02);} }
+  code.split("").forEach(function(c){
+    if(c==="b"){son(t,1);t+=2;} else if(c==="q"){son(t,0.9);t+=1.4;}
+    else if(c==="L"){son(t,4.5);t+=5.5;} else if(c==="P"){t+=1;} else if(c==="|"){t+=2;}
+    else if(c==="T"){for(var n=0;n<6;n++){son(t,0.25);t+=0.5;}t+=0.5;}
+    else if(c==="K"){son(t,9);t+=9.5;}
+    else if(c==="C"){tinte(t,1250,15,0.33);t+=5.6;} else if(c==="G"){tinte(t,330,6,0.85);t+=5.6;} else if(c==="x"){tinte(t,1250,1,0.9);t+=1;}
+  });
+  o.stop(t);
+  enCours=btn; if(btn) btn.classList.add("on");
+  setTimeout(function(){ if(btn) btn.classList.remove("on"); enCours=null; },(t-ctx.currentTime)*1000);
+}
+function bouton(code){ var b=document.createElement("button"); b.type="button"; b.className="play"; b.setAttribute("aria-label","Écouter"); b.textContent="▶"; b.addEventListener("click",function(){jouer(code,b);}); return b; }
+function liste(id,rows){
+  var z=document.getElementById(id);
+  rows.forEach(function(r){
+    var li=document.createElement("div"); li.className="li";
+    li.appendChild(bouton(r[0])); li.appendChild(sg(r[0]));
+    var t=document.createElement("div"); var b=document.createElement("b"); b.textContent=r[1]; t.appendChild(b);
+    if(r[2]){ var s=document.createElement("span"); s.textContent=" · "+r[2]; t.appendChild(s); }
+    li.appendChild(t); z.appendChild(li);
+  });
+}
+liste("lBriques",[["b","Son bref","environ 1 seconde"],["L","Son prolongé","environ 4 s (RGP) ; 4 à 6 s en mer (RIPAM)"],["T","Série de sons très brefs","au moins 6 sons d'environ ¼ s (RGP)"],["C","Volée de cloche","environ 4 s (RGP) ; environ 5 s en mer"]]);
+/* ---------- la grille ---------- */
+var G=[
+ ["0 prolongé","je le fais",[["bbb","3 brefs : je bats en arrière","Signal général, hors grille : trois brefs = machine en arrière.","RGP appendice 6, A"],["b","je viens sur tribord","Un bref : je viens sur tribord, tout de suite.","RGP appendice 6, A"],["bb","je viens sur bâbord","Deux brefs : je viens sur bâbord, tout de suite.","RGP appendice 6, A"]]],
+ ["1 prolongé","attention, je vire",[["L","attention","Un prolongé seul : « attention » (et aussi, avant un passage étroit par visibilité restreinte, ou pour demander un pont ou une écluse).","RGP appendice 6, A ; art. 6.07, 6.26, 6.28"],["Lb","je vais virer sur tribord","Un prolongé (je vire) + un bref (tribord).","RGP art. 6.13, al. 2 a"],["Lbb","je vais virer sur bâbord","Un prolongé (je vire) + deux brefs (bâbord).","RGP art. 6.13, al. 2 b"]]],
+ ["2 prolongés","je veux dépasser",[null,["LLb","dépasser par votre tribord","Deux prolongés (je dépasse) + un bref (par tribord du rattrapé).","RGP art. 6.10, al. 2 b"],["LLbb","dépasser par votre bâbord","Deux prolongés (je dépasse) + deux brefs (par bâbord du rattrapé).","RGP art. 6.10, al. 2 a"]]],
+ ["3 prolongés","port, voie affluente",[["LLL","je vais traverser le chenal","Trois prolongés (port) sans bref : après la sortie, je traverse le chenal principal.","RGP art. 6.16, al. 2 c"],["LLLb","j'entre ou je sors, vers tribord","Trois prolongés (port) + un bref (tribord).","RGP art. 6.16, al. 2 a"],["LLLbb","j'entre ou je sors, vers bâbord","Trois prolongés (port) + deux brefs (bâbord).","RGP art. 6.16, al. 2 b"]]]
+];
+(function(){
+  var z=document.getElementById("grille9");
+  ["","seul","+ 1 bref = tribord","+ 2 brefs = bâbord"].forEach(function(h){var d=document.createElement("div");d.className="gh";d.textContent=h;z.appendChild(d);});
+  var cases=[];
+  G.forEach(function(row){
+    var r=document.createElement("div"); r.className="gr"; r.textContent=row[0]; var s=document.createElement("small"); s.textContent=row[1]; r.appendChild(s); z.appendChild(r);
+    row[2].forEach(function(c){
+      var b=document.createElement("button"); b.type="button"; b.className="cel"+(c?"":" vide");
+      if(!c){ b.textContent="n'existe pas seul"; b.disabled=true; z.appendChild(b); return; }
+      b.appendChild(sg(c[0])); var m=document.createElement("div"); m.textContent=c[1]; b.appendChild(m);
+      b.addEventListener("click",function(){ cases.forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+        document.getElementById("gSt").textContent=c[1]; document.getElementById("gTx").textContent=c[2]+" ("+c[3]+")"; jouer(c[0],null); });
+      cases.push(b); z.appendChild(b);
+    });
+  });
+})();
+liste("lHors",[["bbbb","4 brefs","je suis incapable de manœuvrer"],["bbbbb","5 brefs (le rattrapé)","on ne peut pas me dépasser"],["T","Série de sons très brefs","danger d'abordage ; aussi : refus d'un passage à tribord"],["bbbbL","4 brefs + 1 prolongé","demande d'aide médicale"],["bL","Bref + prolongé, sans arrêt ≥ 15 min","« N'approchez pas » (matières dangereuses)"],["LLLL","Sons prolongés répétés","détresse (ou volées de cloche)"]]);
+liste("lMer",[["L","Moteur, il avance","a de l'erre"],["LPL","Moteur, il est arrêté","stoppé, sans erre"],["Lbb","Navire gêné","voilier, pêche, remorqueur, non maître, capacité restreinte, tirant d'eau"],["Lbbb","Remorqué","juste après son remorqueur : un bref de plus"],["L|bbbb","Bateau-pilote","+ 4 brefs d'identité"],["C","Au mouillage","cloche ; 100 m et plus : cloche puis gong"],["xxxCxxx","Échoué","3 coups, cloche, 3 coups"]]);
+liste("lRiv",[["L","Je fais route sans radar","vers le poste d'amarrage le plus proche"],["Lbbbb","Bac sans radar",""],["C","Je suis à l'arrêt dans le chenal","ou message VHF, dès qu'un bateau approche"]]);
+
+/* ---------- QCM ---------- */
+var Q=[{"t":"grille","z":"F","s":"Lbb","q":"Sur un fleuve, un grand bateau en vue émet ce signal. Il annonce :","o":["qu'il va virer sur bâbord","qu'il vient sur bâbord","qu'il veut dépasser par bâbord du bateau qui le précède","qu'il est à capacité de manœuvre restreinte"],"x":"Un prolongé suivi de deux brefs : « je vais virer sur bâbord ». Un prolongé + un bref : virer sur tribord. En mer par brume, ce même rythme désigne un navire non maître de sa manœuvre, un voilier, un pêcheur… : ne mélangez pas les deux règlements.","r":"RGP art. 6.13, al. 2 b"},{"t":"grille","z":"F","s":"LLLb","q":"Un bateau qui sort d'un port émet ce signal. Il annonce :","o":["qu'après la sortie, il va se diriger sur tribord","qu'il va traverser le chenal principal","qu'il va virer sur tribord","qu'il veut dépasser par tribord"],"x":"Trois prolongés = entrée ou sortie de port / voie affluente. Suivis d'un bref : vers tribord ; de deux brefs : vers bâbord ; seuls : traversée du chenal principal.","r":"RGP art. 6.16, al. 2 a"},{"t":"grille","z":"F","s":"LLL","q":"Ce signal est émis par un bateau qui sort d'une voie affluente. Il annonce :","o":["qu'il va traverser le chenal principal","qu'il demande l'ouverture d'une écluse","un signal de détresse","qu'il va se diriger vers bâbord"],"x":"Trois prolongés seuls : « je vais traverser ». Avant la fin de la traversée, il peut ajouter un prolongé + un bref (vers tribord) ou un prolongé + deux brefs (vers bâbord).","r":"RGP art. 6.16, al. 2 c"},{"t":"grille","z":"F","s":"LLbb","q":"Le rattrapant émet ce signal. Il veut :","o":["dépasser par bâbord du rattrapé","dépasser par tribord du rattrapé","virer sur bâbord","sortir du port vers bâbord"],"x":"Deux prolongés + deux brefs : dépasser par bâbord du rattrapé. Deux prolongés + un bref : par tribord. Truc : un bref = tribord, deux brefs = bâbord, comme pour « je viens sur… ».","r":"RGP art. 6.10, al. 2 a"},{"t":"grille","z":"F","s":"","q":"Le rattrapant demande à dépasser par bâbord. Impossible de ce côté, mais possible par tribord du rattrapé. Le rattrapé émet :","o":["deux sons brefs","un son bref","cinq sons brefs","une série de sons très brefs"],"x":"Le rattrapé indique le côté possible : un bref = par son bâbord, deux brefs = par son tribord. Ici, tribord : deux sons brefs.","r":"RGP art. 6.10, al. 4 b"},{"t":"hors","z":"F","s":"bbbbb","q":"Le rattrapé émet cinq sons brefs. Cela signifie :","o":["le dépassement est impossible sans danger d'abordage","danger imminent d'abordage","je demande une aide médicale","je ne comprends pas vos intentions"],"x":"Sur les eaux intérieures, cinq brefs du rattrapé = « on ne peut me dépasser ». En mer (RIPAM), au moins cinq brefs rapides signifient un doute sur les intentions de l'autre : même nombre de sons, sens différent.","r":"RGP art. 6.10, al. 5"},{"t":"hors","z":"F","s":"","q":"Un conducteur constate un danger d'abordage. Il doit émettre :","o":["une série de sons très brefs","cinq sons brefs","sons prolongés répétés","un son prolongé"],"x":"« Danger imminent d'abordage » : une série de sons très brefs (au moins 6 sons d'environ ¼ s). Ne pas confondre avec cinq sons brefs (d'environ 1 s), réservés au rattrapé.","r":"RGP art. 6.03, al. 4 ; appendice 6, A"},{"t":"hors","z":"F","s":"LLbb","q":"Vous conduisez un bateau de plaisance de 9 m. Pouvez-vous émettre ce signal pour annoncer un dépassement ?","o":["non : une menue embarcation ne peut pas utiliser les signaux de rencontre, de dépassement, de virement ni de port","oui, comme tout bateau","oui, mais seulement de nuit","oui, seulement par visibilité réduite"],"x":"Une menue embarcation (moins de 20 m) peut utiliser, si nécessaire, les signaux généraux (appendice 6, A). Les signaux B, C, D et E (rencontre, dépassement, virement, ports) lui sont interdits.","r":"RGP art. 4.02, al. 2 et 3 ; art. 1.01 a1"},{"t":"hors","z":"F","s":"bbbb","q":"Sur les eaux intérieures, quatre sons brefs signifient :","o":["je suis incapable de manœuvrer","je demande une aide médicale","bac en marche par brume","je bats en arrière"],"x":"Quatre brefs = « je suis incapable de manœuvrer » (signal général). Trois brefs = je bats en arrière. Quatre brefs + un prolongé = aide médicale. En mer, quatre brefs par brume identifient un bateau-pilote.","r":"RGP appendice 6, A ; art. 3.18"},{"t":"hors","z":"F","s":"bbbbL","q":"Ce signal sonore signifie :","o":["je demande une aide médicale","bac ne naviguant pas au radar, par brume","je suis incapable de manœuvrer","N'approchez pas"],"x":"Quatre brefs suivis d'un prolongé : demande d'aide médicale. L'ordre inverse (un prolongé puis quatre brefs) est le signal de brume d'un bac.","r":"RGP art. 3.30, al. 3"},{"t":"hors","z":"F","s":"bL","q":"Un bateau transportant des matières dangereuses émet ce signal sans interruption pendant au moins 15 minutes. C'est :","o":["le signal « N'approchez pas »","un signal de détresse","une demande d'ouverture d'écluse","« je vais virer sur tribord »"],"x":"« N'approchez pas » : un son bref suivi d'un son prolongé, répétés sans interruption pendant au moins 15 minutes, synchronisés avec le feu jaune. Les bateaux qui l'entendent prennent toutes mesures pour éviter le danger.","r":"RGP art. 4.04/1, al. 2"},{"t":"brumeR","z":"F","s":"","q":"Par visibilité réduite, un bateau isolé qui ne navigue pas au radar et fait route vers le poste d'amarrage le plus proche émet :","o":["un son prolongé","deux sons prolongés","un son prolongé suivi de deux sons brefs","une volée de cloche"],"x":"Un son prolongé, répété. Il doit aussi naviguer autant que possible sur le côté du chenal et avoir une vigie à l'avant. Deux prolongés et « prolongé + deux brefs » sont des signaux de brume de la mer.","r":"RGP art. 6.33, al. 1 b"},{"t":"brumeR","z":"F","s":"Lbbbb","q":"Par brume, vous entendez ce signal sur une rivière. Il provient :","o":["d'un bac qui ne navigue pas au radar","d'un bateau qui demande une aide médicale","d'un bateau incapable de manœuvrer","d'un bateau à l'arrêt qui vient de la mer"],"x":"Un prolongé suivi de quatre brefs = signal de brume d'un bac (sans radar). Piège : l'ordre inverse (quatre brefs puis un prolongé) est l'aide médicale.","r":"RGP art. 6.33, al. 2"},{"t":"piege","z":"C","s":"Lbb","q":"En mer, par visibilité réduite, vous entendez ce signal. Il peut venir :","o":["d'un voilier, d'un navire de pêche, d'un navire non maître de sa manœuvre ou à capacité restreinte","d'un navire à moteur qui va virer sur bâbord","d'un navire à moteur faisant route avec de l'erre","d'un bateau-pilote"],"x":"En mer, prolongé + deux brefs est un signal de BRUME : non maître de sa manœuvre, capacité de manœuvre restreinte, contraint par son tirant d'eau, voilier, pêche, remorqueur ou pousseur. Sur une rivière, le même rythme veut dire « je vais virer sur bâbord ».","r":"RIPAM règle 35 c"},{"t":"brumeM","z":"C","s":"LL","q":"En mer, par brume, deux sons prolongés signalent :","o":["un navire à propulsion mécanique faisant route mais stoppé, sans erre","un navire à moteur faisant route avec de l'erre","un navire au mouillage","un navire qui veut vous dépasser"],"x":"Un prolongé : navire à moteur avec de l'erre. Deux prolongés : navire à moteur faisant route mais stoppé (il ne fait plus de sillage).","r":"RIPAM règle 35 a et b"},{"t":"piege","z":"C","s":"bbbbb","q":"En mer, navires en vue l'un de l'autre, au moins cinq sons brefs et rapides signifient :","o":["je ne comprends pas vos intentions ou je doute que vous manœuvriez assez pour éviter l'abordage","on ne peut pas me dépasser","je suis en détresse","je bats en arrière"],"x":"Le « signal de doute » du RIPAM. Sur les eaux intérieures, cinq brefs émis par le rattrapé signifient « on ne peut me dépasser ».","r":"RIPAM règle 34 d"},{"t":"piege","z":"C","s":"bbbb","q":"En mer, par brume, quatre sons brefs émis en plus du signal de brume habituel identifient :","o":["un bateau-pilote en service","un navire incapable de manœuvrer","un navire qui demande une aide médicale","un navire au mouillage"],"x":"Quatre brefs = signal d'identification du bateau-pilote. Sur les eaux intérieures, quatre brefs = « je suis incapable de manœuvrer ».","r":"RIPAM règle 35 k"},{"t":"vue","z":"C","s":"b","q":"Un navire à moteur en vue émet ce signal en manœuvrant. Que fait-il ?","o":["il vient sur tribord","il vient sur bâbord","il bat en arrière","il vous demande de venir sur tribord"],"x":"Un bref : « je viens sur tribord ». C'est le navire qui siffle qui manœuvre, il ne donne pas d'ordre aux autres.","r":"RIPAM règle 34 a"},{"t":"vue","z":"C","s":"bbb","q":"Un navire à moteur en vue émet ce signal. Que fait-il ?","o":["il bat en arrière (machine en arrière)","il est en détresse (SOS)","il est au mouillage","il vient sur tribord trois fois"],"x":"Trois brefs : machine en arrière. Le navire peut encore avancer sur son erre. Ce n'est pas SOS : SOS, c'est 3 courts, 3 longs, 3 courts.","r":"RIPAM règle 34 a"},{"t":"vue","z":"C","s":"L","q":"Par bonne visibilité, un navire caché derrière le coude d'un chenal émet ce signal. Que signifie-t-il ?","o":["« j'approche d'un coude où la vue est masquée »","« je suis un navire à moteur qui a de l'erre »","« je suis en détresse »","« attention, je vais virer »"],"x":"Un prolongé à l'approche d'un coude ou d'un passage masqué : « j'arrive ». Il s'emploie par n'importe quelle visibilité.","r":"RIPAM règle 34 e"},{"t":"brumeM","z":"C","s":"Lbbb","q":"Par brume, juste après le signal d'un remorqueur, vous entendez ce signal. Qui l'émet ?","o":["le navire remorqué (le dernier s'il y en a plusieurs), s'il a un équipage","un deuxième remorqueur","un bateau-pilote","un navire échoué"],"x":"Remorqueur : prolongé + deux brefs. Remorqué : prolongé + trois brefs, si possible juste après. Un bref de plus.","r":"RIPAM règle 35 e"},{"t":"brumeM","z":"C","s":"C","q":"Par brume, vous entendez ce signal (tintement rapide de cloche d'environ 5 s). Qui est-ce ?","o":["un navire au mouillage","un navire à moteur stoppé","un navire échoué","une bouée sonore"],"x":"La cloche signale un navire au mouillage. Échoué : trois coups isolés avant et après la cloche.","r":"RIPAM règle 35 g"},{"t":"brumeM","z":"C","s":"xxxCxxx","q":"Par brume, vous entendez ce signal. Que signale-t-il ?","o":["un navire échoué","un navire au mouillage de plus de 100 m","un navire en détresse","un navire qui lève l'ancre"],"x":"Trois coups isolés juste avant et juste après la cloche : navire échoué. S'il fait 100 m ou plus, il ajoute le gong.","r":"RIPAM règle 35 h"},{"t":"piege","z":"C","s":"bLb","q":"Par brume, un navire au mouillage, dont vous entendez la cloche, vous lance ce signal au sifflet quand vous approchez. Que veut-il dire ?","o":["« attention, je suis là, risque d'abordage »","« d'accord, vous pouvez me dépasser »","« je lève l'ancre »","« je suis en détresse »"],"x":"Bref, prolongé, bref : le navire au mouillage signale sa position et un risque d'abordage (facultatif). Ne le confondez pas avec l'accord de dépassement : prolongé, bref, prolongé, bref.","r":"RIPAM règle 35 g"},{"t":"vue","z":"C","s":"LbLb","q":"Dans un chenal étroit, le navire que vous voulez dépasser répond par ce signal. Que dit-il ?","o":["« d'accord, vous pouvez me dépasser »","« non, ne me dépassez pas »","« je suis au mouillage »","« je viens sur tribord »"],"x":"Prolongé, bref, prolongé, bref : accord. Le RIPAM ne prévoit pas de signal de refus : en cas de doute, le rattrapé émet au moins cinq brefs rapides.","r":"RIPAM règle 34 c ii et d"},{"t":"hors","z":"C","s":"K","q":"Un navire fait retentir son appareil de brume sans arrêt. Ce signal est :","o":["un signal de détresse","un très long son prolongé, sans signification particulière","le signal d'un navire au mouillage","le signal d'un coude"],"x":"Le son continu de l'appareil de brume est un signal de détresse. Un prolongé, lui, s'arrête au bout de 4 à 6 s.","r":"RIPAM règle 37 et annexe IV"},{"t":"grille","z":"F","s":"","q":"Dans un signal de manœuvre du règlement fluvial, que disent les sons prolongés placés au début ?","o":["le type de manœuvre : 1 = virer, 2 = dépasser, 3 = port ou voie affluente","le côté : tribord ou bâbord","la longueur du bateau","l'urgence du danger"],"x":"Les prolongés disent QUOI. Plus la manœuvre gêne les autres, plus il y a de prolongés : virer (1), dépasser (2), port ou voie affluente (3).","r":"RGP art. 6.10, 6.13 et 6.16 ; appendice 6"},{"t":"grille","z":"F","s":"","q":"Et les sons brefs placés à la fin du signal ?","o":["le côté : 1 bref = tribord, 2 brefs = bâbord","le nombre de bateaux du convoi","la vitesse du bateau","qu'il faut répondre"],"x":"Les brefs disent DE QUEL CÔTÉ, avec le code de base : 1 bref = tribord, 2 brefs = bâbord. Pas de bref après trois prolongés : « je vais traverser ».","r":"RGP appendice 6, A, C, D et E"},{"t":"grille","z":"F","s":"LLLbb","q":"Un bateau qui va entrer dans un port émet ce signal. Il annonce :","o":["qu'il va se diriger vers bâbord pour entrer","qu'il va traverser le chenal","qu'il veut dépasser par bâbord","qu'il va virer sur bâbord"],"x":"Trois prolongés = port ; deux brefs = bâbord. Lu dans l'ordre : « port » + « bâbord ».","r":"RGP art. 6.16, al. 2 b"},{"t":"brumeM","z":"C","s":"","q":"Par brume en mer, que signifie toujours la cloche ?","o":["un navire immobile sur le fond : au mouillage (ou échoué, avec les 3 coups)","un navire à moteur qui avance","un voilier","un bateau-pilote"],"x":"Le sifflet : le navire est en route (prolongés). La cloche : il tient au fond, au mouillage ou échoué. Exception : le pêcheur au mouillage siffle prolongé + 2 brefs.","r":"RIPAM règle 35 g et h"}];
+var THEMES={grille:"La grille (rivière)",hors:"Hors grille",vue:"Navires en vue (mer)",brumeR:"Brume en rivière",brumeM:"Brume en mer",piege:"Pièges mer / rivière"};
+var L4="ABCD", ordre=[], i=0, rep=[], t0=0, tick=null, fin=false, CLE="kam-logique-sons-histo";
+function mel(a){a=a.slice();for(var k=a.length-1;k>0;k--){var r=Math.floor(Math.random()*(k+1));var x=a[k];a[k]=a[r];a[r]=x;}return a;}
+function go(){ ordre=mel(Q.map(function(_,k){return k;})).map(function(k){return{k:k,o:mel([0,1,2,3])};}); i=0;rep=[];fin=false;t0=Date.now(); if(tick)clearInterval(tick); tick=setInterval(temps,1000); feux();carte();stats(); }
+function mmss(s){return Math.floor(s/60)+":"+("0"+(s%60)).slice(-2);}
+function temps(){ document.getElementById("sT").textContent=mmss(Math.round((Date.now()-t0)/1000)); }
+function feux(){ var f=document.getElementById("feux");f.textContent=""; for(var k=0;k<30;k++){var s=document.createElement("span"); if(rep[k])s.className=rep[k].ok?"ok":"ko"; else if(k===i&&!fin)s.className="cur"; f.appendChild(s);} }
+function carte(){
+  var c=document.getElementById("carte"); c.textContent="";
+  if(fin){ var ok=rep.filter(function(r){return r.ok;}).length;
+    var h=document.createElement("h2"); h.textContent="Résultat : "+ok+" / 30 ("+Math.round(ok/30*100)+" %)"; c.appendChild(h);
+    var b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent="Recommencer (nouvel ordre)"; b.addEventListener("click",go); c.appendChild(b); return; }
+  var it=ordre[i], d=Q[it.k];
+  var m=document.createElement("div"); m.className="qmeta"; var a=document.createElement("span"); a.className="qtag"; a.textContent=(d.z==="C"?"Côtier · ":"Fluvial · ")+THEMES[d.t]; var n=document.createElement("span"); n.textContent="Question "+(i+1)+" / 30"; m.appendChild(a); m.appendChild(n); c.appendChild(m);
+  var q=document.createElement("p"); q.className="q"; q.textContent=d.q; c.appendChild(q);
+  if(d.s){ var s=document.createElement("div"); s.className="qsig"; s.appendChild(bouton(d.s)); s.appendChild(sg(d.s)); c.appendChild(s); }
+  var zo=document.createElement("div"); zo.className="qo"; c.appendChild(zo);
+  var fb=document.createElement("div"); fb.hidden=true; c.appendChild(fb);
+  var nx=document.createElement("button"); nx.type="button"; nx.className="btn"; nx.hidden=true; nx.textContent=i<29?"Question suivante ›":"Voir le résultat"; c.appendChild(nx);
+  nx.addEventListener("click",function(){ if(i<29)i++; else { fin=true; clearInterval(tick); sauver(); } feux(); carte(); document.getElementById("qcm").scrollIntoView({behavior:"smooth"}); });
+  it.o.forEach(function(oi,pos){
+    var b=document.createElement("button"); b.type="button"; var l=document.createElement("b"); l.textContent=L4[pos]; var tx=document.createElement("span"); tx.textContent=d.o[oi]; b.appendChild(l); b.appendChild(tx);
+    b.addEventListener("click",function(){
+      if(rep[i]) return; var ok=oi===0; rep[i]={ok:ok,k:it.k,c:oi};
+      Array.prototype.forEach.call(zo.children,function(x,p){x.disabled=true; if(it.o[p]===0)x.classList.add("bon");}); if(!ok)b.classList.add("faux");
+      fb.className="qx "+(ok?"ok":"ko"); fb.hidden=false;
+      var st=document.createElement("strong"); st.textContent=ok?"Juste.":"Faux. Bonne réponse : "+d.o[0]+"."; var p=document.createElement("div"); p.textContent=d.x; var r=document.createElement("div"); r.className="qref"; r.textContent=d.r;
+      fb.appendChild(st); fb.appendChild(p); fb.appendChild(r); nx.hidden=false; feux(); stats(); nx.focus({preventScroll:true});
+    });
+    zo.appendChild(b);
+  });
+}
+function stats(){
+  var n=rep.filter(Boolean).length, ok=rep.filter(function(r){return r&&r.ok;}).length;
+  document.getElementById("sRep").textContent=n+"/30"; document.getElementById("sOk").textContent=ok; document.getElementById("sPc").textContent=n?Math.round(ok/n*100)+" %":"–"; temps();
+  var tb=document.getElementById("tTheme"); tb.textContent=""; var tr=document.createElement("tr"); ["Thème","Justes","Total",""].forEach(function(x){var th=document.createElement("th");th.textContent=x;tr.appendChild(th);}); tb.appendChild(tr);
+  Object.keys(THEMES).forEach(function(t){ var tot=Q.filter(function(q){return q.t===t;}).length; var f=rep.filter(function(r){return r&&Q[r.k].t===t;}), bo=f.filter(function(r){return r.ok;}).length;
+    var row=document.createElement("tr"); [THEMES[t],f.length?bo+" / "+f.length:"–",String(tot)].forEach(function(v,k){var td=document.createElement("td");td.textContent=v;if(k)td.className="n";row.appendChild(td);});
+    var td=document.createElement("td"); var j=document.createElement("div"); j.className="jg"; var jj=document.createElement("div"); jj.style.width=(f.length?bo/f.length*100:0)+"%"; j.appendChild(jj); td.appendChild(j); row.appendChild(td); tb.appendChild(row); });
+  var er=document.getElementById("erreurs"); er.textContent=""; var faux=rep.filter(function(r){return r&&!r.ok;});
+  if(faux.length){ var h=document.createElement("h3"); h.className="dh"; h.textContent="Vos erreurs ("+faux.length+")"; er.appendChild(h);
+    faux.forEach(function(r){ var d=Q[r.k], x=document.createElement("div"); x.className="er"; var q=document.createElement("b"); q.textContent=d.q; x.appendChild(q); if(d.s)x.appendChild(sg(d.s));
+      var a=document.createElement("div"); a.textContent="Votre réponse : "+d.o[r.c]; var b=document.createElement("div"); b.textContent="Bonne réponse : "+d.o[0]; var c=document.createElement("div"); c.className="qref"; c.textContent=d.r; x.appendChild(a); x.appendChild(b); x.appendChild(c); er.appendChild(x); }); }
+  histo();
+}
+function lire(){ try{ return JSON.parse(localStorage.getItem(CLE)||"[]"); }catch(e){ return []; } }
+function sauver(){ var h=lire(); h.unshift({d:new Date().toLocaleDateString("fr-BE"),ok:rep.filter(function(r){return r.ok;}).length,s:Math.round((Date.now()-t0)/1000)}); try{ localStorage.setItem(CLE,JSON.stringify(h.slice(0,10))); }catch(e){} stats(); }
+function histo(){ var z=document.getElementById("histo"); z.textContent=""; var h=lire(); if(!h.length)return; var best=Math.max.apply(null,h.map(function(x){return x.ok;}));
+  var t=document.createElement("h3"); t.className="dh"; t.textContent="Vos derniers examens"; z.appendChild(t);
+  var tb=document.createElement("table"); tb.className="th"; h.forEach(function(x){ var r=document.createElement("tr"); [x.d,x.ok+" / 30"+(x.ok===best?" · meilleur":""),mmss(x.s)].forEach(function(v,k){var td=document.createElement("td");td.textContent=v;if(k)td.className="n";r.appendChild(td);}); tb.appendChild(r); }); z.appendChild(tb); }
+go();
+})();
+</script>
+</body>
+</html>
