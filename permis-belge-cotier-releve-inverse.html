@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Regarder dans l'autre sens</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.5 -apple-system,system-ui,sans-serif;padding:14px 16px 30px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:#5b6577}h1{font-size:22px;margin:4px 0 8px}h2{font-size:18px;margin:0 0 6px}
+.card{background:#fff;border:1px solid #d9dee7;border-radius:16px;padding:12px 14px;margin:12px 0}
+svg{width:100%;height:auto;display:block;border-radius:12px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.tabs button{font:700 15px system-ui;padding:12px 6px;border-radius:12px;border:1.5px solid #c9d1de;background:#fff;color:#14213d}
+.tabs button.on.b{background:#0f5b86;color:#fff;border-color:#0f5b86}
+.tabs button.on.p{background:#1a9c46;color:#fff;border-color:#1a9c46}
+.big{font-size:20px;font-weight:800;text-align:center;margin:6px 0}
+.ok{background:#e6f5ea;border-left:5px solid #1a9c46;border-radius:0 10px 10px 0;padding:10px 12px;font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid #d9dee7;padding:6px;text-align:center}th{background:#eef2f7}
+</style></head><body><a href="./permis-belge.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:inherit;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7;backdrop-filter:blur(6px)">‹ Retour</a><div class="w">
+<div class="v">Maquette · version 1.1 · regarder dans l'autre sens (± 180°)</div>
+<h1>Qui regarde qui ?</h1>
+
+<div class="card">
+<p style="margin:0">Deux personnes : <b>vous, sur le bateau</b>, et <b>le gardien du phare</b>. Vous vous regardez l'un l'autre. Touchez les deux boutons.</p>
+</div>
+
+<div class="tabs"><button class="b on" id="tb">👀 Moi, sur le bateau</button><button class="p" id="tp">👀 Le gardien du phare</button></div>
+
+<div class="card">
+<svg viewBox="0 0 400 400">
+ <defs>
+  <marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#0f5b86"/></marker>
+  <marker id="mg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1a9c46"/></marker>
+ </defs>
+ <rect width="400" height="400" fill="#cfe3f2"/>
+ <path d="M0 0 H170 Q130 80 80 120 Q40 150 0 160 Z" fill="#e8c98f"/>
+ <!-- rose -->
+ <g font-size="15" font-weight="800" fill="#14213d" text-anchor="middle">
+  <text x="200" y="22">N (0°)</text><text x="200" y="392">S (180°)</text><text x="378" y="205">E</text><text x="20" y="205">W</text>
+ </g>
+ <!-- phare -->
+ <g transform="translate(95 120)"><rect x="-7" y="-30" width="14" height="30" fill="#fff" stroke="#14213d" stroke-width="1.5"/><rect x="-7" y="-21" width="14" height="7" fill="#d62828"/><circle cx="0" cy="-35" r="6" fill="#ffd60a" stroke="#14213d"/></g>
+ <text x="70" y="142" font-size="14" font-weight="700">phare</text>
+ <!-- bateau -->
+ <g transform="translate(254 290)"><path d="M0 -18 Q9 -5 8 14 L-8 14 Q-9 -5 0 -18Z" fill="#fff" stroke="#14213d" stroke-width="2"/></g>
+ <text x="236" y="325" font-size="14" font-weight="700">bateau</text>
+
+ <!-- vue du bateau -->
+ <g id="vb">
+  <line x1="254" y1="290" x2="254" y2="230" stroke="#0f5b86" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="260" y="236" font-size="12" fill="#0f5b86" font-weight="700">nord</text>
+  <line x1="242" y1="278" x2="107" y2="133" stroke="#0f5b86" stroke-width="4" marker-end="url(#mb)"/>
+  <rect x="20" y="250" width="160" height="50" rx="10" fill="#0f5b86"/>
+  <text x="100" y="271" text-anchor="middle" font-size="14" fill="#fff">je regarde vers le</text>
+  <text x="100" y="291" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">nord-ouest : 317°</text>
+ </g>
+ <!-- vue du phare -->
+ <g id="vp" style="display:none">
+  <line x1="95" y1="120" x2="95" y2="60" stroke="#1a9c46" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="101" y="66" font-size="12" fill="#1a7a3a" font-weight="700">nord</text>
+  <line x1="107" y1="133" x2="242" y2="278" stroke="#1a9c46" stroke-width="4" marker-end="url(#mg)"/>
+  <rect x="186" y="150" width="172" height="50" rx="10" fill="#1a9c46"/>
+  <text x="272" y="171" text-anchor="middle" font-size="14" fill="#fff">le gardien regarde</text>
+  <text x="272" y="191" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">vers le sud-est : 137°</text>
+ </g>
+</svg>
+<p class="big" id="txt">Du bateau, le phare est au <span style="color:#0f5b86">317°</span></p>
+</div>
+
+<div class="card">
+<h2>Ce qu'il faut voir</h2>
+<p>C'est la <b>même ligne droite</b> entre le bateau et le phare. Seul le <b>sens</b> change :</p>
+<ul>
+<li>vous regardez vers le <b>nord-ouest</b> ;</li>
+<li>le gardien regarde vers le <b>sud-est</b>, c'est-à-dire exactement l'<b>opposé</b>.</li>
+</ul>
+<p>Sur la rose, deux directions opposées sont toujours séparées de <b>180°</b> (un demi-tour) :</p>
+<table>
+<tr><th>Je regarde vers…</th><th>L'autre regarde vers…</th></tr>
+<tr><td>N 0°</td><td>S 180°</td></tr>
+<tr><td>E 90°</td><td>W 270°</td></tr>
+<tr><td>NW <b>317°</b></td><td>SE <b>137°</b></td></tr>
+</table>
+<p class="big">317 − 180 = 137</p>
+</div>
+
+<div class="card">
+<h2>Pourquoi la question demande 137° ?</h2>
+<p>Sur la carte, vous ne savez <b>pas où est votre bateau</b> : c'est ce que vous cherchez. Mais vous savez <b>où est le phare</b>, il est dessiné sur la carte.</p>
+<p>Vous posez donc la règle <b>sur le phare</b> et vous tracez une ligne <b>vers le sud-est, au 137°</b>. Votre bateau se trouve quelque part sur cette ligne.</p>
+<p class="ok">Résumé : du bateau, je vois le phare au 317°. Donc, du phare, le bateau est au 317 − 180 = 137°.</p>
+</div>
+
+<div class="card">
+<h2>Rappel : d'où vient le 317° ?</h2>
+<p>Le compas indique 318° (Zc). On le corrige comme un cap :</p>
+<p>318 <b>− 3</b> (déviation du cap 210° : 3° W) <b>+ 2</b> (déclinaison 2° E) = <b>317°</b></p>
+</div>
+</div>
+<script>
+const tb=document.getElementById('tb'),tp=document.getElementById('tp'),vb=document.getElementById('vb'),vp=document.getElementById('vp'),t=document.getElementById('txt');
+tb.onclick=()=>{tb.classList.add('on');tp.classList.remove('on');vb.style.display='';vp.style.display='none';t.innerHTML='Du bateau, le phare est au <span style="color:#0f5b86">317°</span>';};
+tp.onclick=()=>{tp.classList.add('on');tb.classList.remove('on');vp.style.display='';vb.style.display='none';t.innerHTML='Du phare, le bateau est au <span style="color:#1a9c46">137°</span>';};
+</script>
+</body></html>

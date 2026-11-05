@@ -615,6 +615,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 .cours-nom{ margin:14px 0 6px; font-family:var(--display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
 .cours-nom .num{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--navy); color:var(--paper); font-size:.9rem; }
 .menu-item.cours-sous{ margin-left:18px; width:calc(100% - 18px); box-sizing:border-box; }
+.theme-nom{ margin:10px 0 4px 18px; font-weight:700; font-size:.92rem; color:var(--navy); }
 /* QCM : bandeau de reprise, choix fait à l'examen */
 .qz-reprise{ margin:0 0 10px; padding:10px 12px; border-radius:10px; background:var(--sea); border:1px solid var(--navy); font-weight:700; }
 .qz-opt.choisie{ border-color:var(--navy); border-width:2px; background:var(--sea); }
@@ -646,7 +647,7 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
 <div class="kam-bar"><a href="./index.html#accueil">‹ Retour</a><span>Permis Belge</span></div>
 <main>
 <header>
-  <div class="ver">SOMMAIRE · v139 · QCM final Fluvial (examen blanc 90 q.) · QCM final Mer (examen blanc 90 q.), priorités mer-Escaut-Terneuzen, feux des bouées · cours officiels · QCM révision (fluvial et côtier) · cours améliorés et QCM : fluvial chapitres 1 à 6, QCM fluvial complet et examen blanc · QCM côtier, QCM feux et sons, animations côtières feux et sons, météo, maquette des trois nords, erreurs du manuel côtier</div>
+  <div class="ver">SOMMAIRE · v140 · rangement par brevet : cours, animations par thème, entraînement, examens blancs, pièges · fluvial · côtier · commun aux deux brevets · pratique · radiotéléphonie · QCM révision · 6 examens blancs de difficulté moyenne, 2 QCM de calculs, relèvement inverse</div>
   <h1>Brevet de conduite belge</h1>
   <p>Deux façons de réviser : les <b>cours officiels</b> — le manuel et le manuel radio de l'IBPT, tels quels — et le <b>cours amélioré</b>, réécrit d'après les règlements officiels, avec les animations et les QCM.</p>
 </header>
@@ -741,16 +742,16 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
       <p class="od-etat" id="od-etat" aria-live="polite"></p>
     </div>
 
-    <button type="button" class="menu-item pret groupe" data-groupe="ameliore">
+    <button type="button" class="menu-item pret groupe" data-groupe="fluvial">
       <span class="num">2</span>
       <span class="txt">
-        <span class="t">Cours améliorés et QCM</span>
-        <span class="s">Sous chaque cours : le cours réécrit et vérifié sur le règlement, puis son QCM avec l'examen blanc</span>
+        <span class="t">Fluvial — brevet restreint</span>
+        <span class="s">Cours, animations par thème, entraînement, 3 examens blancs et le QCM final, pièges du manuel</span>
       </span>
-      <span class="etat">Modules</span>
+      <span class="etat">Ouvrir</span>
     </button>
-    <div class="sousmenu" id="groupe-ameliore" hidden>
-      <p class="cours-nom"><span class="num">1</span> Fluvial — brevet restreint</p>
+    <div class="sousmenu" id="groupe-fluvial" hidden>
+      <p class="cours-nom"><span class="num">📖</span> Cours</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-m1.html">
         <span class="num">📖</span>
         <span class="txt">
@@ -759,46 +760,15 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">Chap. 1 à 6</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-qcm-fluvial.html">
-        <span class="num">✔</span>
+      <p class="cours-nom"><span class="num">▶</span> Comprendre par thème</p>
+      <p class="theme-nom">Signalisation</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-feux-sons.html">
+        <span class="num">💡</span>
         <span class="txt">
-          <span class="t">QCM</span>
-          <span class="s">Réglementation, Navigation, Sécurité et manœuvres · examen blanc de 200 questions</span>
+          <span class="t">Feux, marques et sons</span>
+          <span class="s">Feux et marques de jour, comparaisons côte à côte, signaux sonores à écouter</span>
         </span>
-        <span class="etat">R · N · S · examen</span>
-      </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-fluvial-qcm-final.html">
-        <span class="num">🎓</span>
-        <span class="txt">
-          <span class="t">QCM final Fluvial : examen blanc</span>
-          <span class="s">90 questions difficiles en 3 parties (Navigation · Manœuvres et sécurité · Réglementation) · réussite : 50 % par partie et 60 % au total · progression, statistiques, remise à zéro · explication après chaque réponse · panneaux officiels</span>
-        </span>
-        <span class="etat">v1.0</span>
-      </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-qcm-balises.html">
-        <span class="num">⚑</span>
-        <span class="txt">
-          <span class="t">QCM spécial balises et panneaux</span>
-          <span class="s">100 questions illustrées, avec un rappel théorique en tête</span>
-        </span>
-        <span class="etat">B · P</span>
-      </a>
-      <p class="cours-nom"><span class="num">▶</span> Animations — fluvial</p>
-      <a class="menu-item pret cours-sous" href="./permis-belge-logique-sons.html">
-        <span class="num">🧩</span>
-        <span class="txt">
-          <span class="t">Logique signaux sonores</span>
-          <span class="s">La grille : les prolongés disent QUOI, les brefs DE QUEL CÔTÉ · signaux hors grille · brume en mer et en rivière · même son, autre sens · écoute · QCM 30 questions (matière d'examen uniquement) avec correction et statistiques</span>
-        </span>
-        <span class="etat">v1.4</span>
-      </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-balises.html">
-        <span class="num">⚓</span>
-        <span class="txt">
-          <span class="t">Descente balisée</span>
-          <span class="s">Le bateau descend le chenal jusqu'à la mer et s'arrête 10 s à chaque balise, avec un rappel théorique</span>
-        </span>
-        <span class="etat">v3.4</span>
+        <span class="etat">v1.19</span>
       </a>
       <a class="menu-item pret cours-sous" href="./permis-belge-panneaux.html">
         <span class="num">⛔</span>
@@ -808,15 +778,103 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">v1.14</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-feux-sons.html">
-        <span class="num">💡</span>
+      <a class="menu-item pret cours-sous" href="./permis-belge-balises.html">
+        <span class="num">⚓</span>
         <span class="txt">
-          <span class="t">Feux, marques et sons</span>
-          <span class="s">Feux et marques de jour, comparaisons côte à côte, signaux sonores à écouter</span>
+          <span class="t">Descente balisée</span>
+          <span class="s">Le bateau descend le chenal jusqu'à la mer et s'arrête 10 s à chaque balise, avec un rappel théorique</span>
         </span>
-        <span class="etat">v1.19</span>
+        <span class="etat">v3.4</span>
       </a>
-      <p class="cours-nom"><span class="num">2</span> Côtier — complément au brevet général</p>
+      <p class="theme-nom">Règles de route</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-priorites.html">
+        <span class="num">🧭</span>
+        <span class="txt">
+          <span class="t">Priorités sur l'eau : méthode, animations et QCM</span>
+          <span class="s">Brevet restreint · comment répondre à une question de priorité, les questions à se poser dans l'ordre, 38 situations animées et un QCM de 36 questions · matière d'examen uniquement, articles du règlement fluvial cités</span>
+        </span>
+        <span class="etat">v8</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-passage-etroit-voiliers.html">
+        <span class="num">⛵</span>
+        <span class="txt">
+          <span class="t">Passage étroit : priorités des voiliers selon le vent</span>
+          <span class="s">Règlement fluvial art. 6.07 : vent dans l'axe, vent de travers, voilier contre barque, petit contre grand · animé · comparaison avec l'eau libre · test</span>
+        </span>
+        <span class="etat">v1.1</span>
+      </a>
+      <p class="theme-nom">Ponts et écluses</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-hauteur-pont.html">
+        <span class="num">🌉</span>
+        <span class="txt">
+          <span class="t">Hauteur de passage sous un pont (NAP)</span>
+          <span class="s">Le calcul sur une règle graduée : niveau du canal, niveau du jour, place sous le pont</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <p class="cours-nom"><span class="num">✔</span> S'entraîner</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-qcm-balises.html">
+        <span class="num">⚑</span>
+        <span class="txt">
+          <span class="t">QCM spécial balises et panneaux</span>
+          <span class="s">100 questions illustrées, avec un rappel théorique en tête</span>
+        </span>
+        <span class="etat">B · P</span>
+      </a>
+      <p class="cours-nom"><span class="num">🎓</span> Examens blancs</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-fluvial-examen-1.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">Examen Fluvial n° 1</span>
+          <span class="s">30 questions de difficulté moyenne · répartition officielle : Réglementation 18 · Navigation 6 · Manœuvres et sécurité 6 · réussite : 50 % par chapitre et 60 % au total · correction et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-fluvial-examen-2.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">Examen Fluvial n° 2</span>
+          <span class="s">30 questions de difficulté moyenne · répartition officielle : Réglementation 18 · Navigation 6 · Manœuvres et sécurité 6 · réussite : 50 % par chapitre et 60 % au total · correction et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-fluvial-examen-3.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">Examen Fluvial n° 3</span>
+          <span class="s">30 questions de difficulté moyenne · répartition officielle : Réglementation 18 · Navigation 6 · Manœuvres et sécurité 6 · réussite : 50 % par chapitre et 60 % au total · correction et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-fluvial-qcm-final.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">QCM final Fluvial : examen blanc</span>
+          <span class="s">90 questions difficiles en 3 parties (Navigation · Manœuvres et sécurité · Réglementation) · réussite : 50 % par partie et 60 % au total · progression, statistiques, remise à zéro · explication après chaque réponse · panneaux officiels</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <p class="cours-nom"><span class="num">!</span> Pièges</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-erreurs.html">
+            <span class="num">!</span>
+            <span class="txt">
+              <span class="t">Erreurs du manuel</span>
+              <span class="s">54 points avec leurs sources, et ce qu'il ne faut pas étudier : ce que dit le manuel, ce que dit le règlement, l'article, au programme ou non</span>
+            </span>
+            <span class="etat">Consulter</span>
+          </a>
+    </div>
+
+    <button type="button" class="menu-item pret groupe" data-groupe="cotier">
+      <span class="num">3</span>
+      <span class="txt">
+        <span class="t">Côtier — complément au brevet général</span>
+        <span class="s">Animations par thème, QCM, calculs, 3 examens blancs et le QCM final Mer, pièges du manuel</span>
+      </span>
+      <span class="etat">Ouvrir</span>
+    </button>
+    <div class="sousmenu" id="groupe-cotier" hidden>
+      <p class="cours-nom"><span class="num">📖</span> Cours</p>
       <button type="button" class="menu-item avenir cours-sous" data-bientot="2">
         <span class="num">📖</span>
         <span class="txt">
@@ -826,22 +884,17 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         <span class="etat">Pas encore écrit</span>
       </button>
       <p class="bientot" id="bientot-2" hidden>Ce cours n'est pas encore réécrit. En attendant, le cours officiel est le Tome 2, dans le groupe 1 « Cours officiels ».</p>
-      <a class="menu-item pret cours-sous" href="./permis-belge-qcm-cotier.html">
-        <span class="num">✔</span>
+      <p class="cours-nom"><span class="num">▶</span> Comprendre par thème</p>
+      <p class="theme-nom">Feux et marques en mer</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-feux.html">
+        <span class="num">💡</span>
         <span class="txt">
-          <span class="t">QCM</span>
-          <span class="s">Réglementation, Navigation, Manœuvres et sécurité · au moins 100 questions par matière · examen blanc de 200 questions</span>
+          <span class="t">Feux et marques qui se ressemblent</span>
+          <span class="s">Bateaux comparés côte à côte, de nuit et de jour, avec le piège de chaque groupe et les 10 pièges à éviter · en mer (RIPAM), avec la règle des eaux intérieures sous chaque fiche · défilé ou quiz</span>
         </span>
-        <span class="etat">R · N · S · examen</span>
+        <span class="etat">v1.29</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-qcm-final.html">
-        <span class="num">🎓</span>
-        <span class="txt">
-          <span class="t">QCM final Mer : examen blanc</span>
-          <span class="s">90 questions difficiles en 3 parties (Navigation · Manœuvres et sécurité · Réglementation) · réussite : 50 % par partie et 60 % au total · progression, statistiques, remise à zéro · explication après chaque réponse</span>
-        </span>
-        <span class="etat">v1.1</span>
-      </a>
+      <p class="theme-nom">Priorités</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-cotier-priorites.html">
         <span class="num">🧭</span>
         <span class="txt">
@@ -850,14 +903,15 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">v1.3</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-qcm-priorites.html">
-        <span class="num">✔</span>
+      <a class="menu-item pret cours-sous" href="./permis-belge-voiliers-vent.html">
+        <span class="num">⛵</span>
         <span class="txt">
-          <span class="t">QCM priorités (50 questions)</span>
-          <span class="s">Mer, Escaut, Terneuzen, marques et pièges · compteur, statistiques, remise à zéro</span>
+          <span class="t">Au vent, sous le vent : voiliers et quai</span>
+          <span class="s">Le vocabulaire avec un repère clair, voilier amarré selon le vent, qui s'écarte entre deux voiliers · test</span>
         </span>
-        <span class="etat">v1.2</span>
+        <span class="etat">v1.0</span>
       </a>
+      <p class="theme-nom">Balisage AISM</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-feux-bouees.html">
         <span class="num">🔦</span>
         <span class="txt">
@@ -874,14 +928,49 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">v1.0</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-voiliers-vent.html">
-        <span class="num">⛵</span>
+      <p class="theme-nom">Navigation et calculs</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-caps.html">
+        <span class="num">🧭</span>
         <span class="txt">
-          <span class="t">Au vent, sous le vent : voiliers et quai</span>
-          <span class="s">Le vocabulaire avec un repère clair, voilier amarré selon le vent, qui s'écarte entre deux voiliers · test</span>
+          <span class="t">Les trois nords : cap vrai, magnétique et compas</span>
+          <span class="s">Maquette à régler : Nord vrai, Nord magnétique, Nord compas · déclinaison et déviation · calcul pas à pas dans les deux sens · exemples du QCM</span>
+        </span>
+        <span class="etat">v1.1</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-gisements.html">
+        <span class="num">📐</span>
+        <span class="txt">
+          <span class="t">Gisement et relèvement : exercices</span>
+          <span class="s">Cap, gisement, relèvement expliqués avec un schéma · 5 exercices résolus pas à pas, 5 exercices avec la réponse cachée · cap compas, déviation, déclinaison</span>
         </span>
         <span class="etat">v1.0</span>
       </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-releve-inverse.html">
+        <span class="num">🔄</span>
+        <span class="txt">
+          <span class="t">Relèvement inverse : qui regarde qui ?</span>
+          <span class="s">Du bateau, le phare est au 317° ; du phare, le bateau est au 137° · maquette à deux boutons · pourquoi on trace depuis le phare</span>
+        </span>
+        <span class="etat">v1.1</span>
+      </a>
+      <p class="theme-nom">Météo et secours</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-meteo.html">
+        <span class="num">🌦</span>
+        <span class="txt">
+          <span class="t">Météo : fronts, dépression et anticyclone</span>
+          <span class="s">Passage d'un front chaud, froid ou occlus : température, pression, pluie et vent en direct · vie d'une dépression et rôle de l'anticyclone · animation : le vent à bord quand la dépression passe</span>
+        </span>
+        <span class="etat">v1.5</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-secours.html">
+        <span class="num">⛑</span>
+        <span class="txt">
+          <span class="t">Premiers secours : piqûre de méduse</span>
+          <span class="s">Animation pas à pas : eau de mer, sable sec, carte rigide, surveillance · ce qu'il ne faut pas faire · définitions</span>
+        </span>
+        <span class="etat">v1.12</span>
+      </a>
+      <p class="cours-nom"><span class="num">✔</span> S'entraîner</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-qcm-feux-sons.html">
         <span class="num">💡</span>
         <span class="txt">
@@ -890,15 +979,73 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">F · S · v1.16</span>
       </a>
-      <p class="cours-nom"><span class="num">▶</span> Animations — côtier</p>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-feux.html">
-        <span class="num">💡</span>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-qcm-priorites.html">
+        <span class="num">✔</span>
         <span class="txt">
-          <span class="t">Feux et marques qui se ressemblent</span>
-          <span class="s">Bateaux comparés côte à côte, de nuit et de jour, avec le piège de chaque groupe et les 10 pièges à éviter · en mer (RIPAM), avec la règle des eaux intérieures sous chaque fiche · défilé ou quiz</span>
+          <span class="t">QCM priorités (50 questions)</span>
+          <span class="s">Mer, Escaut, Terneuzen, marques et pièges · compteur, statistiques, remise à zéro</span>
         </span>
-        <span class="etat">v1.29</span>
+        <span class="etat">v1.2</span>
       </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-qcm-calculs-examen.html">
+        <span class="num">🧮</span>
+        <span class="txt">
+          <span class="t">QCM calculs niveau examen</span>
+          <span class="s">16 questions de marées et 15 de caps · heure-marée d'une heure pile, une ou deux étapes par question · correction pas à pas et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-qcm-calculs.html">
+        <span class="num">🧮</span>
+        <span class="txt">
+          <span class="t">QCM calculs difficiles</span>
+          <span class="s">16 questions de marées et 15 de caps, relèvements, dérive et courant · plusieurs pièges par question · correction pas à pas et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <p class="cours-nom"><span class="num">🎓</span> Examens blancs</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-examen-1.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">Examen Côtier n° 1</span>
+          <span class="s">30 questions de difficulté moyenne · répartition officielle : Réglementation 21 · Navigation 9 · réussite : 50 % par chapitre et 60 % au total · correction et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-examen-2.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">Examen Côtier n° 2</span>
+          <span class="s">30 questions de difficulté moyenne · répartition officielle : Réglementation 21 · Navigation 9 · réussite : 50 % par chapitre et 60 % au total · correction et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-examen-3.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">Examen Côtier n° 3</span>
+          <span class="s">30 questions de difficulté moyenne · répartition officielle : Réglementation 21 · Navigation 9 · réussite : 50 % par chapitre et 60 % au total · correction et statistiques</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-qcm-final.html">
+        <span class="num">🎓</span>
+        <span class="txt">
+          <span class="t">QCM final Mer : examen blanc</span>
+          <span class="s">90 questions difficiles en 3 parties (Navigation · Manœuvres et sécurité · Réglementation) · réussite : 50 % par partie et 60 % au total · progression, statistiques, remise à zéro · explication après chaque réponse</span>
+        </span>
+        <span class="etat">v1.1</span>
+      </a>
+      <p class="cours-nom"><span class="num">!</span> Pièges</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-erreurs-cotier.html">
+        <span class="num">!</span>
+        <span class="txt">
+          <span class="t">Erreurs du manuel côtier</span>
+          <span class="s">48 erreurs du Tome 2 avec leurs sources, ce qu'il ne faut pas étudier, ce que le manuel oublie</span>
+        </span>
+        <span class="etat">Consulter</span>
+      </a>
+      <p class="cours-nom"><span class="num">·</span> Hors programme</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-cotier-port-ostende.html">
         <span class="num">🚦</span>
         <span class="txt">
@@ -907,6 +1054,18 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">v1.0</span>
       </a>
+    </div>
+
+    <button type="button" class="menu-item pret groupe" data-groupe="commun">
+      <span class="num">4</span>
+      <span class="txt">
+        <span class="t">Commun aux deux brevets</span>
+        <span class="s">Signaux sonores, vocabulaire, croisements, longueur du bateau</span>
+      </span>
+      <span class="etat">Ouvrir</span>
+    </button>
+    <div class="sousmenu" id="groupe-commun" hidden>
+      <p class="cours-nom"><span class="num">🔊</span> Signaux sonores</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-logique-sons.html">
         <span class="num">🧩</span>
         <span class="txt">
@@ -931,47 +1090,51 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">v2.15</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-meteo.html">
-        <span class="num">🌦</span>
+      <a class="menu-item pret cours-sous" href="./signaux-sonores-v1.1.mp3">
+        <span class="num">🎧</span>
         <span class="txt">
-          <span class="t">Météo : fronts, dépression et anticyclone</span>
-          <span class="s">Passage d'un front chaud, froid ou occlus : température, pression, pluie et vent en direct · vie d'une dépression et rôle de l'anticyclone · animation : le vent à bord quand la dépression passe</span>
-        </span>
-        <span class="etat">v1.5</span>
-      </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-caps.html">
-        <span class="num">🧭</span>
-        <span class="txt">
-          <span class="t">Les trois nords : cap vrai, magnétique et compas</span>
-          <span class="s">Maquette à régler : Nord vrai, Nord magnétique, Nord compas · déclinaison et déviation · calcul pas à pas dans les deux sens · exemples du QCM</span>
+          <span class="t">Signaux sonores à écouter (fichier son)</span>
+          <span class="s">12 minutes, voix féminine : d'abord le son, puis ce qu'il veut dire · eaux intérieures, puis seulement ce qui change sur l'Escaut et le canal de Gand à Terneuzen · uniquement la matière au programme</span>
         </span>
         <span class="etat">v1.1</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-gisements.html">
-        <span class="num">📐</span>
+      <p class="cours-nom"><span class="num">⛵</span> Vocabulaire et règles générales</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-en-route.html">
+        <span class="num">⭕</span>
         <span class="txt">
-          <span class="t">Gisement et relèvement : exercices</span>
-          <span class="s">Cap, gisement, relèvement expliqués avec un schéma · 5 exercices résolus pas à pas, 5 exercices avec la réponse cachée · cap compas, déviation, déclinaison</span>
+          <span class="t">« En route » ou « fait route » ?</span>
+          <span class="s">Deux cercles pour comprendre la différence</span>
         </span>
         <span class="etat">v1.0</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-cotier-secours.html">
-        <span class="num">⛑</span>
+      <a class="menu-item pret cours-sous" href="./permis-belge-croisements.html">
+        <span class="num">⛵</span>
         <span class="txt">
-          <span class="t">Premiers secours : piqûre de méduse</span>
-          <span class="s">Animation pas à pas : eau de mer, sable sec, carte rigide, surveillance · ce qu'il ne faut pas faire · définitions</span>
+          <span class="t">Qui passe en premier ? Croisements animés</span>
+          <span class="s">27 situations animées : rencontre, croisement, dépassement, passage étroit, sortie de port ou de voie affluente, petit et grand bateau, voiliers, pêche… · eaux intérieures (règlement fluvial) ou mer (RIPAM) · qui garde sa route, qui s'écarte, l'article</span>
         </span>
-        <span class="etat">v1.12</span>
+        <span class="etat">v1.8</span>
       </a>
-      <a class="menu-item pret cours-sous" href="./permis-belge-erreurs-cotier.html">
-        <span class="num">!</span>
+      <a class="menu-item pret cours-sous" href="./permis-belge-longueurs.html">
+        <span class="num">📏</span>
         <span class="txt">
-          <span class="t">Erreurs du manuel côtier</span>
-          <span class="s">48 erreurs du Tome 2 avec leurs sources, ce qu'il ne faut pas étudier, ce que le manuel oublie</span>
+          <span class="t">La longueur du bateau : ce qui change</span>
+          <span class="s">Animation : le bateau grandit, chaque seuil (2,5 · 4 · 6 · 6,5 · 7 · 12 · 20 · 24 · 50 · 100 · 110 m) montre ce qui s'applique · fluvial ou mer (RIPAM, Escaut, canal, ports de la côte, arrêté plaisance) · articles cités</span>
         </span>
-        <span class="etat">Consulter</span>
+        <span class="etat">v1.4</span>
       </a>
-      <p class="cours-nom"><span class="num">3</span> Pratique</p>
+    </div>
+
+    <button type="button" class="menu-item pret groupe" data-groupe="pratique">
+      <span class="num">5</span>
+      <span class="txt">
+        <span class="t">Pratique</span>
+        <span class="s">Hélice, manœuvres de port, amarres</span>
+      </span>
+      <span class="etat">Ouvrir</span>
+    </button>
+    <div class="sousmenu" id="groupe-pratique" hidden>
+      <p class="cours-nom"><span class="num">📖</span> Cours</p>
       <button type="button" class="menu-item avenir cours-sous" data-bientot="3">
         <span class="num">📖</span>
         <span class="txt">
@@ -980,6 +1143,8 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">Pas encore écrit</span>
       </button>
+      <p class="bientot" id="bientot-3" hidden>Ce cours n'est pas encore réécrit. En attendant, le cours officiel est le Tome 3, dans le groupe 1. L'examen pratique se passe sur l'eau : il n'a pas de QCM.</p>
+      <p class="cours-nom"><span class="num">▶</span> Animations</p>
       <a class="menu-item pret cours-sous" href="./permis-belge-pratique-helice.html">
         <span class="num">⚙️</span>
         <span class="txt">
@@ -1004,8 +1169,25 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">v1.1</span>
       </a>
-      <p class="bientot" id="bientot-3" hidden>Ce cours n'est pas encore réécrit. En attendant, le cours officiel est le Tome 3, dans le groupe 1. L'examen pratique se passe sur l'eau : il n'a pas de QCM.</p>
-      <p class="cours-nom"><span class="num">R</span> Radiotéléphonie — certificat restreint</p>
+      <a class="menu-item pret cours-sous" href="./permis-belge-quai-vent.html">
+        <span class="num">💨</span>
+        <span class="txt">
+          <span class="t">Quai au vent, quai sous le vent</span>
+          <span class="s">Animation : où amarrer pour une nuit calme</span>
+        </span>
+        <span class="etat">v1.0</span>
+      </a>
+    </div>
+
+    <button type="button" class="menu-item pret groupe" data-groupe="radio">
+      <span class="num">6</span>
+      <span class="txt">
+        <span class="t">Radiotéléphonie — certificat restreint</span>
+        <span class="s">Fiche de révision VHF, QCM et examen blanc</span>
+      </span>
+      <span class="etat">Ouvrir</span>
+    </button>
+    <div class="sousmenu" id="groupe-radio" hidden>
       <button type="button" class="menu-item avenir cours-sous" data-bientot="R">
         <span class="num">📖</span>
         <span class="txt">
@@ -1023,83 +1205,10 @@ main table.qz-regle-tab td:not(:first-child), main table.qz-regle-tab th:not(:fi
         </span>
         <span class="etat">Ouvrir</span>
       </a>
-      <p class="cours-nom"><span class="num">!</span> Pour tous les cours</p>
-      <a class="menu-item pret" href="./permis-belge-priorites.html">
-        <span class="num">🧭</span>
-        <span class="txt">
-          <span class="t">Priorités sur l'eau : méthode, animations et QCM</span>
-          <span class="s">Brevet restreint · comment répondre à une question de priorité, les questions à se poser dans l'ordre, 38 situations animées et un QCM de 36 questions · matière d'examen uniquement, articles du règlement fluvial cités</span>
-        </span>
-        <span class="etat">v8</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-passage-etroit-voiliers.html">
-        <span class="num">⛵</span>
-        <span class="txt">
-          <span class="t">Passage étroit : priorités des voiliers selon le vent</span>
-          <span class="s">Règlement fluvial art. 6.07 : vent dans l'axe, vent de travers, voilier contre barque, petit contre grand · animé · comparaison avec l'eau libre · test</span>
-        </span>
-        <span class="etat">v1.1</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-en-route.html">
-        <span class="num">⭕</span>
-        <span class="txt">
-          <span class="t">« En route » ou « fait route » ?</span>
-          <span class="s">Deux cercles pour comprendre la différence</span>
-        </span>
-        <span class="etat">v1.0</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-quai-vent.html">
-        <span class="num">💨</span>
-        <span class="txt">
-          <span class="t">Quai au vent, quai sous le vent</span>
-          <span class="s">Animation : où amarrer pour une nuit calme</span>
-        </span>
-        <span class="etat">v1.0</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-hauteur-pont.html">
-        <span class="num">🌉</span>
-        <span class="txt">
-          <span class="t">Hauteur de passage sous un pont (NAP)</span>
-          <span class="s">Le calcul sur une règle graduée : niveau du canal, niveau du jour, place sous le pont</span>
-        </span>
-        <span class="etat">v1.0</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-croisements.html">
-        <span class="num">⛵</span>
-        <span class="txt">
-          <span class="t">Qui passe en premier ? Croisements animés</span>
-          <span class="s">27 situations animées : rencontre, croisement, dépassement, passage étroit, sortie de port ou de voie affluente, petit et grand bateau, voiliers, pêche… · eaux intérieures (règlement fluvial) ou mer (RIPAM) · qui garde sa route, qui s'écarte, l'article</span>
-        </span>
-        <span class="etat">v1.8</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-longueurs.html">
-        <span class="num">📏</span>
-        <span class="txt">
-          <span class="t">La longueur du bateau : ce qui change</span>
-          <span class="s">Animation : le bateau grandit, chaque seuil (2,5 · 4 · 6 · 6,5 · 7 · 12 · 20 · 24 · 50 · 100 · 110 m) montre ce qui s'applique · fluvial ou mer (RIPAM, Escaut, canal, ports de la côte, arrêté plaisance) · articles cités</span>
-        </span>
-        <span class="etat">v1.4</span>
-      </a>
-      <a class="menu-item pret" href="./signaux-sonores-v1.1.mp3">
-        <span class="num">🎧</span>
-        <span class="txt">
-          <span class="t">Signaux sonores à écouter (fichier son)</span>
-          <span class="s">12 minutes, voix féminine : d'abord le son, puis ce qu'il veut dire · eaux intérieures, puis seulement ce qui change sur l'Escaut et le canal de Gand à Terneuzen · uniquement la matière au programme</span>
-        </span>
-        <span class="etat">v1.1</span>
-      </a>
-      <a class="menu-item pret" href="./permis-belge-erreurs.html">
-            <span class="num">!</span>
-            <span class="txt">
-              <span class="t">Erreurs du manuel</span>
-              <span class="s">54 points avec leurs sources, et ce qu'il ne faut pas étudier : ce que dit le manuel, ce que dit le règlement, l'article, au programme ou non</span>
-            </span>
-            <span class="etat">Consulter</span>
-          </a>
     </div>
 
     <button type="button" class="menu-item pret groupe" data-groupe="revision">
-      <span class="num">3</span>
+      <span class="num">7</span>
       <span class="txt">
         <span class="t">QCM révision</span>
         <span class="s">Les questions booost envoyées à Claude, corrigées d'après les textes officiels : bonne réponse, piège et dessin</span>

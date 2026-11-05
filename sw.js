@@ -1,14 +1,14 @@
 /* Kat-a-Mar — service worker — v169
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v169";
+const CACHE = "kat-a-mar-v170";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
 const FILES = ["./", "./index.html", "./permis-hauturier.html",
                "./permis-belge.html", "./permis-belge-m1.html",
-               "./permis-belge-erreurs.html", "./permis-belge-qcm-fluvial.html", "./permis-belge-qcm-balises.html",
-               "./permis-belge-qcm-cotier.html", "./permis-belge-qcm-feux-sons.html", "./permis-belge-cotier-feux.html", "./permis-belge-cotier-sons.html", "./permis-belge-sons-animes.html", "./permis-belge-logique-sons.html", "./permis-belge-cotier-meteo.html", "./permis-belge-cotier-caps.html", "./permis-belge-erreurs-cotier.html", "./permis-belge-pratique-helice.html", "./permis-belge-pratique-manoeuvres.html", "./permis-belge-pratique-amarres.html", "./permis-belge-cotier-secours.html", "./permis-belge-cotier-port-ostende.html", "./permis-belge-longueurs.html", "./permis-belge-croisements.html", "./permis-belge-priorites.html", "./permis-belge-cotier-gisements.html",
+               "./permis-belge-erreurs.html", "./permis-belge-qcm-balises.html",
+               "./permis-belge-qcm-feux-sons.html", "./permis-belge-cotier-feux.html", "./permis-belge-cotier-sons.html", "./permis-belge-sons-animes.html", "./permis-belge-logique-sons.html", "./permis-belge-cotier-meteo.html", "./permis-belge-cotier-caps.html", "./permis-belge-erreurs-cotier.html", "./permis-belge-pratique-helice.html", "./permis-belge-pratique-manoeuvres.html", "./permis-belge-pratique-amarres.html", "./permis-belge-cotier-secours.html", "./permis-belge-cotier-port-ostende.html", "./permis-belge-longueurs.html", "./permis-belge-croisements.html", "./permis-belge-priorites.html", "./permis-belge-cotier-gisements.html",
                "./permis-belge-fluvial-qcm-final.html", "./permis-belge-cotier-qcm-final.html", "./permis-belge-cotier-priorites.html", "./permis-belge-cotier-qcm-priorites.html", "./permis-belge-feux-bouees.html", "./permis-belge-cotier-chenal-prefere.html", "./permis-belge-voiliers-vent.html", "./permis-belge-passage-etroit-voiliers.html", "./permis-belge-en-route.html", "./permis-belge-quai-vent.html", "./permis-belge-hauteur-pont.html",
-               "./permis-belge-balises.html", "./permis-belge-panneaux.html", "./permis-belge-feux-sons.html",
+               "./permis-belge-fluvial-examen-1.html", "./permis-belge-fluvial-examen-2.html", "./permis-belge-fluvial-examen-3.html", "./permis-belge-cotier-examen-1.html", "./permis-belge-cotier-examen-2.html", "./permis-belge-cotier-examen-3.html", "./permis-belge-cotier-qcm-calculs-examen.html", "./permis-belge-cotier-qcm-calculs.html", "./permis-belge-cotier-releve-inverse.html", "./permis-belge-balises.html", "./permis-belge-panneaux.html", "./permis-belge-feux-sons.html",
                "./certificat-vhf.html", "./permis-espagnol.html", "./lire.html", "./pdfjs-3.11.174.min.js", "./pdfjs-3.11.174.worker.min.js", "./per-01-nomenclatura-bilingue-v1.6.pdf", "./per-02-amarre-fondeo-bilingue-v1.6.pdf", "./per-03-seguridad-bilingue-v1.5.pdf", "./per-04-legislacion-bilingue-v1.6.pdf", "./per-05-balizamiento-bilingue-v1.0.pdf", "./per-06-ripa-bilingue-v1.0.pdf", "./per-07-maniobra-bilingue-v1.0.pdf", "./per-08-emergencias-bilingue-v1.0.pdf", "./per-09-meteorologia-bilingue-v1.0.pdf", "./per-10-teoria-navegacion-bilingue-v1.0.pdf", "./per-11-carta-navegacion-bilingue-v1.0.pdf",
                "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
