@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pourquoi multiplier</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.55 -apple-system,system-ui,sans-serif;padding:14px 16px 36px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:#5b6577}h1{font-size:22px;margin:4px 0 8px}
+.card{background:#fff;border:1px solid #d9dee7;border-radius:16px;padding:12px 14px;margin:12px 0}
+svg{width:100%;height:auto;display:block;background:#eaf3fb;border-radius:12px}
+.ctl label{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:15px}.ctl span{min-width:150px}.ctl input{flex:1;accent-color:#1565c0}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+button{font:700 15px system-ui;padding:10px 14px;border-radius:12px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}button.p{background:#1565c0;color:#fff}
+.out{background:#f0f4fa;border-radius:10px;padding:10px 12px;font-size:16px}
+.big{font-size:19px;font-weight:800;text-align:center;margin:6px 0}
+.key{background:#e6f5ea;border-left:5px solid #1a9c46;border-radius:0 10px 10px 0;padding:10px 12px;font-weight:600;margin:8px 0}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Maquette · version 1.0 · pourquoi on multiplie par la longueur (r × sin a, r × cos a)</div>
+<h1>Pourquoi multiplier ? Une marche à la fois</h1>
+
+<div class="card">
+<p style="margin-top:0">La flèche violette monte avec un angle <b>a</b>. On la découpe en <b>morceaux de longueur 1</b>. Chaque morceau est un <b>petit triangle identique</b> : il monte de <b style="color:#e07a00">sin a</b> et avance de <b style="color:#1565c0">cos a</b>.</p>
+<p>Touchez <b>« + 1 unité »</b> : on ajoute un petit triangle à la fois, comme une marche d'escalier.</p>
+<svg id="s" viewBox="0 0 400 300"></svg>
+<div class="btns"><button class="p" id="add">+ 1 unité</button><button id="sub">− 1 unité</button><button id="play">▶ Animer</button></div>
+<div class="ctl">
+<label><span>Angle a : <b id="av"></b></span><input id="a" type="range" min="10" max="70" value="30"></label>
+<label><span>Longueur r : <b id="rv"></b></span><input id="r" type="range" min="1" max="6" step="1" value="1"></label>
+</div>
+<div class="out" id="o"></div>
+<p class="big" id="big"></p>
+</div>
+
+<div class="card">
+<div class="key">Chaque petit triangle de longueur 1 monte de <b>sin a</b>. Avec r triangles, on monte r fois de sin a :
+<br>sin a + sin a + … (r fois) = <b>r × sin a</b>.
+<br>Même chose à l'horizontale : <b>r × cos a</b>.</div>
+<p><b>Comme au marché :</b> 1 kilo de pommes coûte 2 €. Pour 3 kilos : 2 + 2 + 2 = 3 × 2 = 6 €. Ici, le « prix par unité » est sin a, et le nombre d'unités est r.</p>
+<p><b>En bateau :</b> cap 060°, 6 nœuds. Chaque nœud de vitesse donne 0,87 vers l'Est (sin 60°). Six nœuds donnent 6 × 0,87 = <b>5,2 nœuds vers l'Est</b>.</p>
+</div>
+</div>
+<script>
+const R=Math.PI/180,$=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const f2=x=>(Math.round(x*100)/100).toString().replace('.',',');
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;$('s').appendChild(e);return e}
+function T(x,y,t,c,anc='middle'){return el('text',{x,y,'text-anchor':anc,'font-size':13,'font-weight':800,fill:c,stroke:'#eaf3fb','stroke-width':4,'paint-order':'stroke'},t)}
+function draw(){const a=+$('a').value,r=+$('r').value;$('av').textContent=a+'°';$('rv').textContent=r;$('s').innerHTML='';
+ const s=Math.sin(a*R),c=Math.cos(a*R);const k=Math.min(320/(6*c),240/(6*s));const O=[34,272];
+ const P=i=>[O[0]+i*c*k,O[1]-i*s*k];
+ // full big triangle outline
+ const E=P(r);el('line',{x1:O[0],y1:O[1],x2:E[0],y2:O[1],stroke:'#1565c0','stroke-width':3,'stroke-dasharray':'6 5'});
+ el('line',{x1:E[0],y1:O[1],x2:E[0],y2:E[1],stroke:'#e07a00','stroke-width':3,'stroke-dasharray':'6 5'});
+ for(let i=0;i<r;i++){const A=P(i),B=P(i+1);
+  el('polygon',{points:`${A} ${B[0]},${A[1]} ${B}`,fill:i%2?'#fde7c7':'#d7e8fb',stroke:'none'});
+  el('line',{x1:A[0],y1:A[1],x2:B[0],y2:A[1],stroke:'#1565c0','stroke-width':4});
+  el('line',{x1:B[0],y1:A[1],x2:B[0],y2:B[1],stroke:'#e07a00','stroke-width':4});
+  el('line',{x1:A[0],y1:A[1],x2:B[0],y2:B[1],stroke:'#7b3fbf','stroke-width':5,'stroke-linecap':'round'});
+  el('circle',{cx:B[0],cy:B[1],r:3.5,fill:'#7b3fbf'});
+  T((A[0]+B[0])/2-8,(A[1]+B[1])/2-6,'1','#7b3fbf','end');
+  if(r<=3||i===r-1){T(B[0]+5,(A[1]+B[1])/2+4,f2(s),'#b35f00','start');T((A[0]+B[0])/2,A[1]+15,f2(c),'#1565c0')}}
+ el('path',{d:`M${O[0]+30} ${O[1]} A30 30 0 0 0 ${O[0]+30*c} ${O[1]-30*s}`,fill:'none',stroke:'#14213d','stroke-width':2});T(O[0]+40,O[1]-6,'a','#14213d','start');
+ T(Math.min(E[0]+6,330),Math.max(E[1]-8,14),'montée totale = '+f2(r*s),'#b35f00',E[0]>250?'end':'start');
+ $('o').innerHTML=`${r} triangle${r>1?'s':''} identique${r>1?'s':''}, chacun monte de sin ${a}° = ${f2(s)}.<br>Montée totale = ${Array(r).fill(f2(s)).join(' + ')} = <b>${f2(r*s)}</b><br>Avancée totale = ${Array(r).fill(f2(c)).join(' + ')} = <b>${f2(r*c)}</b>`;
+ $('big').innerHTML=`${r} × sin ${a}° = ${r} × ${f2(s)} = <span style="color:#e07a00">${f2(r*s)}</span>`}
+['a','r'].forEach(i=>$(i).oninput=draw);
+$('add').onclick=()=>{$('r').value=Math.min(6,+$('r').value+1);draw()};$('sub').onclick=()=>{$('r').value=Math.max(1,+$('r').value-1);draw()};
+let t=null;$('play').onclick=()=>{clearInterval(t);$('r').value=1;draw();t=setInterval(()=>{if(+$('r').value>=6){clearInterval(t);return}$('r').value=+$('r').value+1;draw()},1100)};
+draw();
+</script></body></html>

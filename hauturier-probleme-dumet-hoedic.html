@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Problème Dumet Hoëdic</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.5 -apple-system,system-ui,sans-serif;padding:12px 14px 40px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:#5b6577}h1{font-size:22px;margin:4px 0 8px}
+.card{background:#fff;border:1px solid #d9dee7;border-radius:16px;padding:12px;margin:10px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.tabs button{font:700 13px system-ui;padding:7px 10px;border-radius:10px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}.tabs button.on{background:#1565c0;color:#fff}
+.en{background:#fff7d6;border-left:5px solid #f2c94c;border-radius:0 10px 10px 0;padding:8px 12px;font-size:15px;margin-bottom:8px}
+svg{width:100%;height:auto;display:block;background:#f3f8fc;border-radius:12px}
+.prog{display:flex;justify-content:space-between;font-size:13px;color:#5b6577;font-weight:700;margin-bottom:4px}
+.bar{height:6px;background:#e3e8ef;border-radius:3px;margin-bottom:8px}.bar i{display:block;height:100%;background:#1565c0;border-radius:3px}
+.kind{display:inline-block;font:800 12px system-ui;padding:3px 8px;border-radius:8px;margin-bottom:4px}.k1{background:#e3efff;color:#0d47a1}.k2{background:#e6f5ea;color:#137a37}.k3{background:#fde4e4;color:#a51c1c}
+.txt{font-size:17px;margin:6px 2px}.txt mark{background:#ffe14d;padding:0 3px;border-radius:4px}
+.calc{background:#f0f4fa;border-radius:10px;padding:8px 12px;font-weight:800;font-size:17px;text-align:center;min-height:1.4em}
+.nav{display:flex;gap:10px;margin-top:10px}.nav button{flex:1;font:800 17px system-ui;padding:12px;border-radius:12px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}.nav button.p{background:#1565c0;color:#fff}
+.leg{font-size:13px;color:#5b6577;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px}.leg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid #d9dee7;padding:5px 7px;text-align:left}th{background:#f0f4fa}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Problème type examen · version 1.0 · carte 9999 · problème n° 5 de permis-hauturier.info, résolu pas à pas</div>
+<h1>De nuit : de Dumet vers Hoëdic</h1>
+<div class="card">
+<div class="en"><b>Énoncé.</b> À <b>23 h 30</b>, au sud de l'île Dumet, vous relevez trois feux au compas de relèvement :
+<br>• <b>Z1</b> : feu blanc à 3 éclats toutes les 12 s, au <b>011°</b>
+<br>• <b>Z2</b> : feu à 3 scintillements toutes les 10 s, au <b>038°</b>
+<br>• <b>Z3</b> : feu à 9 scintillements toutes les 15 s, au <b>098°</b>
+<br>C'est le point <b>A</b>. Vous voulez aller au point <b>T</b>, à <b>1,5 mille au sud</b> du feu à 4 éclats blancs toutes les 15 s (au sud-est de Hoëdic).
+<br><b>Données :</b> vitesse <b>6 nœuds</b> · courant portant au <b>Sud (180°), 1 nœud</b> · vent d'Ouest, dérive <b>4°</b> · déclinaison <b>D = 4° E</b> · déviation du compas de relèvement <b>0</b> · déviation du compas de route <b>+2° (E)</b>.
+<br><b>Trouvez :</b> A, T, la route fond, la route surface, le cap compas, la vitesse fond, l'heure d'arrivée.</div>
+<div class="prog"><span id="ttl"></span><span id="cnt"></span></div><div class="bar"><i id="bar"></i></div>
+<div id="kind"></div>
+<svg id="s" viewBox="0 0 420 320"></svg>
+<div class="leg" id="leg"><b>Légende :</b> <span><i style="background:#c62828"></i>lignes de relèvement</span><span><i style="background:#1a9c46"></i>route fond A → T</span><span><i style="background:#e07a00"></i>courant (1 h)</span><span><i style="background:#1565c0"></i>route surface (1 h de bateau)</span><span><i style="background:#5b6577"></i>arc du compas</span><span>1 petit trait = 1 mille</span><span>quadrillage = 2′ de latitude / 2′ de longitude</span></div>
+<p class="txt" id="txt"></p>
+<div class="calc" id="calc"></div>
+<div class="nav"><button id="prev">◀ Retour</button><button class="p" id="next">Suivant ▶</button></div>
+</div>
+<div class="card"><b>Les réponses</b>
+<table>
+<tr><th>Point A</th><td>47°23,0′ N · 2°37,8′ W</td></tr>
+<tr><th>Point T</th><td>47°17,8′ N · 2°50,0′ W</td></tr>
+<tr><th>Route fond</th><td>237,5°</td></tr>
+<tr><th>Route surface</th><td>245,6°</td></tr>
+<tr><th>Cap vrai</th><td>249,6° ≈ 250°</td></tr>
+<tr><th>Cap compas</th><td><b>244°</b></td></tr>
+<tr><th>Vitesse fond</th><td>6,5 nœuds</td></tr>
+<tr><th>Distance A → T</th><td>9,8 milles</td></tr>
+<tr><th>Arrivée</th><td><b>01 h 01</b></td></tr>
+</table>
+<p style="font-size:14px;color:#5b6577;margin-bottom:0">Réponses identiques au corrigé du site (corrigeprobleme5.pdf), contrôlées à la calculatrice. Les mesures sur carte ont une petite marge : selon le tracé, on lit 237,5° à 238° et 9,7 à 9,8 milles ; l'heure d'arrivée sort à 01 h 00 ou 01 h 01, les deux sont acceptées. Dessin schématique : seuls les feux utiles sont placés, aux positions de la carte.</p></div>
+</div>
+<script>
+const R=Math.PI/180,NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),svg=$('s'),HI='#ffe14d';
+const BL='#1565c0',GR='#1a9c46',OR='#e07a00',PU='#7b3fbf',RD='#c62828',DK='#14213d';
+const K=30,px=([x,y])=>[(x+10.5)*K,(3.8-y)*K];
+const dir=d=>[Math.sin(d*R),Math.cos(d*R)];
+const sdir=d=>[Math.sin(d*R),-Math.cos(d*R)];
+const wadd=(P,d,s)=>[P[0]+dir(d)[0]*s,P[1]+dir(d)[1]*s];
+const add=(P,v,k)=>[P[0]+v[0]*k,P[1]+v[1]*k];
+const fr=v=>(Math.round(v*100)/100).toString().replace('.',',');
+function el(t,a,tx){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(tx!==undefined)e.textContent=tx;svg.appendChild(e);return e}
+function text(x,y,t,c=DK,a='middle',s=14,hi,fill){const e=el('text',{x,y,'text-anchor':a,'font-size':s,'font-weight':800,fill:c,stroke:'#fff','stroke-width':4,'paint-order':'stroke'},t);
+ if(hi||fill){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill:fill||HI}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+function line(P,Q,c,w,dash,hi){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':w+12,'stroke-linecap':'round'});el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+function defs(){const d=el('defs',{});for(const [id,c] of [['k',DK],['p',PU],['b',BL],['o',OR],['g',GR],['r',RD]]){const m=document.createElementNS(NS,'marker');for(const [k,v] of Object.entries({id:'m'+id,viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:4.5,markerHeight:4.5,orient:'auto'}))m.setAttribute(k,v);const p=document.createElementNS(NS,'path');p.setAttribute('d','M0 0L10 5L0 10Z');p.setAttribute('fill',c);m.appendChild(p);d.appendChild(m)}}
+/* flèche en coordonnées monde, graduée (1 trait par mille ou par nœud) */
+function vec(Pw,Qw,c,m,hi,grad,w=4){const P=px(Pw),Q=px(Qw);if(hi)line(P,Q,HI,w+2);el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round','marker-end':m?`url(#m${m})`:''});
+ if(grad){const L=Math.hypot(Qw[0]-Pw[0],Qw[1]-Pw[1]);const ux=(Q[0]-P[0])/(L*K),uy=(Q[1]-P[1])/(L*K);for(let i=1;i<L-0.3;i++){const x=P[0]+ux*K*i,y=P[1]+uy*K*i;el('line',{x1:x-uy*7,y1:y+ux*7,x2:x+uy*7,y2:y-ux*7,stroke:c,'stroke-width':2.5})}}}
+function seg(Pw,Qw,c,w,dash,hi){line(px(Pw),px(Qw),c,w,dash,hi)}
+function pt(Pw,lab,c,dx=0,dy=-12,hi,a='middle'){const P=px(Pw);el('circle',{cx:P[0],cy:P[1],r:5.5,fill:c,stroke:'#fff','stroke-width':2});if(lab)text(P[0]+dx,P[1]+dy,lab,c,a,15,hi)}
+function arcW(Pw,r,d1,d2,c,lab,hi,lr){const C=px(Pw),d=d2-d1;if(Math.abs(d)<.3)return;const s=add(C,sdir(d1),r),e=add(C,sdir(d2),r);const p=`M${s[0]} ${s[1]} A${r} ${r} 0 ${Math.abs(d)>180?1:0} ${d>0?1:0} ${e[0]} ${e[1]}`;
+ if(hi)el('path',{d:p,fill:'none',stroke:HI,'stroke-width':12});el('path',{d:p,fill:'none',stroke:c,'stroke-width':3});
+ if(lab){const q=add(C,sdir(d1+d/2),lr||r+18);text(q[0],q[1]+5,lab,c,'middle',13,hi)}}
+function north(Pw,L=70){const P=px(Pw);line(P,[P[0],P[1]-L],DK,2,'5 5');text(P[0],P[1]-L-5,'N',DK,'middle',13)}
+/* fond de carte : méridiens, parallèles, échelle des latitudes */
+
+/* coordonnées en milles depuis A (x vers l'Est, y vers le Nord) ; 1′ de longitude = cos 47,4° = 0,677 mille */
+const CL=Math.cos(47.38*R),lat=m=>47*60+23+m,xL=lw=>(37.8-lw)*CL,yL=lm=>lm-23;
+const A=[0,0],DUM=[0.453,1.69],BE=[1.97,2.19],BAY=[1.956,-0.416],CAR=[xL(50.0),yL(19.32)],T=[xL(50.0),yL(17.82)];
+const RF=Math.atan2(T[0]-A[0],T[1]-A[1])/R+360,DIST=Math.hypot(T[0],T[1]);
+const th=180-RF,trav=Math.sin(th*R),al=Math.asin(trav/6)/R,RS=RF-al,VF=6*Math.cos(al*R)+Math.cos(th*R);
+const B=[0,-1],Cc=wadd(A,RF,VF);
+function chart(){el('rect',{x:0,y:0,width:420,height:320,fill:'#f3f8fc'});
+ for(let lm=18;lm<=26;lm+=2){const y=px([0,yL(lm)])[1];line([0,y],[420,y],GR,1,'3 6');text(4,y-3,"47°"+lm+"′",'#137a37','start',9)}
+ for(let lw=52;lw>=34;lw-=2){const x=px([xL(lw),0])[0];if(x<0||x>420)continue;line([x,0],[x,320],BL,1,'3 6');text(x+2,316,"2°"+lw+"′",'#0d47a1','start',8)}
+ // îles schématiques
+ const isl=(c,pts,lab,dx,dy)=>{const P=pts.map(p=>px([c[0]+p[0],c[1]+p[1]]));el('polygon',{points:P.map(q=>q.join(',')).join(' '),fill:'#f3e3a8',stroke:'#8a7a40','stroke-width':1.5});const q=px(c);text(q[0]+dx,q[1]+dy,lab,'#6b5a1e','middle',11)};
+ isl([0.25,1.85],[[-0.3,0.15],[0.25,0.25],[0.35,-0.05],[-0.1,-0.25]],'île Dumet',-34,22);
+ isl([xL(52.4),yL(20.2)],[[-0.9,0.4],[0.3,0.6],[0.8,0.1],[0.2,-0.5],[-0.7,-0.3]],'Hoëdic',0,4);
+ const cx=px([3.15,0])[0];el('rect',{x:cx,y:0,width:420-cx,height:320,fill:'#f3e3a8'});text(412,150,'côte (Piriac)','#6b5a1e','end',10)}
+function feu(P,lab,sub,hi,dx=8,dy=-8,a='start'){const q=px(P);el('circle',{cx:q[0],cy:q[1],r:6,fill:'#c2185b',stroke:'#fff','stroke-width':2});text(q[0]+dx,q[1]+dy,lab,'#880e4f',a,12,hi);if(sub)text(q[0]+dx,q[1]+dy+14,sub,'#5b6577',a,10,hi)}
+function box(h){el('rect',{x:30,y:6,width:290,height:62,rx:8,fill:'#fff',stroke:h?'#f2c94c':'#9aa7b8','stroke-width':h?3:1.5});[['Z1 = phare de Dumet','Fl(3)WRG.12s'],['Z2 = Basse-Est Dumet','Q(3)10s, cardinale Est'],['Z3 = Les Bayonnelles','Q(9)15s, cardinale Ouest']].forEach((t,i)=>{text(38,22+i*19,t[0],'#880e4f','start',11);text(160,22+i*19,'',DK,'start',9)});[['Fl(3)WRG.12s'],['Q(3)10s · card. E'],['Q(9)15s · card. W']].forEach((t,i)=>text(312,22+i*19,t[0],'#5b6577','end',10))}
+function lop(P,zv,hi,lab){const a=wadd(P,zv,1.2),b=wadd(P,zv,-4.2);seg(a,b,RD,2.5,null,hi);const m=px(wadd(P,zv,-1.3));text(m[0]+6,m[1]+4,lab,RD,'start',12,hi)}
+const E={
+ Z1:h=>{box(h);feu(DUM,'Z1','',h,8,12)},
+ Z2:h=>feu(BE,'Z2','',h,8,-6),
+ Z3:h=>feu(BAY,'Z3','',h,8,-6),
+ L1:h=>lop(DUM,15,h,'015°'),L2:h=>lop(BE,42,h,'042°'),L3:h=>lop(BAY,102,h,'102°'),
+ A:h=>{const q=px(A);el('circle',{cx:q[0],cy:q[1],r:9,fill:'none',stroke:GR,'stroke-width':3.5});text(q[0]-12,q[1]+20,'A 23h30',DK,'end',13,h)},
+ CAR:h=>feu(CAR,'Les Grands Cardinaux','Fl(4)15s28m13M',h,-6,-24,'start'),
+ T:h=>{seg(CAR,T,'#5b6577',2,'4 4',h);const q=px(T);el('circle',{cx:q[0],cy:q[1],r:6,fill:DK});text(q[0]+8,q[1]+5,'T',DK,'start',14,h);const m=px([CAR[0],(CAR[1]+T[1])/2]);text(m[0]-6,m[1]+4,'1,5 M',DK,'end',11,h)},
+ RFl:h=>{vec(A,T,GR,'g',h,true,3.5);const m=px(wadd(A,RF,4.5));text(m[0]+4,m[1]+18,'route fond ≈ 237,5°',GR,'start',12,h)},
+ CO:h=>{vec(A,B,OR,'o',h,true,4);const q=px(B);text(q[0]-8,q[1]+4,'B',OR,'end',13,h);text(q[0]+8,q[1]-12,'courant',OR,'start',11,h)},
+ ARC:h=>{const c=px(B),r=6*K,a0=Math.atan2(px(Cc)[1]-c[1],px(Cc)[0]-c[0]);const s=[c[0]+r*Math.cos(a0-.25),c[1]+r*Math.sin(a0-.25)],e=[c[0]+r*Math.cos(a0+.25),c[1]+r*Math.sin(a0+.25)];if(h)el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 1 ${e[0]} ${e[1]}`,fill:'none',stroke:HI,'stroke-width':10});el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 1 ${e[0]} ${e[1]}`,fill:'none',stroke:'#5b6577','stroke-width':2.5,'stroke-dasharray':'7 5'});text(e[0]+6,e[1]+4,'rayon 6 M',DK,'start',11,h)},
+ C:h=>{const q=px(Cc);el('circle',{cx:q[0],cy:q[1],r:5,fill:GR});text(q[0]-8,q[1]-8,'C',GR,'end',14,h)},
+ RS:h=>{vec(B,Cc,BL,'b',h,true,4);const m=px(wadd(B,RS,2.2));text(m[0]-6,m[1]-12,'route surface ≈ 245,6°',BL,'end',12,h)},
+ VF:h=>{const m=px(wadd(A,RF,VF));text(m[0]+10,m[1]+22,'AC ≈ 6,5 M en 1 h → Vf ≈ 6,5 nd',GR,'start',11,h,'#fff')}
+};
+const ORD=['RFl','L1','L2','L3','CO','ARC','RS','Z1','Z2','Z3','CAR','T','A','C','VF'];
+const S=[
+ {k:1,add:['Z1','Z2','Z3'],txt:'<b>Identifier les feux</b> d\'après leur description (on cherche les mêmes lettres sur la carte, près de Dumet) :<br>• 3 éclats / 12 s = <mark>Fl(3)…12s = phare de Dumet</mark><br>• 3 scintillements / 10 s = <mark>Q(3)10s = Basse-Est Dumet</mark> (cardinale Est : 3 scintillements comme 3 h sur une montre)<br>• 9 scintillements / 15 s = <mark>Q(9)15s = Les Bayonnelles</mark> (cardinale Ouest : 9 comme 9 h)'},
+ {k:2,add:[],txt:'<b>Relèvements vrais</b>. Zv = Zc + dév + D. La déviation du compas de relèvement est <b>0</b>, la déclinaison est <b>4° E</b> donc <mark>+4</mark>.',calc:'Zv1 = 11 + 0 + 4 = 015° · Zv2 = 38 + 4 = 042° · Zv3 = 98 + 4 = 102°'},
+ {k:1,add:['L1'],txt:'<b>Tracer Dumet au 015°</b>. Règle Cras : bord sur le feu, <b>flèche vers le feu</b> (015°, chiffres noirs), pivoter jusqu\'à lire 15 sur un méridien. On trace depuis le feu <mark>vers le bateau</mark> (vers le Sud-Sud-Ouest).'},
+ {k:1,add:['L2'],txt:'<b>Tracer Basse-Est Dumet au 042°</b>, même méthode : flèche vers la bouée, lecture 42, trait vers le bateau.'},
+ {k:1,add:['L3'],txt:'<b>Tracer Les Bayonnelles au 102°</b> : flèche vers la bouée, lecture 102, trait vers l\'Ouest.'},
+ {k:3,add:['A'],txt:'Les trois lignes se croisent au <mark>point A</mark>. On lit sa latitude sur l\'échelle du bord (gauche ou droite) et sa longitude en haut ou en bas.',calc:'A : 47°23,0′ N · 2°37,8′ W'},
+ {k:1,add:['CAR'],txt:'<b>Le feu d\'arrivée</b> : 4 éclats blancs toutes les 15 s = <mark>Fl(4)15s = Les Grands Cardinaux</mark>, au sud-est de Hoëdic.'},
+ {k:3,add:['T'],txt:'<b>Point T</b> : 1,5 mille <mark>au Sud</mark> du feu. On prend 1,5 mille au compas sur l\'échelle des latitudes et on descend le long du méridien du feu.',calc:'T : 47°17,8′ N · 2°50,0′ W'},
+ {k:1,add:['RFl'],txt:'On trace <mark>A → T</mark> : c\'est la <b>route fond</b> voulue. À la Cras (flèche vers T, Sud-Ouest, chiffres rouges) on lit environ 237,5°. Au compas sur l\'échelle des latitudes : environ 9,8 milles.',calc:'Rf = 237,5° · distance A → T = 9,8 milles'},
+ {k:1,add:['CO'],txt:'<b>Le courant d\'abord</b>, depuis A : vers le <b>Sud (180°)</b>, longueur <mark>1 mille</mark> (1 heure de courant). On arrive en <b>B</b>.'},
+ {k:1,add:['ARC'],txt:'Pointe du compas sur B, ouverture <mark>6 milles</mark> (1 heure de bateau). L\'arc coupe la route fond.'},
+ {k:1,add:['C','RS'],txt:'L\'arc coupe la route fond en <b>C</b>. <mark>B → C</mark> est la <b>route surface</b> : à la Cras, environ 245,5°.',calc:'Rs ≈ 245,6°'},
+ {k:1,add:['VF'],txt:'<mark>A → C</mark> = le chemin fait sur le fond en 1 heure. Au compas sur l\'échelle : 6,5 milles, donc 6,5 nœuds.',calc:'Vf ≈ 6,5 nœuds'},
+ {k:2,add:[],txt:'<b>Contrôle à la calculatrice</b> (recette 2). θ = courant − route fond = 180 − 237,5 = −57,5°. En travers = 1 × sin(−57,5°) = −0,84. α = sin⁻¹(−0,84 ÷ 6) = −8,1°. Le signe moins veut dire : on corrige de l\'autre côté.',calc:'Rs = Rf − α = 237,5 + 8,1 = 245,6° · Vf = 6 × cos 8,1° + 1 × cos 57,5° = 5,94 + 0,54 = 6,48 nd'},
+ {k:2,add:[],txt:'<b>Cap vrai</b> : Rs = Cv + dérive, donc Cv = Rs − dérive. Vent d\'Ouest, cap ≈ 250° : le vent arrive par <b>tribord</b> (côté droit) et pousse le bateau vers bâbord, donc <mark>dérive = −4°</mark>.',calc:'Cv = 245,6 − (−4) = 249,6° ≈ 250°'},
+ {k:2,add:[],txt:'<b>Cap compas</b> : Cv = Cc + dév + D, donc Cc = Cv − dév − D. Ici la déviation est celle du <b>compas de route</b> : <mark>+2</mark>, et D = <mark>+4</mark>.',calc:'Cc = 249,6 − 2 − 4 = 243,6 ≈ 244°'},
+ {k:2,add:[],txt:'<b>Durée</b> = distance ÷ vitesse fond. 0,51 h × 60 = 31 min.',calc:'9,83 ÷ 6,48 = 1,51 h = 1 h 31 → 23 h 30 + 1 h 31 = 01 h 01'},
+ {k:3,add:[],hi:['RFl','RS','A','T'],txt:'<b>Réponses</b> : A 47°23,0′ N 2°37,8′ W · T 47°17,8′ N 2°50,0′ W · Rf 237,5° · Rs 245,6° · Cv 250° · <b>Cc 244°</b> · Vf 6,5 nd · <b>arrivée 01 h 01</b>.',calc:'Cc 244° · Vf 6,5 nd · 01 h 01'}
+];
+let cs=0;
+function render(){const st=S[cs];svg.innerHTML='';defs();chart();
+ const on=new Set();for(let i=0;i<=cs;i++)(S[i].add||[]).forEach(k=>on.add(k));
+ const now=new Set([...(st.add||[]),...(st.hi||[])]);ORD.forEach(k=>{if(on.has(k))E[k](now.has(k))});
+ $('ttl').textContent='Problème 5';$('cnt').textContent=`Étape ${cs+1} / ${S.length}`;$('bar').style.width=((cs+1)/S.length*100)+'%';
+ $('kind').innerHTML=st.k==1?'<span class="kind k1">TRACÉ sur la carte</span>':st.k==2?'<span class="kind k2">CALCUL</span>':'<span class="kind k3">RÉSULTAT</span>';
+ $('txt').innerHTML=st.txt;$('calc').textContent=st.calc||'';$('prev').disabled=cs==0;$('next').disabled=cs==S.length-1}
+$('next').onclick=()=>{if(cs<S.length-1)cs++;render()};$('prev').onclick=()=>{if(cs>0)cs--;render()};
+render();
+</script></body></html>

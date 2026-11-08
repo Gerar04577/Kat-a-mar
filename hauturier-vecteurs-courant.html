@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vecteurs et courant</title>
+<style>
+:root{--ink:#14213d;--mut:#5b6577;--bg:#f4f6f9;--card:#fff;--line:#d9dee7;--blue:#1565c0;--orange:#e07a00;--green:#1a9c46;--red:#c62828;--pur:#7b3fbf}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,system-ui,sans-serif;padding:14px 16px 40px}
+.w{max-width:680px;margin:0 auto}.v{font-size:12px;color:var(--mut)}
+h1{font-size:23px;margin:4px 0 6px}h2{font-size:19px;margin:0 0 8px}h3{font-size:16px;margin:14px 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:14px 0}
+nav a{display:inline-block;margin:3px 4px 3px 0;padding:6px 10px;border-radius:999px;background:#e8eef6;color:var(--ink);text-decoration:none;font-size:14px;font-weight:600}
+svg{width:100%;height:auto;display:block;background:#eaf3fb;border-radius:12px}
+.ctl{display:grid;gap:6px;margin:10px 0}
+.ctl label{display:flex;align-items:center;gap:10px;font-size:15px}
+.ctl label span.n{min-width:140px}
+.ctl input[type=range]{flex:1;accent-color:var(--blue)}
+.out{background:#f0f4fa;border-radius:10px;padding:8px 12px;font-size:16px;margin:8px 0}
+.f{font-weight:600;background:#eef2f7;border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:8px 12px;margin:8px 0;font-size:15.5px;white-space:pre-line}
+.key{background:#e6f5ea;border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 12px;font-weight:600;margin:8px 0}
+.warn{background:#fff4e0;border-left:5px solid var(--orange);border-radius:0 10px 10px 0;padding:10px 12px;margin:8px 0}
+.bad{background:#fdecec;border-left:5px solid var(--red);border-radius:0 10px 10px 0;padding:8px 12px;margin:8px 0}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+button{font:700 15px system-ui;padding:10px 14px;border-radius:12px;border:1.5px solid var(--blue);background:#fff;color:var(--blue)}
+button.p{background:var(--blue);color:#fff}
+.tag{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;color:#fff;margin-right:6px;vertical-align:middle}
+.t1{background:var(--green)}.t2{background:var(--orange)}.t3{background:var(--red)}
+.leg span{display:inline-block;margin-right:12px;font-size:14px}
+.sw{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:4px}
+.stepbox{background:#f3ecfb;border-left:5px solid var(--pur);border-radius:0 10px 10px 0;padding:10px 12px;margin:8px 0;min-height:4.6em}
+.stepbox .num{font-weight:800;color:var(--pur)}
+.ord{background:#eef6ff;border:1px dashed var(--blue);border-radius:10px;padding:6px 10px;font-size:15px;margin:6px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid var(--line);padding:5px;text-align:center}th{background:#eef2f7}
+.ex{border-top:1px solid var(--line);padding-top:8px;margin-top:10px}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Animation · version 1.7 · permis hauturier · vecteurs, courant, sinus et cosinus — morceaux Est en rouge et Nord en bleu-vert, pour ne plus les confondre avec le courant et la route fond</div>
+<h1>Vecteurs et courant : le cours de maths, puis la carte</h1>
+
+<div class="card">
+<p style="margin-top:0">À l'examen, vous <b>tracez</b> les vecteurs sur la carte. Ici, vous apprenez <b>d'où viennent</b> les formules et comment <b>contrôler</b> votre tracé par le calcul. Suivez les parties dans l'ordre. Dans chaque animation, touchez <b>« Étape suivante »</b> : tout se construit sous vos yeux, avec les calculs.</p>
+<nav><a href="#p0">0. Le cercle</a><a href="#p1">1. Triangle rectangle</a><a href="#p2">2. Est et Nord</a><a href="#p3">3. Bateau + courant</a><a href="#p4">4. Quel cap ?</a><a href="#p5">5. Exemples</a><a href="#p6">6. Résumé</a></nav>
+<div class="ord"><b>Graduation :</b> sur chaque flèche, <b>un petit trait = 1 unité</b> (1 nœud, c'est-à-dire 1 mille parcouru en 1 heure). Une flèche de 3,5 a donc <b>3 traits</b>, puis encore une demi-unité jusqu'à la pointe.</div>
+</div>
+
+<!-- ============ 0 ============ -->
+<div class="card" id="p0">
+<h2>0. D'où viennent sinus et cosinus : le cercle</h2>
+<p>On dessine un cercle de <b>rayon 1</b> autour d'un centre O. On part vers la droite et on tourne d'un angle <b>a</b> (en maths, on tourne <b>vers le haut</b>, dans le sens inverse des aiguilles d'une montre). On arrive au point <b>M</b> sur le cercle.</p>
+<svg id="s0" viewBox="0 0 400 400"></svg>
+<div class="ctl">
+<label><span class="n">Angle a : <b id="a0v"></b></span><input id="a0" type="range" min="0" max="360" value="35"></label>
+<label><span class="n">Rayon r : <b id="r0v"></b></span><input id="r0" type="range" min="1" max="5" step="0.5" value="1"></label>
+</div>
+<div class="out" id="o0"></div>
+<ol>
+<li><b>Définition.</b> On projette M sur l'axe horizontal (point H). La distance <b>OH</b> (bleue) s'appelle le <b>cosinus</b> de a. La hauteur <b>HM</b> (orange) s'appelle le <b>sinus</b> de a.</li>
+<li><b>Le triangle O-H-M est rectangle en H</b> : OH est horizontal, HM est vertical. Son plus grand côté est le rayon OM.</li>
+<li><b>Si le rayon vaut r</b> au lieu de 1, tout est agrandi r fois : <b>OH = r × cos a</b> et <b>HM = r × sin a</b>. Faites glisser le curseur « Rayon ».</li>
+<li><b>Pythagore</b> dans ce triangle : OH² + HM² = OM², donc <b>cos² a + sin² a = 1</b>.</li>
+<li><b>Les signes.</b> Si M passe à gauche, le cosinus devient négatif. Si M passe en bas, c'est le sinus qui devient négatif.</li>
+</ol>
+<table><tr><th>a</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr>
+<tr><td>sin a</td><td>0</td><td>0,5</td><td>0,71</td><td>0,87</td><td>1</td></tr>
+<tr><td>cos a</td><td>1</td><td>0,87</td><td>0,71</td><td>0,5</td><td>0</td></tr></table>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="card" id="p1">
+<h2>1. Le triangle rectangle</h2>
+<p>Tout triangle rectangle est un morceau de ce cercle : <b>l'hypoténuse joue le rôle du rayon</b>. On en déduit les trois formules, valables <b>uniquement dans un triangle rectangle</b>.</p>
+<svg id="s1" viewBox="0 0 400 270"></svg>
+<div class="ctl"><label><span class="n">Angle α : <b id="a1v"></b></span><input id="a1" type="range" min="5" max="85" value="30"></label></div>
+<div class="out" id="o1"></div>
+<div class="f">sin α = côté OPPOSÉ ÷ hypoténuse  →  opposé = hypoténuse × sin α
+cos α = côté ADJACENT ÷ hypoténuse  →  adjacent = hypoténuse × cos α
+tan α = côté OPPOSÉ ÷ côté ADJACENT</div>
+<div class="key">Truc : « CAH-SOH-TOA » → Cos = Adjacent / Hypoténuse · Sin = Opposé / Hypoténuse · Tan = Opposé / Adjacent.</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="card" id="p2">
+<h2>2. Du cours de maths à la carte : découper une flèche en « Est » et « Nord »</h2>
+<p>Une flèche de bateau, par exemple <b>6 nœuds au cap 041°</b>, part à la fois un peu vers l'<b>Est</b> et un peu vers le <b>Nord</b>. On veut savoir <b>combien</b> de chaque. Suivez les étapes : la réponse se construit sur le quadrillage, où <b>1 carreau = 1 unité</b>.</p>
+<svg id="s2" viewBox="0 0 400 400"></svg>
+<div class="stepbox" id="st2"></div>
+<div class="btns"><button class="p" id="b2n">Étape suivante ▶</button><button id="b2p">◀ Précédente</button><button id="b2r">Recommencer</button><button id="b2a">▶ Tout animer</button></div>
+<div class="ctl">
+<label><span class="n">Cap Z : <b id="z2v"></b></span><input id="z2" type="range" min="0" max="359" value="41"></label>
+<label><span class="n">Longueur V : <b id="v2v"></b></span><input id="v2" type="range" min="1" max="7" step="0.5" value="6"></label>
+</div>
+<div class="btns"><button onclick="set2(41,6)">Cap 041°</button><button onclick="set2(130,5)">Cap 130°</button><button onclick="set2(220,5)">Cap 220°</button><button onclick="set2(310,4)">Cap 310°</button><button onclick="set2(90,4)">Cap 090°</button></div>
+<div class="out" id="o2"></div>
+<div class="f">morceau Est = V × sin Z   (négatif = vers l'Ouest)
+morceau Nord = V × cos Z   (négatif = vers le Sud)</div>
+<div class="key">Pourquoi le sinus va avec l'Est : pour un cap entre 000° et 090°, l'angle Z est collé à l'axe Nord dans le petit triangle. Le côté Nord est donc ADJACENT à Z (cosinus), et le côté Est est OPPOSÉ à Z (sinus). C'est CAH-SOH-TOA, rien de plus. Pour les autres caps, l'animation montre l'angle β du triangle, et la calculatrice donne le même résultat avec le bon signe.</div>
+<table><tr><th>Cap</th><th>vers l'Est ?</th><th>vers le Nord ?</th><th>signes</th></tr>
+<tr><td>000° à 090°</td><td>oui</td><td>oui</td><td>Est + · Nord +</td></tr>
+<tr><td>090° à 180°</td><td>oui</td><td>non, vers le Sud</td><td>Est + · Nord −</td></tr>
+<tr><td>180° à 270°</td><td>non, vers l'Ouest</td><td>non, vers le Sud</td><td>Est − · Nord −</td></tr>
+<tr><td>270° à 360°</td><td>non, vers l'Ouest</td><td>oui</td><td>Est − · Nord +</td></tr></table>
+<p>La calculatrice donne ces signes toute seule : sin 130° est positif, cos 130° est négatif, etc.</p>
+<h3 id="p2b">Pourquoi le signe ? Le miroir et les angles supplémentaires</h3>
+<p>Deux mots à ne pas confondre :</p>
+<ul>
+<li><b>Angles complémentaires</b> : leur somme fait <b>90°</b> (un angle droit). Exemple : 40° et 50°. Règle : sin 40° = cos 50°. C'est ce qui relie l'angle compté depuis le Nord (Z) et l'angle compté depuis l'Est en maths (90° − Z).</li>
+<li><b>Angles supplémentaires</b> : leur somme fait <b>180°</b> (un demi-tour). Exemple : 130° et 50°. Règle : <b>sin 130° = sin 50°</b> mais <b>cos 130° = − cos 50°</b>. C'est ce qui explique l'étape 4.</li>
+</ul>
+<p>Faites tourner la flèche bleue. La flèche grise est son <b>reflet</b> dans le premier quart (entre 000° et 090°), avec l'angle β. Les deux flèches ont exactement la même forme : seuls les <b>sens</b> changent.</p>
+<svg id="s2b" viewBox="0 0 400 400"></svg>
+<div class="ctl"><label><span class="n">Cap Z : <b id="z2bv"></b></span><input id="z2b" type="range" min="0" max="359" value="130"></label></div>
+<div class="btns"><button onclick="setb(130)">130°</button><button onclick="setb(220)">220°</button><button onclick="setb(310)">310°</button><button onclick="setb(50)">050°</button></div>
+<div class="stepbox" id="o2b"></div>
+<table><tr><th>Cap Z</th><th>β (angle du triangle)</th><th>miroir</th><th>sin Z</th><th>cos Z</th></tr>
+<tr><td>000° à 090°</td><td>β = Z</td><td>aucun</td><td>+ sin β</td><td>+ cos β</td></tr>
+<tr><td>090° à 180°</td><td>β = 180° − Z (supplémentaire)</td><td>par l'axe Est-Ouest</td><td>+ sin β</td><td><b>−</b> cos β</td></tr>
+<tr><td>180° à 270°</td><td>β = Z − 180°</td><td>demi-tour</td><td><b>−</b> sin β</td><td><b>−</b> cos β</td></tr>
+<tr><td>270° à 360°</td><td>β = 360° − Z</td><td>par l'axe Nord-Sud</td><td><b>−</b> sin β</td><td>+ cos β</td></tr></table>
+<div class="key">À l'examen, pas besoin de retenir ce tableau : tapez directement le cap dans la calculatrice. Elle applique ces règles toute seule et donne le signe. Le tableau sert seulement à comprendre <b>pourquoi</b>.</div>
+
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="card" id="p3">
+<h2>3. Bateau + courant = route fond (je connais mon cap)</h2>
+<p>En 1 heure, le bateau avance <b>sur l'eau</b> (<b style="color:var(--blue)">flèche bleue</b>), et l'eau elle-même avance (<b style="color:var(--orange)">flèche orange</b>, le courant). Sur le fond, le bateau suit la <b style="color:var(--green)">flèche verte</b>. Le courant « porte au 150° » veut dire qu'il <b>pousse vers</b> le 150°.</p>
+<div class="ord"><b>Ordre de tracé :</b> ① la flèche du bateau depuis le départ A ; ② le courant <b>au bout</b> de la flèche du bateau ; ③ on joint A au point d'arrivée : c'est la route fond.</div>
+<svg id="s3" viewBox="0 0 400 400"></svg>
+<svg id="s3b" viewBox="0 0 400 220" style="margin-top:8px;display:none"></svg>
+<div class="leg"><span><i class="sw" style="background:var(--blue)"></i>bateau (surface)</span><span><i class="sw" style="background:var(--orange)"></i>courant</span><span><i class="sw" style="background:var(--green)"></i>route fond</span><br><span><i class="sw" style="background:#c62828"></i>morceaux Est (E1, E2)</span><span><i class="sw" style="background:#00838f"></i>morceaux Nord (N1, N2)</span></div>
+<div class="stepbox" id="st3"></div>
+<div class="btns"><button class="p" id="b3n">Étape suivante ▶</button><button id="b3p">◀ Précédente</button><button id="b3r">Recommencer</button></div>
+<div class="ctl">
+<label><span class="n">Cap surface : <b id="c3v"></b></span><input id="c3" type="range" min="0" max="359" value="30"></label>
+<label><span class="n">Vitesse surface : <b id="vs3v"></b></span><input id="vs3" type="range" min="1" max="10" step="0.5" value="5"></label>
+<label><span class="n">Courant porte au : <b id="d3v"></b></span><input id="d3" type="range" min="0" max="359" value="150"></label>
+<label><span class="n">Vitesse courant : <b id="vc3v"></b></span><input id="vc3" type="range" min="0" max="6" step="0.5" value="2"></label>
+</div>
+<div class="warn"><b>Ce triangle n'est en général PAS rectangle.</b> Regardez l'angle affiché au point où les deux flèches se rejoignent : il ne vaut 90° que si le courant est exactement perpendiculaire au cap. On ne peut donc pas utiliser directement CAH-SOH-TOA. On découpe chaque flèche en morceaux Est et Nord (partie 2) : ces morceaux, eux, forment des triangles rectangles.</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="card" id="p4">
+<h2>4. Quel cap suivre ? (le problème de l'examen)</h2>
+<p>On veut aller de <b>A</b> vers une destination : la <b>route fond est imposée</b>. On connaît le courant et la vitesse du bateau. On cherche le <b>cap</b>.</p>
+<div class="ord"><b>Ordre de tracé : ici, on trace le COURANT D'ABORD.</b> ① la route fond depuis A (on ne connaît pas encore sa longueur) ; ② le courant depuis A, sur 1 heure → point K ; ③ un arc de compas centré sur K, de rayon = vitesse du bateau ; ④ il coupe la route au point B ; ⑤ K → B donne le cap.<br><b>Pourquoi le courant d'abord ?</b> C'est la seule flèche connue en entier (direction ET longueur). Celle du bateau a une longueur connue mais une direction inconnue : c'est justement ce qu'on cherche.</div>
+<svg id="s4" viewBox="0 0 400 400"></svg>
+<div class="stepbox" id="st4"></div>
+<div class="btns"><button class="p" id="b4n">Étape suivante ▶</button><button id="b4p">◀ Précédente</button><button id="b4r">Recommencer</button></div>
+<div class="ctl">
+<label><span class="n">Route fond voulue : <b id="r4v"></b></span><input id="r4" type="range" min="0" max="359" value="90"></label>
+<label><span class="n">Vitesse surface : <b id="vs4v"></b></span><input id="vs4" type="range" min="1" max="10" step="0.5" value="6"></label>
+<label><span class="n">Courant porte au : <b id="d4v"></b></span><input id="d4" type="range" min="0" max="359" value="135"></label>
+<label><span class="n">Vitesse courant : <b id="vc4v"></b></span><input id="vc4" type="range" min="0" max="6" step="0.5" value="2"></label>
+</div>
+<div class="key">Le triangle A-K-B n'est pas rectangle. L'astuce (étapes 6 à 8) : on trace la <b>hauteur</b> depuis K jusqu'à la route. Elle coupe le triangle en <b>deux triangles rectangles</b>, et CAH-SOH-TOA s'applique dans chacun. C'est de là que vient la « loi des sinus ».</div>
+</div>
+
+<!-- ============ 5 ============ -->
+<div class="card" id="p5">
+<h2>5. Exemples, du plus facile au plus difficile</h2>
+<p>Lisez l'énoncé et cherchez seul. Puis touchez <b>« Lancer l'animation »</b> : la solution se construit étape par étape dans le schéma, avec tous les calculs.</p>
+
+<div class="ex"><h3><span class="tag t1">FACILE</span>1. Courant perpendiculaire (je connais le cap)</h3>
+<p>Cap 000°, vitesse surface 4 nœuds. Courant portant au 090° à 3 nœuds. Route fond et vitesse fond ?</p>
+<div class="ord">Ordre : bateau (4 traits vers le Nord), puis courant au bout (3 traits vers l'Est), puis on joint.</div>
+<p>Réponse : route fond 037°, vitesse fond 5 nœuds. C'est le seul cas où le triangle est rectangle.</p>
+<div class="btns"><button onclick="load3(0,4,90,3)">Lancer l'animation</button></div></div>
+
+<div class="ex"><h3><span class="tag t1">FACILE</span>2. Courant de biais (je connais le cap)</h3>
+<p>Cap 000°, vitesse surface 5 nœuds. Courant portant au 135° à 2 nœuds. Route fond et vitesse fond ?</p>
+<div class="ord">Ordre : bateau (5 traits vers le Nord), puis courant au bout (2 traits vers le Sud-Est), puis on joint.</div>
+<p>Réponse : route fond 022°, vitesse fond 3,9 nœuds. Ici, le triangle n'est <b>pas</b> rectangle : l'angle au point de jonction vaut 45°.</p>
+<div class="btns"><button onclick="load3(0,5,135,2)">Lancer l'animation</button></div></div>
+
+<div class="ex"><h3><span class="tag t1">FACILE</span>3. Quel cap ? Courant perpendiculaire</h3>
+<p>Route fond voulue 000°. Vitesse surface 5 nœuds. Courant portant au 090° à 3 nœuds. Quel cap ?</p>
+<div class="ord">Ordre : route fond, courant depuis A (3 traits), arc de 5 depuis K, point B, cap K → B.</div>
+<p>Réponse : cap 323°, vitesse fond 4 nœuds.</p>
+<div class="btns"><button onclick="load4(0,5,90,3)">Lancer l'animation</button></div></div>
+
+<div class="ex"><h3><span class="tag t2">MOYEN</span>4. Quel cap ? Courant à 45°</h3>
+<p>Route fond voulue 090°. Vitesse surface 6 nœuds. Courant portant au 135° à 2 nœuds. Quel cap et quelle vitesse fond ?</p>
+<div class="ord">Ordre : route fond, courant depuis A (2 traits), arc de 6 depuis K, point B, cap K → B.</div>
+<p>Réponse : cap 076°, vitesse fond 7,2 nœuds.</p>
+<div class="btns"><button onclick="load4(90,6,135,2)">Lancer l'animation</button></div></div>
+
+<div class="ex"><h3><span class="tag t3">DIFFICILE</span>5. Courant de face de biais, et durée du trajet</h3>
+<p>Route fond voulue 180°, distance 12 milles. Vitesse surface 6 nœuds. Courant portant au 030° à 3 nœuds. Quel cap ? Combien de temps ?</p>
+<div class="ord">Ordre : route fond, courant depuis A (3 traits, il part « vers l'arrière »), arc de 6 depuis K, point B, cap K → B.</div>
+<p>Réponse : cap 194°, vitesse fond 3,2 nœuds, durée 12 ÷ 3,2 ≈ 3 h 44.</p>
+<div class="btns"><button onclick="load4(180,6,30,3,{dist:12})">Lancer l'animation</button></div></div>
+
+<div class="ex"><h3><span class="tag t3">DIFFICILE</span>6. Toute la chaîne jusqu'au cap compas</h3>
+<p>Route fond voulue 045°, distance 20 milles. Vitesse surface 6 nœuds. Courant portant au 300° à 2 nœuds. Vent venant de bâbord, dérive 5°. Déclinaison 2° W. Déviation 3° E. Cap compas ? Durée ?</p>
+<div class="ord">Ordre : d'abord le courant (construction de la partie 4), on obtient la route surface. Ensuite seulement : la dérive, puis la déclinaison et la déviation.</div>
+<p>Réponse : route surface 064°, cap vrai 059°, cap compas 058°, vitesse fond 5,2 nœuds, durée ≈ 3 h 52.</p>
+<div class="btns"><button onclick="load4(45,6,300,2,{dist:20,der:5,D:-2,dev:3})">Lancer l'animation</button></div></div>
+
+<div class="ex"><h3><span class="tag t3">DIFFICILE</span>7. Le piège : le bateau trop lent</h3>
+<p>Route fond voulue 000°. Vitesse surface 4 nœuds. Courant portant au 270° à 5 nœuds. Quel cap ?</p>
+<p>Réponse : impossible. Le courant pousse sur le côté plus vite que le bateau n'avance : l'arc de compas ne touche jamais la route.</p>
+<div class="btns"><button onclick="load4(0,4,270,5)">Lancer l'animation</button></div></div>
+</div>
+
+<!-- ============ 6 ============ -->
+<div class="card" id="p6">
+<h2>6. Résumé</h2>
+<table>
+<tr><th>Situation</th><th>Ordre de tracé</th><th>Contrôle par le calcul</th></tr>
+<tr><td>Je connais le cap, je cherche la route fond</td><td>bateau, puis courant au bout, puis joindre</td><td>Est = Vs sin(cap) + Vc sin(courant)<br>Nord = Vs cos(cap) + Vc cos(courant)<br>Vf = √(Est² + Nord²) ; tan Rf = Est ÷ Nord</td></tr>
+<tr><td>Je connais la route fond, je cherche le cap</td><td>route fond, courant depuis A, arc de rayon Vs, point B, cap K → B</td><td>θ = courant − route fond<br>sin α = Vc sin θ ÷ Vs<br>cap = route fond − α<br>Vf = Vs cos α + Vc cos θ</td></tr>
+</table>
+<div class="key">Après le courant : route surface → (dérive) → cap vrai → (déclinaison) → cap magnétique → (déviation) → cap compas.</div>
+<p class="v">Les formules servent à contrôler le tracé pendant l'entraînement. Vérifiez si la calculatrice est autorisée le jour de l'examen.</p>
+</div>
+</div>
+
+<script>
+const R=Math.PI/180,NS='http://www.w3.org/2000/svg';
+const nrm=a=>((a%360)+360)%360;
+const n3=a=>String(Math.round(nrm(a))%360).padStart(3,'0')+'°';
+const f1=x=>{const v=Math.round(x*10)/10;return (Object.is(v,-0)?0:v).toString().replace('.',',')};
+const f2=x=>{const v=Math.round(x*100)/100;return (Object.is(v,-0)?0:v).toString().replace('.',',')};
+const $=id=>document.getElementById(id);
+function el(svg,tag,a,txt){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;svg.appendChild(e);return e}
+function defs(svg){svg.innerHTML='';const d=el(svg,'defs',{});
+ for(const [id,c] of [['ab','#1565c0'],['ao','#e07a00'],['ag','#1a9c46'],['ak','#14213d'],['ap','#7b3fbf'],['ay','#6b7280']]){
+  const m=document.createElementNS(NS,'marker');for(const [k,v] of Object.entries({id:id+svg.id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:5,markerHeight:5,orient:'auto'}))m.setAttribute(k,v);
+  const p=document.createElementNS(NS,'path');p.setAttribute('d','M0 0L10 5L0 10Z');p.setAttribute('fill',c);m.appendChild(p);d.appendChild(m);}}
+function line(svg,P,Q,c,w=2,dash){el(svg,'line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+// arrow with unit ticks: V = value in units
+function arrow(svg,P,Q,c,id,V,w=4,dash){el(svg,'line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round','marker-end':`url(#${id}${svg.id})`,...(dash?{'stroke-dasharray':dash}:{})});
+ if(V&&V>0){const L=Math.hypot(Q[0]-P[0],Q[1]-P[1]);if(L<1)return;const ux=(Q[0]-P[0])/L,uy=(Q[1]-P[1])/L,u=L/V;
+  for(let i=1;i<=Math.floor(V+1e-9);i++){const x=P[0]+ux*u*i,y=P[1]+uy*u*i;if(i*u>L-3)continue;el(svg,'line',{x1:x-uy*7,y1:y+ux*7,x2:x+uy*7,y2:y-ux*7,stroke:c,'stroke-width':2.2})}}}
+function north(svg,x=372,y=40){el(svg,'line',{x1:x,y1:y+18,x2:x,y2:y-14,stroke:'#14213d','stroke-width':2.5,'marker-end':`url(#ak${svg.id})`});el(svg,'text',{x,y:y-20,'text-anchor':'middle','font-size':13,'font-weight':800},'N')}
+function txt(svg,x,y,t,c='#14213d',anchor='middle',size=13){
+ const e=el(svg,'text',{x,y,'text-anchor':anchor,'font-size':size,'font-weight':800,fill:c,stroke:'#eaf3fb','stroke-width':4,'paint-order':'stroke'},t);return e}
+// small arc between two navigation directions (shortest way), center px
+function arcNav(svg,C,r,z0,z1,c){let d=((z1-z0)%360+540)%360-180;if(Math.abs(d)<0.5)return null;const p=a=>[C[0]+r*Math.sin(a*R),C[1]-r*Math.cos(a*R)];
+ const A=p(z0),B=p(z0+d);el(svg,'path',{d:`M${A[0]} ${A[1]} A${r} ${r} 0 0 ${d>0?1:0} ${B[0]} ${B[1]}`,fill:'none',stroke:c,'stroke-width':2.2});return p(z0+d/2)}
+function rightMark(svg,C,za,zb,s=11){const p=(z,k)=>[C[0]+k*Math.sin(z*R),C[1]-k*Math.cos(z*R)];const a=p(za,s),b=p(zb,s),m=[a[0]+b[0]-C[0],a[1]+b[1]-C[1]];el(svg,'polyline',{points:`${a} ${m} ${b}`,fill:'none',stroke:'#14213d','stroke-width':1.6})}
+const vec=(Z,V)=>[V*Math.sin(Z*R),V*Math.cos(Z*R)];
+const dirOf=(P,Q)=>nrm(Math.atan2(Q[0]-P[0],-(Q[1]-P[1]))/R); // px points → nav angle
+function fit(pts,box=400,pad=48,maxs=46){const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ const s=Math.min(maxs,(box-2*pad)/Math.max(x1-x0,1e-6),(box-2*pad)/Math.max(y1-y0,1e-6));const cx=(x0+x1)/2,cy=(y0+y1)/2;
+ const T=p=>[box/2+(p[0]-cx)*s,box/2-(p[1]-cy)*s];T.s=s;return T}
+
+/* ---------- 0 : cercle ---------- */
+function draw0(){const a=+$('a0').value,r=+$('r0').value;$('a0v').textContent=a+'°';$('r0v').textContent=f1(r);const s=$('s0');defs(s);
+ const C=[200,200],K=140;line(s,[20,200],[380,200],'#9aa7b8',1.5);line(s,[200,20],[200,380],'#9aa7b8',1.5);
+ el(s,'circle',{cx:200,cy:200,r:K,fill:'none',stroke:'#14213d','stroke-width':1.5});
+ const M=[C[0]+K*Math.cos(a*R),C[1]-K*Math.sin(a*R)],H=[M[0],200];
+ const p=t=>[C[0]+38*Math.cos(t*R),C[1]-38*Math.sin(t*R)];if(a>0){const e=p(a);el(s,'path',{d:`M${C[0]+38} 200 A38 38 0 ${a>180?1:0} 0 ${e[0]} ${e[1]}`,fill:'none',stroke:'#14213d','stroke-width':2})}
+ txt(s,C[0]+52*Math.cos(a/2*R),C[1]-52*Math.sin(a/2*R)+4,'a');
+ line(s,C,H,'#1565c0',6);line(s,H,M,'#e07a00',6);line(s,C,M,'#7b3fbf',3);
+ if(Math.abs(Math.cos(a*R))>0.1&&Math.abs(Math.sin(a*R))>0.1){const sx=Math.sign(C[0]-H[0]),sy=Math.sign(M[1]-H[1]);el(s,'polyline',{points:`${H[0]+sx*11},${H[1]} ${H[0]+sx*11},${H[1]+sy*11} ${H[0]},${H[1]+sy*11}`,fill:'none',stroke:'#14213d','stroke-width':1.5})}
+ el(s,'circle',{cx:M[0],cy:M[1],r:6,fill:'#7b3fbf'});txt(s,M[0]+(M[0]>=200?12:-12),M[1]-8,'M','#7b3fbf',M[0]>=200?'start':'end',15);
+ txt(s,190,216,'O','#14213d','end');txt(s,H[0],H[1]+(M[1]<=200?18:-8),'H');
+ txt(s,(C[0]+H[0])/2,200+(M[1]<=200?34:-22),'cos = '+f2(r*Math.cos(a*R)),'#1565c0');
+ txt(s,H[0]+(M[0]>=200?8:-8),(H[1]+M[1])/2,'sin = '+f2(r*Math.sin(a*R)),'#b35f00',M[0]>=200?'start':'end');
+ txt(s,386,194,'0°','#14213d','end');txt(s,206,30,'90°','#14213d','start');txt(s,24,194,'180°','#14213d','start');txt(s,206,378,'270°','#14213d','start');
+ $('o0').innerHTML=`Rayon ${f1(r)}, angle ${a}° → OH = ${f1(r)} × cos ${a}° = <b>${f2(r*Math.cos(a*R))}</b> · HM = ${f1(r)} × sin ${a}° = <b>${f2(r*Math.sin(a*R))}</b><br>Contrôle Pythagore : ${f2(r*Math.cos(a*R))}² + ${f2(r*Math.sin(a*R))}² = ${f2(r*r)} = ${f1(r)}² ✔`}
+['a0','r0'].forEach(i=>$(i).oninput=draw0);draw0();
+
+/* ---------- 1 : triangle rectangle ---------- */
+function draw1(){const a=+$('a1').value;$('a1v').textContent=a+'°';const s=$('s1');defs(s);
+ const H=10,op=H*Math.sin(a*R),ad=H*Math.cos(a*R),k=28;const A=[40,235],B=[40+ad*k,235],C=[40+ad*k,235-op*k];
+ el(s,'polygon',{points:`${A} ${B} ${C}`,fill:'#fff',stroke:'none'});
+ line(s,A,C,'#7b3fbf',5);line(s,A,B,'#1565c0',5);line(s,B,C,'#e07a00',5);
+ el(s,'rect',{x:B[0]-14,y:B[1]-14,width:14,height:14,fill:'none',stroke:'#14213d','stroke-width':1.5});
+ el(s,'path',{d:`M${A[0]+40} ${A[1]} A40 40 0 0 0 ${A[0]+40*Math.cos(a*R)} ${A[1]-40*Math.sin(a*R)}`,fill:'none',stroke:'#14213d','stroke-width':2});
+ txt(s,A[0]+52,A[1]-8,'α','#14213d','start',15);
+ txt(s,(A[0]+B[0])/2,258,'adjacent = '+f1(ad),'#1565c0');
+ txt(s,Math.min(B[0]+8,300),(B[1]+C[1])/2,'opposé = '+f1(op),'#b35f00','start');
+ txt(s,(A[0]+C[0])/2-10,(A[1]+C[1])/2-14,'hypoténuse = 10','#7b3fbf','end');
+ $('o1').innerHTML=`sin ${a}° = ${f1(op)} ÷ 10 = <b>${f2(Math.sin(a*R))}</b> · cos ${a}° = ${f1(ad)} ÷ 10 = <b>${f2(Math.cos(a*R))}</b> · tan ${a}° = ${f1(op)} ÷ ${f1(ad)} = <b>${f2(Math.tan(a*R))}</b>`}
+$('a1').oninput=draw1;draw1();
+
+/* ---------- 2 : nord ---------- */
+let st2=0,tm2=null;const MAX2=7;
+function set2(z,v){$('z2').value=z;$('v2').value=v;st2=0;draw2();$('p2').scrollIntoView({behavior:'smooth'})}
+function draw2(){const Z=+$('z2').value,V=+$('v2').value;$('z2v').textContent=n3(Z);$('v2v').textContent=f1(V);const s=$('s2');defs(s);
+ const k=26,O=[200,200],[E,N]=vec(Z,V),P=[O[0]+E*k,O[1]-N*k],Q=[P[0],O[1]];
+ // grid
+ for(let i=-7;i<=7;i++){line(s,[O[0]+i*k,8],[O[0]+i*k,392],'#d3e2f0',1);line(s,[8,O[1]+i*k],[392,O[1]+i*k],'#d3e2f0',1)}
+ line(s,[8,200],[392,200],'#8796ab',2);line(s,[200,8],[200,392],'#8796ab',2);
+ txt(s,200,18,'NORD (0°)');txt(s,390,193,'EST (90°)','#14213d','end');txt(s,200,394,'SUD (180°)');txt(s,10,193,'OUEST (270°)','#14213d','start');
+ const Zs=Z>180?Z-360:Z;
+ if(st2>=1){const m=arcNav(s,O,40,0,Zs,'#7b3fbf');if(m)txt(s,O[0]+(m[0]-O[0])*1.45,O[1]+(m[1]-O[1])*1.45+4,'Z = '+n3(Z),'#7b3fbf')}
+ if(st2>=1)arrow(s,O,P,'#1565c0','ab',V,4);
+ if(st2>=2){line(s,P,Q,'#14213d',1.5,'5 4');line(s,O,[O[0],P[1]],'#14213d',1.5,'5 4');line(s,[O[0],P[1]],P,'#14213d',1.5,'5 4')}
+ if(st2>=3){el(s,'polygon',{points:`${O} ${[O[0],P[1]]} ${P}`,fill:'#7b3fbf',opacity:.10});
+   if(Math.abs(E)>0.3&&Math.abs(N)>0.3)rightMark(s,[O[0],P[1]],N>=0?180:0,E>=0?90:270,11)}
+ const Q1=(Z<=90),ax=(N>=0?0:180),bet=Math.abs(((Z-ax)%360+540)%360-180);
+ if(st2>=3&&!Q1&&bet>0.5&&bet<89.5){const m=arcNav(s,O,30,ax,ax+(((Z-ax)%360+540)%360-180),'#c62828');if(m)txt(s,O[0]+(m[0]-O[0])*1.8,O[1]+(m[1]-O[1])*1.8+4,'β','#c62828','middle',15)}
+ if(st2>=4){line(s,O,[O[0],P[1]],'#00838f',6);txt(s,O[0]+(E>=0?-8:8),(O[1]+P[1])/2,N>=0?'Nord':'Sud','#006064',E>=0?'end':'start',14)}
+ if(st2>=5){line(s,[O[0],P[1]],P,'#c62828',6);txt(s,(O[0]+P[0])/2,P[1]+(N>=0?-10:20),E>=0?'Est':'Ouest','#b71c1c','middle',14)}
+ if(st2>=6){// ticks on pieces
+   const tk=(A,B,val,c)=>{const n=Math.floor(Math.abs(val)+1e-9),L=Math.hypot(B[0]-A[0],B[1]-A[1]);if(L<1)return;const ux=(B[0]-A[0])/L,uy=(B[1]-A[1])/L;for(let i=1;i<=n;i++){const x=A[0]+ux*k*i,y=A[1]+uy*k*i;line(s,[x-uy*7,y+ux*7],[x+uy*7,y-ux*7],c,2.2)}};
+   tk(O,[O[0],P[1]],N,'#006064');tk([O[0],P[1]],P,E,'#b71c1c');
+   txt(s,O[0]+(E>=0?-8:8),(O[1]+P[1])/2+18,f2(N),'#006064',E>=0?'end':'start',14);txt(s,(O[0]+P[0])/2,P[1]+(N>=0?-26:36),f2(E),'#b71c1c','middle',14)}
+ if(st2>=1)arrow(s,O,P,'#1565c0','ab',V,4);
+ const sz=Math.sin(Z*R),cz=Math.cos(Z*R);
+ const S2=[`<span class="num">Départ.</span> Le quadrillage : 1 carreau = 1 unité. Les angles se comptent depuis le <b>Nord</b>, dans le sens des aiguilles d'une montre. Touchez « Étape suivante ».`,
+ `<span class="num">Étape 1 — la flèche.</span> Cap ${n3(Z)}, longueur ${f1(V)} : elle porte <b>${Math.floor(V+1e-9)} traits</b>, un par unité. L'angle Z (violet) part de l'axe Nord et tourne jusqu'à la flèche.`,
+ `<span class="num">Étape 2 — on projette.</span> Depuis la pointe de la flèche, on descend (ou monte) tout droit jusqu'à l'axe, et on va de côté jusqu'à l'axe Nord-Sud (pointillés). C'est comme lire les coordonnées d'un point sur un plan de ville.`,
+ Q1?`<span class="num">Étape 3 — un triangle rectangle apparaît.</span> La flèche, le morceau vertical (le long de l'axe Nord) et le morceau horizontal forment un triangle avec un angle droit. L'angle Z est collé à l'axe Nord : c'est l'angle de ce triangle au point de départ.`:`<span class="num">Étape 3 — un triangle rectangle apparaît.</span> La flèche et ses deux morceaux forment un triangle avec un angle droit. <b>Attention :</b> ici le cap dépasse 090°, donc l'angle du triangle au départ n'est pas Z. C'est l'écart <b style="color:#c62828">β</b> entre la flèche et l'axe ${N>=0?'Nord':'Sud'} : β = ${Math.round(bet)}°.`,
+ Q1?`<span class="num">Étape 4 — le morceau NORD (bleu-vert).</span> Il touche l'angle Z : c'est le côté <b>ADJACENT</b>. Donc cos Z = Nord ÷ V, et en multipliant par V : <b>Nord = V × cos Z</b>.`:`<span class="num">Étape 4 — le morceau ${N>=0?'NORD':'SUD'} (bleu-vert).</span> Il touche l'angle β : c'est le côté <b>ADJACENT</b>. Sa longueur = V × cos β = ${f1(V)} × cos ${Math.round(bet)}° = ${f2(Math.abs(N))}. La calculatrice avec le cap donne directement V × cos Z = ${f1(V)} × cos ${n3(Z)} = <b>${f2(N)}</b> : le même nombre, ${N<0?'avec le signe − qui veut dire « vers le Sud »':'positif : vers le Nord'}. <b>Pourquoi ?</b> Voir « le miroir et les angles supplémentaires » juste en dessous.`,
+ Q1?`<span class="num">Étape 5 — le morceau EST (rouge).</span> Il est en face de l'angle Z : c'est le côté <b>OPPOSÉ</b>. Donc sin Z = Est ÷ V, et en multipliant par V : <b>Est = V × sin Z</b>.`:`<span class="num">Étape 5 — le morceau ${E>=0?'EST':'OUEST'} (rouge).</span> Il est en face de β : c'est le côté <b>OPPOSÉ</b>. Sa longueur = V × sin β = ${f1(V)} × sin ${Math.round(bet)}° = ${f2(Math.abs(E))}. Avec le cap : V × sin Z = ${f1(V)} × sin ${n3(Z)} = <b>${f2(E)}</b>, ${E<0?'avec le signe − qui veut dire « vers l\'Ouest »':'positif : vers l\'Est'}. <b>Conclusion :</b> en tapant directement le cap Z dans la calculatrice, on obtient la bonne longueur ET le bon sens.`,
+ `<span class="num">Étape 6 — on compte les carreaux.</span> Est = ${f1(V)} × sin ${n3(Z)} = ${f1(V)} × ${f2(sz)} = <b>${f2(E)}</b> · Nord = ${f1(V)} × cos ${n3(Z)} = ${f1(V)} × ${f2(cz)} = <b>${f2(N)}</b>. Vérifiez sur le quadrillage : environ ${f1(Math.abs(E))} carreaux ${E>=0?'vers l\'Est':'vers l\'Ouest'} et ${f1(Math.abs(N))} ${N>=0?'vers le Nord':'vers le Sud'}.`,
+ `<span class="num">Étape 7 — contrôle avec Pythagore.</span> ${E<0?'('+f2(E)+')':f2(E)}² + ${N<0?'('+f2(N)+')':f2(N)}² = ${f2(E*E+N*N)} et √${f2(E*E+N*N)} = ${f2(Math.hypot(E,N))} = la longueur de la flèche ✔. ${E<-0.005||N<-0.005?'Un morceau négatif veut dire : '+(E<-0.005?'vers l\'Ouest ':'')+(E<-0.005&&N<-0.005?'et ':'')+(N<-0.005?'vers le Sud':'')+'.':'Les deux morceaux sont positifs : vers l\'Est et vers le Nord.'} Essayez les boutons 130°, 220°, 310° pour voir les signes changer.`];
+ $('st2').innerHTML=S2[st2];
+ $('o2').innerHTML=`Est = ${f1(V)} × sin ${n3(Z)} = ${f1(V)} × ${f2(sz)} = <b>${f2(E)}</b>${E<-0.005?' (vers l\'Ouest)':''}<br>Nord = ${f1(V)} × cos ${n3(Z)} = ${f1(V)} × ${f2(cz)} = <b>${f2(N)}</b>${N<-0.005?' (vers le Sud)':''}`}
+['z2','v2'].forEach(i=>$(i).oninput=draw2);
+$('b2n').onclick=()=>{st2=Math.min(st2+1,MAX2);draw2()};$('b2p').onclick=()=>{st2=Math.max(st2-1,0);draw2()};$('b2r').onclick=()=>{clearInterval(tm2);st2=0;draw2()};
+$('b2a').onclick=()=>{clearInterval(tm2);st2=0;draw2();tm2=setInterval(()=>{if(st2>=MAX2){clearInterval(tm2);return}st2++;draw2()},2200)};
+draw2();
+
+
+/* ---------- 2b : miroir ---------- */
+function setb(z){$('z2b').value=z;drawb()}
+function drawb(){const Z=+$('z2b').value;$('z2bv').textContent=n3(Z);const s=$('s2b');defs(s);const V=5,k=30,O=[200,200];
+ for(let i=-6;i<=6;i++){line(s,[O[0]+i*k,20],[O[0]+i*k,380],'#d3e2f0',1);line(s,[20,O[1]+i*k],[380,O[1]+i*k],'#d3e2f0',1)}
+ line(s,[14,200],[386,200],'#8796ab',2);line(s,[200,14],[200,386],'#8796ab',2);
+ txt(s,200,12,'N');txt(s,392,204,'E','#14213d','end');txt(s,200,398,'S');txt(s,8,204,'W','#14213d','start');
+ const q=Z<90?1:Z<180?2:Z<270?3:4;const b=q==1?Z:q==2?180-Z:q==3?Z-180:360-Z;
+ const [E,N]=vec(Z,V),[Eb,Nb]=vec(b,V);const P=[O[0]+E*k,O[1]-N*k],Pb=[O[0]+Eb*k,O[1]-Nb*k];
+ // mirror lines
+ if(q==2)line(s,[20,200],[380,200],'#c62828',3,'10 6');if(q==4)line(s,[200,20],[200,380],'#c62828',3,'10 6');
+ if(q==3)el(s,'circle',{cx:200,cy:200,r:7,fill:'none',stroke:'#c62828','stroke-width':3});
+ // reflet
+ if(q!=1){line(s,Pb,[Pb[0],200],'#9aa7b8',1.5,'4 4');line(s,Pb,[200,Pb[1]],'#9aa7b8',1.5,'4 4');arrow(s,O,Pb,'#6b7280','ay',V,3,'7 5');
+   const m=arcNav(s,O,34,0,b,'#6b7280');if(m)txt(s,O[0]+(m[0]-O[0])*1.6,O[1]+(m[1]-O[1])*1.6+4,'β='+Math.round(b)+'°','#4b5563')}
+ // vrai
+ line(s,P,[P[0],200],'#9aa7b8',1.5,'4 4');line(s,O,[200,P[1]],'#00838f',5);line(s,[200,P[1]],P,'#c62828',5);
+ arrow(s,O,P,'#1565c0','ab',V,4);
+ const m2=arcNav(s,O,52,0,Z>180?Z-360:Z,'#7b3fbf');if(m2)txt(s,O[0]+(m2[0]-O[0])*1.4,O[1]+(m2[1]-O[1])*1.4+4,'Z='+n3(Z),'#7b3fbf');
+ const sb=Math.sin(b*R),cb=Math.cos(b*R),sz=Math.sin(Z*R),cz=Math.cos(Z*R);
+ const why={1:`Cap entre 000° et 090° : la flèche est déjà dans le premier quart. β = Z = ${Math.round(Z)}°. Pas de miroir, tout est positif.`,
+ 2:`Cap entre 090° et 180° : on retourne la flèche <b>par l'axe Est-Ouest</b> (ligne rouge), comme dans un miroir posé à plat. Elle devient la flèche grise à <b>β = 180° − ${Math.round(Z)}° = ${Math.round(b)}°</b> (Z et β sont supplémentaires). Le morceau <b>Est ne bouge pas</b> : sin ${n3(Z)} = sin ${Math.round(b)}° = ${f2(sb)}. Le morceau Nord <b>change de côté</b> (il passe au Sud) : cos ${n3(Z)} = − cos ${Math.round(b)}° = ${f2(cz)}.`,
+ 3:`Cap entre 180° et 270° : on fait faire un <b>demi-tour</b> à la flèche autour du centre (cercle rouge). Elle devient la flèche grise à <b>β = ${Math.round(Z)}° − 180° = ${Math.round(b)}°</b>. Les <b>deux morceaux changent de côté</b> : sin ${n3(Z)} = − sin ${Math.round(b)}° = ${f2(sz)} (Ouest) et cos ${n3(Z)} = − cos ${Math.round(b)}° = ${f2(cz)} (Sud).`,
+ 4:`Cap entre 270° et 360° : on retourne la flèche <b>par l'axe Nord-Sud</b> (ligne rouge). Elle devient la flèche grise à <b>β = 360° − ${Math.round(Z)}° = ${Math.round(b)}°</b>. Le morceau <b>Nord ne bouge pas</b> : cos ${n3(Z)} = cos ${Math.round(b)}° = ${f2(cz)}. Le morceau Est <b>change de côté</b> (il passe à l'Ouest) : sin ${n3(Z)} = − sin ${Math.round(b)}° = ${f2(sz)}.`};
+ $('o2b').innerHTML=why[q]+`<br><b>Résultat pour 5 nœuds :</b> Est = 5 × ${f2(sz)} = ${f2(5*sz)} · Nord = 5 × ${f2(cz)} = ${f2(5*cz)}.`}
+$('z2b').oninput=drawb;drawb();
+/* ---------- 3 : direct ---------- */
+let st3=0;const MAX3=8;
+function draw3(){const C=+$('c3').value,Vs=+$('vs3').value,D=+$('d3').value,Vc=+$('vc3').value;
+ $('c3v').textContent=n3(C);$('vs3v').textContent=f1(Vs)+' nd';$('d3v').textContent=n3(D);$('vc3v').textContent=f1(Vc)+' nd';
+ const s=$('s3');defs(s);north(s);const a=vec(C,Vs),c=vec(D,Vc),b=[a[0]+c[0],a[1]+c[1]];const T=fit([[0,0],a,b,[0,b[1]],[b[0],0],[a[0],0],[a[0]+c[0],a[1]]]);
+ const O=T([0,0]),A=T(a),B=T(b);const Vf=Math.hypot(b[0],b[1]),Rf=nrm(Math.atan2(b[0],b[1])/R);
+ const join=180-Math.abs(((D-C)%360+540)%360-180); // interior angle at junction
+ el(s,'circle',{cx:O[0],cy:O[1],r:5,fill:'#14213d'});txt(s,O[0]-10,O[1]+16,'A','#14213d','end',15);
+ if(st3>=1){line(s,O,[O[0],O[1]-62],'#14213d',1.6,'5 4');txt(s,O[0],O[1]-68,'N','#14213d');const m=arcNav(s,O,44,0,C>180?C-360:C,'#1565c0');if(m)txt(s,O[0]+(m[0]-O[0])*1.3+10,O[1]+(m[1]-O[1])*1.3+12,'cap '+n3(C),'#1565c0','start')}
+ if(st3>=1)arrow(s,O,A,'#1565c0','ab',Vs,5);
+ if(st3>=2&&Vc>0){arrow(s,A,B,'#e07a00','ao',Vc,5);
+   if(st3==2){line(s,A,[A[0],A[1]-60],'#14213d',1.6,'5 4');txt(s,A[0],A[1]-66,'N','#14213d');
+     const ex=[A[0]+(A[0]-O[0])*0.35,A[1]+(A[1]-O[1])*0.35];line(s,A,ex,'#1565c0',1.6,'3 4');
+     const m3=arcNav(s,A,34,C,D,'#1565c0');if(m3)txt(s,A[0]+(m3[0]-A[0])*1.0+10,A[1]+(m3[1]-A[1])*1.0+14,Math.round(180-join)+'°','#1565c0','start');
+     const m1=arcNav(s,A,46,0,D>180?D-360:D,'#e07a00');if(m1)txt(s,A[0]+(m1[0]-A[0])*1.15+14,A[1]+(m1[1]-A[1])*1.15-16,'courant '+n3(D),'#b35f00','start')}
+   if(Math.abs(join-90)<0.6)rightMark(s,A,C+180,D,12);else{const m=arcNav(s,A,24,C+180,D,'#7b3fbf');if(m)txt(s,A[0]+(m[0]-A[0])*1.9,A[1]+(m[1]-A[1])*1.9+4,Math.round(join)+'°','#7b3fbf')}}
+ if(st3>=3)arrow(s,O,B,'#1a9c46','ag',Vf,5);
+ const E1=a[0],N1=a[1],E2=c[0],N2=c[1];
+ const P1=T([E1,0]),P2=T([E1,N1]),P3=T([E1+E2,N1]);
+ if(st3>=4&&st3<=5){line(s,O,P1,'#c62828',5);line(s,P1,P2,'#00838f',5);txt(s,(O[0]+P1[0])/2,O[1]+(N1>=0?20:-10),'E1 = '+f2(E1),'#b71c1c');txt(s,P1[0]+(E1>=0?8:-8),P2[1]+(P1[1]-P2[1])*0.82,'N1 = '+f2(N1),'#006064',E1>=0?'start':'end')}
+ if(st3>=5&&st3<=5&&Vc>0){line(s,A,P3,'#c62828',5,'3 3');line(s,P3,B,'#00838f',5,'3 3');txt(s,(A[0]+P3[0])/2,A[1]-10,'E2 = '+f2(E2),'#b71c1c');txt(s,P3[0]+8,(P3[1]+B[1])/2+4,'N2 = '+f2(N2),'#006064','start')}
+ if(st3>=6){line(s,O,P1,'#c62828',5);line(s,P1,P2,'#00838f',5);line(s,P2,P3,'#c62828',5,'3 3');line(s,P3,B,'#00838f',5,'3 3');
+   txt(s,(O[0]+P1[0])/2,O[1]+(N1>=0?20:-10),'E1 = '+f2(E1),'#b71c1c');txt(s,P1[0]+(E1>=0?8:-8),P2[1]+(P1[1]-P2[1])*0.82,'N1 = '+f2(N1),'#006064',E1>=0?'start':'end');
+   txt(s,(P2[0]+P3[0])/2,P2[1]-10,'E2 = '+f2(E2),'#b71c1c');txt(s,P3[0]+8,(P3[1]+B[1])/2+4,'N2 = '+f2(N2),'#006064','start')}
+ if(st3>=7){const Bx=T([b[0],0]);line(s,O,Bx,'#b71c1c',2.5,'8 5');line(s,Bx,B,'#006064',2.5,'8 5');
+   txt(s,(O[0]+Bx[0])/2,O[1]+36,'Est total '+f2(b[0]),'#b71c1c');txt(s,Bx[0]+(b[0]>=0?8:-8),B[1]+(Bx[1]-B[1])*0.35,'Nord total '+f2(b[1]),'#006064',b[0]>=0?'start':'end')}
+ if(st3>=8){const m=arcNav(s,O,36,0,Rf>180?Rf-360:Rf,'#1a9c46');if(m)txt(s,O[0]+(m[0]-O[0])*1.6,O[1]+(m[1]-O[1])*1.6+4,n3(Rf),'#137a37')}
+ const sb=$('s3b');sb.style.display=st3>=6?'block':'none';
+ if(st3>=6){defs(sb);const mx=Math.max(Math.abs(E1)+Math.abs(E2),Math.abs(N1)+Math.abs(N2),Math.abs(b[0]),Math.abs(b[1]),1);const kk=125/mx,X0=200;
+  const bar=(y,lab,v1,v2,tot,c1,c2,neg,pos)=>{txt(sb,8,y-26,lab,'#14213d','start',14);line(sb,[30,y],[370,y],'#9aa7b8',1.5);line(sb,[X0,y-12],[X0,y+12],'#14213d',2);
+   txt(sb,X0-6,y+26,'0','#14213d','end');txt(sb,34,y+26,neg,'#5b6577','start',12);txt(sb,366,y+26,pos,'#5b6577','end',12);
+   const x1=X0+v1*kk,x2=x1+v2*kk;line(sb,[X0,y-8],[x1,y-8],c1,7);line(sb,[x1,y-14],[x1,y+14],'#14213d',1.2,'2 2');line(sb,[x1,y+8],[x2,y+8],c2,7);
+   txt(sb,(X0+x1)/2,y-18,'bateau '+(v1>=0?'+':'')+f2(v1),c1);txt(sb,(x1+x2)/2,y+28,'courant '+(v2>=0?'+':'')+f2(v2),c2);
+   el(sb,'circle',{cx:x2,cy:y+8,r:6,fill:'#14213d'});txt(sb,Math.min(Math.max(x2,40),360),y-36,'total = '+f2(tot),'#14213d','middle',15)};
+  bar(78,'EST : bateau puis courant',E1,E2,b[0],'#c62828','#b71c1c','← Ouest','Est →');
+  bar(182,'NORD : bateau puis courant',N1,N2,b[1],'#00838f','#006064','← Sud','Nord →')}
+ const T3=[`<span class="num">Départ.</span> Le point A est le départ. Touchez « Étape suivante ».`,
+ `<span class="num">Étape 1 — le bateau.</span> Depuis A, tracez le cap ${n3(C)} et reportez ${f1(Vs)} unités (${Math.floor(Vs+1e-9)} traits) : c'est ce que le bateau fait sur l'eau en 1 heure.`,
+ `<span class="num">Étape 2 — le courant, au bout de la flèche bleue.</span> Direction ${n3(D)}, ${f1(Vc)} unités (${Math.floor(Vc+1e-9)} traits). <b>Comment on trouve l'angle violet de ${Math.round(join)}° :</b> au bout de la flèche bleue, on retrace un Nord (pointillés). ① Le bateau va au ${n3(C)}, le courant au ${n3(D)} : leurs directions s'écartent de ${Math.round(180-join)}° (prolongez la flèche bleue : pointillés bleus). ② L'angle À L'INTÉRIEUR du triangle est ce qui reste pour faire un demi-tour : 180° − ${Math.round(180-join)}° = <b>${Math.round(join)}°</b>. ${Math.abs(join-90)<0.6?'Ici 90° : triangle <b>rectangle</b> (cas rare).':'Ce n\'est pas 90° : triangle <b>pas rectangle</b>.'}`,
+ `<span class="num">Étape 3 — on joint A à l'arrivée.</span> La flèche verte est la route fond. Sur la carte, on mesure sa direction au rapporteur et sa longueur à l'échelle des latitudes.`,
+ `<span class="num">Étape 4 — on découpe la flèche du BATEAU.</span> Comme en partie 2 : en 1 heure, le bateau va de <b>E1</b> = ${f1(Vs)} × sin ${n3(C)} = <b>${f2(E1)}</b> vers l'Est (trait <b style="color:#c62828">rouge</b> horizontal, en bas, qui part de A) et de <b>N1</b> = ${f1(Vs)} × cos ${n3(C)} = <b>${f2(N1)}</b> vers le Nord (trait <b style="color:#00838f">bleu-vert</b> vertical). E1 et N1 sont notés sur le dessin.`,
+ `<span class="num">Étape 5 — on découpe la flèche du COURANT.</span> Pendant la même heure, l'eau emmène le bateau de E2 = ${f1(Vc)} × sin ${n3(D)} = <b>${f2(E2)}</b> vers l'Est et de N2 = ${f1(Vc)} × cos ${n3(D)} = <b>${f2(N2)}</b> vers le Nord${N2<0?' (négatif : il ramène vers le Sud)':''} (pointillés).`,
+ `<span class="num">Étape 6 — on met les morceaux bout à bout.</span> Pour aller de A à l'arrivée, on peut faire : E1 vers l'Est, N1 vers le Nord, puis E2 vers l'Est, N2 vers le Nord. C'est un escalier qui arrive exactement au même point que les deux flèches. Les deux règles graduées sous le schéma montrent ces morceaux posés bout à bout. <b>C'est comme marcher dans une ville en damier</b> : 3 rues vers l'Est, puis encore 1 rue vers l'Est, ça fait 4 rues vers l'Est au total.`,
+ `<span class="num">Étape 7 — on ADDITIONNE.</span> Tous les déplacements vers l'Est s'ajoutent : Est total = E1 + E2 = ${f2(E1)} + ${f2(E2)} = <b>${f2(b[0])}</b>. Tous les déplacements vers le Nord s'ajoutent : Nord total = N1 + N2 = ${f2(N1)} + ${f2(N2)} = <b>${f2(b[1])}</b>${N2<0?' (le courant « reprend » une partie du Nord)':''}. Ces deux totaux et la flèche verte forment un <b>triangle rectangle</b> (grands pointillés).`,
+ `<span class="num">Étape 8 — résultat avec Pythagore.</span> Vitesse fond = √(${f2(b[0])}² + ${f2(b[1])}²) = <b>${f1(Vf)} nœuds</b>. tan(route fond) = ${f2(b[0])} ÷ ${f2(b[1])} → route fond <b>${n3(Rf)}</b>.`];
+ $('st3').innerHTML=T3[st3]}
+['c3','vs3','d3','vc3'].forEach(i=>$(i).oninput=draw3);
+$('b3n').onclick=()=>{st3=Math.min(st3+1,MAX3);draw3()};$('b3p').onclick=()=>{st3=Math.max(st3-1,0);draw3()};$('b3r').onclick=()=>{st3=0;draw3()};
+draw3();
+function load3(c,vs,d,vc){$('c3').value=c;$('vs3').value=vs;$('d3').value=d;$('vc3').value=vc;st3=0;draw3();$('p3').scrollIntoView({behavior:'smooth'})}
+
+/* ---------- 4 : quel cap ---------- */
+let st4=0,X4={};
+function solve4(Rf,Vs,D,Vc){const t=(D-Rf)*R;const x=Vc*Math.sin(t)/Vs;if(Math.abs(x)>1)return null;const al=Math.asin(x)/R;const Vf=Vs*Math.cos(al*R)+Vc*Math.cos(t);if(Vf<=0.05)return null;return{al,Cs:nrm(Rf-al),Vf}}
+function max4(){return 9+(X4.dist?1:0)+(X4.der!==undefined?2:0)}
+function draw4(){const Rf=+$('r4').value,Vs=+$('vs4').value,D=+$('d4').value,Vc=+$('vc4').value;
+ $('r4v').textContent=n3(Rf);$('vs4v').textContent=f1(Vs)+' nd';$('d4v').textContent=n3(D);$('vc4v').textContent=f1(Vc)+' nd';
+ const s=$('s4');defs(s);north(s);const S=solve4(Rf,Vs,D,Vc);const k=vec(D,Vc),u=vec(Rf,1);
+ const th=((D-Rf)%360+540)%360-180, dproj=Vc*Math.cos(th*R), h=Vc*Math.sin(th*R);
+ const L=S?S.Vf:Math.max(Vs,Vc)+1;const b=[u[0]*L,u[1]*L];const ext=[u[0]*(L+1.5),u[1]*(L+1.5)];const Hp=[u[0]*dproj,u[1]*dproj];
+ const T=fit([[0,0],k,b,ext,Hp],400,52);const A=T([0,0]),K=T(k),B=T(b),X=T(ext),H=T(Hp);const sc=T.s;
+ el(s,'circle',{cx:A[0],cy:A[1],r:5,fill:'#14213d'});
+ // label A away from route
+ txt(s,A[0]-u[0]*16,A[1]+u[1]*16+5,'A','#14213d','middle',15);
+ if(st4>=1)line(s,A,X,'#1a9c46',2.5,'8 6');
+ if(st4>=1){const sd=h>0?1:-1,Lp=T([u[0]*(L+0.9),u[1]*(L+0.9)]);txt(s,Lp[0]-sd*u[1]*22,Lp[1]-sd*u[0]*22+4,'route '+n3(Rf),'#137a37')}
+ if(st4>=2&&Vc>0){arrow(s,A,K,'#e07a00','ao',Vc,5);txt(s,K[0]+(k[0]>=0?10:-10),K[1]-8,'K','#b35f00',k[0]>=0?'start':'end',15);
+   const m=arcNav(s,A,30,Rf,D,'#b35f00');if(m)txt(s,A[0]+(m[0]-A[0])*1.7,A[1]+(m[1]-A[1])*1.7+4,'θ','#b35f00','middle',15)}
+ if(st4>=3)el(s,'circle',{cx:K[0],cy:K[1],r:Vs*sc,fill:'none',stroke:'#7b3fbf','stroke-width':2,'stroke-dasharray':'4 5'});
+ if(st4>=4&&S){el(s,'circle',{cx:B[0],cy:B[1],r:6,fill:'#1a9c46'});txt(s,B[0]+u[1]*16,B[1]+u[0]*16+5,'B','#137a37','middle',15);arrow(s,A,B,'#1a9c46','ag',S.Vf,5)}
+ if(st4>=5&&S){arrow(s,K,B,'#1565c0','ab',Vs,5);const m=arcNav(s,B,30,Rf+180,S.Cs+180,'#1565c0');if(m)txt(s,B[0]+(m[0]-B[0])*1.8,B[1]+(m[1]-B[1])*1.8+4,'α','#1565c0','middle',15)}
+ if(st4>=6&&S&&Math.abs(h)>0.05){line(s,K,H,'#14213d',2.2,'5 4');rightMark(s,H,dirOf(H,K),Rf,10);
+   el(s,'circle',{cx:H[0],cy:H[1],r:4,fill:'#14213d'});const dk=Math.hypot(K[0]-H[0],K[1]-H[1])||1;
+   txt(s,H[0]-(K[0]-H[0])/dk*16,H[1]-(K[1]-H[1])/dk*16+5,'H','#14213d','middle',14);
+   txt(s,(K[0]+H[0])/2+8,(K[1]+H[1])/2,'h','#14213d','start',15)}
+ const ex=X4.der!==undefined;let txtCh='';
+ const iD=10+(X4.dist?1:0);
+ if(ex&&S&&st4>=iD){const Cv=nrm(S.Cs-X4.der);const p=T([k[0]+Vs*0.75*Math.sin(Cv*R),k[1]+Vs*0.75*Math.cos(Cv*R)]);arrow(s,K,p,'#7b3fbf','ap',0,3,'7 5');txt(s,p[0]+8,p[1],'Cv '+n3(Cv),'#7b3fbf','start')}
+ if(ex&&S&&st4>=iD+1){const Cv=nrm(S.Cs-X4.der),Cc=nrm(Cv-X4.D-X4.dev);const p=T([k[0]+Vs*0.55*Math.sin(Cc*R),k[1]+Vs*0.55*Math.cos(Cc*R)]);arrow(s,K,p,'#6b7280','ay',0,3,'3 4');txt(s,p[0]+8,p[1]+14,'Cc '+n3(Cc),'#4b5563','start')}
+ const S4=[`<span class="num">Départ.</span> A est le point de départ. On veut suivre la route fond ${n3(Rf)}. Touchez « Étape suivante ».`,
+ `<span class="num">Étape 1 — la route fond.</span> Depuis A, tracez une ligne au ${n3(Rf)} (pointillés verts). On ne connaît pas encore jusqu'où le bateau ira en 1 heure.`,
+ `<span class="num">Étape 2 — le courant D'ABORD, depuis A.</span> Direction ${n3(D)}, ${f1(Vc)} unités (${Math.floor(Vc+1e-9)} traits) → point K. L'angle θ entre la route et le courant vaut ${f1(Math.abs(th))}°.`,
+ `<span class="num">Étape 3 — le compas.</span> Pointe sur K, ouverture = vitesse du bateau = ${f1(Vs)} unités (lue sur l'échelle des latitudes). Tracez l'arc.`,
+ S?`<span class="num">Étape 4 — le point B.</span> L'arc coupe la route en B. La flèche verte A → B est ce que le bateau fait sur le fond en 1 heure : sa longueur est la vitesse fond.`:`<span class="num">Étape 4 —</span> <b style="color:#c62828">l'arc ne coupe pas la route fond : IMPOSSIBLE.</b> Le courant pousse sur le côté plus vite que le bateau n'avance (${f1(Math.abs(h))} contre ${f1(Vs)}). On ne peut pas tenir cette route.`,
+ S?`<span class="num">Étape 5 — le cap.</span> Tracez K → B (flèche bleue, ${Math.floor(Vs+1e-9)} traits). Sa direction, mesurée au rapporteur, est le cap surface à suivre. L'angle α entre la route et ce cap est la correction.`:`Pas de solution.`,
+ S?`<span class="num">Étape 6 — contrôle : la hauteur h.</span> Depuis K, tracez la perpendiculaire à la route (pointillés noirs) → point H. Le triangle A-K-B (pas rectangle) est coupé en deux triangles rectangles : A-K-H et B-K-H.`:`Pas de solution.`,
+ S?`<span class="num">Étape 7 — dans les deux triangles rectangles.</span> Dans A-K-H : h = Vc × sin θ = ${f1(Vc)} × ${f2(Math.sin(Math.abs(th)*R))} = ${f2(Math.abs(h))}. Dans B-K-H : h = Vs × sin α. Même hauteur, donc : <b>Vs × sin α = Vc × sin θ</b>.`:`Pas de solution.`,
+ S?`<span class="num">Étape 8 — l'angle α.</span> sin α = Vc × sin θ ÷ Vs = ${f2(Math.abs(h))} ÷ ${f1(Vs)} = ${f2(Math.abs(h)/Vs)} → α = <b>${f1(Math.abs(S.al))}°</b>. On corrige vers le côté d'où vient le courant : cap = ${n3(Rf)} ${S.al>=0?'−':'+'} ${f1(Math.abs(S.al))}° = <b>${n3(S.Cs)}</b>.`:`Pas de solution.`,
+ S?`<span class="num">Étape 9 — la vitesse fond.</span> A-B = A-H + H-B = Vc × cos θ + Vs × cos α = ${f2(dproj)} + ${f2(Vs*Math.cos(S.al*R))} = <b>${f1(S.Vf)} nœuds</b>.${dproj<0?' (A-H est négatif : le courant freine.)':''}`:`Pas de solution.`];
+ if(X4.dist&&S)S4.push(`<span class="num">Étape 10 — la durée.</span> Durée = distance ÷ vitesse fond = ${X4.dist} ÷ ${f2(S.Vf)} = ${f2(X4.dist/S.Vf)} h = <b>${Math.floor(X4.dist/S.Vf)} h ${String(Math.round((X4.dist/S.Vf%1)*60)).padStart(2,'0')}</b>.`);
+ if(ex&&S){const Rs=Math.round(S.Cs),Cv=nrm(Rs-X4.der),Cc=nrm(Cv-X4.D-X4.dev);
+  S4.push(`<span class="num">Étape ${S4.length} — la dérive.</span> Le cap trouvé est la route surface Rs = ${n3(Rs)}. Vent venant de bâbord : dérive = +${X4.der}°. Rs = Cv + dérive → Cv = ${n3(Rs)} − ${X4.der} = <b>${n3(Cv)}</b> (flèche violette).`);
+  S4.push(`<span class="num">Étape ${S4.length} — déclinaison et déviation.</span> Cc = Cv − D − dév = ${n3(Cv)} − (${X4.D}) − (${X4.dev>0?'+':''}${X4.dev}) = <b>${n3(Cc)}</b> : c'est le cap à afficher au compas (flèche grise).`)}
+ if(!X4.dist&&ex){}
+ if(!S)S4.length=5;
+ st4=Math.min(st4,S4.length-1);$('st4').innerHTML=S4[st4];$('b4n').disabled=st4>=S4.length-1}
+['r4','vs4','d4','vc4'].forEach(i=>$(i).oninput=()=>{X4={};draw4()});
+$('b4n').onclick=()=>{st4++;draw4()};$('b4p').onclick=()=>{st4=Math.max(st4-1,0);draw4()};$('b4r').onclick=()=>{st4=0;draw4()};
+function load4(r,vs,d,vc,x){$('r4').value=r;$('vs4').value=vs;$('d4').value=d;$('vc4').value=vc;X4=x||{};st4=0;draw4();$('p4').scrollIntoView({behavior:'smooth'})}
+draw4();
+</script>
+</body></html>

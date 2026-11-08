@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hauturier hors carte</title>
+<style>
+:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--acc2:#e3eef7;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--acc2:#16283a;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--acc2:#16283a;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:max(10px,env(safe-area-inset-top)) 16px 40px}
+.back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:var(--bg);color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.w{max-width:680px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:23px;margin:4px 0 6px}h2{font-size:20px;margin:0 0 8px}h3{font-size:17px;margin:14px 0 6px;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.tabs button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 13px system-ui;cursor:pointer;padding:4px}
+.tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 15px system-ui;cursor:pointer;padding:8px 14px}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{flex:1}
+.mute{color:var(--mute);font-size:14px}
+.bar{height:9px;background:var(--line);border-radius:5px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:9px;background:var(--accent)}
+.qq{font-size:19px;font-weight:700;margin:10px 0}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;min-height:54px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:500 16px/1.35 system-ui;padding:9px 12px;cursor:pointer}
+.opts button.good{background:var(--okbg);border-color:var(--ok)}.opts button.bad{background:var(--kobg);border-color:var(--ko)}.opts button.sel{border-color:var(--accent);background:var(--acc2)}
+.exp{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:16px}
+.src{font-size:13px;color:var(--mute);margin-top:6px}
+.res{font-size:28px;font-weight:900;text-align:center;margin:6px 0;border-radius:14px;padding:12px}
+.res.ok{background:var(--okbg);color:var(--ok)}.res.ko{background:var(--kobg);color:var(--ko)}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:7px 5px;text-align:left;vertical-align:top}th{color:var(--mute);font-size:13px}
+.rev{border-left:4px solid var(--line);padding:8px 10px;margin:8px 0;background:var(--bg);border-radius:0 10px 10px 0;font-size:15px}
+.rev.k{border-color:var(--ko)}.rev.o{border-color:var(--ok)}.rev small{display:block;color:var(--mute);margin-top:4px}
+.rule{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;font-size:15px;margin:10px 0}
+.okc{color:var(--ok);font-weight:800}.koc{color:var(--ko);font-weight:800}
+ul,ol{padding-left:22px}li{margin:4px 0}
+input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.dz td:first-child{font-weight:800;width:42%}
+</style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
+<div class="v">Hauturier hors carte · version 1.0 · cours (aides électroniques et radio, météo, sécurité, marée), 3 QCM de 30 questions, 3 examens blancs, statistiques</div>
+<h1>Hauturier : tout ce qui n'est pas la carte</h1>
+<div class="tabs" id="tabs"><button data-t="regles" class="on">Conditions</button><button data-t="cours">Cours</button><button data-t="gps">QCM GPS-radio</button><button data-t="meteo">QCM Météo</button><button data-t="secu">QCM Sécurité</button><button data-t="blanc">Examens blancs</button><button data-t="stats">Statistiques</button></div>
+<section id="v-regles">
+<div class="card"><h2>Conditions de réussite</h2>
+<p>Épreuve unique de <b>1 h 30</b>, sur la carte spéciale <b>SHOM 9999</b> (arrêté du 28/09/2007, article 4).</p>
+<table><tr><th>Partie</th><th>Points</th></tr>
+<tr><td>Problème sur la carte</td><td><b>12</b></td></tr>
+<tr><td>Calcul de marée (règle des douzièmes)</td><td><b>4</b></td></tr>
+<tr><td>2 QCM aides électroniques (GPS…)</td><td>2 × 0,5 = <b>1</b></td></tr>
+<tr><td>2 QCM météorologie</td><td>2 × 1 = <b>2</b></td></tr>
+<tr><td>1 QCM matériel de sécurité au-delà de 6 milles</td><td><b>1</b></td></tr>
+<tr><td><b>Total</b></td><td><b>20</b></td></tr></table>
+<div class="rule"><b>Pour réussir, il faut les deux :</b><br>① au moins <b>10 / 20</b> au total ;<br>② au moins <b>7 / 12</b> sur la carte.<br>Exemple : 12/12 sur la carte mais 0 ailleurs = 12/20, réussi. 6/12 sur la carte et 8/8 ailleurs = 14/20, mais <b>échec</b> (moins de 7 sur la carte).</div>
+<p class="mute">Les parties hors carte valent 8 points : elles ne suffisent jamais seules, mais elles compensent un problème de carte moyen (à partir de 7/12). Les examens blancs de cette page reproduisent exactement ces 8 points, puis calculent la note de carte qu'il vous faut.</p>
+<p class="mute">Le programme officiel (article 4.2) tient en quelques lignes : « être sensibilisé aux aides électroniques à la navigation » ; « interpréter de manière simple une carte de météorologie marine et connaître les symboles utilisés » ; « connaître le matériel de sécurité obligatoire au-delà de 6 milles » ; « calcul de marée par rapport à un port principal par la règle des douzièmes ». La VHF n'est pas au programme en tant que telle : elle fait partie du permis côtier, mais elle revient dans les questions de matériel.</p></div>
+</section>
+<section id="v-cours" style="display:none">
+<div class="card"><h2>1 · Aides électroniques et radio</h2>
+<h3>Le GPS</h3>
+<ul>
+<li><b>Système américain</b> : 24 satellites (au minimum) à défilement, sur des orbites <b>inclinées de 55°</b> par rapport à l'équateur, qui font le tour de la Terre en environ <b>12 heures</b>.</li>
+<li>Le GPS du bord est un <b>récepteur</b> : il n'émet rien.</li>
+<li><b>3 satellites</b> = position en 2D (latitude, longitude) · <b>4 satellites</b> = 3D (avec l'altitude). Le satellite en plus sert aussi à corriger l'<b>horloge du récepteur</b>, qui est la source d'erreur (les satellites ont des horloges atomiques).</li>
+<li>Satellites exploitables quand ils sont à plus de <b>15°</b> au-dessus de l'horizon.</li>
+<li>Précision de l'ordre de <b>5 à 15 m</b>. Système géodésique : <b>WGS 84</b>.</li>
+<li>Il donne aussi l'<b>heure</b>.</li>
+</ul>
+<h3>Ce que l'écran affiche</h3>
+<table class="dz"><tr><td>COG</td><td>Course Over Ground = <b>route fond</b> (pas le cap !)</td></tr>
+<tr><td>SOG</td><td>Speed Over Ground = <b>vitesse fond</b></td></tr>
+<tr><td>WPT</td><td>waypoint = point de route</td></tr>
+<tr><td>MOB</td><td>Man Over Board = homme à la mer (mémorise la position)</td></tr>
+<tr><td>DR</td><td>Dead Reckoning = estime : <b>réception insuffisante</b></td></tr>
+<tr><td>GDOP</td><td>qualité du point ; selon le cours Vagnon, de 0 (bon) à 9 (mauvais)</td></tr></table>
+<h3>Précautions</h3>
+<ul>
+<li><b>Accorder toujours</b> le système de la carte et celui du GPS. Carte 9999 en ED 50 : position GPS à corriger de <b>0,06′ vers le Nord et 0,08′ vers l'Est</b>. Ailleurs (Antilles…) l'écart peut dépasser 150 m.</li>
+<li>Le GPS peut décrocher : sous un <b>pont</b>, près d'une falaise, en cas de panne ou de brouillage. On garde toujours l'<b>estime</b> et la <b>carte papier</b>.</li>
+<li>Une carte levée il y a longtemps peut placer les dangers avec plusieurs dizaines de mètres d'erreur : garder une <b>marge large</b> (au moins 100 m d'un haut-fond).</li>
+<li>Le GPS ne donne pas le <b>cap</b> : avec courant ou dérive, la route fond diffère du cap. Le cap se lit au compas.</li>
+<li>Vérifier les <b>waypoints</b> sur la carte : une route directe peut passer sur des rochers.</li>
+</ul>
+<h3>Les autres aides</h3>
+<ul>
+<li><b>Sondeur</b> : profondeur sous la quille (ou sous la sonde).</li>
+<li><b>Radar</b> : détecte côtes, bateaux, grains, même sans AIS.</li>
+<li><b>AIS</b> : échange par VHF le nom, la position, la route et la vitesse des navires <b>équipés</b>. Un rocher ou un bateau sans AIS n'apparaît pas.</li>
+<li><b>Traceur / carte électronique</b> : utile, mais à vérifier avec la carte officielle.</li>
+</ul>
+<h3>La VHF</h3>
+<ul>
+<li><b>Canal 16</b> : détresse, sécurité, appel. On se dégage ensuite sur un autre canal.</li>
+<li>Portée « à vue » : 30 à 50 milles vers une station côtière (antenne haute), bien moins entre deux petits bateaux.</li>
+<li><b>VHF ASN</b> : le bouton DISTRESS envoie une alerte avec le <b>MMSI</b> (9 chiffres), et la <b>position et l'heure</b> si la VHF est reliée au GPS.</li>
+<li>En France : MMSI et licence auprès de l'<b>ANFR</b> ; permis plaisance (depuis 2011) suffisant dans les eaux territoriales, <b>CRR</b> au-delà de 12 milles. <b>Sous pavillon belge</b> : licence et MMSI auprès de l'<b>IBPT</b>, certificat <b>SRC</b> pour une VHF ASN en mer.</li>
+</ul>
+<h3>Les satellites et la météo par radio</h3>
+<ul>
+<li><b>RLS</b> (radiobalise de détresse) : <b>406 MHz</b>, relayée par les satellites <b>COSPAS-SARSAT</b>, doit être <b>enregistrée</b>.</li>
+<li><b>NAVTEX</b> : messages écrits de sécurité et de météo. <b>518 kHz</b> (international, en anglais), 490 kHz (national). Portée environ <b>300 à 400 milles</b>.</li>
+<li><b>BLU</b> : ondes qui portent à des milliers de kilomètres (météo au large).</li>
+<li>Téléphone satellite : <b>recommandé</b> au-delà de 60 milles, pas obligatoire.</li>
+</ul>
+<p class="src">Sources : cours Vagnon (cours n° 3) ; carte SHOM 9999 ; Météo-France, Guide marine ; Division 240 ; Figaro Nautisme (VHF, 2025) ; IBPT.</p></div>
+
+<div class="card"><h2>2 · Météorologie</h2>
+<h3>Pression et centres d'action</h3>
+<ul>
+<li>Pression en <b>hectopascals</b> (hPa). Moyenne au niveau de la mer : <b>1 013 hPa</b>.</li>
+<li><b>A</b> (ou H) = <b>anticyclone</b>, hautes pressions, plutôt beau temps. <b>D</b> (ou L) = <b>dépression</b>, basses pressions, plutôt mauvais temps.</li>
+<li><b>Isobares</b> : lignes d'égale pression, tous les 5 hPa en général. <b>Serrées = vent fort</b>, écartées = vent faible.</li>
+<li><b>Dorsale</b> : axe de hautes pressions qui prolonge un anticyclone (fait obstacle aux perturbations). <b>Thalweg</b> : axe de basses pressions qui prolonge une dépression. <b>Marais barométrique</b> : pression presque partout égale, vent faible.</li>
+</ul>
+<h3>Le vent</h3>
+<ul>
+<li>La direction du vent = <b>d'où il vient</b> (vent d'ouest = vient de l'ouest).</li>
+<li>Hémisphère Nord : autour d'une <b>dépression</b>, sens <b>inverse</b> des aiguilles d'une montre ; autour d'un <b>anticyclone</b>, sens des aiguilles d'une montre.</li>
+<li><b>Buys-Ballot</b> : face au vent, la <b>dépression est à droite</b>, l'anticyclone à gauche (hémisphère Nord).</li>
+<li>Symbole du vent : une hampe avec des barbules. <b>Petite barbule = 5 nœuds</b>, <b>grande = 10</b>, <b>triangle = 50</b>. Exemple : triangle + 2 grandes + 1 petite = 75 nœuds. Un cercle = calme.</li>
+<li><b>Brise thermique</b> : le jour, de la mer vers la terre ; la nuit, de la terre vers la mer.</li>
+</ul>
+<h3>Les fronts</h3>
+<table class="dz"><tr><td>Front froid</td><td>triangles (bleus). Après lui : éclaircies, averses, rafales, pression qui remonte, vent qui tourne au nord(-ouest).</td></tr>
+<tr><td>Front chaud</td><td>demi-cercles (rouges). Avant lui : nuages qui s'épaississent, pluie continue, pression qui baisse, vent qui se renforce en tournant au sud.</td></tr>
+<tr><td>Occlusion</td><td>triangles et demi-cercles alternés (violets) : le front froid a rattrapé le front chaud.</td></tr>
+<tr><td>Front stationnaire</td><td>triangles et demi-cercles de part et d'autre de la ligne.</td></tr>
+<tr><td>Ligne de grains</td><td>ligne noire : rafales et pluie, visibilité réduite.</td></tr></table>
+<h3>Les bulletins (Météo-France)</h3>
+<ul>
+<li><b>Côte</b> : jusqu'à <b>20 milles</b>. <b>Large</b> : jusqu'à <b>200 à 300 milles</b>. <b>Grand large</b> : au-delà.</li>
+<li><b>BMS</b> (bulletin spécial) : côte à partir de <b>force 7</b>, large à partir de <b>force 8</b> ; annoncé sur le canal 16, puis diffusé sur un autre canal.</li>
+<li>Rafales : <b>rafales</b> = vent moyen + 10 à 15 nœuds ; <b>fortes rafales</b> = + 15 à 25 ; <b>violentes rafales</b> = plus de 25. Les rafales peuvent dépasser le vent moyen de 40 à 50 %.</li>
+<li><b>État de la mer</b> = hauteur significative = moyenne du <b>tiers des vagues les plus hautes</b>. Certaines vagues atteignent environ 2 fois cette hauteur.</li>
+<li>Où l'obtenir : capitaineries, VHF (CROSS, canaux annoncés sur le 16), NAVTEX, BLU, internet.</li>
+</ul>
+<h3>Échelle de Beaufort</h3>
+<table><tr><th>Force</th><th>Nom</th><th>Nœuds</th></tr>
+<tr><td>3</td><td>petite brise</td><td>7–10</td></tr><tr><td>4</td><td>jolie brise</td><td>11–16</td></tr><tr><td>5</td><td>bonne brise</td><td>17–21</td></tr>
+<tr><td>6</td><td>vent frais</td><td>22–27</td></tr><tr><td>7</td><td>grand frais</td><td>28–33</td></tr><tr><td>8</td><td>coup de vent</td><td>34–40</td></tr>
+<tr><td>9</td><td>fort coup de vent</td><td>41–47</td></tr><tr><td>10</td><td>tempête</td><td>48–55</td></tr><tr><td>11</td><td>violente tempête</td><td>56–63</td></tr><tr><td>12</td><td>ouragan</td><td>64 et plus</td></tr></table>
+<p class="src">Sources : cours Vagnon (cours n° 2) ; Météo-France, Guide marine (octobre 2022).</p></div>
+
+<div class="card"><h2>3 · Matériel de sécurité au-delà de 6 milles</h2>
+<p>Distances comptées depuis un <b>abri</b> : lieu où l'on peut se mettre en sécurité (mouiller, s'échouer, accoster) et d'où l'on peut repartir sans aide.</p>
+<table><tr><th>Zone</th><th>Distance d'un abri</th><th>Gilet</th></tr>
+<tr><td>Basique</td><td>moins de 2 milles</td><td>50 N</td></tr>
+<tr><td>Côtière</td><td>2 à 6 milles</td><td>100 N</td></tr>
+<tr><td><b>Semi-hauturière</b></td><td><b>6 à 60 milles</b></td><td><b>150 N</b></td></tr>
+<tr><td><b>Hauturière</b></td><td><b>60 milles et plus</b></td><td><b>150 N</b></td></tr></table>
+<h3>Semi-hauturier (6 à 60 milles) : le matériel côtier, plus</h3>
+<ol>
+<li>gilet <b>150 N</b> par personne (pas de gilet à gonflage buccal seul) ;</li>
+<li><b>VHF fixe</b> ;</li>
+<li><b>radeau de survie</b> pour toutes les personnes à bord ;</li>
+<li>matériel pour <b>faire le point, tracer et suivre une route</b> ;</li>
+<li><b>livre des feux</b> à jour (papier ou électronique) ;</li>
+<li><b>journal de bord</b> ;</li>
+<li>moyen de <b>recevoir la météo marine</b> ;</li>
+<li><b>harnais</b> + longe : un pour le bord (bateau à moteur), un par personne (voilier) ;</li>
+<li><b>trousse de secours</b> réglementaire ;</li>
+<li><b>projecteur étanche</b> pour chercher un homme à la mer de nuit.</li></ol>
+<h3>Hauturier (plus de 60 milles) : le matériel semi-hauturier, plus</h3>
+<ol><li><b>RLS</b> (radiobalise 406 MHz) enregistrée ;</li><li><b>VHF portative étanche</b> ;</li><li>radeau <b>type I (ISO 9650)</b>, classe II ou type approuvé.</li></ol>
+<p>Téléphone satellite : recommandé, pas obligatoire.</p>
+<h3>Rappel : matériel côtier (toujours exigé au-delà)</h3>
+<p>Matériel basique (gilets, lampe, extincteur, écope, remorquage, mouillage, heures et coefficients de marée sauf en Méditerranée, pavillon hors eaux territoriales) + bouée fer à cheval ou couronne, <b>3 feux rouges à main</b>, <b>compas magnétique</b>, <b>cartes officielles à jour</b>, <b>RIPAM</b> et document sur le balisage.</p>
+<div class="rule"><b>Écarts avec le cours Vagnon</b> (édition plus ancienne) : il ne cite pas la <b>VHF fixe</b> en semi-hauturier, il range l'annuaire des marées en semi-hauturier (le texte actuel le met dans le matériel de base) et il cite une corne de brume en côtier. Ici, c'est le <b>texte en vigueur de la Division 240</b> qui est suivi. Le jour de l'examen, si une question porte sur un de ces points, répondez selon le texte en vigueur.</div>
+<p class="src">Sources : Division 240, articles 240-2.03 à 240-2.06 et 240-2.20 (mer.gouv.fr) ; cours Vagnon p. 26 ; Figaro Nautisme (VHF, 2025).</p></div>
+
+<div class="card"><h2>4 · Calcul de marée : la règle des douzièmes</h2>
+<p>Entre une basse mer (BM) et une pleine mer (PM), environ 6 heures. On découpe le <b>marnage</b> (PM − BM) en 12 parts, les « douzièmes ». La mer monte (ou descend) de :</p>
+<table><tr><th>Heure</th><th>1re</th><th>2e</th><th>3e</th><th>4e</th><th>5e</th><th>6e</th></tr>
+<tr><td>Douzièmes</td><td>1</td><td>2</td><td>3</td><td>3</td><td>2</td><td>1</td></tr>
+<tr><td>Cumul</td><td>1</td><td>3</td><td>6</td><td>9</td><td>11</td><td>12</td></tr></table>
+<p><b>Exemple</b> : PM 5,2 m, BM 1,0 m → marnage 4,2 m → 1 douzième = 0,35 m. Trois heures après la PM, la mer a baissé de 6 douzièmes = 2,1 m : hauteur 3,1 m.</p>
+<p><b>Hauteur d'eau</b> à un endroit = <b>sonde</b> (lue sur la carte) + <b>hauteur de marée</b>. Sur une roche qui <b>découvre</b> (sonde soulignée), on <b>retire</b> sa valeur. On passe si : hauteur d'eau ≥ tirant d'eau + pied de pilote (marge).</p>
+<p class="mute">À l'examen, la PM et la BM viennent d'un extrait d'annuaire du port principal ; si la durée n'est pas de 6 h, on divise la durée de la marée en 6 « heures-marée ».</p></div>
+</section>
+<section id="v-quiz" style="display:none"></section>
+<section id="v-blanc" style="display:none"></section>
+<section id="v-stats" style="display:none"></section>
+<p class="mute" style="font-size:12px">Sources : arrêté du 28/09/2007 (Légifrance, art. 4) ; Division 240 (mer.gouv.fr) ; Météo-France, Guide marine (2022) ; cours Vagnon « Guide de formation navigation hauturière » (cours n° 2 et 3) ; carte SHOM 9999 ; Figaro Nautisme (réglementation VHF, 2025) ; Loisirs Nautic (répartition des points).</p>
+</div>
+<script>
+/* Chaque question : q, o (choix), a (index bonne réponse), e (explication), s (source) */
+const S_ARR="Arrêté du 28/09/2007, art. 4",S_VAG="Cours Vagnon, cours n° 3",S_VAG2="Cours Vagnon, cours n° 2",S_MF="Météo-France, Guide marine",S_D240="Division 240 (mer.gouv.fr)",S_FIG="Figaro Nautisme, réglementation VHF 2025";
+const BANK={
+gps:[
+{q:"Pour obtenir une position GPS en 2D (latitude et longitude), il faut capter :",o:["2 satellites","3 satellites","4 satellites"],a:1,e:"3 satellites donnent une position à plat (2D). Il en faut un 4e pour avoir aussi l'altitude (3D).",s:S_VAG},
+{q:"Pour obtenir une position GPS en 3D, il faut :",o:["3 satellites","4 satellites","24 satellites"],a:1,e:"4 satellites : latitude, longitude, altitude, et la correction de l'horloge du récepteur.",s:S_VAG},
+{q:"Le système GPS est géré par :",o:["l'Europe","les États-Unis","l'ONU"],a:1,e:"Le GPS est américain. Le système européen s'appelle Galileo.",s:S_VAG},
+{q:"Quel est le système géodésique de référence du GPS ?",o:["ED 50","WGS 72","WGS 84"],a:2,e:"Le GPS donne ses positions en WGS 84 (système mondial).",s:S_VAG},
+{q:"Les orbites des satellites GPS sont :",o:["équatoriales","inclinées de 55° par rapport à l'équateur","polaires"],a:1,e:"Les orbites sont inclinées de 55° par rapport à l'équateur.",s:S_VAG},
+{q:"Un satellite GPS est :",o:["géostationnaire","à défilement, période d'environ 12 heures","à défilement, période d'environ 24 heures"],a:1,e:"Les satellites GPS tournent autour de la Terre en environ 12 heures : ils « défilent » dans le ciel.",s:S_VAG},
+{q:"En plus de la position, le récepteur GPS donne aussi :",o:["les informations météo","l'heure","la profondeur sous la quille"],a:1,e:"Le GPS fonctionne avec des horloges atomiques : il donne l'heure très précise. La profondeur vient du sondeur, la météo d'autres moyens.",s:S_VAG},
+{q:"L'appareil qui permet d'obtenir un point GPS à bord est :",o:["un récepteur","un émetteur","un émetteur-récepteur"],a:0,e:"Le GPS de bord ne fait que recevoir les signaux des satellites. Il n'émet rien.",s:S_VAG},
+{q:"L'erreur sur la mesure du temps de propagation du signal vient :",o:["d'un mauvais réglage de l'horloge atomique du satellite","d'une imprécision de l'horloge embarquée sur le navire (le récepteur)","d'une imprécision de l'horloge du satellite"],a:1,e:"Les satellites ont des horloges atomiques très précises. Le récepteur du bateau n'a qu'une horloge ordinaire : c'est elle qui est imprécise, d'où le 4e satellite pour la corriger.",s:S_VAG},
+{q:"Les satellites GPS sont exploitables :",o:["lorsque leur hauteur au-dessus de l'horizon dépasse 15°","lorsqu'ils sont sous l'horizon"],a:0,e:"Trop bas sur l'horizon, le signal traverse trop d'atmosphère et devient imprécis. Le cours retient une hauteur supérieure à 15°.",s:S_VAG},
+{q:"Sur l'écran du GPS, le sigle qui désigne la route fond est :",o:["WPT","COG","MOB"],a:1,e:"COG = Course Over Ground = route fond. WPT = waypoint (point de route), MOB = homme à la mer.",s:S_VAG},
+{q:"Sur l'écran du GPS, SOG désigne :",o:["la vitesse surface","la vitesse fond","la vitesse du vent"],a:1,e:"SOG = Speed Over Ground = vitesse fond (par rapport au fond, courant compris).",s:S_VAG},
+{q:"Le sigle DR affiché sur l'écran du GPS signifie que la réception des satellites est :",o:["excellente","fiable","insuffisante"],a:2,e:"DR = Dead Reckoning = estime. Le GPS ne capte plus assez de satellites et calcule une position à l'estime.",s:S_VAG},
+{q:"Selon le cours, quand la précision du point GPS est mauvaise, le GPS affiche un GDOP de :",o:["3","6","9"],a:2,e:"Le cours Vagnon présente le GDOP sur une échelle de 0 (très bon) à 9 (mauvais).",s:S_VAG},
+{q:"Faut-il accorder le système géodésique de la carte et celui du GPS ?",o:["Oui, toujours","Non","Uniquement si la carte n'est pas éditée par le SHOM"],a:0,e:"Si les deux systèmes diffèrent, le point reporté est décalé. Il faut toujours appliquer la correction indiquée sur la carte.",s:S_VAG},
+{q:"Sur la carte 9999 (système ED 50), une position lue au GPS (WGS 84) doit être corrigée de :",o:["0,06′ vers le Nord et 0,08′ vers l'Est","0,06′ vers le Sud et 0,08′ vers l'Ouest","aucune correction"],a:0,e:"C'est écrit dans le cartouche de la carte 9999 : 0,06′ vers le Nord et 0,08′ vers l'Est.",s:"Carte SHOM 9999, cartouche"},
+{q:"Le GPS indique-t-il le cap du bateau (la direction de l'étrave) ?",o:["Oui, c'est le COG","Non : le COG est la route fond, pas le cap"],a:1,e:"Le GPS mesure le déplacement sur le fond. Avec du courant ou de la dérive, la route fond (COG) diffère du cap. Le cap se lit au compas.",s:S_VAG},
+{q:"La précision habituelle d'une position GPS est de l'ordre de :",o:["5 à 15 mètres","150 à 300 mètres","1 à 2 milles"],a:0,e:"Le cours donne une précision de l'ordre de 5 à 15 mètres.",s:S_VAG},
+{q:"La réception GPS peut être perturbée :",o:["en pleine mer par beau temps","lors du passage sous un pont","la nuit"],a:1,e:"Un pont (ou une falaise, un grand navire) masque les satellites.",s:S_VAG},
+{q:"Votre carte a été levée par le SHOM en 1950 et reproduite en 2007. Avec un point GPS, vous passerez prudemment à au moins :",o:["10 mètres d'un haut-fond","30 mètres d'un haut-fond","100 mètres d'un haut-fond"],a:2,e:"Le GPS est précis, mais les anciens levés peuvent placer les dangers avec une erreur de plusieurs dizaines de mètres. On garde une large marge.",s:S_VAG},
+{q:"Le canal 16 de la VHF est réservé :",o:["à la météo","à la détresse, à la sécurité et à l'appel","aux conversations entre plaisanciers"],a:1,e:"Canal 16 : canal international de détresse, de sécurité et d'appel. On se dégage ensuite sur un autre canal.",s:S_VAG},
+{q:"Sur une VHF ASN, le bouton de détresse envoie automatiquement :",o:["l'identité du navire (MMSI), et sa position si la VHF est reliée à un GPS","un message vocal enregistré","un signal à la balise de détresse"],a:0,e:"L'alerte ASN contient le numéro MMSI, et la position et l'heure si la VHF est connectée à un GPS.",s:S_VAG},
+{q:"Le MMSI est :",o:["le numéro de coque du bateau","le numéro d'identification du navire dans le service mobile maritime (9 chiffres)","le code de la licence radio"],a:1,e:"MMSI = Maritime Mobile Service Identity, un numéro à 9 chiffres programmé dans la VHF ASN.",s:S_VAG},
+{q:"Selon le cours, la portée d'une VHF fixe peut atteindre :",o:["environ 5 milles","30 à 50 milles","300 milles"],a:1,e:"La VHF porte « en vue directe » : 30 à 50 milles vers une station côtière dont l'antenne est haute. Entre deux petits bateaux, c'est bien moins.",s:S_VAG},
+{q:"En France, avec un permis plaisance obtenu depuis 2011, le CRR est obligatoire :",o:["partout","en dehors des eaux territoriales françaises (au-delà de 12 milles)","jamais"],a:1,e:"Le permis plaisance couvre l'usage de la VHF dans les eaux territoriales françaises. Au-delà, le CRR est exigé. (Sous pavillon belge, ce sont les règles de l'IBPT qui s'appliquent.)",s:S_VAG+" ; "+S_FIG},
+{q:"En France, le numéro MMSI s'obtient auprès de :",o:["la capitainerie","l'ANFR","Météo-France"],a:1,e:"L'ANFR (Agence nationale des fréquences) attribue le MMSI. En Belgique, c'est l'IBPT.",s:S_VAG+" ; "+S_FIG},
+{q:"La fréquence internationale du NAVTEX (messages en anglais) est :",o:["156,8 MHz","518 kHz","406 MHz"],a:1,e:"NAVTEX international : 518 kHz (anglais). 490 kHz : messages nationaux. 156,8 MHz = canal 16. 406 MHz = balises de détresse.",s:S_MF},
+{q:"Le NAVTEX permet de recevoir des messages de sécurité et de météo jusqu'à environ :",o:["20 milles","300 à 400 milles","partout sur le globe"],a:1,e:"Le cours donne 300 à 400 milles des antennes d'émission. Météo-France indique des bulletins couvrant jusqu'à 300 milles.",s:S_VAG2+" ; "+S_MF},
+{q:"Une radiobalise de localisation des sinistres (RLS) émet sur :",o:["406 MHz, reçue par les satellites COSPAS-SARSAT","le canal 16","518 kHz"],a:0,e:"La RLS émet sur 406 MHz. Les satellites COSPAS-SARSAT relaient l'alerte vers les secours (CROSS).",s:S_D240},
+{q:"L'AIS permet :",o:["de voir le nom, la route et la vitesse des navires équipés d'un transpondeur AIS","de détecter tous les obstacles, même les rochers","de recevoir la météo"],a:0,e:"L'AIS échange par VHF l'identité, la position, la route et la vitesse des navires équipés. Un bateau sans AIS ou un rocher n'apparaît pas : seul le radar les détecte.",s:"Cours d'aides électroniques (synthèse)"}
+],
+meteo:[
+{q:"L'unité utilisée pour la pression atmosphérique est :",o:["l'isobare","l'hectopascal"],a:1,e:"La pression se mesure en hectopascals (hPa). L'isobare est une ligne d'égale pression.",s:S_VAG2},
+{q:"La pression moyenne au niveau de la mer est de :",o:["1 000 hPa","1 013 hPa","1 030 hPa"],a:1,e:"1 013 hPa. Au-dessus : conditions anticycloniques ; en dessous : conditions dépressionnaires.",s:S_VAG2},
+{q:"Dans l'hémisphère Nord, les vents tournent autour d'une dépression dans le sens des aiguilles d'une montre :",o:["Vrai","Faux"],a:1,e:"Faux : autour d'une dépression, le vent tourne dans le sens INVERSE des aiguilles d'une montre (hémisphère Nord).",s:S_VAG2},
+{q:"Dans l'hémisphère Nord, autour d'un anticyclone, le vent tourne :",o:["dans le sens des aiguilles d'une montre","dans le sens inverse des aiguilles d'une montre"],a:0,e:"Anticyclone : sens des aiguilles d'une montre. Dépression : sens inverse.",s:S_VAG2},
+{q:"Une dépression est :",o:["une zone de hautes pressions, au-dessus de 1 013 hPa","un marais barométrique","une zone de basses pressions, en dessous de 1 013 hPa"],a:2,e:"Dépression = basses pressions, notée D (ou L pour « Low » sur les cartes anglaises).",s:S_VAG2},
+{q:"Les isobares sont :",o:["des lignes d'égale température","des lignes d'égale pression","des lignes d'égal vent"],a:1,e:"Isobare = ligne reliant les points de même pression, tracée en général tous les 5 hPa.",s:S_VAG2},
+{q:"Un gradient horizontal de pression élevé signifie :",o:["vent faible (isobares éloignées)","vent fort (isobares serrées)"],a:1,e:"Plus les isobares sont serrées, plus la pression change vite, plus le vent est fort.",s:S_VAG2},
+{q:"Une dorsale est :",o:["une zone où la pression varie très peu","un axe de hautes pressions prolongeant un anticyclone, pouvant faire obstacle aux perturbations","une zone de basses pressions sous 1 015 hPa"],a:1,e:"Dorsale = « langue » de hautes pressions qui prolonge un anticyclone.",s:S_VAG2},
+{q:"Un thalweg est :",o:["un axe de basses pressions prolongeant une dépression","un axe de hautes pressions","un front froid"],a:0,e:"Thalweg = « vallée » de basses pressions qui prolonge une dépression. C'est le contraire de la dorsale.",s:S_VAG2},
+{q:"Un marais barométrique, c'est :",o:["une zone où les isobares sont très écartées et la pression varie très peu","une dépression très creuse","un front stationnaire"],a:0,e:"Pas de centre d'action, pressions proches : vent faible et variable.",s:S_VAG2},
+{q:"Loi de Buys-Ballot : dans l'hémisphère Nord, face au vent, la dépression se trouve :",o:["à votre gauche","à votre droite","derrière vous"],a:1,e:"Face au vent : anticyclone à gauche, dépression à droite (hémisphère Nord). C'est inversé dans l'hémisphère Sud.",s:S_VAG2},
+{q:"Un « vent d'ouest » est un vent :",o:["qui vient de l'ouest","qui va vers l'ouest"],a:0,e:"La direction du vent est toujours celle d'où il VIENT.",s:S_VAG2},
+{q:"Sur une carte des vents, une petite barbule vaut :",o:["2 nœuds","5 nœuds","10 nœuds"],a:1,e:"Petite barbule = 5 nœuds, grande barbule = 10 nœuds, triangle = 50 nœuds.",s:S_VAG2},
+{q:"Sur une carte des vents, un triangle (fanion) vaut :",o:["10 nœuds","25 nœuds","50 nœuds"],a:2,e:"Triangle = 50 nœuds.",s:S_VAG2},
+{q:"Une hampe portant un triangle et deux grandes barbules indique un vent de :",o:["52 nœuds","60 nœuds","70 nœuds"],a:2,e:"50 + 10 + 10 = 70 nœuds.",s:S_VAG2},
+{q:"Sur une carte isobarique, le front froid est représenté par :",o:["des triangles (bleus)","des demi-cercles (rouges)","des triangles et demi-cercles alternés"],a:0,e:"Front froid : triangles bleus. Front chaud : demi-cercles rouges. Occlusion : alternés, violets.",s:S_VAG2},
+{q:"Le front chaud est représenté par :",o:["des triangles","des demi-cercles","une ligne noire"],a:1,e:"Demi-cercles rouges. La ligne noire seule représente une ligne de grains.",s:S_VAG2},
+{q:"Un front occlus, c'est :",o:["un front froid qui rattrape le front chaud","un front qui ne bouge pas","une ligne d'orages"],a:0,e:"Le front froid, plus rapide, rattrape le front chaud et rejette l'air chaud en altitude.",s:S_VAG2},
+{q:"Au passage d'un front froid, on observe :",o:["une pluie continue et une baisse de pression","des éclaircies avec averses et rafales, une hausse de pression, un vent qui s'oriente vers le nord","un calme plat"],a:1,e:"Front froid : averses, rafales, températures en baisse, pression qui remonte, vent qui tourne au nord(-ouest).",s:S_VAG2},
+{q:"En Atlantique, lequel de ces signes n'annonce PAS l'arrivée d'un front chaud et d'une dépression ?",o:["Bascule du vent au nord-est","Chute rapide de la pression","Bascule du vent au sud-ouest"],a:0,e:"Avant un front chaud, la pression baisse et le vent se renforce en s'orientant au sud. Un vent qui passe au nord-est annonce plutôt une amélioration (hautes pressions).",s:S_VAG2},
+{q:"Dans un bulletin météo marine, « fortes rafales » signifie que les rafales dépassent le vent moyen de :",o:["10 à 15 nœuds","15 à 25 nœuds","plus de 25 nœuds"],a:1,e:"Rafales : +10 à 15 nœuds. Fortes rafales : +15 à 25 nœuds. Violentes rafales : plus de 25 nœuds au-dessus du vent moyen.",s:S_MF},
+{q:"« Violentes rafales » signifie que les rafales dépassent le vent moyen de :",o:["10 à 15 nœuds","15 à 25 nœuds","plus de 25 nœuds"],a:2,e:"Violentes rafales : plus de 25 nœuds au-dessus du vent moyen.",s:S_MF},
+{q:"Force 7 Beaufort (« grand frais ») correspond à un vent moyen de :",o:["17 à 21 nœuds","28 à 33 nœuds","41 à 47 nœuds"],a:1,e:"Force 7 = grand frais = 28 à 33 nœuds.",s:S_VAG2+" ; "+S_MF},
+{q:"Force 8 Beaufort s'appelle :",o:["vent frais","coup de vent","tempête"],a:1,e:"Force 8 = coup de vent (34 à 40 nœuds). Force 6 = vent frais, force 10 = tempête.",s:S_VAG2+" ; "+S_MF},
+{q:"Un BMS (Bulletin météorologique spécial) côte est émis lorsque le vent atteint ou dépasse :",o:["force 5","force 7","force 9"],a:1,e:"BMS côte : à partir de force 7. BMS large et grand large : à partir de force 8. Il est annoncé sur le canal 16.",s:S_MF},
+{q:"Quel bulletin météo marine couvre la zone de la côte jusqu'à 200 à 300 milles au large ?",o:["Bulletin côte","Bulletin large","Bulletin grand large"],a:1,e:"Côte : jusqu'à 20 milles. Large : jusqu'à 200 à 300 milles. Grand large : au-delà.",s:S_MF},
+{q:"Le bulletin « côte » couvre une zone allant jusqu'à :",o:["2 milles","20 milles","200 milles"],a:1,e:"Le bulletin côte couvre jusqu'à 20 milles des côtes.",s:S_MF},
+{q:"L'état de la mer donné dans un bulletin météo marine correspond à :",o:["la hauteur moyenne des vagues","la hauteur moyenne du tiers des vagues les plus hautes","la hauteur maximale des vagues"],a:1,e:"C'est la « hauteur significative » (H1/3). Certaines vagues peuvent atteindre environ 2 fois cette hauteur.",s:S_MF+" ; "+S_VAG2},
+{q:"En journée, la brise thermique souffle :",o:["de la terre vers la mer","de la mer vers la terre"],a:1,e:"Le jour, la terre chauffe, l'air y monte : l'air de la mer vient le remplacer (brise de mer). La nuit, c'est l'inverse (brise de terre).",s:S_VAG2},
+{q:"Pour une navigation au-delà de 6 milles d'un abri, un dispositif permettant de recevoir la météo marine à bord est-il obligatoire ?",o:["Oui","Non"],a:0,e:"Oui : la Division 240 l'exige dès la zone semi-hauturière (6 à 60 milles).",s:S_D240+" ; "+S_VAG2}
+],
+secu:[
+{q:"La navigation semi-hauturière correspond à :",o:["2 à 6 milles d'un abri","6 à 60 milles d'un abri","au-delà de 60 milles d'un abri"],a:1,e:"Basique < 2 milles · Côtière 2 à 6 · Semi-hauturière 6 à 60 · Hauturière au-delà de 60 milles d'un abri.",s:S_D240},
+{q:"La navigation hauturière commence à :",o:["6 milles d'un abri","20 milles d'un abri","60 milles d'un abri"],a:2,e:"Hauturière : 60 milles et plus d'un abri.",s:S_D240},
+{q:"Un « abri », au sens de la Division 240, est :",o:["un port avec une capitainerie","un lieu où le bateau et son équipage peuvent se mettre en sécurité et d'où ils peuvent repartir sans assistance","n'importe quelle plage"],a:1,e:"Un abri tient compte de la météo, de l'état de la mer et du bateau : on doit pouvoir y mouiller, s'échouer ou accoster, puis repartir seul.",s:S_D240},
+{q:"La navigation côtière correspond à :",o:["jusqu'à 2 milles d'un abri","2 à 6 milles d'un abri","6 à 60 milles d'un abri"],a:1,e:"Côtière : de 2 à moins de 6 milles d'un abri.",s:S_D240},
+{q:"En navigation semi-hauturière, chaque personne doit disposer d'un équipement individuel de flottabilité (gilet) de :",o:["50 N","100 N","150 N"],a:2,e:"Basique : 50 N · Côtier : 100 N · Semi-hauturier et au-delà : 150 N.",s:S_D240},
+{q:"Le gilet de sauvetage à gonflage buccal seul est autorisé au-delà de 6 milles d'un abri :",o:["Vrai","Faux"],a:1,e:"Faux : il faut un gilet de 150 N conforme. Un gilet qu'on ne peut gonfler qu'à la bouche ne convient pas.",s:S_VAG},
+{q:"Au-delà de 6 milles d'un abri, un radeau de survie est :",o:["obligatoire, pour toutes les personnes à bord","facultatif","obligatoire seulement au-delà de 60 milles"],a:0,e:"Radeau(x) gonflable(s) adapté(s) à la navigation, pouvant recevoir toutes les personnes à bord, dès la zone semi-hauturière.",s:S_D240},
+{q:"En navigation hauturière (plus de 60 milles), le radeau de survie doit être :",o:["de n'importe quel type","de type I (norme ISO 9650), de classe II ou d'un type approuvé","un simple canot pneumatique"],a:1,e:"Type I selon EN ISO 9650, ou classe II (division 333), ou type approuvé (division 311).",s:S_D240},
+{q:"Une installation VHF fixe est obligatoire :",o:["dès 2 milles d'un abri","dès 6 milles d'un abri (semi-hauturier)","seulement au-delà de 60 milles"],a:1,e:"Le texte en vigueur exige une VHF fixe dès la zone semi-hauturière. (Attention : certains anciens manuels ne la citent pas.)",s:S_D240+" ; "+S_FIG},
+{q:"Une VHF portative étanche est obligatoire, en plus de la VHF fixe :",o:["dès 6 milles d'un abri","au-delà de 60 milles d'un abri","jamais"],a:1,e:"En navigation hauturière (au-delà de 60 milles), il faut aussi une VHF portative étanche.",s:S_D240},
+{q:"La radiobalise de localisation des sinistres (RLS) est obligatoire :",o:["au-delà de 6 milles d'un abri","au-delà de 60 milles d'un abri","dès 2 milles"],a:1,e:"La RLS fait partie du matériel hauturier (au-delà de 60 milles).",s:S_D240},
+{q:"La tenue d'un journal de bord est obligatoire :",o:["dans tous les cas","pour toute navigation au-delà de 6 milles d'un abri","seulement pour une navigation de plusieurs jours"],a:1,e:"Journal de bord tenu à jour : obligatoire dès la zone semi-hauturière.",s:S_D240+" ; "+S_VAG},
+{q:"Le harnais de sécurité est-il obligatoire à bord d'un navire à moteur au-delà de 6 milles d'un abri ?",o:["Oui","Non"],a:0,e:"Oui : au moins un harnais et sa longe à bord des navires qui ne sont pas des voiliers.",s:S_D240+" ; "+S_VAG},
+{q:"À bord d'un voilier, au-delà de 6 milles d'un abri, il faut :",o:["un seul harnais pour le bord","un harnais et sa longe par personne","aucun harnais"],a:1,e:"Voiliers : un harnais par personne. Navires non voiliers : un harnais pour le bord.",s:S_D240},
+{q:"Le livre des feux à jour est obligatoire :",o:["dès la navigation côtière","dès la navigation semi-hauturière, sur papier ou sur support électronique","jamais"],a:1,e:"Livre des feux tenu à jour, papier ou électronique (avec son appareil de lecture), dès 6 milles.",s:S_D240},
+{q:"La trousse de secours réglementaire est obligatoire :",o:["dès 2 milles","dès 6 milles d'un abri","seulement au-delà de 60 milles"],a:1,e:"Trousse de secours conforme : matériel semi-hauturier.",s:S_D240},
+{q:"Au-delà de 6 milles, un projecteur (dispositif lumineux) étanche pour rechercher une personne à la mer de nuit est :",o:["obligatoire","recommandé seulement"],a:0,e:"Obligatoire dès la zone semi-hauturière : portatif ou fixe, adapté à la recherche d'un homme à la mer de nuit.",s:S_D240},
+{q:"Combien de feux rouges à main faut-il à partir de la navigation côtière ?",o:["1","3","6"],a:1,e:"3 feux rouges à main, dès la zone côtière (et donc aussi au-delà).",s:S_D240},
+{q:"Le compas magnétique étanche est obligatoire :",o:["dès la navigation côtière","seulement au-delà de 60 milles"],a:0,e:"Compas magnétique : matériel côtier, donc aussi exigé au-delà de 6 milles.",s:S_D240},
+{q:"Les cartes marines officielles à jour sont obligatoires :",o:["dès la navigation côtière, sur papier ou électroniques","seulement en papier, au-delà de 60 milles"],a:0,e:"Cartes officielles (ou extraits officiels) à jour, papier ou électroniques, dès la zone côtière.",s:S_D240},
+{q:"Le RIPAM et un document décrivant le balisage doivent être à bord :",o:["dès la navigation côtière","jamais"],a:0,e:"RIPAM (ou un résumé) et document sur le balisage : matériel côtier.",s:S_D240},
+{q:"Au-delà de 6 milles, il faut aussi le matériel permettant :",o:["de faire le point, de tracer et de suivre une route","de pêcher"],a:0,e:"Exemple : règle Cras, compas à pointes, crayon, carte.",s:S_D240},
+{q:"Les heures et coefficients de marée du jour et de la zone sont exigés :",o:["partout, y compris en Méditerranée","partout sauf en Méditerranée"],a:1,e:"Le texte ne les exige pas en Méditerranée, où la marée est très faible.",s:S_D240},
+{q:"Le pavillon national doit être arboré :",o:["seulement au port","en dehors des eaux territoriales","jamais sur un bateau de plaisance"],a:1,e:"Le pavillon national doit être arboré en dehors des eaux territoriales.",s:S_D240},
+{q:"Quel matériel n'est PAS obligatoire à 20 milles d'un abri ?",o:["La VHF fixe","Le radeau de survie","La radiobalise (RLS)"],a:2,e:"À 20 milles, on est en semi-hauturier : VHF fixe et radeau oui, la RLS n'est exigée qu'au-delà de 60 milles.",s:S_D240},
+{q:"Un dispositif de communication par satellite (téléphone satellite) en navigation hauturière est :",o:["obligatoire","recommandé, mais pas obligatoire"],a:1,e:"La Division 240 le recommande sans l'imposer.",s:S_D240},
+{q:"Une VHF ASN doit être programmée avec :",o:["le numéro de coque","le MMSI attribué par l'autorité compétente","le numéro de téléphone du propriétaire"],a:1,e:"Le MMSI officiel (ANFR en France, IBPT en Belgique).",s:S_D240},
+{q:"La radiobalise (RLS) doit être :",o:["enregistrée auprès de l'autorité compétente","achetée d'occasion uniquement","programmée avec le numéro de téléphone"],a:0,e:"La RLS doit être identifiée et enregistrée (codage pavillon et MMSI).",s:S_D240},
+{q:"À 8 milles d'un abri, quel gilet faut-il par personne ?",o:["50 N","100 N","150 N"],a:2,e:"8 milles = semi-hauturier : gilet 150 N.",s:S_D240},
+{q:"Quel matériel s'ajoute au-delà de 60 milles, par rapport à la liste semi-hauturière ?",o:["Le journal de bord","La RLS, la VHF portative étanche et un radeau de type I / classe II / approuvé","Le livre des feux"],a:1,e:"Le journal de bord et le livre des feux sont déjà exigés dès 6 milles.",s:S_D240}
+]};
+/* Marée : 2 calculs par examen blanc (2 points chacun) */
+const TIDE=[
+[{q:"Marée : PM à 12 h 00, hauteur 5,2 m ; BM à 18 h 00, hauteur 1,0 m (durée 6 h). Quelle est la hauteur d'eau à 15 h 00 ?",o:["2,6 m","3,1 m","3,5 m","4,2 m"],a:1,e:"Marnage = 5,2 − 1,0 = 4,2 m. Un douzième = 4,2 ÷ 12 = 0,35 m. En 3 heures la mer descend de 1 + 2 + 3 = 6 douzièmes = 6 × 0,35 = 2,1 m. Hauteur = 5,2 − 2,1 = 3,1 m.",s:"Règle des douzièmes"},
+ {q:"Même marée (PM 12 h 00 : 5,2 m ; BM 18 h 00 : 1,0 m). À quelle heure la hauteur d'eau sera-t-elle de 4,5 m ?",o:["13 h 00","13 h 30","14 h 00","14 h 30"],a:1,e:"La mer doit descendre de 5,2 − 4,5 = 0,7 m = 2 douzièmes (0,35 × 2). 1re heure : 1 douzième (0,35 m). 2e heure : 2 douzièmes (0,70 m), dont il ne manque qu'un seul : la moitié de la 2e heure. 1 h + 0 h 30 = 1 h 30 après la PM → 13 h 30.",s:"Règle des douzièmes"}],
+[{q:"Marée : BM à 06 h 20, hauteur 0,8 m ; PM à 12 h 20, hauteur 5,6 m (durée 6 h). Quelle est la hauteur d'eau à 10 h 20 ?",o:["3,2 m","4,0 m","4,4 m","5,2 m"],a:2,e:"Marnage = 5,6 − 0,8 = 4,8 m. Un douzième = 0,4 m. En 4 heures la mer monte de 1 + 2 + 3 + 3 = 9 douzièmes = 3,6 m. Hauteur = 0,8 + 3,6 = 4,4 m.",s:"Règle des douzièmes"},
+ {q:"Même marée (BM 06 h 20 : 0,8 m ; PM 12 h 20 : 5,6 m). À partir de quelle heure la hauteur d'eau atteint-elle 3,2 m ?",o:["08 h 20","09 h 20","09 h 50","10 h 20"],a:1,e:"Il faut monter de 3,2 − 0,8 = 2,4 m = 6 douzièmes (6 × 0,4). 1 + 2 + 3 = 6 douzièmes : c'est atteint au bout de 3 heures → 06 h 20 + 3 h = 09 h 20.",s:"Règle des douzièmes"}],
+[{q:"Marée : PM à 08 h 00, hauteur 4,9 m ; BM à 14 h 00, hauteur 1,3 m (durée 6 h). Quelle est la hauteur d'eau à 10 h 00 ?",o:["3,1 m","3,7 m","4,0 m","4,6 m"],a:2,e:"Marnage = 4,9 − 1,3 = 3,6 m. Un douzième = 0,3 m. En 2 heures la mer descend de 1 + 2 = 3 douzièmes = 0,9 m. Hauteur = 4,9 − 0,9 = 4,0 m.",s:"Règle des douzièmes"},
+ {q:"Même marée (PM 08 h 00 : 4,9 m ; BM 14 h 00 : 1,3 m). Votre bateau cale 1,2 m et vous voulez 0,4 m sous la quille sur un banc qui découvre de 1,0 m. Jusqu'à quelle heure environ pouvez-vous passer ?",o:["10 h 33","11 h 00","11 h 33","12 h 00"],a:2,e:"Il faut une hauteur de marée de 1,0 (le banc découvre de 1,0 m) + 1,2 + 0,4 = 2,6 m. La mer peut donc descendre de 4,9 − 2,6 = 2,3 m. Après 3 h elle a baissé de 6 douzièmes = 1,8 m ; la 4e heure fait baisser de 3 douzièmes = 0,9 m. Il reste 0,5 m sur 0,9 m : 0,5 ÷ 0,9 × 60 ≈ 33 min. 08 h 00 + 3 h 33 = 11 h 33.",s:"Règle des douzièmes"}]
+];
+/* Examens blancs : 2 GPS (0,5 pt), 2 météo (1 pt), 1 sécurité (1 pt), 2 marée (2 pts) = 8 points */
+const BLANCS=[{gps:[0,10],meteo:[2,20],secu:[11],tide:0},{gps:[3,12],meteo:[6,25],secu:[24],tide:1},{gps:[14,20],meteo:[7,27],secu:[5],tide:2}];
+
+const $=id=>document.getElementById(id);
+const NAMES={gps:"QCM GPS, électronique et radio",meteo:"QCM Météorologie",secu:"QCM Matériel de sécurité"};
+const KEY="kam-hauturier-hc-v1";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+const fr=n=>String(Math.round(n*100)/100).replace('.',',');
+function shuf(q){if(q.o.length<=2)return{...q,ord:q.o.map((_,i)=>i)};const ord=q.o.map((_,i)=>i);for(let i=ord.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]]}return{...q,ord}}
+/* ---------- onglets ---------- */
+let tab="regles";
+function show(t){tab=t;["regles","cours","quiz","blanc","stats"].forEach(s=>$("v-"+s).style.display="none");
+ [...$("tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.t==t));
+ if(t=="regles"||t=="cours")$("v-"+t).style.display="block";
+ else if(BANK[t]){$("v-quiz").style.display="block";startQuiz(t)}
+ else if(t=="blanc"){$("v-blanc").style.display="block";blancMenu()}
+ else{$("v-stats").style.display="block";stats()}
+ window.scrollTo(0,0)}
+$("tabs").onclick=e=>{const b=e.target.closest("button");if(b)show(b.dataset.t)};
+/* ---------- QCM d'entraînement (30 questions, correction immédiate) ---------- */
+let Q=null;
+function startQuiz(k){Q={k,list:BANK[k].map((q,i)=>({...shuf(q),id:i})),i:0,rep:[]};drawQ()}
+function drawQ(){const v=$("v-quiz"),q=Q.list[Q.i],n=Q.list.length;
+ v.innerHTML=`<div class="card"><div class="mute">${NAMES[Q.k]} · question ${Q.i+1} / ${n}</div><div class="bar"><i style="width:${Q.i/n*100}%"></i></div>
+ <div class="qq">${q.q}</div><div class="opts" id="opts">${q.ord.map(j=>`<button data-j="${j}">${q.o[j]}</button>`).join("")}</div><div id="fb"></div></div>`;
+ $("opts").onclick=e=>{const b=e.target.closest("button");if(!b||Q.rep[Q.i]!==undefined)return;const j=+b.dataset.j;Q.rep[Q.i]=j;
+  [...$("opts").children].forEach(x=>{const jj=+x.dataset.j;if(jj==q.a)x.classList.add("good");else if(jj==j)x.classList.add("bad")});
+  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}<div class="src">Source : ${q.s}</div></div>
+  <div class="row" style="margin-top:10px"><button class="btn primary" id="nx">${Q.i<n-1?'Question suivante ▶':'Voir le résultat'}</button></div>`;
+  $("nx").onclick=()=>{if(Q.i<n-1){Q.i++;drawQ()}else endQuiz()}}}
+function endQuiz(){const n=Q.list.length,ok=Q.list.filter((q,i)=>Q.rep[i]==q.a).length,pc=Math.round(ok/n*100);
+ const d=load();d[Q.k]=d[Q.k]||{tries:[],err:{}};d[Q.k].tries.push({t:Date.now(),ok,n});Q.list.forEach((q,i)=>{if(Q.rep[i]!=q.a)d[Q.k].err[q.id]=(d[Q.k].err[q.id]||0)+1});save(d);
+ $("v-quiz").innerHTML=`<div class="card"><h2>${NAMES[Q.k]}</h2><div class="res ${pc>=80?'ok':'ko'}">${ok} / ${n} · ${pc} %</div>
+ <p class="mute">Objectif conseillé : 80 % ou plus avant l'examen.</p><div class="row"><button class="btn primary" id="again">Recommencer (ordre des réponses mélangé)</button></div>
+ <h3>Correction complète</h3>${Q.list.map((q,i)=>`<div class="rev ${Q.rep[i]==q.a?'o':'k'}"><b>${i+1}. ${q.q}</b><br>${Q.rep[i]==q.a?'<span class="okc">✔</span>':'<span class="koc">✘ vous : '+q.o[Q.rep[i]]+'</span><br>'} Bonne réponse : <b>${q.o[q.a]}</b><small>${q.e} — ${q.s}</small></div>`).join("")}</div>`;
+ $("again").onclick=()=>startQuiz(Q.k);window.scrollTo(0,0)}
+/* ---------- examens blancs (barème officiel hors carte : 8 points) ---------- */
+let B=null;
+function blancMenu(){const d=load();$("v-blanc").innerHTML=`<div class="card"><h2>Examens blancs (partie hors carte)</h2>
+ <p>Exactement comme à l'examen : <b>2 QCM GPS</b> (0,5 pt chacun), <b>2 QCM météo</b> (1 pt chacun), <b>1 QCM sécurité</b> (1 pt), <b>2 calculs de marée</b> (2 pts chacun) = <b>8 points</b>. La correction n'apparaît qu'à la fin.</p>
+ <div class="rule">Rappel : il faut au moins <b>10/20</b> au total <b>et</b> au moins <b>7/12</b> sur la carte. À la fin, la page calcule la note de carte qui vous manque.</div>
+ ${[0,1,2].map(i=>{const b=d["blanc"+i];const last=b&&b.tries.length?b.tries[b.tries.length-1]:null;return `<div class="row" style="margin:8px 0"><button class="btn primary" data-b="${i}">Examen blanc n° ${i+1}${last?` · dernier : ${fr(last.pts)}/8`:''}</button></div>`}).join("")}</div>`;
+ $("v-blanc").querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>startBlanc(+b.dataset.b))}
+function startBlanc(i){const c=BLANCS[i],L=[];
+ c.gps.forEach(j=>L.push({...shuf(BANK.gps[j]),pts:.5,part:"Aides électroniques",bk:"gps",id:j}));
+ c.meteo.forEach(j=>L.push({...shuf(BANK.meteo[j]),pts:1,part:"Météorologie",bk:"meteo",id:j}));
+ c.secu.forEach(j=>L.push({...shuf(BANK.secu[j]),pts:1,part:"Sécurité",bk:"secu",id:j}));
+ TIDE[c.tide].forEach((q,j)=>L.push({...shuf(q),pts:2,part:"Marée",bk:"tide",id:j}));
+ B={i,list:L,rep:[],k:0};drawB()}
+function drawB(){const q=B.list[B.k],n=B.list.length;
+ $("v-blanc").innerHTML=`<div class="card"><div class="mute">Examen blanc n° ${B.i+1} · ${q.part} · ${fr(q.pts)} pt · question ${B.k+1} / ${n}</div><div class="bar"><i style="width:${B.k/n*100}%"></i></div>
+ <div class="qq">${q.q}</div><div class="opts" id="bo">${q.ord.map(j=>`<button data-j="${j}" class="${B.rep[B.k]==j?'sel':''}">${q.o[j]}</button>`).join("")}</div>
+ <div class="row" style="margin-top:12px"><button class="btn" id="bp" ${B.k==0?'disabled':''}>◀ Précédente</button><button class="btn primary" id="bn">${B.k<n-1?'Suivante ▶':'Terminer et corriger'}</button></div></div>`;
+ $("bo").onclick=e=>{const b=e.target.closest("button");if(!b)return;B.rep[B.k]=+b.dataset.j;drawB()};
+ $("bp").onclick=()=>{if(B.k>0){B.k--;drawB()}};
+ $("bn").onclick=()=>{if(B.k<n-1){B.k++;drawB()}else endB()}}
+function endB(){const L=B.list;let pts=0;const parts={};
+ L.forEach((q,i)=>{const g=B.rep[i]==q.a?q.pts:0;pts+=g;parts[q.part]=parts[q.part]||{g:0,m:0};parts[q.part].g+=g;parts[q.part].m+=q.pts});
+ const d=load(),key="blanc"+B.i;d[key]=d[key]||{tries:[]};d[key].tries.push({t:Date.now(),pts});save(d);
+ const need=Math.max(7,10-pts);
+ $("v-blanc").innerHTML=`<div class="card"><h2>Examen blanc n° ${B.i+1} : résultat</h2><div class="res ${pts>=5?'ok':'ko'}">${fr(pts)} / 8 hors carte</div>
+ <table><tr><th>Partie</th><th>Obtenu</th><th>Maximum</th></tr>${Object.entries(parts).map(([p,v])=>`<tr><td>${p}</td><td>${fr(v.g)}</td><td>${fr(v.m)}</td></tr>`).join("")}</table>
+ <div class="rule">Avec ${fr(pts)}/8 ici, il vous faudrait au moins <b>${fr(need)}/12 sur la carte</b> pour réussir (minimum absolu 7/12).</div>
+ <p><b>Votre note de carte</b> (si vous avez fait un problème sur carte) : <input type="number" id="nc" min="0" max="12" step="0.5"> / 12 <button class="btn" id="calc">Calculer</button></p><div id="verd"></div>
+ <h3>Correction</h3>${L.map((q,i)=>`<div class="rev ${B.rep[i]==q.a?'o':'k'}"><b>${i+1}. [${q.part}, ${fr(q.pts)} pt] ${q.q}</b><br>${B.rep[i]===undefined?'<span class="koc">✘ sans réponse</span><br>':B.rep[i]==q.a?'<span class="okc">✔</span> ':'<span class="koc">✘ vous : '+q.o[B.rep[i]]+'</span><br>'}Bonne réponse : <b>${q.o[q.a]}</b><small>${q.e}</small></div>`).join("")}
+ <div class="row"><button class="btn primary" id="bm">Retour aux examens blancs</button></div></div>`;
+ $("calc").onclick=()=>{const c=parseFloat(String($("nc").value).replace(',','.'));if(isNaN(c)||c<0||c>12){$("verd").innerHTML='<p class="koc">Entrez une note entre 0 et 12.</p>';return}
+  const tot=c+pts,okc=c>=7,okt=tot>=10;$("verd").innerHTML=`<div class="res ${okc&&okt?'ok':'ko'}">${fr(tot)} / 20 · ${okc&&okt?'RÉUSSI':'ÉCHEC'}</div><p class="mute">Carte : ${fr(c)}/12 ${okc?'✔ (7 minimum)':'✘ il faut au moins 7'} · Total : ${fr(tot)}/20 ${okt?'✔ (10 minimum)':'✘ il faut au moins 10'}</p>`};
+ $("bm").onclick=blancMenu;window.scrollTo(0,0)}
+/* ---------- statistiques ---------- */
+function stats(){const d=load();let h='<div class="card"><h2>Statistiques</h2><table><tr><th>Exercice</th><th>Essais</th><th>Dernier</th><th>Meilleur</th></tr>';
+ for(const k in NAMES){const t=(d[k]&&d[k].tries)||[];h+=`<tr><td>${NAMES[k]}</td><td>${t.length}</td><td>${t.length?Math.round(t[t.length-1].ok/t[t.length-1].n*100)+' %':'—'}</td><td>${t.length?Math.max(...t.map(x=>Math.round(x.ok/x.n*100)))+' %':'—'}</td></tr>`}
+ for(let i=0;i<3;i++){const t=(d["blanc"+i]&&d["blanc"+i].tries)||[];h+=`<tr><td>Examen blanc n° ${i+1}</td><td>${t.length}</td><td>${t.length?fr(t[t.length-1].pts)+'/8':'—'}</td><td>${t.length?fr(Math.max(...t.map(x=>x.pts)))+'/8':'—'}</td></tr>`}
+ h+='</table><h3>Vos questions les plus souvent ratées</h3>';const errs=[];for(const k in NAMES){const e=(d[k]&&d[k].err)||{};for(const id in e)errs.push({k,id:+id,c:e[id]})}
+ errs.sort((a,b)=>b.c-a.c);h+=errs.length?errs.slice(0,10).map(x=>{const q=BANK[x.k][x.id];return `<div class="rev k"><b>${q.q}</b> (${x.c} erreur${x.c>1?'s':''})<br>Bonne réponse : <b>${q.o[q.a]}</b><small>${q.e}</small></div>`}).join(""):'<p class="mute">Aucune erreur enregistrée pour l\'instant.</p>';
+ h+='<div class="row" style="margin-top:10px"><button class="btn" id="raz">Effacer les statistiques</button></div><p class="mute">Les statistiques restent sur cet appareil uniquement.</p></div>';
+ $("v-stats").innerHTML=h;$("raz").onclick=()=>{if(confirm("Effacer toutes les statistiques ?")){save({});stats()}}}
+</script></body></html>

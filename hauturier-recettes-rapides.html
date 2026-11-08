@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recettes rapides courant</title>
+<style>
+:root{--ink:#14213d;--mut:#5b6577;--bg:#f4f6f9;--line:#d9dee7;--blue:#1565c0;--orange:#e07a00;--green:#1a9c46;--red:#c62828;--pur:#7b3fbf}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 -apple-system,system-ui,sans-serif;padding:14px 16px 40px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:var(--mut)}
+h1{font-size:23px;margin:4px 0 8px}h2{font-size:20px;margin:0 0 6px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:14px 0}
+.tabs{display:grid;gap:8px;margin:10px 0}.tabs button{text-align:left}
+button{font:700 16px system-ui;padding:12px 14px;border-radius:12px;border:1.5px solid var(--blue);background:#fff;color:var(--blue)}
+button.p{background:var(--blue);color:#fff}button.on{background:#e3eefb}button:disabled{opacity:.35}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.nav button{font-size:18px;padding:14px}
+.prog{font-size:14px;font-weight:700;color:var(--mut);margin:4px 0}
+.bar{height:6px;background:#e3e8ef;border-radius:3px;overflow:hidden;margin-bottom:8px}.bar i{display:block;height:100%;background:var(--pur)}
+svg{width:100%;height:auto;display:block;background:#f7fafd;border:1px solid #e3e8ef;border-radius:12px}
+.kind{display:inline-block;font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;color:#fff;margin-bottom:4px}
+.k1{background:#1565c0}.k2{background:#7b3fbf}
+.txt{font-size:18px;margin:8px 0;min-height:3.2em}
+.calc{font-size:21px;font-weight:800;background:#fff7d6;border:2px solid #f2c94c;border-radius:12px;padding:10px 12px;margin:8px 0;text-align:center}
+.calc:empty{display:none}
+.leg{font-size:14px;line-height:1.9;margin:6px 0;background:#f3f6fa;border-radius:10px;padding:6px 10px}
+.leg i{display:inline-block;width:18px;height:5px;border-radius:2px;vertical-align:middle;margin-right:4px}
+.leg span{margin-right:12px;white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid var(--line);padding:6px;text-align:left}th{background:#eef2f7}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Maquette pas à pas · version 1.2 · chaque sinus et cosinus expliqué par son petit triangle rectangle · les deux recettes rapides et exactes : tracer, puis contrôler à la calculatrice</div>
+<h1>Le courant : tracer et calculer vite</h1>
+
+<div class="card">
+<p style="margin-top:0">Deux types de questions à l'examen, donc deux recettes. Chaque étape est soit un <span class="kind k1">TRACÉ</span> (sur la carte), soit un <span class="kind k2">CALCUL</span> (à la calculatrice, pour contrôler). L'élément nouveau est entouré de <b style="background:#fff3a6;padding:0 4px">jaune</b>.</p>
+<div class="tabs">
+<button class="on" id="tab0" onclick="go(0)">Recette 1 — Je connais mon CAP, je cherche la ROUTE FOND</button>
+<button id="tab1" onclick="go(1)">Recette 2 — Je connais la ROUTE FOND voulue, je cherche le CAP</button>
+</div>
+</div>
+
+<div class="card">
+<h2 id="ttl"></h2>
+<div class="prog" id="prog"></div><div class="bar"><i id="bari"></i></div>
+<svg id="s" viewBox="0 0 400 400"></svg>
+<div id="zw" style="display:none;margin-top:8px"><div style="font-weight:800;color:#5b6577;font-size:14px;margin-bottom:4px">🔍 LOUPE : le petit triangle rectangle du courant, en grand, dans le même sens que sur le dessin</div><svg id="z" viewBox="0 0 480 300"></svg></div>
+<div class="leg" id="leg"></div>
+<div id="kind"></div>
+<div class="txt" id="txt"></div>
+<div class="calc" id="calc"></div>
+<div class="nav"><button id="prev">◀ Précédent</button><button class="p" id="next">Suivant ▶</button></div>
+</div>
+
+<div class="card">
+<h2>La fiche à retenir</h2>
+<table>
+<tr><th colspan="2">Recette 1 — cap connu → route fond</th></tr>
+<tr><td>Tracé</td><td>① bateau depuis A · ② courant au bout · ③ joindre A à l'arrivée</td></tr>
+<tr><td>Calcul</td><td>écart = courant − cap<br>dans l'axe = Vc × cos(écart) · en travers = Vc × sin(écart)<br>avant = Vs + dans l'axe<br>Vf = √(avant² + travers²) · δ = tan⁻¹(travers ÷ avant)<br><b>Rf = cap + δ</b></td></tr>
+<tr><th colspan="2">Recette 2 — route fond voulue → cap</th></tr>
+<tr><td>Tracé</td><td>① route fond depuis A · ② courant depuis A → K · ③ arc de rayon Vs centré sur K → B · ④ K → B = cap</td></tr>
+<tr><td>Calcul</td><td>θ = courant − Rf · en travers = Vc × sin θ<br>α = sin⁻¹(travers ÷ Vs) · <b>cap = Rf − α</b><br>Vf = Vs × cos α + Vc × cos θ</td></tr>
+<tr><th colspan="2">Ensuite</th></tr>
+<tr><td colspan="2">Durée = distance ÷ Vf · Cv = Rs − dérive (vent de bâbord = +) · Cc = Cv − D − dév<br>Signe : « en travers » positif = le courant pousse à DROITE ; négatif = à GAUCHE. Tapez la différence telle quelle, la calculatrice fait le reste.</td></tr>
+</table>
+</div>
+</div>
+
+<script>
+const R=Math.PI/180,NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id);
+let svg;const HI='#ffe14d';
+function el(t,a,tx){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(tx!==undefined)e.textContent=tx;svg.appendChild(e);return e}
+function mk(){svg.innerHTML='';const d=el('defs',{});for(const [id,c] of [['b','#1565c0'],['o','#e07a00'],['g','#1a9c46'],['p','#7b3fbf'],['r','#c62828']]){const m=document.createElementNS(NS,'marker');for(const [k,v] of Object.entries({id:'m'+id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:4.5,markerHeight:4.5,orient:'auto'}))m.setAttribute(k,v);const p=document.createElementNS(NS,'path');p.setAttribute('d','M0 0L10 5L0 10Z');p.setAttribute('fill',c);m.appendChild(p);d.appendChild(m)}}
+function line(P,Q,c,w,dash,hi){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':w+12,'stroke-linecap':'round',opacity:.9});el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+function arrow(P,Q,c,m,V,hi,w=5){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':w+13,'stroke-linecap':'round',opacity:.9});
+ el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round','marker-end':`url(#m${m})`});
+ if(V){const L=Math.hypot(Q[0]-P[0],Q[1]-P[1]),ux=(Q[0]-P[0])/L,uy=(Q[1]-P[1])/L,u=L/V;for(let i=1;i<=Math.floor(V+1e-9);i++){if(i*u>L-4)continue;const x=P[0]+ux*u*i,y=P[1]+uy*u*i;el('line',{x1:x-uy*8,y1:y+ux*8,x2:x+uy*8,y2:y-ux*8,stroke:c,'stroke-width':2.5})}}}
+function text(x,y,t,c='#14213d',a='middle',s=15,hi){const e=el('text',{x,y,'text-anchor':a,'font-size':s,'font-weight':800,fill:c,stroke:'#f7fafd','stroke-width':5,'paint-order':'stroke'},t);if(hi){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill:HI}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+function arc(C,r,z0,z1,c,lab,labR,hi,lc,la){let d=((z1-z0)%360+540)%360-180;const p=(a,rr)=>[C[0]+rr*Math.sin(a*R),C[1]-rr*Math.cos(a*R)];const s=p(z0,r),e=p(z0+d,r);
+ if(hi)el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 ${d>0?1:0} ${e[0]} ${e[1]}`,fill:'none',stroke:HI,'stroke-width':12,opacity:.9});
+ el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 ${d>0?1:0} ${e[0]} ${e[1]}`,fill:'none',stroke:c,'stroke-width':3});
+ if(lab){const q=p(la!==undefined?la:z0+d/2,labR||r+22);text(q[0],q[1]+5,lab,lc||c,'middle',15,hi)}}
+function rmark(H,P1,P2,s=12){const u=P=>{const d=Math.hypot(P[0]-H[0],P[1]-H[1]);return[(P[0]-H[0])/d,(P[1]-H[1])/d]};const a=u(P1),b=u(P2);el('polyline',{points:`${H[0]+a[0]*s},${H[1]+a[1]*s} ${H[0]+a[0]*s+b[0]*s},${H[1]+a[1]*s+b[1]*s} ${H[0]+b[0]*s},${H[1]+b[1]*s}`,fill:'none',stroke:'#14213d','stroke-width':2})}
+function north(P,L,hi){line(P,[P[0],P[1]-L],'#14213d',2,'6 5',hi);text(P[0],P[1]-L-6,'N','#14213d','middle',14)}
+const vec=(Z,V)=>[V*Math.sin(Z*R),V*Math.cos(Z*R)];
+function inset(x0,y0,w,h,pts,labs,hi){el('rect',{x:x0,y:y0,width:w,height:h,rx:10,fill:'#ffffff',stroke:hi?'#f2c94c':'#9aa7b8','stroke-width':hi?4:2});
+ text(x0+8,y0+18,'🔍 LOUPE','#5b6577','start',12);
+ const [P,H,Q]=pts;el('polygon',{points:`${P} ${H} ${Q}`,fill:'#ffe0b2',stroke:'none'});
+ line(P,Q,'#e07a00',4);line(P,H,'#7b3fbf',4);line(H,Q,'#c62828',4);rmark(H,P,Q,9);
+ labs.forEach(([x,y,t,c,a])=>text(x,y,t,c,a||'middle',12))}
+
+
+/* ===== Recette 1 : cap 030°, 5 nd ; courant 150°, 2 nd ===== */
+const K1=58,A1=[95,345],px1=([e,n])=>[A1[0]+e*K1,A1[1]-n*K1];
+const p1=vec(30,5),q1=[p1[0]+vec(150,2)[0],p1[1]+vec(150,2)[1]],h1=vec(30,4);
+const P1=px1(p1),Q1=px1(q1),H1=px1(h1),EX1=px1(vec(30,6.3)),RF1=Math.atan2(q1[0],q1[1])/R;
+const E1={
+ A:h=>{el('circle',{cx:A1[0],cy:A1[1],r:6,fill:'#14213d'});text(A1[0]-14,A1[1]+22,'A (départ)','#14213d','middle',15,h)},
+ NA:h=>north(A1,80,h),
+ blue:h=>{arrow(A1,P1,'#1565c0','b',5,h);text((A1[0]+P1[0])/2-20,(A1[1]+P1[1])/2,'bateau 5 nd','#1565c0','end',15,h)},
+ cap:h=>arc(A1,34,0,30,'#1565c0','cap 030°',50,h,undefined,-28),
+ NP:h=>north(P1,60,h),
+ orange:h=>{arrow(P1,Q1,'#e07a00','o',2,h);text((P1[0]+Q1[0])/2+16,(P1[1]+Q1[1])/2-6,'courant 2 nd','#b35f00','start',15,h)},
+ cour:h=>arc(P1,24,0,150,'#e07a00','150°',46,h,'#b35f00',40),
+ green:h=>{arrow(A1,Q1,'#1a9c46','g',0,h);text((A1[0]+Q1[0])/2+75,(A1[1]+Q1[1])/2+52,'route fond','#137a37','middle',15,h)},
+ prol:h=>line(P1,EX1,'#1565c0',2.5,'5 5',h),
+ ecart:h=>arc(P1,40,30,150,'#1565c0','écart 120°',72,h,undefined,96),
+ axe:h=>{line(P1,H1,'#7b3fbf',7,null,h);text(H1[0]-14,H1[1]+14,'axe −1','#7b3fbf','end',14,h)},
+ trav:h=>{line(H1,Q1,'#c62828',6,null,h);rmark(H1,Q1,A1);text((H1[0]+Q1[0])/2+6,(H1[1]+Q1[1])/2+22,'en travers 1,73','#c62828','middle',14,h)},
+ avant:h=>{line([A1[0]-12,A1[1]+7],[H1[0]-12,H1[1]+7],'#0d47a1',5,'2 0',h);text((A1[0]+H1[0])/2-28,(A1[1]+H1[1])/2+24,'avant 4','#0d47a1','end',15,h)},
+ tri:h=>el('polygon',{points:`${A1} ${H1} ${Q1}`,fill:h?'#fff3a6':'#e8f5ec',opacity:.8}),
+ petit:h=>{el('polygon',{points:`${P1} ${H1} ${Q1}`,fill:h?'#ffe0b2':'#fff1dd',opacity:.95});rmark(H1,Q1,P1);},
+ a60:h=>{arc(P1,22,210,150,'#7b3fbf','60°',44,h,undefined,185)},
+ hyp:h=>text((P1[0]+Q1[0])/2+16,(P1[1]+Q1[1])/2+16,'hypoténuse = 2','#b35f00','start',13,h),
+ vf:h=>text((A1[0]+Q1[0])/2+75,(A1[1]+Q1[1])/2+72,'Vf = 4,36 nd','#137a37','middle',15,h),
+ del:h=>arc(A1,70,30,RF1,'#a51c1c','δ = 23,4°',98,h,undefined,66),
+ rf:h=>arc(A1,120,0,RF1,'#1a9c46','Rf = 053°',185,h,'#137a37',22),
+};
+/* ===== Recette 2 : Rf 045°, Vs 6 ; courant 090°, 2,5 nd ===== */
+const K2=50,A2=[60,350],px2=([e,n])=>[A2[0]+e*K2,A2[1]-n*K2];
+const k2=vec(90,2.5),al2=Math.asin(2.5*Math.sin(45*R)/6)/R,VF2=6*Math.cos(al2*R)+2.5*Math.cos(45*R),b2=vec(45,VF2),tF=2.5*Math.cos(45*R),f2p=vec(45,tF);
+const K2p=px2(k2),B2=px2(b2),F2=px2(f2p),X2=px2(vec(45,8.4)),CAP2=45-al2;
+const off=(P,d)=>[P[0]-d*0.707,P[1]-d*0.707];
+const E2={
+ A:h=>{el('circle',{cx:A2[0],cy:A2[1],r:6,fill:'#14213d'});text(A2[0]-12,A2[1]+5,'A','#14213d','end',16,h)},
+ NA:h=>north(A2,70,h),
+ route:h=>{line(A2,X2,'#1a9c46',3,'10 7',h);text(X2[0]-6,X2[1]-8,'route fond voulue 045°','#137a37','end',15,h)},
+ cour:h=>{arrow(A2,K2p,'#e07a00','o',2.5,h);arc(A2,28,0,90,'#e07a00');text((A2[0]+K2p[0])/2,A2[1]+24,'courant 090° · 2,5 nd','#b35f00','middle',14,h);text(K2p[0]+14,K2p[1]+6,'K','#b35f00','start',16,h)},
+ compas:h=>{const r=6*K2,c=K2p;const ang=Math.atan2(B2[1]-c[1],B2[0]-c[0]);const s0=ang-0.3,s1=ang+0.3;
+   const P0=[c[0]+r*Math.cos(s0),c[1]+r*Math.sin(s0)],P1x=[c[0]+r*Math.cos(s1),c[1]+r*Math.sin(s1)];
+   if(h)el('path',{d:`M${P0[0]} ${P0[1]} A${r} ${r} 0 0 1 ${P1x[0]} ${P1x[1]}`,fill:'none',stroke:HI,'stroke-width':12});
+   el('path',{d:`M${P0[0]} ${P0[1]} A${r} ${r} 0 0 1 ${P1x[0]} ${P1x[1]}`,fill:'none',stroke:'#5b6577','stroke-width':3,'stroke-dasharray':'7 5'});
+   text(P1x[0]+8,P1x[1]+4,'arc du compas,','#5b6577','start',12,h);text(P1x[0]+8,P1x[1]+20,'rayon 6','#5b6577','start',12,h)},
+ B:h=>{el('circle',{cx:B2[0],cy:B2[1],r:6,fill:'#1a9c46'});text(B2[0]+12,B2[1]+4,'B','#137a37','start',16,h)},
+ blue:h=>{arrow(K2p,B2,'#1565c0','b',6,h);text((K2p[0]+B2[0])/2+12,(K2p[1]+B2[1])/2+10,'bateau 6 nd','#1565c0','start',15,h)},
+ NK:h=>north(K2p,60,h),
+ cap:h=>arc(K2p,36,0,CAP2,'#1565c0','cap 028°',60,h,undefined,40),
+ green:h=>{arrow(A2,B2,'#1a9c46','g',0,h);text(A2[0]+90,A2[1]-150,'Vf','#137a37','middle',16,h)},
+ theta:h=>arc(A2,62,45,90,'#7b3fbf','θ = 45°',90,h,undefined,70),
+ petit2:h=>{el('polygon',{points:`${A2} ${F2} ${K2p}`,fill:h?'#ffe0b2':'#fff1dd',opacity:.95})},
+ hyp2:h=>text((A2[0]+K2p[0])/2,A2[1]+42,'hypoténuse = courant = 2,5','#b35f00','middle',13,h),
+ trav:h=>{line(K2p,F2,'#c62828',6,null,h);rmark(F2,K2p,B2);text((K2p[0]+F2[0])/2+10,(K2p[1]+F2[1])/2+18,'en travers 1,77','#c62828','start',14,h)},
+ alpha:h=>arc(B2,56,225,207.86,'#a51c1c','α = 17,1°',86,h,undefined,214),
+ AF:h=>{line(off(A2,12),off(F2,12),'#7b3fbf',6,null,h);const m=off([(A2[0]+F2[0])/2,(A2[1]+F2[1])/2],30);text(m[0],m[1],'1,77','#7b3fbf','middle',14,h)},
+ FB:h=>{line(off(F2,12),off(B2,12),'#0d47a1',6,null,h);const m=off([(F2[0]+B2[0])/2,(F2[1]+B2[1])/2],30);text(m[0],m[1],'5,74','#0d47a1','middle',14,h)},
+ vf:h=>text(150,60,'Vf = 1,77 + 5,74 = 7,50 nd','#137a37','middle',15,h),
+};
+const SH=[
+{t:'Recette 1 — cap connu → route fond',E:E1,
+ order:['tri','petit','NA','NP','prol','A','green','blue','orange','avant','axe','trav','cap','cour','ecart','a60','hyp','del','rf','vf'],
+ leg:'<span><i style="background:#1565c0"></i>bateau</span><span><i style="background:#e07a00"></i>courant</span><span><i style="background:#1a9c46"></i>route fond</span><span><i style="background:#7b3fbf"></i>courant « dans l\'axe »</span><span><i style="background:#c62828"></i>courant « en travers »</span><span><i style="background:#0d47a1"></i>avance réelle</span><span><i style="background:#a51c1c"></i>angle δ</span><span>Rf = route fond</span><span>┆ Nord</span><span>1 petit trait = 1 nœud</span>',
+ steps:[
+ {k:'T',add:['A','NA'],txt:'Énoncé : cap <b>030°</b>, vitesse <b>5 nœuds</b>, courant portant au <b>150°</b> à <b>2 nœuds</b>. On part de A. Les pointillés montrent le Nord.'},
+ {k:'T',add:['blue','cap'],txt:'<b>Tracé ①</b> — Depuis A, la flèche du bateau : au cap 030°, longueur 5 (5 petits traits).'},
+ {k:'T',add:['NP','cour','orange'],txt:'<b>Tracé ②</b> — Au bout, la flèche du courant : au 150° (mesuré depuis un Nord retracé), longueur 2.'},
+ {k:'T',add:['green'],txt:'<b>Tracé ③</b> — On joint A à l\'arrivée : c\'est la <b>route fond</b>. Sur la carte, on la mesure au rapporteur et au compas. Maintenant, on contrôle par le calcul.'},
+ {k:'C',add:['prol','ecart'],txt:'<b>Calcul ①</b> — L\'écart entre le cap et le courant (prolongement de la flèche bleue en pointillés) :',calc:'écart = 150 − 30 = 120°'},
+ {k:'C',add:['petit','a60','hyp'],z:{k:1,hi:'all'},txt:'<b>Pourquoi des sinus et cosinus ?</b> On découpe le courant en deux morceaux : un le long de l\'axe du bateau, un à angle droit. Avec la flèche du courant, ils forment un <b>petit triangle rectangle</b> (orange clair). Son <b>hypoténuse</b> est le courant = 2. Son angle au point de départ du courant vaut <b>180° − 120° = 60°</b> (violet). La <b>loupe</b> sous le dessin le montre en grand.',calc:'petit triangle : hypoténuse 2, angle 60°'},
+ {k:'C',add:['trav'],z:{k:1,hi:'opp'},txt:'<b>Calcul ②</b> — Le morceau <b>en travers</b> (rouge) est <b>en face</b> de l\'angle de 60° : c\'est le côté opposé. Opposé = hypoténuse × sinus (CAH-SOH-TOA). Et sin 60° = sin 120° (angles supplémentaires) : on peut taper directement 2 × sin 120°, la calculatrice donne la même chose.',calc:'en travers = 2 × sin 60° = 2 × 0,866 = 1,73'},
+ {k:'C',add:['axe'],z:{k:1,hi:'adj'},txt:'<b>Calcul ③</b> — Le morceau <b>dans l\'axe</b> (violet) <b>touche</b> l\'angle de 60° : c\'est le côté adjacent. Adjacent = hypoténuse × cosinus = 2 × 0,5 = 1. Il est dirigé <b>vers l\'arrière</b> du bateau : le courant <b>freine</b> de 1. C\'est pourquoi 2 × cos 120° donne directement <b>−1</b> (le signe moins = vers l\'arrière).',calc:'dans l\'axe = 2 × cos 60° = 1, vers l\'arrière → −1'},
+ {k:'C',add:['avant'],txt:'<b>Calcul ④</b> — Ce que le bateau avance vraiment dans son axe (bleu foncé) : ses 5 nœuds moins le freinage.',calc:'avant = 5 + (−1) = 4'},
+ {k:'C',add:['tri','vf'],txt:'<b>Calcul ⑤</b> — « avant » et « en travers » forment un <b>triangle rectangle</b> (vert clair) dont la route fond est l\'hypoténuse. Pythagore :',calc:'Vf = √(4² + 1,73²) = √19 = 4,36 nd'},
+ {k:'C',add:['del'],txt:'<b>Calcul ⑥</b> — L\'angle δ entre le cap et la route fond. Dans le triangle rectangle : tangente = opposé ÷ adjacent = travers ÷ avant (touche tan⁻¹).',calc:'δ = tan⁻¹(1,73 ÷ 4) = 23,4°'},
+ {k:'C',add:['rf'],txt:'<b>Calcul ⑦</b> — On ajoute δ au cap (δ est positif car le courant pousse à droite).',calc:'route fond = 030° + 23,4° = 053°'},
+ {k:'C',add:[],hi:['green','rf','vf'],txt:'<b>Résultat</b> — Le bateau suit la route fond <b>053°</b> à <b>4,36 nœuds</b>. Si votre tracé donne à peu près la même chose, il est juste.',calc:'Rf 053° · Vf 4,36 nd'}
+ ]},
+{t:'Recette 2 — route fond voulue → cap',E:E2,
+ order:['petit2','NA','NK','route','A','green','AF','FB','trav','cour','compas','blue','B','theta','alpha','cap','vf','hyp2'],
+ leg:'<span><i style="background:#1a9c46"></i>route fond</span><span><i style="background:#e07a00"></i>courant</span><span><i style="background:#1565c0"></i>bateau (le cap cherché)</span><span><i style="background:#5b6577"></i>arc du compas</span><span><i style="background:#c62828"></i>courant « en travers »</span><span><i style="background:#7b3fbf"></i>angle θ</span><span><i style="background:#a51c1c"></i>angle α</span><span>┆ Nord</span><span>1 petit trait = 1 nœud</span>',
+ steps:[
+ {k:'T',add:['A','NA'],txt:'Énoncé : on veut suivre la route fond <b>045°</b>. Vitesse du bateau <b>6 nœuds</b>. Courant portant au <b>090°</b> à <b>2,5 nœuds</b>. Quel cap afficher ?'},
+ {k:'T',add:['route'],txt:'<b>Tracé ①</b> — Depuis A, la route fond voulue au 045°, <b>sans longueur</b> (on ne sait pas encore jusqu\'où on ira en 1 heure).'},
+ {k:'T',add:['cour'],txt:'<b>Tracé ②</b> — Le <b>courant d\'abord</b>, depuis A : au 090°, longueur 2,5 (2 traits et demi). On arrive au point <b>K</b>. (Le courant est la seule flèche connue en entier.)'},
+ {k:'T',add:['compas'],txt:'<b>Tracé ③</b> — Pointe du compas sur K, ouverture = vitesse du bateau = <b>6</b>. On trace un arc qui coupe la route fond.'},
+ {k:'T',add:['B'],txt:'L\'arc coupe la route fond au point <b>B</b> : c\'est là que le bateau sera dans 1 heure.'},
+ {k:'T',add:['NK','blue','cap','green'],txt:'<b>Tracé ④</b> — K → B (bleu) donne le <b>cap</b> : on le mesure au rapporteur depuis un Nord retracé en K. A → B (vert) donne la <b>vitesse fond</b>. Maintenant, on contrôle par le calcul.'},
+ {k:'C',add:['theta'],txt:'<b>Calcul ①</b> — L\'angle θ entre la route fond et le courant :',calc:'θ = 90 − 45 = 45°'},
+ {k:'C',add:['trav','petit2','hyp2'],z:{k:2,hi:'opp'},txt:'<b>Calcul ②</b> — On découpe le courant : un morceau le long de la route, un morceau à angle droit (rouge). Avec la flèche du courant, ils forment un <b>petit triangle rectangle</b> (orange clair) : <b>hypoténuse = courant = 2,5</b>, angle θ = 45° au point A (voir la <b>loupe</b> sous le dessin). Le morceau rouge est <b>en face</b> de θ : opposé = hypoténuse × sin θ.',calc:'en travers = 2,5 × sin 45° = 2,5 × 0,707 = 1,77'},
+ {k:'C',add:['alpha'],txt:'<b>Calcul ③</b> — Le bateau doit annuler ce « travers ». Regardez le grand triangle rectangle formé par la flèche bleue (hypoténuse = 6), le trait rouge et la route : le trait rouge (1,77) est <b>en face</b> de l\'angle α. Donc sin α = opposé ÷ hypoténuse = 1,77 ÷ 6, puis touche sin⁻¹ :',calc:'α = sin⁻¹(1,77 ÷ 6) = 17,1°'},
+ {k:'C',add:[],hi:['cap','alpha'],txt:'<b>Calcul ④</b> — On remonte vers le côté d\'où vient le courant : on <b>retire</b> α de la route fond.',calc:'cap = 045° − 17,1° = 028°'},
+ {k:'C',add:['AF','FB','vf'],z:{k:2,hi:'adj'},txt:'<b>Calcul ⑤</b> — La vitesse fond = ce que le courant fait le long de la route (violet : dans le petit triangle, c\'est le côté qui <b>touche</b> θ, donc 2,5 × cos 45° = 1,77) + ce que le bateau fait le long de la route (bleu foncé : dans le grand triangle, le côté qui <b>touche</b> α, donc 6 × cos 17,1° = 5,74).',calc:'Vf = 1,77 + 5,74 = 7,50 nd'},
+ {k:'C',add:[],hi:['cap','vf'],txt:'<b>Résultat</b> — Afficher le <b>cap 028°</b> ; on avancera à <b>7,50 nœuds</b> sur le fond. Ensuite si besoin : durée = distance ÷ 7,50 ; puis dérive, déclinaison et déviation pour le cap compas.',calc:'Cap 028° · Vf 7,50 nd'}
+ ]}];
+
+function drawZoom(z){const zw=$('zw');if(!z){zw.style.display='none';return}zw.style.display='block';const keep=svg;svg=$('z');mk();
+ /* même orientation que sur le grand dessin : on reprend les vrais points (Est, Nord) et on les agrandit */
+ const D=z.k==1?{P:vec(30,5),H:vec(30,4),Q:[vec(30,5)[0]+vec(150,2)[0],vec(30,5)[1]+vec(150,2)[1]],ax:30,axT:'axe du bateau (cap 030°)',sc:95,
+   hypT:['hypoténuse','= courant 150°','= 2 nœuds'],adjT:['adjacent','(touche l\'angle)','= dans l\'axe','= 2 × cos 60° = 1'],oppT:['opposé','(en face de l\'angle)','= en travers','= 2 × sin 60°','= 1,73'],angT:'60°'}
+  :{P:[0,0],H:vec(45,1.768),Q:vec(90,2.5),ax:45,axT:'route fond 045°',sc:110,
+   hypT:['hypoténuse = courant 090° = 2,5 nœuds'],adjT:['adjacent (touche θ)','= le long de la route','= 2,5 × cos 45° = 1,77'],oppT:['opposé','(en face de θ)','= en travers','= 2,5 × sin 45°','= 1,77'],angT:'θ = 45°'};
+ const W=480,Hh=300,raw=[D.P,D.H,D.Q].map(([e,n])=>[e,-n]);
+ const cx=(Math.min(...raw.map(p=>p[0]))+Math.max(...raw.map(p=>p[0])))/2,cy=(Math.min(...raw.map(p=>p[1]))+Math.max(...raw.map(p=>p[1])))/2;
+ const [P,H,Q]=raw.map(p=>[W/2+(p[0]-cx)*D.sc,Hh/2+(p[1]-cy)*D.sc+(z.k==1?0:10)]);
+ const G=[(P[0]+H[0]+Q[0])/3,(P[1]+H[1]+Q[1])/3];
+ /* Nord, en haut à gauche */
+ line([26,70],[26,30],'#14213d',2,'6 5');text(26,24,'N','#14213d','middle',14);
+ /* axe (bateau ou route) en pointillés, prolongé */
+ const u=[Math.sin(D.ax*R),-Math.cos(D.ax*R)],pr=X=>X[0]*u[0]+X[1]*u[1],[Bk,Fw]=pr(P)<pr(H)?[P,H]:[H,P],e1=[Bk[0]-u[0]*50,Bk[1]-u[1]*50],e2=[Fw[0]+u[0]*60,Fw[1]+u[1]*60];
+ line(e1,e2,z.k==1?'#1565c0':'#1a9c46',2.5,'6 6');
+ el('polygon',{points:`${P} ${H} ${Q}`,fill:'#fff1dd'});
+ const ha=z.hi=='all',hA=ha||z.hi=='adj',hO=ha||z.hi=='opp';
+ line(P,H,'#7b3fbf',6,null,hA);line(H,Q,'#c62828',6,null,hO);arrow(P,Q,'#e07a00','o',0,ha,6);rmark(H,P,Q,14);
+ /* angle au départ du courant */
+ const a1=Math.atan2(H[1]-P[1],H[0]-P[0]),a2=Math.atan2(Q[1]-P[1],Q[0]-P[0]);let d=a2-a1;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+ const r=36,s0=[P[0]+r*Math.cos(a1),P[1]+r*Math.sin(a1)],s1=[P[0]+r*Math.cos(a1+d),P[1]+r*Math.sin(a1+d)];
+ el('path',{d:`M${s0[0]} ${s0[1]} A${r} ${r} 0 0 ${d>0?1:0} ${s1[0]} ${s1[1]}`,fill:'none',stroke:'#7b3fbf','stroke-width':3});
+ const bm=a1+d/2;text(P[0]+58*Math.cos(bm),P[1]+58*Math.sin(bm)+5,D.angT,'#7b3fbf','middle',15);
+ /* étiquettes : à l'extérieur de chaque côté */
+ function lab(A,B,L,c,hi,dist){const m=[(A[0]+B[0])/2,(A[1]+B[1])/2];let nx=m[0]-G[0],ny=m[1]-G[1];const n=Math.hypot(nx,ny);nx/=n;ny/=n;
+  const x=m[0]+nx*dist,anc=nx>0.35?'start':nx<-0.35?'end':'middle',hL=16*L.length;
+  const y0=ny>0.35?m[1]+ny*dist+10:ny<-0.35?m[1]+ny*dist-hL+14:m[1]-hL/2+12;
+  L.forEach((t,i)=>text(x,y0+i*16,t,c,anc,13,hi))}
+ lab(P,H,D.adjT,'#7b3fbf',hA,z.k==1?18:26);lab(H,Q,D.oppT,'#c62828',hO,18);lab(P,Q,D.hypT,'#b35f00',ha,18);
+ text(e2[0]+8,e2[1]+4,D.axT,z.k==1?'#1565c0':'#137a37','start',12);
+ svg=keep}
+let cur=0,st=0;
+function render(){svg=$('s');mk();const sh=SH[cur];let on=new Set();
+ for(let i=0;i<=st;i++){(sh.steps[i].add||[]).forEach(x=>on.add(x));(sh.steps[i].rm||[]).forEach(x=>on.delete(x))}
+ const now=new Set([...(sh.steps[st].add||[]),...(sh.steps[st].hi||[])]);
+ sh.order.forEach(k=>{if(on.has(k))sh.E[k](now.has(k))});
+ drawZoom(sh.steps[st].z);
+ $('ttl').textContent=sh.t;$('prog').textContent=`Étape ${st+1} / ${sh.steps.length}`;$('bari').style.width=((st+1)/sh.steps.length*100)+'%';
+ $('leg').innerHTML='<b>Légende :</b> '+sh.leg;
+ $('kind').innerHTML=sh.steps[st].k=='T'?'<span class="kind k1">TRACÉ sur la carte</span>':'<span class="kind k2">CALCUL de contrôle</span>';
+ $('txt').innerHTML=sh.steps[st].txt;$('calc').textContent=sh.steps[st].calc||'';
+ $('prev').disabled=st==0;$('next').disabled=st==sh.steps.length-1;[0,1].forEach(i=>$('tab'+i).classList.toggle('on',i==cur))}
+function go(i){cur=i;st=0;render()}
+$('next').onclick=()=>{st++;render()};$('prev').onclick=()=>{st--;render()};render();
+</script></body></html>

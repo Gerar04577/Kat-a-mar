@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Triangles quelconques</title>
+<style>
+:root{--ink:#14213d;--mut:#5b6577;--bg:#f4f6f9;--line:#d9dee7;--blue:#1565c0;--orange:#e07a00;--green:#1a9c46;--red:#c62828;--pur:#7b3fbf}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 -apple-system,system-ui,sans-serif;padding:14px 16px 40px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:var(--mut)}
+h1{font-size:23px;margin:4px 0 8px}h2{font-size:20px;margin:0 0 6px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:14px 0}
+.tabs{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
+.tabs button{text-align:left}
+button{font:700 16px system-ui;padding:12px 14px;border-radius:12px;border:1.5px solid var(--blue);background:#fff;color:var(--blue)}
+button.p{background:var(--blue);color:#fff}button.on{background:#e3eefb}
+button:disabled{opacity:.35}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.nav button{font-size:18px;padding:14px}
+.prog{font-size:14px;font-weight:700;color:var(--mut);margin:4px 0}
+.bar{height:6px;background:#e3e8ef;border-radius:3px;overflow:hidden;margin-bottom:8px}.bar i{display:block;height:100%;background:var(--pur)}
+svg{width:100%;height:auto;display:block;background:#f7fafd;border:1px solid #e3e8ef;border-radius:12px}
+.txt{font-size:18px;margin:10px 0;min-height:3.2em}
+.calc{font-size:21px;font-weight:800;background:#fff7d6;border:2px solid #f2c94c;border-radius:12px;padding:10px 12px;margin:8px 0;text-align:center;min-height:1.8em}
+.calc:empty{display:none}
+.leg{font-size:14px;line-height:1.8;margin:6px 0}
+.leg i{display:inline-block;width:16px;height:5px;border-radius:2px;vertical-align:middle;margin:0 4px 0 0}
+.leg span{margin-right:12px;white-space:nowrap}
+.ctl label{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:16px}.ctl span{min-width:150px}.ctl input{flex:1;accent-color:var(--blue)}
+ol.res li{margin:5px 0}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Cours pas à pas · version 2.0 · triangles quelconques : loi des cosinus et loi des sinus, sur UN seul exemple de bateau</div>
+<h1>Bateau + courant : le calcul pas à pas</h1>
+
+<div class="card">
+<p style="margin-top:0"><b>Un seul exemple, du début à la fin :</b> un bateau fait route au <b>cap 030°</b> à <b>5 nœuds</b>. Le courant <b>porte au 150°</b> à <b>2 nœuds</b>. Où va vraiment le bateau ?</p>
+<p>Chaque appui sur <b>« Suivant »</b> ajoute <b>une seule chose</b> au dessin, entourée de <b style="background:#fff3a6;padding:0 4px">jaune</b>, avec une phrase et un calcul.</p>
+<div class="tabs">
+<button class="on" id="tab0" onclick="go(0)">① Le calcul complet (23 étapes)</button>
+<button id="tab1" onclick="go(1)">② Pourquoi la loi des cosinus est vraie (8 étapes)</button>
+<button id="tab2" onclick="go(2)">③ Pourquoi la loi des sinus est vraie (6 étapes)</button>
+</div>
+</div>
+
+<div class="card">
+<h2 id="ttl"></h2>
+<div class="prog" id="prog"></div><div class="bar"><i id="bari"></i></div>
+<svg id="s" viewBox="0 0 400 400"></svg>
+<div class="leg"><span><i style="background:var(--blue)"></i>bateau</span><span><i style="background:var(--orange)"></i>courant</span><span><i style="background:var(--green)"></i>route fond</span><span><i style="background:var(--pur)"></i>angles γ</span><span><i style="background:var(--red)"></i>angle δ</span><span>┆ Nord</span><span>1 petit trait = 1 nœud</span></div>
+<div class="txt" id="txt"></div>
+<div class="calc" id="calc"></div>
+<div class="nav"><button id="prev">◀ Précédent</button><button class="p" id="next">Suivant ▶</button></div>
+</div>
+
+<div class="card">
+<h2>Avec vos propres chiffres</h2>
+<p>Quand vous avez compris l'exemple, changez les chiffres : le même calcul s'écrit tout seul, ligne par ligne.</p>
+<div class="ctl">
+<label><span>Cap : <b id="cCv"></b></span><input id="cC" type="range" min="0" max="359" value="30"></label>
+<label><span>Vitesse bateau : <b id="cVsv"></b></span><input id="cVs" type="range" min="1" max="10" step="0.5" value="5"></label>
+<label><span>Courant porte au : <b id="cDv"></b></span><input id="cD" type="range" min="0" max="359" value="150"></label>
+<label><span>Vitesse courant : <b id="cVcv"></b></span><input id="cVc" type="range" min="0.5" max="6" step="0.5" value="2"></label>
+</div>
+<ol class="res" id="res"></ol>
+</div>
+</div>
+
+<script>
+const R=Math.PI/180,NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id);
+const f1=x=>(Math.round(x*10)/10).toString().replace('.',','),f2=x=>(Math.round(x*100)/100).toString().replace('.',',');
+const nrm=a=>((a%360)+360)%360,n3=a=>String(Math.round(nrm(a))%360).padStart(3,'0')+'°';
+let svg;
+function el(t,a,tx){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(tx!==undefined)e.textContent=tx;svg.appendChild(e);return e}
+function mk(){svg.innerHTML='';const d=el('defs',{});for(const [id,c] of [['b','#1565c0'],['o','#e07a00'],['g','#1a9c46']]){const m=document.createElementNS(NS,'marker');for(const [k,v] of Object.entries({id:'m'+id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:4.5,markerHeight:4.5,orient:'auto'}))m.setAttribute(k,v);const p=document.createElementNS(NS,'path');p.setAttribute('d','M0 0L10 5L0 10Z');p.setAttribute('fill',c);m.appendChild(p);d.appendChild(m)}}
+const HI='#ffe14d';
+function line(P,Q,c,w,dash,hi){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':w+12,'stroke-linecap':'round',opacity:.9});el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+function arrow(P,Q,c,m,V,hi,dash){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':18,'stroke-linecap':'round',opacity:.9});
+ el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':5,'stroke-linecap':'round','marker-end':`url(#m${m})`,...(dash?{'stroke-dasharray':dash}:{})});
+ if(V){const L=Math.hypot(Q[0]-P[0],Q[1]-P[1]),ux=(Q[0]-P[0])/L,uy=(Q[1]-P[1])/L,u=L/V;for(let i=1;i<=Math.floor(V+1e-9);i++){if(i*u>L-4)continue;const x=P[0]+ux*u*i,y=P[1]+uy*u*i;el('line',{x1:x-uy*8,y1:y+ux*8,x2:x+uy*8,y2:y-ux*8,stroke:c,'stroke-width':2.5})}}}
+function text(x,y,t,c='#14213d',a='middle',s=15,hi){const e=el('text',{x,y,'text-anchor':a,'font-size':s,'font-weight':800,fill:c,stroke:'#f7fafd','stroke-width':5,'paint-order':'stroke'},t);if(hi){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill:HI}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+// arc between navigation directions at C, radius r; label at labR
+function arc(C,r,z0,z1,c,lab,labR,hi,lc,la){let d=((z1-z0)%360+540)%360-180;const p=(a,rr)=>[C[0]+rr*Math.sin(a*R),C[1]-rr*Math.cos(a*R)];const s=p(z0,r),e=p(z0+d,r);
+ if(hi)el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 ${d>0?1:0} ${e[0]} ${e[1]}`,fill:'none',stroke:HI,'stroke-width':12,opacity:.9});
+ el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 ${d>0?1:0} ${e[0]} ${e[1]}`,fill:'none',stroke:c,'stroke-width':3});
+ if(lab){const q=p(la!==undefined?la:z0+d/2,labR||r+22);text(q[0],q[1]+5,lab,lc||c,'middle',15,hi)}}
+function rmark(H,P1,P2,s=12){const u=P=>{const d=Math.hypot(P[0]-H[0],P[1]-H[1]);return[(P[0]-H[0])/d,(P[1]-H[1])/d]};const a=u(P1),b=u(P2);el('polyline',{points:`${H[0]+a[0]*s},${H[1]+a[1]*s} ${H[0]+a[0]*s+b[0]*s},${H[1]+a[1]*s+b[1]*s} ${H[0]+b[0]*s},${H[1]+b[1]*s}`,fill:'none',stroke:'#14213d','stroke-width':2})}
+
+/* ---------- l'exemple ---------- */
+const K=58,A=[95,345];const px=([e,n])=>[A[0]+e*K,A[1]-n*K];
+const C0=30,VS=5,D0=150,VC=2,Pp=[VS*Math.sin(C0*R),VS*Math.cos(C0*R)],Qp=[Pp[0]+VC*Math.sin(D0*R),Pp[1]+VC*Math.cos(D0*R)];
+const VF=Math.hypot(Qp[0],Qp[1]),RF=nrm(Math.atan2(Qp[0],Qp[1])/R),DL=RF-C0,G=60;
+const P=px(Pp),Q=px(Qp);const u=[Math.sin(C0*R),Math.cos(C0*R)];const tH=Qp[0]*u[0]+Qp[1]*u[1];const H=px([u[0]*tH,u[1]*tH]);
+const EXT=px([u[0]*6.2,u[1]*6.2]);
+
+/* éléments du dessin */
+const E={
+ A:h=>{el('circle',{cx:A[0],cy:A[1],r:6,fill:'#14213d'});text(A[0]-14,A[1]+22,'A (départ)','#14213d','middle',15,h)},
+ NA:h=>{line(A,[A[0],A[1]-80],'#14213d',2,'6 5',h);text(A[0],A[1]-88,'N','#14213d','middle',15)},
+ blue:h=>{arrow(A,P,'#1565c0','b',VS,h);text((A[0]+P[0])/2-20,(A[1]+P[1])/2,'5 nd','#1565c0','end',16,h)},
+ cap:h=>arc(A,34,0,C0,'#1565c0','030°',58,h),
+ NP:h=>{line(P,[P[0],P[1]-62],'#14213d',2,'6 5',h);text(P[0],P[1]-68,'N','#14213d','middle',15)},
+ orange:h=>{arrow(P,Q,'#e07a00','o',VC,h);text((P[0]+Q[0])/2+16,(P[1]+Q[1])/2-4,'2 nd','#b35f00','start',16,h)},
+ cour:h=>arc(P,26,0,D0,'#e07a00','150°',50,h,'#b35f00',38),
+ greenQ:h=>{line(A,Q,'#1a9c46',3,'9 7',h);text((A[0]+Q[0])/2+30,(A[1]+Q[1])/2+26,'? (route fond)','#137a37','middle',15,h)},
+ tri:h=>{el('polygon',{points:`${A} ${P} ${Q}`,fill:h?'#fff3a6':'#eef4fb',stroke:'none'})},
+ prol:h=>line(P,EXT,'#1565c0',2.5,'5 5',h),
+ ecart:h=>arc(P,40,C0,D0,'#1565c0','120°',66,h,undefined,100),
+ gam:h=>arc(P,20,C0+180,D0,'#7b3fbf','γ = 60°',46,h),
+ green:h=>{arrow(A,Q,'#1a9c46','g',0,h);text((A[0]+Q[0])/2+30,(A[1]+Q[1])/2+26,'4,36 nd','#137a37','middle',16,h)},
+ greenU:h=>{arrow(A,Q,'#1a9c46','g',0,h);text((A[0]+Q[0])/2+30,(A[1]+Q[1])/2+26,'Vf','#137a37','middle',16,h)},
+ del:h=>arc(A,62,C0,RF,'#c62828','δ',84,h),
+ delV:h=>arc(A,62,C0,RF,'#c62828','δ = 23,4°',100,h),
+ rf:h=>arc(A,110,0,RF,'#1a9c46','053°',150,h,'#137a37',9),
+ blue2:h=>{arrow(A,P,'#1565c0','b',VS,h);text((A[0]+P[0])/2+16,(A[1]+P[1])/2+30,'Vs = 5','#1565c0','start',16,h)},
+ orange2:h=>{arrow(P,Q,'#e07a00','o',VC,h);text((P[0]+Q[0])/2+16,(P[1]+Q[1])/2-4,'Vc = 2','#b35f00','start',16,h)},
+
+ Vf:h=>text((A[0]+Q[0])/2+30,(A[1]+Q[1])/2+46,'Vf','#137a37','middle',16,h),
+ hH:h=>{line(Q,H,'#14213d',3,'6 4',h);el('circle',{cx:H[0],cy:H[1],r:5,fill:'#14213d'});text(H[0]-14,H[1]-4,'H','#14213d','end',15);rmark(H,Q,A);text((Q[0]+H[0])/2+4,(Q[1]+H[1])/2-10,'h','#14213d','middle',17,h)},
+ triPHQ:h=>el('polygon',{points:`${P} ${H} ${Q}`,fill:'#ffe9c2',opacity:h?1:.6}),
+ triAHQ:h=>el('polygon',{points:`${A} ${H} ${Q}`,fill:'#d9f2e1',opacity:h?1:.6}),
+ PH:h=>{line([P[0]-14,P[1]+8],[H[0]-14,H[1]+8],'#7b3fbf',5,null,h);text((P[0]+H[0])/2-26,(P[1]+H[1])/2+10,'PH = 1','#7b3fbf','end',14,h)},
+ AH:h=>{line([A[0]-14,A[1]+8],[H[0]-14,H[1]+8],'#c62828',5,null,h);text((A[0]+H[0])/2-28,(A[1]+H[1])/2+12,'AH = 4','#c62828','end',14,h)},
+ Pl:h=>text(P[0]-12,P[1]+4,'P','#14213d','end',15,h),
+ Ql:h=>text(Q[0]+12,Q[1]+6,'Q','#14213d','start',15,h),
+};
+/* ---------- les 3 diaporamas ---------- */
+const S=[
+{t:'① Le calcul complet',steps:[
+ {add:['A','NA'],txt:'Le bateau part du point <b>A</b>. La ligne en pointillés indique le <b>Nord</b> : tous les angles se comptent à partir d\'elle, dans le sens des aiguilles d\'une montre.'},
+ {add:['blue'],txt:'Le bateau avance sur l\'eau : <b>5 nœuds</b>, donc en 1 heure, une flèche de <b>5 unités</b> (5 petits traits).'},
+ {add:['cap'],txt:'Sa direction est le <b>cap 030°</b> : 30° à droite du Nord.'},
+ {add:['NP'],txt:'Au bout de la flèche bleue, on retrace un <b>Nord</b> (pointillés), pour pouvoir y mesurer un nouvel angle.'},
+ {add:['orange'],txt:'Pendant la même heure, l\'eau emmène le bateau : le <b>courant de 2 nœuds</b> (2 petits traits), dessiné <b>au bout</b> de la flèche bleue.'},
+ {add:['cour'],txt:'Le courant <b>porte au 150°</b> : 150° à partir du Nord.'},
+ {add:['greenQ'],txt:'Le vrai trajet du bateau va de A jusqu\'au bout de la flèche orange. C\'est la <b>route fond</b>. On ne connaît <b>ni sa longueur</b> (la vitesse fond), <b>ni sa direction</b>.'},
+ {add:['tri'],txt:'Les trois flèches forment un <b>triangle</b>. Il n\'a <b>pas d\'angle droit</b> : on ne peut pas utiliser Pythagore directement. On va utiliser deux règles : la <b>loi des cosinus</b>, puis la <b>loi des sinus</b>.'},
+ {add:['prol'],txt:'D\'abord, il faut <b>l\'angle entre les deux flèches</b>. On prolonge la flèche bleue en pointillés : elle continue tout droit au 030°.'},
+ {add:['ecart'],txt:'Entre ce prolongement (030°) et le courant (150°), il y a un écart de :',calc:'150° − 30° = 120°'},
+ {add:['gam'],txt:'La flèche bleue et son prolongement forment une <b>ligne droite</b>, soit 180°. L\'angle <b>à l\'intérieur</b> du triangle, appelé <b>γ</b> (gamma), est ce qui reste :',calc:'γ = 180° − 120° = 60°'},
+ {add:[],hi:['blue','orange','gam'],txt:'<b>Loi des cosinus.</b> On connaît <b>deux côtés</b> (5 et 2) et <b>l\'angle γ entre eux</b>. Elle donne le <b>troisième côté</b>, celui qui est en face de γ : la route fond.',calc:'Vf² = Vs² + Vc² − 2 × Vs × Vc × cos γ'},
+ {add:[],hi:['blue'],txt:'On calcule chaque morceau, un par un. D\'abord le côté bleu au carré :',calc:'Vs² = 5² = 5 × 5 = 25'},
+ {add:[],hi:['orange'],txt:'Puis le côté orange au carré :',calc:'Vc² = 2² = 2 × 2 = 4'},
+ {add:[],hi:['blue','orange'],txt:'Puis 2 × côté bleu × côté orange :',calc:'2 × 5 × 2 = 20'},
+ {add:[],hi:['gam'],txt:'Le cosinus de l\'angle γ (touche <b>cos</b> de la calculatrice) :',calc:'cos 60° = 0,5'},
+ {add:[],txt:'On multiplie les deux derniers résultats :',calc:'20 × 0,5 = 10'},
+ {add:[],txt:'On assemble : 25 + 4 − 10.',calc:'Vf² = 25 + 4 − 10 = 19'},
+ {add:['green'],rm:['greenQ'],txt:'Vf² vaut 19, donc Vf est la racine carrée de 19 (touche <b>√</b>). C\'est la <b>vitesse fond</b>.',calc:'Vf = √19 = 4,36 nœuds'},
+ {add:['del'],txt:'Il reste la <b>direction</b>. L\'angle <b>δ</b> (delta) est l\'écart entre le cap (flèche bleue) et la route fond (flèche verte). On le cherche avec la <b>loi des sinus</b>.'},
+ {add:[],hi:['del','orange','gam','green'],txt:'<b>Loi des sinus</b> : le sinus d\'un angle divisé par le côté <b>en face</b> donne le même nombre pour tous les angles. En face de δ : le courant (2). En face de γ : la route fond (4,36).',calc:'sin δ ÷ 2 = sin 60° ÷ 4,36'},
+ {add:[],txt:'On isole sin δ en multipliant par 2. sin 60° = 0,866 (touche <b>sin</b>).',calc:'sin δ = 2 × 0,866 ÷ 4,36 = 0,397'},
+ {add:['delV'],rm:['del'],txt:'Pour trouver l\'angle à partir de son sinus, on utilise la touche <b>sin⁻¹</b> (souvent « SHIFT » puis « sin »).',calc:'δ = sin⁻¹(0,397) = 23,4°'},
+ {add:['rf'],txt:'Le courant pousse vers la <b>droite</b> du bateau (la flèche orange part vers la droite de la bleue). La route fond est donc décalée vers la droite : on <b>ajoute</b> δ au cap.',calc:'route fond = 030° + 23,4° = 053°'},
+ {add:[],hi:['green','rf'],txt:'<b>Résultat :</b> le bateau suit en réalité la <b>route fond 053°</b> à <b>4,36 nœuds</b>. Sur la carte, on obtient la même chose en mesurant la flèche verte au rapporteur et au compas.',calc:'Route fond 053° · Vitesse fond 4,36 nd'}
+]},
+{t:'② Pourquoi la loi des cosinus est vraie',steps:[
+ {add:['blue2','orange2','greenU','gam','Pl','Ql','A'],txt:'Le même triangle. On veut prouver que <b>Vf² = Vs² + Vc² − 2 × Vs × Vc × cos γ</b>. Idée : couper ce triangle en <b>deux triangles rectangles</b>, où l\'on sait calculer.'},
+ {add:['prol','hH'],txt:'Depuis Q (bout du courant), on trace la <b>hauteur h</b> : une ligne qui tombe à <b>angle droit</b> sur la flèche bleue, au point <b>H</b>.'},
+ {add:['triPHQ'],txt:'Le petit triangle <b>P-H-Q</b> (orange clair) est <b>rectangle en H</b>. Son hypoténuse est le courant Vc = 2, et son angle en P est γ = 60°.'},
+ {add:['PH'],txt:'Dans ce triangle rectangle, le côté PH touche l\'angle γ (côté <b>adjacent</b>) et h est en face (côté <b>opposé</b>) :',calc:'PH = Vc × cos γ = 2 × 0,5 = 1 · h = Vc × sin γ = 2 × 0,866 = 1,73'},
+ {add:['AH'],txt:'Le segment <b>AH</b> est la flèche bleue moins le morceau PH :',calc:'AH = Vs − Vc × cos γ = 5 − 1 = 4'},
+ {add:['triAHQ'],txt:'Le grand triangle <b>A-H-Q</b> (vert clair) est lui aussi <b>rectangle en H</b>. Son hypoténuse est la route fond Vf. <b>Pythagore</b> :',calc:'Vf² = AH² + h²'},
+ {add:[],hi:['AH','hH','PH'],txt:'On remplace AH et h par ce qu\'on vient de trouver, puis on développe. Avec les lettres :',calc:'Vf² = (Vs − Vc cos γ)² + (Vc sin γ)²'},
+ {add:[],txt:'En développant, on obtient Vs² − 2 Vs Vc cos γ + Vc² cos² γ + Vc² sin² γ. Or <b>cos² γ + sin² γ = 1</b> (Pythagore dans le cercle de rayon 1). Il reste la loi des cosinus. Avec les nombres : 4² + 1,73² = 16 + 3 = 19 : c\'est bien le même résultat qu\'au ①.',calc:'Vf² = Vs² + Vc² − 2 Vs Vc cos γ'}
+]},
+{t:'③ Pourquoi la loi des sinus est vraie',steps:[
+ {add:['blue2','orange2','green','gam','del','Pl','Ql','A'],txt:'Le même triangle, avec l\'angle γ (en P) et l\'angle δ (en A). On veut prouver que <b>sin δ ÷ Vc = sin γ ÷ Vf</b>.'},
+ {add:['prol','hH'],txt:'Même idée : la <b>hauteur h</b>, depuis Q, tombe à angle droit sur la flèche bleue au point H.'},
+ {add:['triPHQ'],txt:'Dans le petit triangle rectangle <b>P-H-Q</b>, h est en face de l\'angle γ, et l\'hypoténuse est le courant Vc :',calc:'h = Vc × sin γ = 2 × 0,866 = 1,73'},
+ {add:['triAHQ'],txt:'Dans le grand triangle rectangle <b>A-H-Q</b>, h est en face de l\'angle δ, et l\'hypoténuse est la route fond Vf :',calc:'h = Vf × sin δ'},
+ {add:[],hi:['hH'],txt:'C\'est <b>la même hauteur h</b> ! Les deux calculs sont donc égaux :',calc:'Vf × sin δ = Vc × sin γ'},
+ {add:[],hi:['del'],txt:'On divise par Vf. C\'est exactement la formule utilisée au ①. Avec les nombres : 2 × 0,866 ÷ 4,36 = 0,397, donc δ = 23,4°.',calc:'sin δ = Vc × sin γ ÷ Vf'}
+]}];
+let cur=0,st=0;
+function render(){svg=$('s');mk();const sh=S[cur];const steps=sh.steps;let on=new Set();
+ for(let i=0;i<=st;i++){(steps[i].add||[]).forEach(x=>on.add(x));(steps[i].rm||[]).forEach(x=>on.delete(x))}
+ const now=new Set([...(steps[st].add||[]),...(steps[st].hi||[])]);
+ const order=['tri','triAHQ','triPHQ','NA','NP','prol','A','greenQ','green','greenU','blue','orange','blue2','orange2','hH','PH','AH','cap','cour','ecart','gam','del','delV','rf','Vf','Pl','Ql'];
+ order.forEach(k=>{if(on.has(k))E[k](now.has(k))});
+ $('ttl').textContent=sh.t;$('prog').textContent=`Étape ${st+1} / ${steps.length}`;$('bari').style.width=((st+1)/steps.length*100)+'%';
+ $('txt').innerHTML=steps[st].txt;$('calc').textContent=steps[st].calc||'';
+ $('prev').disabled=st==0;$('next').disabled=st==steps.length-1;
+ [0,1,2].forEach(i=>$('tab'+i).classList.toggle('on',i==cur))}
+function go(i){cur=i;st=0;render()}
+$('next').onclick=()=>{st++;render()};$('prev').onclick=()=>{st--;render()};
+render();
+
+/* ---------- vos chiffres ---------- */
+function calc(){const Cc=+$('cC').value,Vs=+$('cVs').value,D=+$('cD').value,Vc=+$('cVc').value;$('cCv').textContent=n3(Cc);$('cVsv').textContent=f1(Vs)+' nd';$('cDv').textContent=n3(D);$('cVcv').textContent=f1(Vc)+' nd';
+ const ec=Math.abs(((D-Cc)%360+540)%360-180),g=180-ec,cg=Math.cos(g*R),sg=Math.sin(g*R);const Vf2=Vs*Vs+Vc*Vc-2*Vs*Vc*cg,Vf=Math.sqrt(Vf2);
+ let sd=Vc*sg/Vf;sd=Math.min(1,sd);let dl=Math.asin(sd)/R;const obt=Vc*Vc>Vs*Vs+Vf2;if(obt)dl=180-dl;const right=Math.sin((D-Cc)*R)>0;const Rf=nrm(Cc+(right?dl:-dl));
+ const L=[`Écart entre ${n3(Cc)} et ${n3(D)} : <b>${Math.round(ec)}°</b>`,`γ = 180° − ${Math.round(ec)}° = <b>${Math.round(g)}°</b>`,
+ `Vs² = ${f1(Vs)}² = ${f2(Vs*Vs)} · Vc² = ${f1(Vc)}² = ${f2(Vc*Vc)}`,`2 × ${f1(Vs)} × ${f1(Vc)} = ${f2(2*Vs*Vc)} · cos ${Math.round(g)}° = ${f2(cg)}`,
+ `Vf² = ${f2(Vs*Vs)} + ${f2(Vc*Vc)} − ${f2(2*Vs*Vc)} × ${f2(cg)} = <b>${f2(Vf2)}</b>`,`Vf = √${f2(Vf2)} = <b>${f2(Vf)} nœuds</b>`,
+ `sin δ = ${f1(Vc)} × sin ${Math.round(g)}° ÷ ${f2(Vf)} = ${f1(Vc)} × ${f2(sg)} ÷ ${f2(Vf)} = ${f2(sd)}`,`δ = sin⁻¹(${f2(sd)}) = <b>${f1(dl)}°</b>${obt?' (angle obtus : 180° moins la valeur de la calculatrice)':''}`,
+ `Le courant pousse vers la <b>${right?'droite':'gauche'}</b> : route fond = ${n3(Cc)} ${right?'+':'−'} ${f1(dl)}° = <b>${n3(Rf)}</b>`];
+ $('res').innerHTML=L.map(x=>'<li>'+x+'</li>').join('')}
+['cC','cVs','cD','cVc'].forEach(i=>$(i).oninput=calc);calc();
+</script></body></html>

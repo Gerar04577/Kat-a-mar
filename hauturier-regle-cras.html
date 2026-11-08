@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Règle Cras pas à pas</title>
+<style>
+:root{--bg:#f4f6f9;--ink:#14213d;--mut:#5b6577;--card:#fff;--line:#d9dee7}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,sans-serif;padding:12px 14px 40px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:var(--mut)}h1{font-size:22px;margin:4px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.tabs button{font:700 13px system-ui;padding:7px 10px;border-radius:10px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}
+.tabs button.on{background:#1565c0;color:#fff}
+svg{width:100%;height:auto;display:block;background:#eef5fb;border-radius:12px}
+.prog{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);font-weight:700;margin-bottom:4px}
+.bar{height:6px;background:#e3e8ef;border-radius:3px;margin-bottom:8px}.bar i{display:block;height:100%;background:#1565c0;border-radius:3px}
+.txt{font-size:17px;margin:10px 2px 6px}.txt mark{background:#ffe14d;padding:0 3px;border-radius:4px}
+.calc{background:#f0f4fa;border-radius:10px;padding:8px 12px;font-weight:800;font-size:17px;text-align:center;min-height:1.4em}
+.nav{display:flex;gap:10px;margin-top:10px}.nav button{flex:1;font:800 17px system-ui;padding:12px;border-radius:12px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}.nav button.p{background:#1565c0;color:#fff}
+.leg{font-size:13px;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px}.leg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
+ol.res li{margin:6px 0}
+.key{background:#fff7d6;border-left:5px solid #f2c94c;border-radius:0 10px 10px 0;padding:8px 12px;font-size:15px}
+.sl{display:flex;align-items:center;gap:10px;font-weight:800;margin:8px 0}.sl input{flex:1;accent-color:#7b3fbf}.cap{font-weight:800;font-size:15px;margin:10px 0 4px}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Maquette pas à pas · version 1.2 · tout en un : lignes de la carte, pourquoi le 0 n'est pas en haut, rangée méridien et rangée parallèle, exemples, tracer une route depuis X</div>
+<h1>La règle Cras, pas à pas</h1>
+<div class="tabs" id="tabs"></div>
+<div class="card">
+<div class="prog"><span id="ttl"></span><span id="cnt"></span></div><div class="bar"><i id="bar"></i></div>
+<svg id="s" viewBox="0 0 420 420"></svg>
+<div class="leg" id="leg"></div>
+<p class="txt" id="txt"></p>
+<div class="calc" id="calc"></div>
+<div class="nav"><button id="prev">◀ Retour</button><button class="p" id="next">Suivant ▶</button></div>
+</div>
+<div class="card">
+<b>Essayer : rose fixe et règle qui tourne</b>
+<div class="sl"><span>Route : <span id="rv" style="color:#7b3fbf"></span></span><input id="r" type="range" min="0" max="180" step="5" value="60"></div>
+<div class="cap">① Rose des vents : chiffres FIXES, la route tourne</div>
+<svg id="s1" viewBox="0 0 420 420"></svg>
+<div class="cap">② Règle Cras : chiffres COLLÉS à la règle, le méridien reste fixe</div>
+<svg id="s2" viewBox="0 0 420 420"></svg>
+<div class="leg"><b>Légende :</b><span><i style="background:#7b3fbf"></i>route</span><span><i style="background:#1565c0"></i>méridien (Nord)</span><span><i style="background:#d6e7fb"></i>rangée méridien de la règle</span><span><i style="background:#f2a900"></i>le « 0 » de la règle</span><span>⭕ = où on lit</span></div>
+<p class="calc" id="pc"></p>
+</div>
+<div class="card">
+<b>Le résumé en 6 règles</b>
+<ol class="res">
+<li><b>Pourquoi le 0 n'est pas en haut</b> : les chiffres sont collés à la règle et tournent avec elle. Le 0 est au bout, côté flèche ; il est en haut seulement quand la règle pointe au Nord. On lit le chiffre qui tombe sous le <b>méridien</b> : c'est de combien la règle a tourné depuis le Nord = la route.</li>
+<li><b>Flèche</b> de la règle dans le sens de la route.</li>
+<li><b>Couleur</b> : route de 000 à 180° (vers l'Est) → chiffres <b>noirs</b> ; de 180 à 360° (vers l'Ouest) → chiffres <b>rouges</b>.</li>
+<li>Le <b>centre du bord Sud</b> (le plus bas) se pose sur un méridien <b>ou</b> sur un parallèle.</li>
+<li><b>Méridien</b> → on lit la <b>rangée méridien</b>. <b>Parallèle</b> → on lit la <b>rangée parallèle</b>. Les deux rangées ont 90° d'écart parce qu'un méridien et un parallèle se croisent à angle droit.</li>
+<li><b>Contrôle</b> : estimez la route à l'œil avant de lire. Une erreur de 90° = mauvaise rangée ; une erreur de 180° = mauvaise couleur.</li>
+</ol>
+<div class="key">Test pour reconnaître les rangées sur <b>votre</b> règle : posez-la à l'horizontale, flèche vers l'Est. La rangée qui montre <b>90 au milieu</b> est la rangée méridien. Celle qui montre <b>90 aux deux bouts</b> est la rangée parallèle.</div>
+</div>
+</div>
+<script>
+const R=Math.PI/180,NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),HI='#ffe14d';let svg=$('s');
+const BL='#1565c0',GR='#1a9c46',RD='#c62828',RI1=88,RI2=114,RO1=118,RO2=148,LI=101,LO=133,W=160;
+function el(t,a,tx){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(tx!==undefined)e.textContent=tx;svg.appendChild(e);return e}
+function text(x,y,t,c,a='middle',s=13,hi,w=800){const e=el('text',{x,y,'text-anchor':a,'font-size':s,'font-weight':w,fill:c,stroke:'#fff','stroke-width':4,'paint-order':'stroke'},t);
+ if(hi){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill:HI}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+function line(P,Q,c,w,dash,hi){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':w+12,'stroke-linecap':'round'});el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+const dir=d=>[Math.sin(d*R),-Math.cos(d*R)];
+const add=(P,v,k)=>[P[0]+v[0]*k,P[1]+v[1]*k];
+function marker(){const d=el('defs',{});for(const [id,c] of [['k','#14213d'],['p','#7b3fbf']]){const m=document.createElementNS(NS,'marker');for(const [k,v] of Object.entries({id:'m'+id,viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:5,markerHeight:5,orient:'auto'}))m.setAttribute(k,v);const p=document.createElementNS(NS,'path');p.setAttribute('d','M0 0L10 5L0 10Z');p.setAttribute('fill',c);m.appendChild(p);d.appendChild(m)}}
+/* arc de cercle de la direction d1 à d2 (sens horaire si d>0) */
+function arc(C,r,d1,d2,c,lab,hi,lr){let d=d2-d1;const s=add(C,dir(d1),r),e=add(C,dir(d2),r);const pth=`M${s[0]} ${s[1]} A${r} ${r} 0 ${Math.abs(d)>180?1:0} ${d>0?1:0} ${e[0]} ${e[1]}`;
+ if(hi)el('path',{d:pth,fill:'none',stroke:HI,'stroke-width':12});el('path',{d:pth,fill:'none',stroke:c,'stroke-width':3});
+ if(lab){const q=add(C,dir(d1+d/2),lr||r+18);text(q[0],q[1]+5,lab,c,'middle',14,hi)}}
+/* ===== géométrie de la règle ===== */
+function geo(sc){const a=dir(sc.R),black=sc.col=='k';
+ const n=dir(black?sc.R-90:sc.R+90);                       // vers l'intérieur de la règle
+ const u=p=>dir(black?sc.R+180+p:sc.R+180-p);              // direction du point ψ du demi-cercle
+ const lm=p=>black?180-p:p+180;                            // rangée méridien
+ const lp=p=>{if(Math.abs(p-90)<.01)return black?'0/180':'180/360';return black?(p<90?90-p:270-p):(p<90?p+270:p+90)}; // rangée parallèle
+ const pm=black?180-sc.R:sc.R-180;                         // ψ où passe le méridien (Nord)
+ const pp=black?(sc.R<=90?90-sc.R:270-sc.R):(sc.R>=270?sc.R-270:sc.R-90); // ψ où passe le parallèle
+ return{a,n,u,lm,lp,pm,pp,black}}
+const f=v=>String(Math.round(v)).padStart(3,'0');
+/* ===== dessin ===== */
+function grid(on,hi){for(let x=0;x<=420;x+=70)line([x,0],[x,420],BL,on.has('mer')?2:1,on.has('mer')?null:'4 6',hi.has('mer'));
+ for(let y=0;y<=420;y+=70)line([0,y],[420,y],GR,on.has('par')?2:1,on.has('par')?null:'4 6',hi.has('par'))}
+function band(C,g,r1,r2,fill,hi){let pts=[];for(let p=0;p<=180;p+=3)pts.push(add(C,g.u(p),r2));for(let p=180;p>=0;p-=3)pts.push(add(C,g.u(p),r1));
+ el('polygon',{points:pts.map(q=>q.join(',')).join(' '),fill,stroke:hi?HI:'none','stroke-width':hi?6:0,opacity:.95})}
+function draw(st){svg=$('s');svg.innerHTML='';marker();if(st.d){st.d();if(st.box){const lines=st.box;const h=lines.length*20+12;el('rect',{x:8,y:8,width:250,height:h,rx:10,fill:'#fff',stroke:'#f2a900','stroke-width':2.5});lines.forEach((t,i)=>text(18,30+i*20,t[0],t[1]||'#14213d','start',14))}return}const on=new Set(st.on),hi=new Set(st.hi||[]);grid(on,hi);
+ if(on.has('ra')){const P=[140,140];el('polyline',{points:`${P[0]+16},${P[1]} ${P[0]+16},${P[1]-16} ${P[0]},${P[1]-16}`,fill:'none',stroke:'#14213d','stroke-width':2.5});text(P[0]+22,P[1]-22,'90°','#14213d','start',15,hi.has('ra'))}
+ if(on.has('labels')){text(70,412,'méridien','#0d47a1','middle',13,hi.has('mer'));text(412,136,'parallèle','#137a37','end',13,hi.has('par'));
+   text(70,16,'↑ Nord','#0d47a1','middle',13)}
+ if(on.has('route')){const P=[140,350];line(P,add(P,dir(0),200),'#14213d',2,'6 5');text(P[0],P[1]-210,'N','#14213d','middle',16);
+   const E=add(P,dir(60),230);el('line',{x1:P[0],y1:P[1],x2:E[0],y2:E[1],stroke:'#7b3fbf','stroke-width':5,'marker-end':'url(#mp)'});
+   text(E[0]-14,E[1]+30,'route 060°','#7b3fbf','end',15,hi.has('route'));arc(P,60,0,60,'#7b3fbf','60°',hi.has('route'),82);
+   el('circle',{cx:P[0],cy:P[1],r:5,fill:'#14213d'})}
+ const sc=st.sc;if(!sc)return;const g=geo(sc),C=sc.C,numC=g.black?'#14213d':RD;
+ if(on.has('rule')){const pts=[[-330,0],[330,0],[330,W],[-330,W]].map(([s,t])=>add(add(C,g.a,s),g.n,t));
+   el('polygon',{points:pts.map(q=>q.join(',')).join(' '),fill:'#ffffff',opacity:.82,stroke:hi.has('rule')?HI:'#7a8699','stroke-width':hi.has('rule')?7:2});
+   const A1=add(add(C,g.a,-55),g.n,48),A2=add(add(C,g.a,55),g.n,48);
+   el('line',{x1:A1[0],y1:A1[1],x2:A2[0],y2:A2[1],stroke:'#14213d','stroke-width':4,'marker-end':'url(#mk)'});
+   const T=add(C,g.n,68);text(T[0],T[1]+4,'sens de la route','#14213d','middle',11,false,700);
+   // arcs imprimés
+   for(const r of [RI2,RO2]){let d='';for(let p=0;p<=180;p+=3){const q=add(C,g.u(p),r);d+=(p?'L':'M')+q[0]+' '+q[1]}el('path',{d,fill:'none',stroke:numC,'stroke-width':1.5})}}
+ if(on.has('rowM'))band(C,g,RI1,RI2,'#d6e7fb',hi.has('rowM'));
+ if(on.has('rowP'))band(C,g,RO1,RO2,'#d9f1df',hi.has('rowP'));
+ if(on.has('rule')){for(let p=0;p<=180;p+=5){const L=p%10?5:9;for(const r of [RI2,RO2]){const q1=add(C,g.u(p),r),q2=add(C,g.u(p),r-L);el('line',{x1:q1[0],y1:q1[1],x2:q2[0],y2:q2[1],stroke:numC,'stroke-width':p%30?1:2})}}}
+ const ends=hi.has('ends');
+ if(on.has('rowM'))for(let p=0;p<=180;p+=30){const q=add(C,g.u(p),LI);text(q[0],q[1]+4,String(g.lm(p)),numC,'middle',12,hi.has('rowM')||(ends&&p==0))}
+ if(on.has('rowP'))for(let p=0;p<=180;p+=30){const q=add(C,g.u(p),LO);text(q[0],q[1]+4,String(g.lp(p)),numC,'middle',12,hi.has('rowP')||(ends&&p==0))}
+ if(on.has('lineM'))line([C[0],0],[C[0],420],BL,4,null,hi.has('lineM'));
+ if(on.has('lineP'))line([0,C[1]],[420,C[1]],GR,4,null,hi.has('lineP'));
+ if(on.has('angM')){if(g.black)arc(C,46,0,sc.R,'#7b3fbf',sc.R+'°',hi.has('angM'),64);else arc(C,46,0,sc.R-360,'#7b3fbf',(360-sc.R)+'°',hi.has('angM'),64)}
+ if(on.has('angP')){const pd=g.black?(sc.R<=90?270:90):(sc.R>=270?90:270);let rd=sc.R;let d=((rd-pd)%360+540)%360-180;if(Math.abs(d)>90){rd=(sc.R+180)%360;d=((rd-pd)%360+540)%360-180}
+   arc(C,40,pd,pd+d,'#a51c1c',Math.abs(Math.round(d))+'°',hi.has('angP'),60)}
+ function mk(p,r,ok,lab){const q=add(C,g.u(p),r);el('circle',{cx:q[0],cy:q[1],r:15,fill:'none',stroke:ok?'#f2a900':RD,'stroke-width':4});
+   if(!ok){line([q[0]-20,q[1]-20],[q[0]+20,q[1]+20],RD,4);}}
+ if(on.has('readM'))mk(g.pm,LI,true);
+ if(on.has('readP'))mk(g.pp,LO,true);
+ if(on.has('wrong'))mk(g.pm,LO,false);
+ if(on.has('near'))line([210,0],[210,420],BL,4,'10 7',hi.has('near'));
+ if(on.has('trace')){const X=st.X,E=add(X,dir(sc.R),330);if(hi.has('trace'))line(X,E,HI,6);el('line',{x1:X[0],y1:X[1],x2:E[0],y2:E[1],stroke:'#7b3fbf','stroke-width':5,'marker-end':'url(#mp)'});
+   const T=add(X,dir(sc.R),215);text(T[0]+10,T[1]+22,'route '+f(sc.R)+'°','#7b3fbf','start',15,hi.has('trace'))}
+ if(on.has('xang')){const X=st.X;line(X,[X[0],X[1]-150],'#14213d',2,'6 5');text(X[0],X[1]-158,'N','#14213d','middle',16);arc(X,48,0,sc.R,'#7b3fbf',sc.R+'°',hi.has('xang'),68)}
+ if(on.has('X')){const X=st.X;el('circle',{cx:X[0],cy:X[1],r:7,fill:'#e07a00',stroke:'#fff','stroke-width':2});text(X[0]-12,X[1]+22,'X (départ)','#b35f00','middle',15,hi.has('X'))}
+ if(on.has('rule'))el('circle',{cx:C[0],cy:C[1],r:6,fill:'#14213d',stroke:'#fff','stroke-width':2});
+ if(on.has('C')){const q=add(add(C,g.n,-16),g.a,-14);text(q[0],q[1]+5,'C','#14213d','middle',17,hi.has('C'))}
+ if(st.box){const lines=st.box;const h=lines.length*20+12;el('rect',{x:8,y:8,width:228,height:h,rx:10,fill:'#fff',stroke:'#f2a900','stroke-width':2.5});
+   lines.forEach((t,i)=>text(18,30+i*20,t[0],t[1]||'#14213d','start',14))}}
+/* ===== rose des vents et règle qui tourne ===== */
+const PU='#7b3fbf',OR='#f2a900';
+function textB(x,y,t,c,s,fill){const e=el('text',{x,y,'text-anchor':'middle','font-size':s,'font-weight':800,fill:c,stroke:'#fff','stroke-width':4,'paint-order':'stroke'},t);
+ if(fill){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+function grid0(){for(let x=0;x<=420;x+=70)line([x,0],[x,420],BL,1,'4 6');for(let y=0;y<=420;y+=70)line([0,y],[420,y],'#1a9c46',1,'4 6')}
+/* ---------- rose des vents fixe ---------- */
+function rose(Rt,o){grid0();const C=[210,220],r=150;
+ el('circle',{cx:C[0],cy:C[1],r,fill:'#fff',stroke:'#14213d','stroke-width':2,opacity:.95});
+ for(let d=0;d<360;d+=10){const a=add(C,dir(d),r),b=add(C,dir(d),r-(d%30?7:13));line(a,b,'#14213d',d%30?1:2)}
+ for(let d=0;d<360;d+=30){const q=add(C,dir(d),r-30);textB(q[0],q[1]+5,String(d),'#14213d',14,d==0&&o.zero?OR:null)}
+ const nTop=add(C,dir(0),r+16);text(nTop[0],nTop[1]+4,'N','#0d47a1','middle',18);
+ if(o.route!==false){const E=add(C,dir(Rt),r+40);el('line',{x1:C[0],y1:C[1],x2:E[0],y2:E[1],stroke:PU,'stroke-width':5,'marker-end':'url(#mp)'});
+  const q=add(C,dir(Rt),r);el('circle',{cx:q[0],cy:q[1],r:13,fill:'none',stroke:OR,'stroke-width':4});
+  arc(C,52,0,Rt,PU,Rt+'°',o.hiA,74);const L=add(add(C,dir(Rt),100),dir(Rt+90),20);text(L[0],L[1]+5,'route '+f(Rt)+'°',PU,'middle',14,o.hiR)}
+ el('circle',{cx:C[0],cy:C[1],r:5,fill:'#14213d'})}
+/* ---------- règle Cras (noir, routes 000 à 180) ---------- */
+const QI1=92,QI2=124,QL=108,QW=145;
+function crasRot(Rt,o){grid0();const C=[210,215],a=dir(Rt),n=dir(Rt-90),u=p=>dir(Rt+180+p),lab=p=>180-p;
+ if(o.ghost!==undefined){const g=dir(o.ghost),gn=dir(o.ghost-90);const pts=[[-330,0],[330,0],[330,QW],[-330,QW]].map(([s,t])=>add(add(C,g,s),gn,t));
+  el('polygon',{points:pts.map(q=>q.join(',')).join(' '),fill:'none',stroke:'#9aa7b8','stroke-width':2,'stroke-dasharray':'6 6'});
+  const z=add(C,dir(o.ghost),QL);text(z[0],z[1]+4,'0 (avant)','#9aa7b8','middle',12)}
+ const pts=[[-330,0],[330,0],[330,QW],[-330,QW]].map(([s,t])=>add(add(C,a,s),n,t));
+ el('polygon',{points:pts.map(q=>q.join(',')).join(' '),fill:'#fff',opacity:.88,stroke:o.hiRule?HI:'#7a8699','stroke-width':o.hiRule?7:2});
+ let pp=[];for(let p=0;p<=180;p+=3)pp.push(add(C,u(p),QI2));for(let p=180;p>=0;p-=3)pp.push(add(C,u(p),QI1));
+ el('polygon',{points:pp.map(q=>q.join(',')).join(' '),fill:'#d6e7fb'});
+ for(let p=0;p<=180;p+=5){const L=p%10?5:9,q1=add(C,u(p),QI2),q2=add(C,u(p),QI2-L);line(q1,q2,'#14213d',p%30?1:2)}
+ for(let p=0;p<=180;p+=30){const q=add(C,u(p),QL);textB(q[0],q[1]+4,String(lab(p)),'#14213d',13,p==180?OR:null)}
+ const A1=add(add(C,a,-50),n,45),A2=add(add(C,a,50),n,45);el('line',{x1:A1[0],y1:A1[1],x2:A2[0],y2:A2[1],stroke:'#14213d','stroke-width':4,'marker-end':'url(#mk)'});
+ // méridien fixe
+ line([C[0],0],[C[0],420],BL,4,null,o.hiM);text(C[0]+8,410,'méridien (vers le Nord ↑)','#0d47a1','start',13,o.hiM);
+ // lecture
+ const pm=180-Rt,q=add(C,u(pm),QL);el('circle',{cx:q[0],cy:q[1],r:15,fill:'none',stroke:OR,'stroke-width':4});
+ if(Rt%30){textB(q[0]+30,q[1]-14,String(Rt),'#14213d',13,'#fff3c4')}
+ if(o.ang&&Rt>0)arc(C,48,0,Rt,PU,Rt+'°',o.hiA,68);
+ el('circle',{cx:C[0],cy:C[1],r:6,fill:'#14213d',stroke:'#fff','stroke-width':2});text(C[0]+(Rt<20?-12:12),C[1]+20,'C','#14213d','middle',15)}
+function box0(lines){const h=lines.length*20+12;el('rect',{x:8,y:8,width:250,height:h,rx:10,fill:'#fff',stroke:OR,'stroke-width':2.5});lines.forEach((t,i)=>text(18,30+i*20,t[0],t[1]||'#14213d','start',14))}
+
+/* ===== les étapes ===== */
+const X0=[110,360],T40={R:40,col:'k',C:add(X0,dir(40),115)},T60={R:60,col:'k',C:add(X0,dir(60),200/Math.sqrt(3))},T60p={R:60,col:'k',C:add(X0,dir(60),160)};
+const S90={R:90,col:'k',C:[210,350]},S60={R:60,col:'k',C:[270,290]},S135={R:135,col:'k',C:[140,280]},S300={R:300,col:'r',C:[160,280]};
+const RL=['rule','C'],BOTH=['rule','C','rowM','rowP'];
+const LR=[[PU,'route'],['#14213d','chiffres fixes de la rose'],[OR,'le 0']],LC=[[BL,'méridien (fixe)'],['#d6e7fb','rangée méridien'],[OR,'le 0 de la règle'],[PU,'rotation de la règle']];
+const PARTS=[
+{t:'1 · Les lignes de la carte',leg:[[BL,'méridien'],[GR,'parallèle'],['#7b3fbf','route']],steps:[
+ {on:['mer','labels'],hi:['mer'],txt:'Les <mark>méridiens</mark> sont les lignes <b>verticales</b> de la carte (bleu). Ils vont du Sud au Nord. Le <b>Nord est en haut</b>.'},
+ {on:['mer','par','labels','ra'],hi:['par','ra'],txt:'Les <mark>parallèles</mark> sont les lignes <b>horizontales</b> (vert). Ils vont d\'Ouest en Est. Un méridien et un parallèle se croisent toujours à <mark>angle droit : 90°</mark>.',calc:'méridien ⟂ parallèle → 90°'},
+ {on:['route'],hi:['route'],txt:'Une <mark>route</mark> se mesure <b>depuis le Nord</b>, en tournant dans le sens des aiguilles d\'une montre. Ici, la flèche violette fait 60° avec le Nord : route <b>060°</b>.',calc:'route = angle depuis le Nord = 060°'}]},
+{t:'2 · La rose des vents',leg:LR,steps:[
+ {d:()=>rose(0,{route:false,zero:true}),box:[['Rose des vents : FIXE'],['son 0 regarde toujours le Nord']],txt:'La <mark>rose des vents</mark> imprimée sur la carte ne bouge jamais. Son <b>0 est en haut</b>, vers le Nord. Les chiffres tournent dans le sens des aiguilles d\'une montre.'},
+ {d:()=>rose(60,{zero:true,hiR:true}),box:[['Ce qui bouge : la ROUTE',PU],['on lit où la route coupe la rose']],txt:'Pour lire une route sur la rose, c\'est la <mark>route</mark> (violette) qui sert d\'aiguille. Elle coupe la rose sur <b>60</b> : route 060°.',calc:'rose : chiffres fixes, la route bouge'}]},
+{t:'3 · La règle tourne',leg:LC,steps:[
+ {d:()=>crasRot(0,{hiRule:true}),box:[['Règle flèche vers le NORD'],['→ le 0 est EN HAUT !',OR]],txt:'Tournez la règle <b>flèche vers le Nord</b> (vers le haut de la carte). Le <mark>0</mark> (encadré orange) est <b>en haut</b>, sur le méridien. On lit 0 → route 000°. Le 0 est bien en haut… <b>quand la règle pointe au Nord</b>.',calc:'règle au Nord → lecture 0 → route 000°'},
+ {d:()=>crasRot(30,{ang:true,hiA:true,ghost:0}),box:[['La règle tourne de 30°'],['les chiffres tournent AVEC elle']],txt:'La règle <mark>tourne de 30°</mark>. Les chiffres sont <b>imprimés sur la règle</b> : ils tournent avec elle. Le 0 s\'éloigne du méridien. Le méridien, lui, ne bouge pas : il tombe maintenant sur <b>30</b>.',calc:'règle tournée de 30° → lecture 30 → route 030°'},
+ {d:()=>crasRot(60,{ang:true,hiA:true,ghost:0}),box:[['La règle tourne de 60°'],['le méridien tombe sur 60']],txt:'La règle tourne de <mark>60°</mark> : le méridien tombe sur <b>60</b>. Le chiffre sous le méridien = <b>de combien la règle a tourné depuis le Nord</b> = la route.',calc:'lecture 60 → route 060°'},
+ {d:()=>crasRot(90,{ang:true,hiA:true,ghost:0}),box:[['La règle tourne de 90°'],['elle est couchée Est-Ouest']],txt:'La règle tourne de <mark>90°</mark> : elle est couchée Est-Ouest. Le méridien tombe <b>au milieu</b> du demi-cercle, sur <b>90</b>. C\'est la position où vous regardez la règle sur votre photo : voilà pourquoi 90 est « au-dessus » et le 0 sur le côté.',calc:'lecture 90 → route 090°'},
+ {d:()=>crasRot(150,{ang:true,hiA:true,ghost:0}),box:[['La règle tourne de 150°'],['route vers le Sud-Est']],txt:'Encore plus loin : <mark>150°</mark>. Le méridien tombe sur <b>150</b>. Ça marche jusqu\'à 180 ; au-delà, on prend les <b>chiffres rouges</b> (180 à 360), qui suivent la même logique.',calc:'lecture 150 → route 150°'}]},
+{t:'4 · Rose ou règle ?',leg:[[PU,'route'],[BL,'méridien'],[OR,'le 0']],steps:[
+ {d:()=>{rose(60,{zero:true});box0([['① ROSE : les chiffres restent fixes'],['la ROUTE tourne → lecture 60',PU]])},txt:'<b>① Rose des vents</b> : les <mark>chiffres restent fixes</mark> (0 toujours en haut) et c\'est la <b>route</b> qui tourne. On lit où la route coupe les chiffres.'},
+ {d:()=>{crasRot(60,{ang:true,ghost:0});box0([['② CRAS : les chiffres tournent'],['le MÉRIDIEN reste fixe → lecture 60','#0d47a1']])},txt:'<b>② Règle Cras</b> : les <mark>chiffres tournent avec la règle</mark> et c\'est le <b>méridien</b> qui reste fixe. On lit où le méridien coupe les chiffres. Les deux donnent <b>la même route 060°</b>.',calc:'même mesure, lue de deux façons opposées'},
+ {d:()=>{crasRot(60,{ghost:0});box0([['À VOUS : le curseur « Essayer »'],['sous le diaporama']])},txt:'Pour voir les deux bouger ensemble, utilisez le <mark>curseur « Essayer »</mark> sous le diaporama.'}]},
+{t:'5 · Les 2 rangées',leg:[['#d6e7fb','rangée méridien (intérieure)'],['#d9f1df','rangée parallèle (extérieure)'],[BL,'méridien'],[GR,'parallèle']],steps:[
+ {sc:S90,on:[...RL],hi:['rule','C'],box:[['Route 090° (vers l\'Est)']],txt:'La <mark>règle</mark> est posée à l\'horizontale, flèche vers l\'Est (route 090°). On utilise le <mark>centre C</mark> du bord <b>Sud</b> (le bord du bas). Route entre 0 et 180 → chiffres <b>noirs</b>.'},
+ {sc:S90,on:[...RL,'rowM'],hi:['rowM'],box:[['Rangée MÉRIDIEN','#0d47a1'],['180 → 90 → 0']],txt:'La <mark>rangée intérieure</mark> (fond bleu) est la rangée <b>MÉRIDIEN</b> : 180 à gauche, <b>90 au milieu</b>, 0 à droite.'},
+ {sc:S90,on:BOTH,hi:['rowP'],box:[['Rangée PARALLÈLE','#137a37'],['90 → 0/180 → 90']],txt:'La <mark>rangée extérieure</mark> (fond vert) est la rangée <b>PARALLÈLE</b> : <b>90 aux deux bouts</b>, 0/180 au milieu.'},
+ {sc:S90,on:BOTH,hi:['ends'],box:[['Même bout :'],['méridien 0 · parallèle 90']],txt:'Voilà pourquoi vous voyez <mark>deux chiffres au même bout</mark> (sur votre règle retournée : 180 et 90). Ils ont toujours <b>90 d\'écart</b>, parce que le parallèle est à 90° du méridien. On ne lit <b>qu\'un seul</b> des deux : celui de la ligne qu\'on utilise.',calc:'écart entre les 2 rangées = 90°'},
+ {sc:S90,on:[...BOTH,'lineM','readM'],hi:['lineM'],box:[['Méridien → rangée MÉRIDIEN','#0d47a1'],['lecture : 90 → route 090°']],txt:'<b>Lecture avec un méridien.</b> Le <mark>méridien</mark> passe par C et monte. Il coupe la rangée <b>méridien</b> (fond bleu) sur <b>90</b> (cercle orange).',calc:'route = 090°'},
+ {sc:S90,on:[...BOTH,'lineP','readP'],hi:['lineP'],box:[['Parallèle → rangée PARALLÈLE','#137a37'],['lecture : 90 → route 090°']],txt:'<b>Lecture avec un parallèle.</b> Le <mark>parallèle</mark> passe par C. Ici il longe le bord de la règle et touche le <b>bout</b> de la rangée <b>parallèle</b> (fond vert) sur <b>90</b>. Même résultat.',calc:'route = 090° (même résultat)'}]},
+{t:'6 · Exemple 060°',leg:[['#d6e7fb','rangée méridien'],['#d9f1df','rangée parallèle'],[BL,'méridien'],[GR,'parallèle'],['#7b3fbf','angle depuis le Nord'],['#a51c1c','angle avec le parallèle']],steps:[
+ {sc:S60,on:[...BOTH],hi:['rule'],box:[['Route vers le Nord-Est'],['entre 0 et 180 → NOIR']],txt:'On pose la <mark>règle</mark> sur la route tracée, <b>flèche vers le Nord-Est</b>. Route entre 0 et 180 → chiffres <b>noirs</b>, centre C du bord Sud.'},
+ {sc:S60,on:[...BOTH,'lineM'],hi:['lineM'],box:[['On fait glisser la règle'],['sans la tourner']],txt:'On fait <b>glisser</b> la règle, <b>sans la tourner</b>, jusqu\'à ce que le centre C soit sur un <mark>méridien</mark>.'},
+ {sc:S60,on:[...BOTH,'lineM','readM','angM'],hi:['readM','angM'],box:[['Méridien → rangée MÉRIDIEN','#0d47a1'],['lecture : 60 → route 060°']],txt:'Le méridien coupe la rangée <b>méridien</b> (bleu) sur <mark>60</mark>. C\'est exactement l\'<mark>angle de 60°</mark> entre le Nord et la règle.',calc:'route = 060°'},
+ {sc:S60,on:[...BOTH,'lineP','readP','angP'],hi:['readP','angP'],box:[['Parallèle → rangée PARALLÈLE','#137a37'],['lecture : 60 → route 060°']],txt:'Autre façon : C sur un <b>parallèle</b>. Il coupe la rangée <b>parallèle</b> (vert) sur <mark>60</mark>. Entre le parallèle et la règle il y a <mark>30°</mark> ; or le parallèle est à 90° du Nord, donc 90 − 30 = 60. <b>La rangée parallèle fait ce calcul pour vous.</b>',calc:'90 − 30 = 60 → route 060°'},
+ {sc:S60,on:[...BOTH,'lineM','wrong'],hi:['lineM'],box:[['PIÈGE','#c62828'],['méridien lu sur la rangée'],['parallèle → 150 : FAUX']],txt:'<mark>PIÈGE</mark> : avec un <b>méridien</b>, si on lit par erreur la rangée <b>parallèle</b> (vert), on trouve 150 (croix rouge). C\'est faux de 90°.',calc:'150 − 60 = 90 → mauvaise rangée'}]},
+{t:'7 · Exemple 135°',leg:[['#d6e7fb','rangée méridien'],['#d9f1df','rangée parallèle'],[BL,'méridien'],[GR,'parallèle'],['#7b3fbf','angle depuis le Nord'],['#a51c1c','angle avec le parallèle']],steps:[
+ {sc:S135,on:[...BOTH],hi:['rule'],box:[['Route vers le Sud-Est'],['entre 0 et 180 → NOIR']],txt:'Route vers le <b>Sud-Est</b> : <mark>flèche vers le Sud-Est</mark>. Entre 0 et 180 → chiffres <b>noirs</b>.'},
+ {sc:S135,on:[...BOTH,'lineP','readP','angP'],hi:['lineP','readP','angP'],box:[['Parallèle → rangée PARALLÈLE','#137a37'],['lecture : 135 → route 135°']],txt:'Centre C sur un <mark>parallèle</mark>. Il coupe la rangée <b>parallèle</b> (vert) sur <b>135</b>. La règle descend de <mark>45°</mark> sous le parallèle côté Est : 90 + 45 = 135.',calc:'90 + 45 = 135 → route 135°'},
+ {sc:S135,on:[...BOTH,'lineM','readM','angM'],hi:['lineM','readM','angM'],box:[['Méridien → rangée MÉRIDIEN','#0d47a1'],['lecture : 135 → route 135°']],txt:'Contrôle avec un <mark>méridien</mark> : il coupe la rangée <b>méridien</b> (bleu) aussi sur <b>135</b>. Les deux façons donnent la même route.',calc:'route = 135° (les deux concordent)'}]},
+{t:'8 · Exemple 300° (rouge)',leg:[['#d6e7fb','rangée méridien'],['#d9f1df','rangée parallèle'],[BL,'méridien'],[GR,'parallèle'],[RD,'chiffres rouges (180 à 360)']],steps:[
+ {sc:S300,on:[...BOTH],hi:['rule','rowM','rowP'],box:[['Route vers le Nord-Ouest'],['entre 180 et 360 → ROUGE','#c62828']],txt:'Route vers le <b>Nord-Ouest</b> : flèche vers le Nord-Ouest. Entre 180 et 360 → <mark>chiffres rouges</mark>. Toujours le centre C du bord Sud.'},
+ {sc:S300,on:[...BOTH,'lineM','readM','angM'],hi:['lineM','readM','angM'],box:[['Méridien → rangée MÉRIDIEN','#0d47a1'],['lecture : 300 → route 300°']],txt:'C sur un <mark>méridien</mark> : il coupe la rangée <b>méridien</b> sur <b>300</b>. La règle est à <mark>60° à gauche</mark> du Nord : 360 − 60 = 300.',calc:'360 − 60 = 300 → route 300°'},
+ {sc:S300,on:[...BOTH,'lineP','readP','angP'],hi:['lineP','readP','angP'],box:[['Parallèle → rangée PARALLÈLE','#137a37'],['lecture : 300 → route 300°']],txt:'C sur un <mark>parallèle</mark> : il coupe la rangée <b>parallèle</b> sur <b>300</b>. Entre le parallèle et la règle il y a <mark>30°</mark>. La route part donc 30° au-dessus de l\'Ouest (270) : 270 + 30 = 300.',calc:'270 + 30 = 300 → route 300°'},
+ {sc:S300,on:[...BOTH,'lineM','readM'],hi:[],box:[['PIÈGE DE COULEUR','#c62828'],['chiffres noirs → 120 : FAUX'],['(300 − 180 = 120)']],txt:'<mark>PIÈGE</mark> : sur une vraie règle, les chiffres noirs sont aussi visibles. Les lire ici donnerait <b>120</b> : faux de <b>180°</b>, c\'est la route à l\'envers.',calc:'erreur de 180° → mauvaise couleur'}]},
+{t:'9 · Tracer 060° depuis X',leg:[['#e07a00','point de départ X'],['#d6e7fb','rangée méridien'],['#d9f1df','rangée parallèle'],[BL,'méridien'],[GR,'parallèle'],['#7b3fbf','route tracée']],steps:[
+ {sc:T60,X:X0,on:['X'],hi:['X'],box:[['But : tracer la route 060°'],['à partir du point X']],txt:'On part du <mark>point X</mark>. On veut tracer la route <b>060°</b> (vers le Nord-Est). Route entre 0 et 180 → chiffres <b>noirs</b>.'},
+ {sc:T40,X:X0,on:['X','rule','C','rowM','rowP','near'],hi:['rule'],box:[['Bord de la règle sur X'],['flèche vers le Nord-Est']],txt:'On pose le <mark>bord de la règle</mark> (le bord où se trouve le centre C) <b>sur le point X</b>, flèche vers le Nord-Est. Ici la règle n\'est pas encore au bon angle : le centre C n\'est pas sur un méridien (le méridien le plus proche est en pointillés).'},
+ {sc:T60,X:X0,on:['X','rule','C','rowM','rowP','lineM','readM','angM'],hi:['lineM','readM'],box:[['On pivote autour de X'],['jusqu\'à lire 60 (rangée méridien)','#0d47a1']],txt:'On fait <b>pivoter</b> la règle autour de X (le bord reste collé sur X) jusqu\'à ce que deux choses soient vraies en même temps : <b>1)</b> le centre C est sur un <mark>méridien</mark> ; <b>2)</b> ce méridien coupe la rangée <b>méridien</b> sur <mark>60</mark>.',calc:'C sur un méridien + lecture 60 → règle orientée au 060°'},
+ {sc:T60,X:X0,on:['X','rule','C','rowM','rowP','lineM','readM','trace'],hi:['trace'],box:[['On trace au crayon'],['le long du bord, depuis X','#7b3fbf']],txt:'Sans bouger la règle, on <mark>trace au crayon</mark> le long du bord, <b>à partir de X</b>, dans le sens de la flèche.'},
+ {sc:T60,X:X0,on:['X','trace','xang'],hi:['xang'],box:[['La route 060° part de X','#7b3fbf']],txt:'On enlève la règle : la route est tracée. <b>Contrôle</b> : entre le Nord et la route, il y a bien <mark>60°</mark>.',calc:'route 060° tracée depuis X'},
+ {sc:T60p,X:X0,on:['X','rule','C','rowM','rowP','lineP','readP','angP'],hi:['lineP','readP'],box:[['Autre façon : C sur un parallèle','#137a37'],['lecture 60 (rangée parallèle)']],txt:'<b>Autre façon</b> : le bord toujours sur X, on pivote jusqu\'à ce que C soit sur un <mark>parallèle</mark> et que ce parallèle coupe la rangée <b>parallèle</b> sur <mark>60</mark>. La règle a exactement la même direction : on trace pareil.',calc:'même route 060°'}]}
+];
+let cp=0,cs=0;
+function render(){const P=PARTS[cp],st=P.steps[cs];draw(st);
+ $('ttl').textContent=P.t;$('cnt').textContent=`Étape ${cs+1} / ${P.steps.length}`;$('bar').style.width=((cs+1)/P.steps.length*100)+'%';
+ $('txt').innerHTML=st.txt;$('calc').textContent=st.calc||'';
+ $('leg').innerHTML='<b>Légende :</b> '+P.leg.map(([c,t])=>`<span><i style="background:${c}"></i>${t}</span>`).join('')+'<span>⭕ orange = où on lit</span><span>C = centre du rapporteur</span>';
+ $('prev').disabled=cp==0&&cs==0;$('next').textContent=(cp==PARTS.length-1&&cs==P.steps.length-1)?'Fin':'Suivant ▶';
+ [...$('tabs').children].forEach((b,i)=>b.className=i==cp?'on':'')}
+PARTS.forEach((P,i)=>{const b=document.createElement('button');b.textContent=P.t;b.onclick=()=>{cp=i;cs=0;render()};$('tabs').appendChild(b)});
+$('next').onclick=()=>{if(cs<PARTS[cp].steps.length-1)cs++;else if(cp<PARTS.length-1){cp++;cs=0}render()};
+$('prev').onclick=()=>{if(cs>0)cs--;else if(cp>0){cp--;cs=PARTS[cp].steps.length-1}render()};
+
+function play(){const r=+$('r').value;$('rv').textContent=f(r)+'°';
+ svg=$('s1');svg.innerHTML='';marker();rose(r,{zero:true});
+ svg=$('s2');svg.innerHTML='';marker();crasRot(r,{ang:true,ghost:0});svg=$('s');
+ $('pc').textContent=`Rose : la route coupe ${r}. Cras : le méridien coupe ${r}. → route ${f(r)}°`}
+$('r').oninput=play;play();
+render();
+</script></body></html>

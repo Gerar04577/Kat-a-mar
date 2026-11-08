@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercices carte et Cras</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.5 -apple-system,system-ui,sans-serif;padding:12px 14px 40px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:#5b6577}h1{font-size:22px;margin:4px 0 8px}
+.card{background:#fff;border:1px solid #d9dee7;border-radius:16px;padding:12px;margin:10px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.tabs button{font:700 13px system-ui;padding:7px 10px;border-radius:10px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}.tabs button.on{background:#1565c0;color:#fff}
+.en{background:#fff7d6;border-left:5px solid #f2c94c;border-radius:0 10px 10px 0;padding:8px 12px;font-size:15px;margin-bottom:8px}
+svg{width:100%;height:auto;display:block;background:#f3f8fc;border-radius:12px}
+.prog{display:flex;justify-content:space-between;font-size:13px;color:#5b6577;font-weight:700;margin-bottom:4px}
+.bar{height:6px;background:#e3e8ef;border-radius:3px;margin-bottom:8px}.bar i{display:block;height:100%;background:#1565c0;border-radius:3px}
+.kind{display:inline-block;font:800 12px system-ui;padding:3px 8px;border-radius:8px;margin-bottom:4px}.k1{background:#e3efff;color:#0d47a1}.k2{background:#e6f5ea;color:#137a37}.k3{background:#fde4e4;color:#a51c1c}
+.txt{font-size:17px;margin:6px 2px}.txt mark{background:#ffe14d;padding:0 3px;border-radius:4px}
+.calc{background:#f0f4fa;border-radius:10px;padding:8px 12px;font-weight:800;font-size:17px;text-align:center;min-height:1.4em}
+.nav{display:flex;gap:10px;margin-top:10px}.nav button{flex:1;font:800 17px system-ui;padding:12px;border-radius:12px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}.nav button.p{background:#1565c0;color:#fff}
+.leg{font-size:13px;color:#5b6577;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px}.leg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid #d9dee7;padding:5px 7px;text-align:left}th{background:#f0f4fa}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Exercices type examen · version 1.1 · carte, règle Cras, compas à pointes, caps et courant · chaque exercice pas à pas</div>
+<h1>Exercices d'examen avec la règle Cras</h1>
+<div class="tabs" id="tabs"></div>
+<div class="card">
+<div class="en" id="en"></div>
+<div class="prog"><span id="ttl"></span><span id="cnt"></span></div><div class="bar"><i id="bar"></i></div>
+<div id="kind"></div>
+<svg id="s" viewBox="0 0 420 420"></svg>
+<div class="leg" id="leg"></div>
+<p class="txt" id="txt"></p>
+<div class="calc" id="calc"></div>
+<div class="nav"><button id="prev">◀ Retour</button><button class="p" id="next">Suivant ▶</button></div>
+</div>
+<div class="card">
+<b>Les formules utilisées</b>
+<table>
+<tr><th>Cap</th><td>Cv = Cc + dév + D &nbsp;→&nbsp; Cc = Cv − dév − D</td></tr>
+<tr><th>Relèvement</th><td>Zv = Zc + dév (du cap suivi) + D</td></tr>
+<tr><th>Signes</th><td>Est = + &nbsp;·&nbsp; Ouest = − (exemple : D = 2° W → D = −2)</td></tr>
+<tr><th>Distance</th><td>distance = vitesse × durée &nbsp;·&nbsp; durée = distance ÷ vitesse</td></tr>
+<tr><th>Échelle</th><td>sur la carte, 1 minute de <b>latitude</b> (échelle verticale, à gauche ou à droite) = 1 mille</td></tr>
+<tr><th>Cras</th><td>flèche dans le sens de la route <b>ou vers le point relevé</b> ; centre le plus au Sud sur un méridien ; 0 à 180 noir, 180 à 360 rouge</td></tr>
+</table>
+<p style="font-size:14px;color:#5b6577;margin-bottom:0">Les cartes sont des schémas : 1 carreau = 2 milles. Sur la vraie carte 9999, on mesure les distances sur l'échelle des latitudes, jamais sur celle des longitudes.</p>
+</div>
+</div>
+<script>
+const R=Math.PI/180,NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),svg=$('s'),HI='#ffe14d';
+const BL='#1565c0',GR='#1a9c46',OR='#e07a00',PU='#7b3fbf',RD='#c62828',DK='#14213d';
+const K=36,px=([x,y])=>[30+x*K,400-y*K];
+const dir=d=>[Math.sin(d*R),Math.cos(d*R)];                  // monde : (Est, Nord)
+const sdir=d=>[Math.sin(d*R),-Math.cos(d*R)];                // écran
+const wadd=(P,d,s)=>[P[0]+dir(d)[0]*s,P[1]+dir(d)[1]*s];
+const add=(P,v,k)=>[P[0]+v[0]*k,P[1]+v[1]*k];
+const f3=v=>String(Math.round(v)).padStart(3,'0');
+const fr=v=>(Math.round(v*100)/100).toString().replace('.',',');
+function el(t,a,tx){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(tx!==undefined)e.textContent=tx;svg.appendChild(e);return e}
+function text(x,y,t,c=DK,a='middle',s=14,hi,fill){const e=el('text',{x,y,'text-anchor':a,'font-size':s,'font-weight':800,fill:c,stroke:'#fff','stroke-width':4,'paint-order':'stroke'},t);
+ if(hi||fill){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill:fill||HI}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+function line(P,Q,c,w,dash,hi){if(hi)el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:HI,'stroke-width':w+12,'stroke-linecap':'round'});el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+function defs(){const d=el('defs',{});for(const [id,c] of [['k',DK],['p',PU],['b',BL],['o',OR],['g',GR],['r',RD]]){const m=document.createElementNS(NS,'marker');for(const [k,v] of Object.entries({id:'m'+id,viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:4.5,markerHeight:4.5,orient:'auto'}))m.setAttribute(k,v);const p=document.createElementNS(NS,'path');p.setAttribute('d','M0 0L10 5L0 10Z');p.setAttribute('fill',c);m.appendChild(p);d.appendChild(m)}}
+/* flèche en coordonnées monde, graduée (1 trait par mille ou par nœud) */
+function vec(Pw,Qw,c,m,hi,grad,w=4){const P=px(Pw),Q=px(Qw);if(hi)line(P,Q,HI,w+2);el('line',{x1:P[0],y1:P[1],x2:Q[0],y2:Q[1],stroke:c,'stroke-width':w,'stroke-linecap':'round','marker-end':m?`url(#m${m})`:''});
+ if(grad){const L=Math.hypot(Qw[0]-Pw[0],Qw[1]-Pw[1]);const ux=(Q[0]-P[0])/(L*K),uy=(Q[1]-P[1])/(L*K);for(let i=1;i<L-0.3;i++){const x=P[0]+ux*K*i,y=P[1]+uy*K*i;el('line',{x1:x-uy*7,y1:y+ux*7,x2:x+uy*7,y2:y-ux*7,stroke:c,'stroke-width':2.5})}}}
+function seg(Pw,Qw,c,w,dash,hi){line(px(Pw),px(Qw),c,w,dash,hi)}
+function pt(Pw,lab,c,dx=0,dy=-12,hi,a='middle'){const P=px(Pw);el('circle',{cx:P[0],cy:P[1],r:5.5,fill:c,stroke:'#fff','stroke-width':2});if(lab)text(P[0]+dx,P[1]+dy,lab,c,a,15,hi)}
+function arcW(Pw,r,d1,d2,c,lab,hi,lr){const C=px(Pw),d=d2-d1;if(Math.abs(d)<.3)return;const s=add(C,sdir(d1),r),e=add(C,sdir(d2),r);const p=`M${s[0]} ${s[1]} A${r} ${r} 0 ${Math.abs(d)>180?1:0} ${d>0?1:0} ${e[0]} ${e[1]}`;
+ if(hi)el('path',{d:p,fill:'none',stroke:HI,'stroke-width':12});el('path',{d:p,fill:'none',stroke:c,'stroke-width':3});
+ if(lab){const q=add(C,sdir(d1+d/2),lr||r+18);text(q[0],q[1]+5,lab,c,'middle',13,hi)}}
+function north(Pw,L=70){const P=px(Pw);line(P,[P[0],P[1]-L],DK,2,'5 5');text(P[0],P[1]-L-5,'N',DK,'middle',13)}
+/* fond de carte : méridiens, parallèles, échelle des latitudes */
+function chart(){el('rect',{x:0,y:0,width:420,height:420,fill:'#f3f8fc'});
+ for(let x=0;x<=10;x+=2){const a=px([x,0]);line([a[0],0],[a[0],420],BL,1,'3 6')}
+ for(let y=0;y<=11;y+=2){const a=px([0,y]);line([24,a[1]],[420,a[1]],GR,1,'3 6')}
+ el('rect',{x:0,y:0,width:24,height:420,fill:'#fff',stroke:'#9aa7b8'});scaleTicks();
+ text(222,414,'méridiens (bleu) · parallèles (vert) · échelle des latitudes à gauche : 1 trait = 1′ = 1 mille','#5b6577','middle',9)}
+function scaleTicks(){for(let y=0;y<=10;y++){const a=px([0,y]);line([15,a[1]],[24,a[1]],DK,2);text(8,a[1]+4,String(y),DK,'middle',10)}}
+function scaleMark(d,hi,lab){const a=px([0,1]),b=px([0,1+d]);el('rect',{x:1,y:b[1],width:22,height:a[1]-b[1],fill:hi?HI:'#ffe9a8',opacity:.9});scaleTicks();
+ line([22,a[1]],[22,b[1]],RD,3);text(28,(a[1]+b[1])/2+4,lab||(fr(d)+' milles'),RD,'start',14,hi,'#fff')}
+function compas(Pw,Qw,hi,lab){const P=px(Pw),Q=px(Qw),m=[(P[0]+Q[0])/2,(P[1]+Q[1])/2],L=Math.hypot(Q[0]-P[0],Q[1]-P[1]);const n=[-(Q[1]-P[1])/L,(Q[0]-P[0])/L];const A=add(m,n,-Math.min(70,L*.45));
+ if(hi){line(A,P,HI,10);line(A,Q,HI,10)}line(A,P,'#5b6577',3);line(A,Q,'#5b6577',3);el('circle',{cx:A[0],cy:A[1],r:6,fill:'#5b6577'});
+ if(lab)text(A[0],A[1]-10,lab,'#5b6577','middle',12,hi)}
+/* règle Cras : centre C (monde) sur un méridien, route R */
+const RI1=88,RI2=114,RO1=118,RO2=146,LI=101,LO=132,W=158;
+function cras(Cw,R,hi,showP){const C=px(Cw),black=R<180,a=sdir(R),n=sdir(black?R-90:R+90),u=p=>sdir(black?R+180+p:R+180-p);
+ const lm=p=>black?180-p:p+180,lp=p=>Math.abs(p-90)<.01?(black?'0/180':'180/360'):black?(p<90?90-p:270-p):(p<90?p+270:p+90),num=black?DK:RD;
+ const pts=[[-330,0],[330,0],[330,W],[-330,W]].map(([s,t])=>add(add(C,a,s),n,t));
+ el('polygon',{points:pts.map(q=>q.join(',')).join(' '),fill:'#fff',opacity:.8,stroke:hi?'#f2c94c':'#7a8699','stroke-width':hi?5:2});
+ const band=(r1,r2,fill)=>{let q=[];for(let p=0;p<=180;p+=3)q.push(add(C,u(p),r2));for(let p=180;p>=0;p-=3)q.push(add(C,u(p),r1));el('polygon',{points:q.map(z=>z.join(',')).join(' '),fill,opacity:.9})};
+ band(RI1,RI2,'#d6e7fb');band(RO1,RO2,'#d9f1df');
+ for(let p=0;p<=180;p+=5){const L=p%10?5:9;for(const r of [RI2,RO2]){const q1=add(C,u(p),r),q2=add(C,u(p),r-L);line(q1,q2,num,p%30?1:2)}}
+ for(let p=0;p<=180;p+=30){let q=add(C,u(p),LI);text(q[0],q[1]+4,String(lm(p)),num,'middle',11);q=add(C,u(p),LO);text(q[0],q[1]+4,String(lp(p)),num,'middle',11)}
+ const A1=add(add(C,a,-50),n,44),A2=add(add(C,a,50),n,44);el('line',{x1:A1[0],y1:A1[1],x2:A2[0],y2:A2[1],stroke:DK,'stroke-width':4,'marker-end':'url(#mk)'});
+ // méridien par C et lecture
+ line([C[0],0],[C[0],420],BL,3,null,hi);
+ const pm=black?180-R:R-180,q=add(C,u(pm),LI);el('circle',{cx:q[0],cy:q[1],r:14,fill:'none',stroke:'#f2a900','stroke-width':4});
+ el('circle',{cx:C[0],cy:C[1],r:6,fill:DK,stroke:'#fff','stroke-width':2});
+ const lq=add(C,sdir(black?R-90:R+90),-18);text(lq[0],lq[1]+5,'C',DK,'middle',14);
+ const bx=q[0]>300?q[0]-40:q[0]+40;text(bx,q[1]-18,'lecture '+f3(R)+'°',num,'middle',14,false,'#fff3c4')}
+/* point C sur la droite (P, R) au méridien x = mx */
+const onMer=(Pw,Rr,mx)=>{const s=(mx-Pw[0])/Math.sin(Rr*R);return wadd(Pw,Rr,s)};
+/* ===================== EXERCICES ===================== */
+const EX=[];
+/* --- 1 : route, distance, durée, cap compas --- */
+{const A=[1,1.2],Rv=60,dist=8,B=wadd(A,Rv,dist),C1=onMer(A,Rv,4);
+EX.push({t:'1 · Aller de A à B',
+ en:'<b>Énoncé.</b> Vous êtes en <b>A</b> et voulez aller en <b>B</b> à <b>6 nœuds</b>. Pas de courant, pas de vent. Déclinaison <b>D = 2° W</b>, déviation <b>dév = +3°</b>. Trouvez : 1) la route vraie, 2) le cap compas, 3) la distance, 4) la durée.',
+ leg:[[PU,'route vraie A → B'],['#d6e7fb','règle Cras (rangée méridien)'],['#5b6577','compas à pointes'],[RD,'distance sur l\'échelle']],
+ E:{A:h=>pt(A,'A',DK,-12,16,h),B:h=>pt(B,'B',DK,12,4,h,'start'),
+   route:h=>vec(A,B,PU,'p',h,true),
+   cras:h=>cras(C1,Rv,h),
+   comp:h=>compas(A,B,h,'compas'),
+   sc:h=>scaleMark(dist,h,'8 milles'),
+   ang:h=>{north(A,80);arcW(A,50,0,Rv,PU,'060°',h,70)}},
+ order:['route','ang','A','B','cras','comp','sc'],
+ steps:[
+  {k:1,add:['A','B'],txt:'Les deux points <mark>A</mark> (départ) et <mark>B</mark> (arrivée) sont sur la carte.'},
+  {k:1,add:['route'],txt:'<b>Tracé</b> : on relie A à B à la règle. C\'est la <mark>route vraie</mark> (violet). Les petits traits = 1 mille.'},
+  {k:1,add:['cras'],txt:'<b>Mesure à la Cras</b> : bord de la règle sur la route, <b>flèche vers B</b> (Nord-Est → chiffres noirs). On fait glisser jusqu\'à ce que le centre C soit sur un <mark>méridien</mark>. Le méridien coupe la rangée méridien sur <mark>60</mark>.',calc:'route vraie Rv = 060°'},
+  {k:2,add:['ang'],rm:['cras'],txt:'Pas de courant et pas de vent : le bateau suit exactement son cap. Donc <mark>cap vrai = route vraie</mark>.',calc:'Cv = Rv = 060°'},
+  {k:2,add:[],txt:'<b>Cap compas</b>. La formule : Cv = Cc + dév + D. On cherche Cc, donc on <b>retire</b> dév et D. Attention au signe : D = 2° <b>W</b> → <mark>D = −2</mark>.',calc:'Cc = Cv − dév − D = 60 − 3 − (−2) = 60 − 3 + 2 = 059°'},
+  {k:1,add:['comp'],txt:'<b>Distance</b> : on ouvre le <mark>compas à pointes</mark> : une pointe sur A, l\'autre sur B.'},
+  {k:1,add:['sc'],txt:'Sans changer l\'ouverture, on pose le compas sur l\'<mark>échelle des latitudes</mark> (bord gauche). Chaque trait = 1 minute = 1 mille. Le compas va du trait 1 au trait 9 : on compte <b>8 intervalles</b> = <b>8 milles</b>.',calc:'distance AB = 8 milles'},
+  {k:2,add:[],txt:'<b>Durée</b> = distance ÷ vitesse. 0,333 h × 60 = 20 min.',calc:'8 ÷ 6 = 1,333 h = 1 h 20 min'},
+  {k:3,add:[],hi:['route'],txt:'<b>Réponses</b> : route vraie <b>060°</b>, cap compas <b>059°</b>, distance <b>8 milles</b>, durée <b>1 h 20</b>.',calc:'Rv 060° · Cc 059° · 8 M · 1 h 20'}]})}
+/* --- 2 : estime --- */
+{const X=[1.5,8.5],Cc=125,dev=-3,D=-2,Cv=Cc+dev+D,d=7.5,E=wadd(X,Cv,d),C2=onMer(X,Cv,6);
+EX.push({t:'2 · Où suis-je à 10 h 30 ?',
+ en:'<b>Énoncé.</b> À <b>09 h 00</b> vous êtes en <b>X</b>. Vous gouvernez au <b>cap compas 125°</b> à <b>5 nœuds</b>. D = <b>2° W</b>, dév = <b>−3°</b>. Pas de courant, pas de vent. Placez votre position à <b>10 h 30</b>.',
+ leg:[[PU,'route tracée'],['#d6e7fb','règle Cras'],['#5b6577','compas à pointes'],[RD,'distance sur l\'échelle']],
+ E:{X:h=>pt(X,'X 09h00',DK,0,-14,h),cras:h=>cras(C2,Cv,h),route:h=>vec(X,wadd(X,Cv,9.2),PU,'p',h,false),
+   sc:h=>scaleMark(d,h,'7,5 milles'),comp:h=>compas(X,E,h,'7,5 M'),Epos:h=>pt(E,'10h30',RD,10,22,h,'start'),
+   ang:h=>{north(X,70);arcW(X,40,0,Cv,PU,'120°',h,60)}},
+ order:['route','ang','cras','comp','sc','X','Epos'],
+ steps:[
+  {k:1,add:['X'],txt:'Départ en <mark>X</mark> à 09 h 00.'},
+  {k:2,add:[],txt:'On ne trace jamais un cap compas : on le transforme d\'abord en <mark>cap vrai</mark>. Cv = Cc + dév + D, avec dév = −3 et D = −2 (Ouest = moins).',calc:'Cv = 125 + (−3) + (−2) = 120°'},
+  {k:1,add:['cras'],txt:'<b>Cras</b> : bord de la règle sur X, <b>flèche vers le Sud-Est</b> (120 → chiffres noirs). On fait <b>pivoter autour de X</b> jusqu\'à ce que le centre C soit sur un <mark>méridien</mark> qui coupe la rangée méridien sur <mark>120</mark>.'},
+  {k:1,add:['route'],txt:'On <mark>trace</mark> le long du bord, depuis X, dans le sens de la flèche : la route 120°.'},
+  {k:1,add:['ang'],rm:['cras'],txt:'On enlève la règle. <mark>Contrôle</mark> : 120° entre le Nord et la route.'},
+  {k:2,add:[],txt:'<b>Distance parcourue</b> : de 09 h 00 à 10 h 30 = 1 h 30 = <b>1,5 h</b>.',calc:'distance = 5 × 1,5 = 7,5 milles'},
+  {k:1,add:['sc'],txt:'On prend <mark>7,5 milles</mark> au compas sur l\'<b>échelle des latitudes</b>.'},
+  {k:1,add:['comp','Epos'],txt:'On reporte le compas sur la route, depuis X : la deuxième pointe donne la <mark>position à 10 h 30</mark>.'},
+  {k:3,add:[],hi:['Epos'],txt:'<b>Réponse</b> : position estimée à 10 h 30 sur la route 120°, à 7,5 milles de X.',calc:'Cv 120° · 7,5 M · point à 10 h 30'}]})}
+/* --- 3 : point par deux relèvements --- */
+{const S=[5,3],ZvP=42,ZvQ=312,P=wadd(S,ZvP,6),Q=wadd(S,ZvQ,5),CP=onMer(P,ZvP,6),CQ=onMer(Q,ZvQ,4);
+EX.push({t:'3 · Point par 2 relèvements',
+ en:'<b>Énoncé.</b> Au compas de relèvement, vous relevez le <b>phare P au 040°</b> et le <b>clocher Q au 310°</b>. Déviation au cap suivi <b>dév = +4°</b>, D = <b>2° W</b>. Faites le point.',
+ leg:[[RD,'lignes de position'],['#d6e7fb','règle Cras'],[GR,'votre position']],
+ E:{P:h=>{pt(P,'',DK);text(px(P)[0],px(P)[1]-12,'phare P','#5b6577','middle',14,h)},Q:h=>{pt(Q,'',DK);text(px(Q)[0],px(Q)[1]-12,'clocher Q','#5b6577','middle',14,h)},
+   cP:h=>cras(CP,ZvP,h),cQ:h=>cras(CQ,ZvQ,h),
+   lP:h=>{seg(wadd(P,ZvP,-9),wadd(P,ZvP,1),RD,3,null,h);const m=px(wadd(P,ZvP,-2.2));text(m[0]+12,m[1]+16,'042°',RD,'start',14,h)},
+   lQ:h=>{seg(wadd(Q,ZvQ,-8),wadd(Q,ZvQ,1),RD,3,null,h);const m=px(wadd(Q,ZvQ,-2.2));text(m[0]-12,m[1]+16,'312°',RD,'end',14,h)},
+   S:h=>{const Sp=px(S);el('circle',{cx:Sp[0],cy:Sp[1],r:11,fill:'none',stroke:GR,'stroke-width':4});text(Sp[0],Sp[1]+30,'vous êtes ici',GR,'middle',15,h)}},
+ order:['lP','lQ','cP','cQ','P','Q','S'],
+ steps:[
+  {k:1,add:['P','Q'],txt:'Les deux amers relevés : le <mark>phare P</mark> et le <mark>clocher Q</mark>.'},
+  {k:2,add:[],txt:'On transforme les relèvements compas en <mark>relèvements vrais</mark> : Zv = Zc + dév + D. La déviation est celle <b>du cap du bateau</b> (+4), pour les deux.',calc:'Zv P = 40 + 4 − 2 = 042° · Zv Q = 310 + 4 − 2 = 312°'},
+  {k:1,add:['cP'],txt:'<b>Phare P</b> : bord de la règle sur P, <mark>flèche vers P</mark> (la flèche indique « vers le point relevé » : c\'est la direction dans laquelle vous voyez le phare). 042 → chiffres noirs. On pivote autour de P jusqu\'à lire <mark>42</mark> sur un méridien.'},
+  {k:1,add:['lP'],rm:['cP'],txt:'On trace le long du bord, <b>de P vers vous</b> (à l\'opposé de la flèche). Vous êtes <b>quelque part sur cette ligne</b> : c\'est une <mark>ligne de position</mark>.'},
+  {k:1,add:['cQ'],txt:'<b>Clocher Q</b> : flèche <mark>vers Q</mark>. 312 est entre 180 et 360 → <b>chiffres rouges</b>. On pivote autour de Q jusqu\'à lire <mark>312</mark> sur un méridien.'},
+  {k:1,add:['lQ'],rm:['cQ'],txt:'Deuxième <mark>ligne de position</mark>, tracée de Q vers vous.'},
+  {k:3,add:['S'],txt:'Vous êtes sur les deux lignes à la fois : <mark>à leur croisement</mark>. C\'est le point. (Pas besoin d\'ajouter 180° : la flèche « vers le point relevé » s\'en charge.)',calc:'point = intersection des 2 lignes de position'}]})}
+/* --- 4 : cap à suivre avec courant (route fond voulue) --- */
+{const A=[1.5,1.2],B=wadd(A,45,9),Kp=wadd(A,90,2.5),al=Math.asin(2.5*Math.sin(45*R)/6)/R,Cv=45-al,VF=6*Math.cos(al*R)+2.5*Math.cos(45*R),Bp=wadd(A,45,VF),C4a=onMer(A,45,4),C4b=onMer(Kp,Cv,6);
+EX.push({t:'4 · Quel cap pour aller en B ?',
+ en:'<b>Énoncé.</b> Vous voulez aller de <b>A</b> à <b>B</b>. Vitesse du bateau <b>6 nœuds</b>. Courant portant au <b>090°</b>, <b>2,5 nœuds</b>. Pas de vent. D = <b>2° W</b>, dév = <b>+1°</b>. Quel cap compas afficher ? Combien de temps ?',
+ leg:[[GR,'route fond voulue A → B'],[OR,'courant (1 h)'],[BL,'bateau (1 h) = cap vrai'],['#5b6577','arc du compas'],['#d6e7fb','règle Cras']],
+ E:{A:h=>pt(A,'A',DK,-12,16,h),B:h=>pt(B,'B',DK,12,4,h,'start'),route:h=>seg(A,B,GR,3,'9 6',h),
+   cr:h=>{seg(A,B,GR,3,'9 6');},
+   cA:h=>cras(C4a,45,h),
+   cour:h=>{vec(A,Kp,OR,'o',h,true);const m=px(Kp);text(m[0]+8,m[1]+18,'K',OR,'start',15,h);text(px(A)[0]+40,px(A)[1]+20,'courant 2,5 nd',OR,'start',12,h)},
+   arc:h=>{const c=px(Kp),r=6*K,a0=Math.atan2(px(Bp)[1]-c[1],px(Bp)[0]-c[0]);const s=[c[0]+r*Math.cos(a0-.28),c[1]+r*Math.sin(a0-.28)],e=[c[0]+r*Math.cos(a0+.28),c[1]+r*Math.sin(a0+.28)];
+     if(h)el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 1 ${e[0]} ${e[1]}`,fill:'none',stroke:HI,'stroke-width':10});el('path',{d:`M${s[0]} ${s[1]} A${r} ${r} 0 0 1 ${e[0]} ${e[1]}`,fill:'none',stroke:'#5b6577','stroke-width':2.5,'stroke-dasharray':'7 5'});text(e[0]+6,e[1]+4,'rayon 6',DK,'start',12,h)},
+   Bp:h=>pt(Bp,"B'",GR,-14,-6,h,'end'),
+   boat:h=>vec(Kp,Bp,BL,'b',h,true),
+   cB:h=>cras(C4b,Cv,h),
+   ang:h=>{north(Kp,60);arcW(Kp,34,0,Cv,BL,'028°',h,52)}},
+ order:['route','cour','arc','boat','ang','cA','cB','A','B','Bp'],
+ steps:[
+  {k:1,add:['A','B','route'],txt:'On trace la <mark>route fond voulue</mark> A → B (vert pointillé) : c\'est là où on veut passer sur le fond.'},
+  {k:1,add:['cA'],txt:'<b>Cras</b> sur A → B, flèche vers B, centre C sur un méridien : on lit <mark>45</mark>.',calc:'route fond voulue = 045°'},
+  {k:1,add:['cour'],rm:['cA'],txt:'<b>Le courant d\'abord</b>, depuis A : au 090°, longueur <mark>2,5</mark> (1 heure de courant). On arrive en <b>K</b>.'},
+  {k:1,add:['arc'],txt:'Pointe du compas sur K, ouverture <mark>6 milles</mark> (1 heure de bateau) prise sur l\'échelle des latitudes. L\'arc coupe la route voulue.'},
+  {k:1,add:['Bp','boat'],txt:'L\'arc coupe la route en <b>B\'</b>. On trace <mark>K → B\'</mark> (bleu) : c\'est la direction à donner au bateau.'},
+  {k:1,add:['cB'],txt:'<b>Cras</b> sur K → B\', flèche vers B\' : le méridien coupe la rangée méridien sur <mark>28</mark>.',calc:'cap vrai Cv = 028°'},
+  {k:2,add:['ang'],rm:['cB'],txt:'<b>Contrôle à la calculatrice</b> (recette 2) : θ = courant − route = 90 − 45 = 45°. En travers = 2,5 × sin 45° = 1,77. α = sin⁻¹(1,77 ÷ 6) = 17,1°. Cap = 45 − 17,1.',calc:'Cv = 045 − 17,1 = 027,9 ≈ 028° ✓'},
+  {k:2,add:[],txt:'<b>Cap compas</b> : Cc = Cv − dév − D, avec dév = +1 et D = −2.',calc:'Cc = 28 − 1 − (−2) = 28 − 1 + 2 = 029°'},
+  {k:2,add:[],hi:['Bp'],txt:'<b>Vitesse fond</b> = A → B\' mesurée au compas = <mark>7,5 milles en 1 h</mark>. Contrôle : 2,5 × cos 45° + 6 × cos 17,1° = 1,77 + 5,74. Distance A → B = 9 milles.',calc:'Vf = 7,50 nd · durée = 9 ÷ 7,5 = 1,2 h = 1 h 12'},
+  {k:3,add:[],hi:['boat'],txt:'<b>Réponses</b> : afficher le <b>cap compas 029°</b>, vitesse fond <b>7,5 nœuds</b>, durée <b>1 h 12</b>.',calc:'Cc 029° · Vf 7,5 nd · 1 h 12'}]})}
+/* --- 5 : route fond avec courant (cap connu) --- */
+{const A=[1,1.2],Cc=31,dev=1,D=-2,Cv=Cc+dev+D,P=wadd(A,Cv,5),Q=[P[0]+dir(150)[0]*2,P[1]+dir(150)[1]*2],Rf=Math.atan2(Q[0]-A[0],Q[1]-A[1])/R,Vf=Math.hypot(Q[0]-A[0],Q[1]-A[1]),C5a=onMer(A,Cv,4),C5b=onMer(A,Rf,4);
+EX.push({t:'5 · Où suis-je avec le courant ?',
+ en:'<b>Énoncé.</b> À <b>14 h 00</b> vous partez de <b>A</b> au <b>cap compas 031°</b> à <b>5 nœuds</b>. D = <b>2° W</b>, dév = <b>+1°</b>. Courant portant au <b>150°</b>, <b>2 nœuds</b>. Pas de vent. Trouvez la route fond, la vitesse fond et la position à 15 h 00.',
+ leg:[[BL,'bateau (1 h) = cap vrai'],[OR,'courant (1 h)'],[GR,'route fond'],['#d6e7fb','règle Cras'],[RD,'distance sur l\'échelle']],
+ E:{A:h=>pt(A,'A 14h00',DK,0,22,h),cA:h=>cras(C5a,Cv,h),
+   boat:h=>{vec(A,P,BL,'b',h,true);const m=px(P);text(m[0]-10,m[1]+4,'bateau 5 nd',BL,'end',13,h)},
+   cour:h=>{vec(P,Q,OR,'o',h,true);const m=px(P);text(m[0]+12,m[1]-4,'courant 2 nd',OR,'start',13,h)},
+   rf:h=>vec(A,Q,GR,'g',h,false),cB:h=>cras(C5b,Rf,h),
+   sc:h=>scaleMark(Vf,h,'4,36 milles'),comp:h=>compas(A,Q,h,''),
+   Q:h=>pt(Q,'15h00',RD,12,16,h,'start'),
+   ang:h=>{north(A,90);arcW(A,60,0,Rf,GR,'053°',h,80)}},
+ order:['boat','cour','rf','ang','cA','cB','comp','sc','A','Q'],
+ steps:[
+  {k:1,add:['A'],txt:'Départ de <mark>A</mark> à 14 h 00.'},
+  {k:2,add:[],txt:'<b>Cap vrai</b> : Cv = Cc + dév + D = 31 + 1 − 2.',calc:'Cv = 030°'},
+  {k:1,add:['cA'],txt:'<b>Cras</b> : bord sur A, flèche vers le Nord-Est, pivoter jusqu\'à lire <mark>30</mark> sur un méridien.'},
+  {k:1,add:['boat'],rm:['cA'],txt:'On trace la flèche <mark>bateau</mark> : au 030°, longueur <b>5 milles</b> (1 heure à 5 nœuds), prise au compas sur l\'échelle des latitudes.'},
+  {k:1,add:['cour'],txt:'Au bout, la flèche <mark>courant</mark> : au 150°, longueur <b>2 milles</b> (1 heure de courant).'},
+  {k:1,add:['rf','Q'],txt:'On relie A au bout du courant : c\'est la <mark>route fond</mark>, et le bout est la <mark>position à 15 h 00</mark>.'},
+  {k:1,add:['cB'],txt:'<b>Cras</b> sur A → 15 h 00 : on lit <mark>53</mark>.',calc:'route fond Rf = 053°'},
+  {k:1,add:['comp','sc'],rm:['cB'],txt:'<b>Compas</b> entre A et la position de 15 h 00, reporté sur l\'<mark>échelle des latitudes</mark> : environ 4,4 milles en 1 h.',calc:'Vf ≈ 4,4 nd'},
+  {k:2,add:['ang'],rm:['comp','sc'],txt:'<b>Contrôle à la calculatrice</b> (recette 1) : écart = 150 − 30 = 120. Dans l\'axe = 2 × cos 120 = −1 → avant = 5 − 1 = 4. En travers = 2 × sin 120 = 1,73.',calc:'Vf = √(4² + 1,73²) = 4,36 · δ = tan⁻¹(1,73 ÷ 4) = 23,4° · Rf = 30 + 23,4 = 053°'},
+  {k:3,add:[],hi:['rf','Q'],txt:'<b>Réponses</b> : route fond <b>053°</b>, vitesse fond <b>4,36 nœuds</b>, position à 15 h 00 = bout de la route fond.',calc:'Rf 053° · Vf 4,36 nd · point à 15 h 00'}]})}
+/* ===================== moteur ===================== */
+let ce=0,cs=0;
+function render(){const X=EX[ce],st=X.steps[cs];svg.innerHTML='';defs();chart();
+ const on=new Set();for(let i=0;i<=cs;i++){(X.steps[i].add||[]).forEach(k=>on.add(k));(X.steps[i].rm||[]).forEach(k=>on.delete(k))}
+ const now=new Set([...(st.add||[]),...(st.hi||[])]);X.order.forEach(k=>{if(on.has(k))X.E[k](now.has(k))});
+ $('en').innerHTML=X.en;$('ttl').textContent=X.t;$('cnt').textContent=`Étape ${cs+1} / ${X.steps.length}`;$('bar').style.width=((cs+1)/X.steps.length*100)+'%';
+ $('kind').innerHTML=st.k==1?'<span class="kind k1">TRACÉ sur la carte</span>':st.k==2?'<span class="kind k2">CALCUL</span>':'<span class="kind k3">RÉPONSE</span>';
+ $('txt').innerHTML=st.txt;$('calc').textContent=st.calc||'';
+ $('leg').innerHTML='<b>Légende :</b> '+X.leg.map(([c,t])=>`<span><i style="background:${c}"></i>${t}</span>`).join('')+'<span>⭕ = lecture Cras</span><span>C = centre de la règle</span><span>1 petit trait = 1 mille</span>';
+ $('prev').disabled=ce==0&&cs==0;$('next').textContent=(ce==EX.length-1&&cs==X.steps.length-1)?'Fin':'Suivant ▶';
+ [...$('tabs').children].forEach((b,i)=>b.className=i==ce?'on':'')}
+EX.forEach((X,i)=>{const b=document.createElement('button');b.textContent=X.t;b.onclick=()=>{ce=i;cs=0;render()};$('tabs').appendChild(b)});
+$('next').onclick=()=>{if(cs<EX[ce].steps.length-1)cs++;else if(ce<EX.length-1){ce++;cs=0}render()};
+$('prev').onclick=()=>{if(cs>0)cs--;else if(ce>0){ce--;cs=EX[ce].steps.length-1}render()};
+render();
+</script></body></html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coordonnées d'un point</title>
+<style>
+body{margin:0;background:#f4f6f9;color:#14213d;font:17px/1.5 -apple-system,system-ui,sans-serif;padding:12px 14px 40px}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:#5b6577}h1{font-size:22px;margin:4px 0 8px}
+.card{background:#fff;border:1px solid #d9dee7;border-radius:16px;padding:12px;margin:10px 0}
+svg{width:100%;height:auto;display:block;background:#f3f8fc;border-radius:12px}
+.prog{display:flex;justify-content:space-between;font-size:13px;color:#5b6577;font-weight:700;margin-bottom:4px}
+.bar{height:6px;background:#e3e8ef;border-radius:3px;margin-bottom:8px}.bar i{display:block;height:100%;background:#1565c0;border-radius:3px}
+.txt{font-size:17px;margin:8px 2px}.txt mark{background:#ffe14d;padding:0 3px;border-radius:4px}
+.calc{background:#f0f4fa;border-radius:10px;padding:8px 12px;font-weight:800;font-size:17px;text-align:center;min-height:1.4em}
+.nav{display:flex;gap:10px;margin-top:10px}.nav button{flex:1;font:800 17px system-ui;padding:12px;border-radius:12px;border:1.5px solid #1565c0;background:#fff;color:#1565c0}.nav button.p{background:#1565c0;color:#fff}
+.leg{font-size:13px;color:#5b6577;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px}.leg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
+.key{background:#fff7d6;border-left:5px solid #f2c94c;border-radius:0 10px 10px 0;padding:8px 12px;margin:8px 0;font-size:15px}
+li{margin:5px 0}
+</style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
+<div class="v">Maquette pas à pas · version 1.1 · lire et placer les coordonnées d'un point (latitude, longitude) sur la carte 9999</div>
+<h1>Les coordonnées d'un point</h1>
+<div class="card">
+<div class="prog"><span id="ttl"></span><span id="cnt"></span></div><div class="bar"><i id="bar"></i></div>
+<svg id="s" viewBox="0 0 420 400"></svg>
+<div class="leg"><b>Légende :</b><span><i style="background:#1a9c46"></i>parallèle (latitude)</span><span><i style="background:#1565c0"></i>méridien (longitude)</span><span><i style="background:#5b6577"></i>compas à pointes</span><span><i style="background:#c62828"></i>report sur l'échelle</span><span>1 bande noire ou blanche = 1 minute · 1 petit trait = 0,1 minute</span></div>
+<p class="txt" id="txt"></p>
+<div class="calc" id="calc"></div>
+<div class="nav"><button id="prev">◀ Retour</button><button class="p" id="next">Suivant ▶</button></div>
+</div>
+<div class="card"><b>À retenir</b>
+<ol>
+<li>La <b>latitude</b> se lit sur le bord <b>gauche ou droit</b> de la carte. Elle augmente vers le <b>haut</b> (Nord).</li>
+<li>La <b>longitude</b> se lit sur le bord <b>haut ou bas</b>. Sur la carte 9999 (longitude Ouest), elle augmente vers la <b>gauche</b>.</li>
+<li>Méthode : compas à pointes entre le point et le <b>parallèle</b> (ou le <b>méridien</b>) imprimé le plus proche, puis report sur le bord, à partir de ce trait.</li>
+<li>On écrit : degrés, minutes, <b>dixièmes de minute</b>, puis N ou W. Exemple : <b>47°24,7′ N · 2°37,2′ W</b>.</li>
+<li>0,1 minute de latitude = 0,1 mille ≈ 185 m. Une erreur d'un trait, c'est 185 m.</li>
+</ol>
+<div class="key">Les distances se mesurent <b>uniquement sur l'échelle des latitudes</b> (bords gauche et droit). Les minutes de longitude sont plus courtes (environ 0,68 mille ici) : ne jamais mesurer une distance en haut ou en bas.</div>
+</div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),svg=$('s'),HI='#ffe14d',DK='#14213d',BL='#1565c0',GR='#1a9c46',RD='#c62828';
+/* cadre : latitudes 47°22' à 47°26' (bas → haut), longitudes 2°40' W (gauche) à 2°34' W (droite) */
+const X0=56,X1=404,Y0=46,Y1=366,LA0=22,LA1=26,LO0=40,LO1=34;
+const KY=(Y1-Y0)/(LA1-LA0),KX=(X1-X0)/(LO0-LO1);
+const yLa=m=>Y1-(m-LA0)*KY,xLo=m=>X0+(LO0-m)*KX;
+const P={la:24.7,lo:37.2},Q={la:23.0,lo:37.8};
+function el(t,a,tx){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(tx!==undefined)e.textContent=tx;svg.appendChild(e);return e}
+function text(x,y,t,c=DK,a='middle',s=13,hi,fill){const e=el('text',{x,y,'text-anchor':a,'font-size':s,'font-weight':800,fill:c,stroke:'#fff','stroke-width':4,'paint-order':'stroke'},t);
+ if(hi||fill){const b=e.getBBox();const r=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:b.x-4,y:b.y-2,width:b.width+8,height:b.height+4,rx:6,fill:fill||HI}))r.setAttribute(k,v);svg.insertBefore(r,e)}return e}
+function line(a,b,c,w,dash,hi){if(hi)el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:HI,'stroke-width':w+10,'stroke-linecap':'round'});el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:c,'stroke-width':w,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})})}
+function frame(hiLat,hiLon){
+ el('rect',{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:'#eef6fc',stroke:DK,'stroke-width':2});
+ // échelle des latitudes (gauche)
+ for(let m=LA0;m<LA1;m++){el('rect',{x:X0-14,y:yLa(m+1),width:14,height:KY,fill:m%2?'#fff':DK,stroke:DK,'stroke-width':1})}
+ for(let t=0;t<=(LA1-LA0)*10;t++){const y=yLa(LA0+t/10);line([X0-20,y],[X0-14,y],DK,t%10?1:2)}
+ for(let m=LA0;m<=LA1;m++)text(X0-24,yLa(m)+4,m+'′',GR,'end',12,hiLat);
+ text(4,Y1+30,'↑ Latitude N (47°…)','#137a37','start',11);
+ // échelle des longitudes (haut)
+ for(let m=LO1;m<LO0;m++){el('rect',{x:xLo(m+1),y:Y0-14,width:KX,height:14,fill:m%2?'#fff':DK,stroke:DK,'stroke-width':1})}
+ for(let t=0;t<=(LO0-LO1)*10;t++){const x=xLo(LO1+t/10);line([x,Y0-20],[x,Y0-14],DK,t%10?1:2)}
+ for(let m=LO1;m<=LO0;m++)text(xLo(m),Y0-24,m+'′',BL,'middle',12,hiLon);
+ text(X1,Y1+30,'← Longitude W (2°…) augmente vers la gauche','#0d47a1','end',11);
+ 
+ // parallèles et méridiens imprimés tous les 2'
+ for(const m of [24]){line([X0,yLa(m)],[X1,yLa(m)],GR,1.5);text(X1-4,yLa(m)-4,"parallèle 47°24′",GR,'end',10)}
+ for(const m of [38,36]){line([xLo(m),Y0],[xLo(m),Y1],BL,1.5);text(xLo(m)+3,Y1-6,"2°"+m+"′",BL,'start',10)}
+ // îlot schématique
+ const c=[xLo(37.3),yLa(24.8)];el('ellipse',{cx:c[0],cy:c[1],rx:26,ry:12,fill:'#f3e3a8',stroke:'#8a7a40'});text(c[0]-30,c[1]-14,'île Dumet','#6b5a1e','end',11)}
+function point(pt,lab,hi,c='#c2185b'){const x=xLo(pt.lo),y=yLa(pt.la);el('circle',{cx:x,cy:y,r:6,fill:c,stroke:'#fff','stroke-width':2});text(x+10,y+18,lab,c,'start',14,hi)}
+function compasV(x,y1,y2,hi){const A=[x+40,(y1+y2)/2];if(hi){line(A,[x,y1],HI,10);line(A,[x,y2],HI,10)}line(A,[x,y1],'#5b6577',3);line(A,[x,y2],'#5b6577',3);el('circle',{cx:A[0],cy:A[1],r:5,fill:'#5b6577'})}
+function compasH(y,x1,x2,hi){const A=[(x1+x2)/2,y+40];if(hi){line(A,[x1,y],HI,10);line(A,[x2,y],HI,10)}line(A,[x1,y],'#5b6577',3);line(A,[x2,y],'#5b6577',3);el('circle',{cx:A[0],cy:A[1],r:5,fill:'#5b6577'})}
+const E={
+ P:h=>point(P,'P (le phare)',h),
+ cLat:h=>compasV(xLo(P.lo),yLa(P.la),yLa(24),h),
+ zoom:h=>{const bx=262,by=190,bw=138,bh=170;el('rect',{x:bx,y:by,width:bw,height:bh,rx:10,fill:'#fff',stroke:'#f2a900','stroke-width':2.5});text(bx+bw/2,by+16,'LOUPE : 1 minute',DK,'middle',12);
+  const x=bx+30,t0=by+150,step=12.5;el('rect',{x:x-8,y:t0-10*step,width:16,height:10*step,fill:DK});
+  for(let i=0;i<=10;i++){const y=t0-i*step;line([x+8,y],[x+(i%5?18:24),y],DK,i%5?1.5:2.5);text(x+28,y+4,i==0?'24′':i==10?'25′':(i==5?'24,5′':'0,'+i),i==0||i==10?GR:DK,'start',10)}
+  line([x-14,t0],[x-14,t0-7*step],RD,4);text(x+64,t0-7*step+4,'← 7 traits',RD,'start',11);text(bx+bw/2,by+bh+16,'7 × 0,1′ = 0,7′ = 0,7 mille',RD,'middle',12,h,'#fff')},
+ rLat:h=>{compasV(X0-17,yLa(24.7),yLa(24),h);line([X0-17,yLa(24)],[X0-17,yLa(24.7)],RD,4);text(X0+6,yLa(24.7)-8,'24,7′',RD,'start',14,h,'#fff')},
+ hLat:h=>{line([X0,yLa(P.la)],[xLo(P.lo),yLa(P.la)],GR,2,'6 5',h);text(X0+6,yLa(P.la)-8,'24,7′',RD,'start',14,h,'#fff')},
+ cLon:h=>compasH(yLa(P.la),xLo(P.lo),xLo(38),h),
+ rLon:h=>{line([xLo(37.2),Y0-17],[xLo(38),Y0-17],RD,4);text(xLo(37.6),Y0+16,'37,2′',RD,'middle',14,h,'#fff')},
+ vLon:h=>line([xLo(P.lo),Y0],[xLo(P.lo),yLa(P.la)],BL,2,'6 5',h),
+ Q:h=>point(Q,'A (47°23,0′ N · 2°37,8′ W)',h,'#1a9c46'),
+ qLines:h=>{line([X0,yLa(Q.la)],[X1,yLa(Q.la)],GR,2,'6 5',h);line([xLo(Q.lo),Y0],[xLo(Q.lo),Y1],BL,2,'6 5',h)}
+};
+const ORD=['zoom','qLines','hLat','vLon','cLat','cLon','rLat','rLon','P','Q'];
+const S=[
+ {add:[],hiLat:1,txt:'<b>Les deux échelles.</b> La <mark>latitude</mark> se lit sur le <b>bord gauche</b> (ou droit) : une bande noire ou blanche = 1 minute, un petit trait = 0,1 minute. Elle augmente vers le <b>haut</b>.'},
+ {add:[],hiLon:1,txt:'La <mark>longitude</mark> se lit sur le <b>bord du haut</b> (ou du bas). Attention : la carte 9999 est en longitude <b>Ouest</b>, donc les chiffres <mark>augmentent vers la gauche</mark> (34′, 35′, 36′… de droite à gauche).'},
+ {add:['P'],txt:'On veut les coordonnées du <mark>point P</mark> (ici, le phare de l\'île Dumet).'},
+ {add:['cLat'],txt:'<b>Latitude, étape 1</b> : une pointe du <mark>compas</mark> sur P, l\'autre sur le <b>parallèle imprimé le plus proche</b> (ici 47°24′, la ligne verte horizontale).'},
+ {add:['rLat','zoom'],rm:['cLat'],txt:'<b>Latitude, étape 2</b> : sans changer l\'ouverture, on pose une pointe sur le trait <b>24′</b> du bord gauche et l\'autre <b>vers le haut</b>. L\'ouverture est <b>plus petite qu\'une bande</b> : on n\'a pas changé de minute. À l\'intérieur de la bande 24′–25′, on compte <mark>7 petits traits</mark> (voir la loupe). Chaque petit trait = <b>un dixième</b> de minute.',calc:'latitude = 47°24′ + 0,7′ = 47°24,7′ N'},
+ {add:['hLat'],rm:['rLat','zoom'],txt:'<b>Autre méthode, plus rapide</b> : poser la règle Cras <b>bien horizontale</b> (le long d\'un parallèle) en touchant P, et lire directement sur le bord gauche. Même résultat : <mark>24,7′</mark>.',calc:'47°24,7′ N'},
+ {add:['cLon'],rm:['hLat'],txt:'<b>Longitude, étape 1</b> : compas entre P et le <b>méridien imprimé le plus proche</b> (ici 2°38′, la ligne bleue verticale à gauche de P).'},
+ {add:['rLon','vLon'],rm:['cLon'],txt:'<b>Longitude, étape 2</b> : on reporte l\'ouverture sur le bord du haut, à partir du trait <b>38′</b>, <b>vers la droite</b> (P est à droite du méridien, donc moins à l\'Ouest). 38 − 0,8 = <mark>37,2</mark>.',calc:'longitude = 2°38′ − 0,8′ = 2°37,2′ W'},
+ {add:[],hi:['P'],txt:'<b>Résultat</b>. On écrit toujours la latitude en premier, avec N, puis la longitude avec W.',calc:'P : 47°24,7′ N · 2°37,2′ W'},
+ {add:['qLines','Q'],rm:['vLon','rLon'],txt:'<b>Dans l\'autre sens : placer un point</b> donné par ses coordonnées (ex. le point A du problème 5 : 47°23,0′ N · 2°37,8′ W). On trace une ligne <mark>horizontale à 23,0′</mark> (prise sur le bord gauche) et une ligne <mark>verticale à 37,8′</mark> (prise sur le bord du haut). Le point est à leur croisement.',calc:'A = croisement de 47°23,0′ N et 2°37,8′ W'}
+];
+let cs=0;
+function render(){const st=S[cs];svg.innerHTML='';frame(st.hiLat,st.hiLon);
+ const on=new Set();for(let i=0;i<=cs;i++){(S[i].add||[]).forEach(k=>on.add(k));(S[i].rm||[]).forEach(k=>on.delete(k))}
+ const now=new Set([...(st.add||[]),...(st.hi||[])]);ORD.forEach(k=>{if(on.has(k))E[k](now.has(k))});
+ $('ttl').textContent='Lire et placer des coordonnées';$('cnt').textContent=`Étape ${cs+1} / ${S.length}`;$('bar').style.width=((cs+1)/S.length*100)+'%';
+ $('txt').innerHTML=st.txt;$('calc').textContent=st.calc||'';$('prev').disabled=cs==0;$('next').disabled=cs==S.length-1}
+$('next').onclick=()=>{if(cs<S.length-1)cs++;render()};$('prev').onclick=()=>{if(cs>0)cs--;render()};
+render();
+</script></body></html>
