@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prendre les coordonnées</title>
+<style>
+:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--acc2:#e3eef7;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--acc2:#16283a;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--acc2:#16283a;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:max(10px,env(safe-area-inset-top)) 16px 40px}
+.back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:var(--bg);color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.w{max-width:680px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:23px;margin:4px 0 6px}h2{font-size:20px;margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+svg.ch{width:100%;height:auto;display:block;background:#fbfaf3;border-radius:12px;border:1px solid var(--line)}
+select{font:600 16px system-ui;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px;width:100%}
+.steps{display:flex;gap:4px;margin:8px 0}.steps i{flex:1;height:6px;border-radius:3px;background:var(--line)}.steps i.on{background:var(--accent)}
+.cap{min-height:96px;padding:10px 12px;border-radius:10px;background:var(--acc2);font-size:16px;line-height:1.45}
+.calc{margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--bg);font-weight:800;font-size:17px;text-align:center;min-height:1.6em}
+.row{display:flex;gap:8px;margin-top:10px}.row button{flex:1;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 15px system-ui;cursor:pointer}
+.row button.p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rule{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:10px 12px;font-size:15px;margin:10px 0}
+li{margin:4px 0}
+</style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
+<div class="v">Animation · version 1.0 · prendre la latitude (N) et la longitude (W) d'un point au compas à pointes sèches · 10 exemples sur la carte 9999</div>
+<h1>Prendre les coordonnées d'un point</h1>
+<div class="rule"><b>Le principe :</b> on mesure au compas l'écart entre le point et le <b>parallèle</b> (trait horizontal) ou le <b>méridien</b> (trait vertical) tracé le plus proche, puis on reporte cet écart sur l'<b>échelle du bord de la carte</b>, en partant de la graduation de ce même trait.</div>
+<div class="card">
+<select id="ex"></select>
+<svg class="ch" id="s" viewBox="0 0 260 260"></svg>
+<div class="steps" id="st"></div>
+<div class="cap" id="cap"></div>
+<div class="calc" id="calc"></div>
+<div class="row"><button id="prev">◀ Étape</button><button class="p" id="next">Étape ▶</button></div>
+<div class="row"><button id="auto">▶ Lecture automatique</button><button id="nex">Exemple suivant ⏭</button></div>
+</div>
+<div class="card"><h2>L'échelle du bord, en détail</h2>
+<ul>
+<li>Le bord de la carte porte <b>trois traits parallèles</b> qui forment deux rangées.</li>
+<li><b>Rangée côté carte</b> : petites cases, <b>1 case = 0,1′</b> (10 cases par minute).</li>
+<li><b>Rangée extérieure</b> : blocs d'une <b>demi-minute</b> (5 petites cases), un sur deux marqué d'un trait épais : on compte vite par 0,5′.</li>
+<li>Le <b>grand trait</b> qui traverse les deux rangées est la <b>minute entière</b>.</li>
+<li>On lit la position <b>le long</b> de l'échelle : pour une longitude, seule la position gauche-droite compte. Dans l'animation, on pique sur le <b>trait du milieu</b>, que touchent toutes les graduations.</li>
+</ul>
+<p class="mute" style="font-size:14px;color:var(--mute)">Vérifiez sur votre carte : comptez les petites cases entre deux minutes entières. S'il y en a 10, une case vaut 0,1′, comme ici.</p>
+<div class="rule"><b>Les deux pièges</b><br>① <b>Latitude</b> : elle augmente vers le <b>haut</b>. Point au-dessus du parallèle → on <b>ajoute</b> ; en dessous → on <b>retire</b>.<br>② <b>Longitude Ouest</b> : elle augmente vers la <b>gauche</b>. Point à gauche du méridien → on <b>ajoute</b> ; à droite → on <b>retire</b>.</div>
+</div>
+<p style="font-size:12px;color:var(--mute)">Positions des exemples : liste « Repérage des principaux amers de la carte 9999 » (Ma Formation Nautique). Échelle 1/50 000 : 1′ de latitude ≈ 37 mm sur la carte. Côtes non dessinées.</p>
+</div>
+<script>
+const EX=[
+["Er-Gurannic'h (tourelle cardinale Est)",22.55,50.35],["Groguéguez (phare)",19.35,50.0],["Phare de la Teignouse",27.5,62.65],
+["Recherche (bouée cardinale Ouest)",25.65,50.3],["Phare de l'île Dumet",24.75,37.1],["Phare Tréhic",18.55,31.35],
+["Pot de fer (bouée danger isolé)",21.75,59.75],["Le Bauzec (tourelle cardinale Sud)",28.95,49.3],["Basse Cariou (bouée cardinale Ouest)",27.0,66.3],["Les Galères (bouée cardinale Ouest)",18.8,62.7]];
+const $=id=>document.getElementById(id);
+const f2=x=>String(Math.round(x*100)/100).replace(".",",");
+const latTxt=m=>`47°${m<10?"0":""}${f2(m)}′ N`;
+const lonTxt=m=>{const d=2+Math.floor(m/60+1e-9),mm=m-(d-2)*60;return `00${d}°${(mm<10?"0":"")+f2(mm)}′ W`};
+const U=37,BAND=16,H=6*U,TOP=0;let LU=25,E=null,K=0,TOK=0,AUTO=0,VB=[0,0,260,260];
+function setup(i){const[n,la,lo]=EX[i];LU=U*Math.cos((47+la/60)*Math.PI/180);
+ const latHi=la+3,latLo=la-3,lonL=lo+4.4,lonR=lo-4.4,W=(lonL-lonR)*LU;
+ const par=Math.round(la/5)*5,mer=Math.round(lo/5)*5;
+ E={n,la,lo,latHi,latLo,lonL,lonR,W,par,mer,i,X:m=>BAND+(lonL-m)*LU,Y:m=>(latHi-m)*U};E.full=[-2,-4,BAND+W+4,H+BAND+16]}
+function frame(){const{X,Y,W}=E;let g="";
+ g+=`<rect x="${BAND}" y="0" width="${W}" height="${H}" fill="#fbfaf3"/>`;
+ // fine minute grid (faint)
+ for(let m=Math.ceil(E.latLo);m<=E.latHi;m++)g+=`<line x1="${BAND}" y1="${Y(m)}" x2="${BAND+W}" y2="${Y(m)}" stroke="#e7e2cf" stroke-width=".3"/>`;
+ for(let m=Math.ceil(E.lonR);m<=E.lonL;m++)g+=`<line x1="${X(m)}" y1="0" x2="${X(m)}" y2="${H}" stroke="#e7e2cf" stroke-width=".3"/>`;
+ // drawn parallels / meridians every 5'
+ for(let m=Math.ceil(E.latLo/5)*5;m<=E.latHi;m+=5){g+=`<line x1="${BAND}" y1="${Y(m)}" x2="${BAND+W}" y2="${Y(m)}" stroke="#7a3e9d" stroke-width=".7"/><text x="${BAND+3}" y="${Y(m)-2}" font-size="7" fill="#7a3e9d" font-weight="700">47°${m}′</text>`}
+ for(let m=Math.ceil(E.lonR/5)*5;m<=E.lonL;m+=5){g+=`<line x1="${X(m)}" y1="0" x2="${X(m)}" y2="${H}" stroke="#7a3e9d" stroke-width=".7"/><text x="${X(m)+2}" y="9" font-size="7" fill="#7a3e9d" font-weight="700">${lonTxt(m).replace(" W","")}</text>`}
+ // left band (latitude): x 0..8 outer blocks, 8..16 tenths
+ g+=`<rect x="0" y="0" width="${BAND}" height="${H}" fill="#fff"/>`;
+ for(let t=Math.ceil(E.latLo*10);t<=E.latHi*10;t++){const y=Y(t/10);g+=`<line x1="8" y1="${y}" x2="16" y2="${y}" stroke="#222" stroke-width="${t%10==0?.6:.3}"/>`;if(t%5==0)g+=`<line x1="0" y1="${y}" x2="8" y2="${y}" stroke="#222" stroke-width="${t%10==0?.7:.4}"/>`;if(t%10==0)g+=`<text x="1" y="${y-1.5}" font-size="5.5" fill="#222" font-weight="700">${t/10}′</text>`}
+ for(let h=Math.floor(E.latLo*2);h<=E.latHi*2;h++){if(h%2)continue;const y1=Y(h/2),y2=Y(h/2+.5);g+=`<line x1="4" y1="${Math.min(y1,H)}" x2="4" y2="${Math.max(0,y2)}" stroke="#222" stroke-width="1.6"/>`}
+ [0,8,16].forEach(x=>g+=`<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="#222" stroke-width=".6"/>`);
+ // bottom band (longitude): y H..H+8 tenths, H+8..H+16 blocks
+ g+=`<rect x="${BAND}" y="${H}" width="${W}" height="16" fill="#fff"/>`;
+ for(let t=Math.ceil(E.lonR*10);t<=E.lonL*10;t++){const x=X(t/10);g+=`<line x1="${x}" y1="${H}" x2="${x}" y2="${H+8}" stroke="#222" stroke-width="${t%10==0?.6:.3}"/>`;if(t%5==0)g+=`<line x1="${x}" y1="${H+8}" x2="${x}" y2="${H+16}" stroke="#222" stroke-width="${t%10==0?.7:.4}"/>`;if(t%10==0)g+=`<text x="${x+1}" y="${H+23}" font-size="5.5" fill="#222" font-weight="700">${Math.round(t/10)%60}′</text>`}
+ for(let h=Math.floor(E.lonR*2);h<=E.lonL*2;h++){if(h%2)continue;const x1=X(h/2),x2=X(h/2+.5);g+=`<line x1="${Math.max(BAND,x2)}" y1="${H+12}" x2="${Math.min(BAND+W,x1)}" y2="${H+12}" stroke="#222" stroke-width="1.6"/>`}
+ [H,H+8,H+16].forEach(y=>g+=`<line x1="${BAND}" y1="${y}" x2="${BAND+W}" y2="${y}" stroke="#222" stroke-width=".6"/>`);
+ // the point
+ g+=`<circle cx="${X(E.lo)}" cy="${Y(E.la)}" r="2.6" fill="#c92a2a"/><circle cx="${X(E.lo)}" cy="${Y(E.la)}" r="5" fill="none" stroke="#c92a2a" stroke-width=".8"/><text x="${X(E.lo)+6}" y="${Y(E.la)-5}" font-size="7.5" font-weight="800" fill="#c92a2a" stroke="#fbfaf3" stroke-width="2" paint-order="stroke">${E.n.replace(/\s*\(.*\)/,"")}</text>`;
+ return g}
+function compass(p1,p2,side){const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2,dx=p2[0]-p1[0],dy=p2[1]-p1[1],L=Math.hypot(dx,dy)||1,h=Math.max(10,L*.35)*side;
+ const hx=mx-dy/L*h,hy=my+dx/L*h;
+ return `<g><path d="M${p1[0]} ${p1[1]} L${hx} ${hy} L${p2[0]} ${p2[1]}" fill="none" stroke="#333" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${hx}" cy="${hy}" r="2.4" fill="#555"/><circle cx="${p1[0]}" cy="${p1[1]}" r="1.3" fill="#e8590c"/><circle cx="${p2[0]}" cy="${p2[1]}" r="1.3" fill="#e8590c"/></g>`}
+function setVB(v){VB=v;$("s").setAttribute("viewBox",v.join(" "))}
+function anim(ms,fn,tok){return new Promise(r=>{const t0=performance.now();function f(t){if(tok!==TOK)return;const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;fn(e);if(p<1)requestAnimationFrame(f);else r()}requestAnimationFrame(f)})}
+const lerp=(a,b,e)=>a.map((x,i)=>x+(b[i]-x)*e);
+/* ---------- les étapes ---------- */
+const NST=7;
+function render(extra){$("s").innerHTML=frame()+(extra||"")}
+function stepsBar(){$("st").innerHTML=Array.from({length:NST},(_,i)=>`<i class="${i<=K?'on':''}"></i>`).join("")}
+async function play(k){const tok=++TOK;K=k;stepsBar();const{X,Y}=E;const P=[X(E.lo),Y(E.la)];
+ const dLat=E.la-E.par,dLon=E.lo-E.mer;
+ const pPar=[X(E.lo),Y(E.par)],pMer=[X(E.mer),Y(E.la)];
+ const sideL=1,sideV=-1;
+ if(k==0){setVB(E.full);render();$("cap").innerHTML=`<b>① Le point à relever :</b> ${E.n}. On veut sa <b>latitude</b> (Nord) et sa <b>longitude</b> (Ouest).`;$("calc").textContent="";}
+ if(k==1){setVB(E.full);render(`<line x1="${E.X(E.lonL)}" y1="${Y(E.par)}" x2="${E.X(E.lonR)}" y2="${Y(E.par)}" stroke="#1a9c46" stroke-width="1.6"/>`);
+  $("cap").innerHTML=`<b>② Latitude : le parallèle le plus proche</b> est <b>47°${E.par}′</b> (trait horizontal, en vert). Le point est <b>${dLat>=0?'au-dessus':'en dessous'}</b> : on va ${dLat>=0?'<b>ajouter</b>':'<b>retirer</b>'} des minutes.`;$("calc").textContent=`Parallèle : 47°${E.par}′`;
+  if(Math.abs(dLat)<.01){$("cap").innerHTML+=`<br>Ici le point est <b>sur</b> le parallèle : la latitude est 47°${E.par}′ N.`}}
+ if(k==2){setVB(E.full);$("cap").innerHTML=`<b>③ On ouvre le compas</b> : une pointe sur le point, l'autre sur le parallèle, <b>à la verticale</b>. L'ouverture = l'écart en latitude.`;
+  await anim(1300,e=>render(`<line x1="${E.X(E.lonL)}" y1="${Y(E.par)}" x2="${E.X(E.lonR)}" y2="${Y(E.par)}" stroke="#1a9c46" stroke-width="1.6"/>`+compass(P,lerp(P,pPar,e),sideL)),tok)}
+ if(k==3){setVB(E.full);$("cap").innerHTML=`<b>④ Sans changer l'ouverture</b>, on glisse le compas horizontalement jusqu'à l'échelle de <b>gauche</b> : une pointe sur la <b>graduation 47°${E.par}′</b>, l'autre tombe sur l'échelle.`;
+  const a1=P,a2=pPar,b1=[8,Y(E.la)],b2=[8,Y(E.par)];
+  await anim(1600,e=>render(`<line x1="${E.X(E.lonL)}" y1="${Y(E.par)}" x2="${E.X(E.lonR)}" y2="${Y(E.par)}" stroke="#1a9c46" stroke-width="1.6"/>`+compass(lerp(a1,b1,e),lerp(a2,b2,e),sideL)),tok);
+  const y0=Math.min(Y(E.la),Y(E.par))-14,y1=Math.max(Y(E.la),Y(E.par))+14,h=Math.max(60,y1-y0),w=h*0.95;
+  await anim(1100,e=>setVB(lerp(E.full,[-3,y0,w,h],e)),tok);
+  const n=Math.abs(dLat),whole=Math.floor(n+1e-9),rest=Math.round((n-whole)*100)/100;
+  render(`<rect x="8" y="${Math.min(Y(E.la),Y(E.par))}" width="8" height="${Math.abs(Y(E.la)-Y(E.par))}" fill="#ffd43b" opacity=".55"/>`+compass(b1,b2,sideL));
+  $("cap").innerHTML+=`<br>On compte entre les deux pointes : <b>${whole} minute${whole>1?'s':''} entière${whole>1?'s':''}</b> puis <b>${f2(rest*10)} petite${rest*10>=2?'s':''} case${rest*10>=2?'s':''}</b> (1 case = 0,1′)${Math.round(rest*100)%10?' — la demi-case s\'estime à l\'œil':''}.`;
+  $("calc").textContent=`Écart = ${f2(n)}′`}
+ if(k==4){setVB(E.full);render();const r=E.par+dLat;
+  $("cap").innerHTML=`<b>⑤ Le calcul de la latitude :</b> le point est ${dLat>=0?'au-dessus du parallèle → on <b>ajoute</b>':'en dessous du parallèle → on <b>retire</b>'}.`;
+  $("calc").innerHTML=`47°${E.par}′ ${dLat>=0?'+':'−'} ${f2(Math.abs(dLat))}′ = <span style="color:#1a9c46">${latTxt(r)}</span>`}
+ if(k==5){setVB(E.full);$("cap").innerHTML=`<b>⑥ Longitude : le méridien le plus proche</b> est <b>${lonTxt(E.mer)}</b> (trait vertical, en bleu). Le point est <b>${dLon>=0?'à gauche':'à droite'}</b> : en longitude Ouest, on va ${dLon>=0?'<b>ajouter</b>':'<b>retirer</b>'}.${Math.abs(dLon)<.01?'<br>Ici le point est <b>sur</b> le méridien.':''}`;
+  await anim(1300,e=>render(`<line x1="${X(E.mer)}" y1="0" x2="${X(E.mer)}" y2="${H}" stroke="#1971c2" stroke-width="1.6"/>`+compass(P,lerp(P,pMer,e),sideV)),tok);
+  const a1=P,a2=pMer,b1=[X(E.lo),H+8],b2=[X(E.mer),H+8];
+  $("cap").innerHTML+=`<br>Compas <b>à l'horizontale</b> entre le point et le méridien, puis on le descend <b>tout droit</b> sur l'échelle du <b>bas</b>, une pointe sur la graduation du méridien.`;
+  await anim(1600,e=>render(`<line x1="${X(E.mer)}" y1="0" x2="${X(E.mer)}" y2="${H}" stroke="#1971c2" stroke-width="1.6"/>`+compass(lerp(a1,b1,e),lerp(a2,b2,e),sideV)),tok);
+  const x0=Math.min(X(E.lo),X(E.mer))-16,x1=Math.max(X(E.lo),X(E.mer))+16,w=Math.max(70,x1-x0),h=w*0.75;
+  await anim(1100,e=>setVB(lerp(E.full,[x0,H+28-h,w,h],e)),tok);
+  const n=Math.abs(dLon),whole=Math.floor(n+1e-9),rest=Math.round((n-whole)*100)/100;
+  render(`<rect x="${Math.min(X(E.lo),X(E.mer))}" y="${H}" width="${Math.abs(X(E.lo)-X(E.mer))}" height="8" fill="#74c0fc" opacity=".6"/>`+compass(b1,b2,sideV));
+  $("cap").innerHTML=`<b>⑥ Longitude :</b> méridien ${lonTxt(E.mer)}. On compte sur l'échelle du bas : <b>${whole} minute${whole>1?'s':''}</b> puis <b>${f2(rest*10)} petite${rest*10>=2?'s':''} case${rest*10>=2?'s':''}</b>.`;
+  $("calc").textContent=`Écart = ${f2(n)}′`}
+ if(k==6){setVB(E.full);render(`<line x1="${E.X(E.lonL)}" y1="${Y(E.la)}" x2="${E.X(E.lonR)}" y2="${Y(E.la)}" stroke="#1a9c46" stroke-width=".8" stroke-dasharray="3 2"/><line x1="${X(E.lo)}" y1="0" x2="${X(E.lo)}" y2="${H}" stroke="#1971c2" stroke-width=".8" stroke-dasharray="3 2"/>`);
+  const mm=E.mer+dLon;
+  $("cap").innerHTML=`<b>⑦ Le calcul de la longitude :</b> point ${dLon>=0?'à <b>gauche</b> du méridien → on <b>ajoute</b> (plus à l\'Ouest)':'à <b>droite</b> du méridien → on <b>retire</b> (moins à l\'Ouest)'}.<br><b>Résultat : ${E.n}</b>`;
+  $("calc").innerHTML=`${lonTxt(E.mer)} ${dLon>=0?'+':'−'} ${f2(Math.abs(dLon))}′ = <span style="color:#1971c2">${lonTxt(mm)}</span><br><span style="font-size:15px">Position : ${latTxt(E.la)} – ${lonTxt(E.lo)}</span>`}
+ if(AUTO&&tok===TOK){await new Promise(r=>setTimeout(r,2600));if(tok!==TOK||!AUTO)return;if(K<NST-1)play(K+1);else{AUTO=0;$("auto").textContent="▶ Lecture automatique"}}}
+$("ex").innerHTML=EX.map((e,i)=>`<option value="${i}">${i+1}. ${e[0]}</option>`).join("");
+function load(i){setup(i);$("ex").value=i;play(0)}
+$("ex").onchange=()=>load(+$("ex").value);
+$("next").onclick=()=>{AUTO=0;$("auto").textContent="▶ Lecture automatique";if(K<NST-1)play(K+1)};
+$("prev").onclick=()=>{AUTO=0;$("auto").textContent="▶ Lecture automatique";if(K>0)play(K-1)};
+$("nex").onclick=()=>{AUTO=0;$("auto").textContent="▶ Lecture automatique";load((E.i+1)%EX.length)};
+$("auto").onclick=()=>{AUTO=!AUTO;$("auto").textContent=AUTO?"⏸ Pause":"▶ Lecture automatique";if(AUTO)play(K<NST-1?K:0)};
+load(0);
+</script></body></html>
