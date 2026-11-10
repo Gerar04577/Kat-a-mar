@@ -46,11 +46,14 @@ input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:
 .sym{display:flex;gap:12px;align-items:center;margin:10px 0}
 .sym svg{flex:none;background:#fff;border-radius:10px;border:1px solid var(--line)}
 .big{font-size:18px}
+.cap{min-height:74px;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--acc2);font-size:16px;line-height:1.4}
+.steps{display:flex;gap:4px;margin:6px 0}.steps i{flex:1;height:6px;border-radius:3px;background:var(--line)}.steps i.on{background:var(--accent)}
+select{font:600 16px system-ui;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px;width:100%}
 </style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
-<div class="v">Repérage des amers · version 1.0 · carte SHOM 9999 · 84 amers en 11 secteurs · méthode, plan, exemples, quiz et statistiques</div>
+<div class="v">Repérage des amers · version 1.1 · carte SHOM 9999 · 84 amers en 11 secteurs · méthode, plan, exemples, animations par secteur, entraînement, quiz et statistiques</div>
 <h1>Trouver vite un amer sur la carte 9999</h1>
 <div class="rule">À l'examen, l'énoncé donne la zone de l'exercice, mais <b>c'est vous qui devez trouver les amers</b> sur la carte. Il n'y a pas de Ctrl+F sur le papier : il faut savoir <b>où chercher</b> et <b>à quoi ressemble</b> ce qu'on cherche.</div>
-<div class="tabs" id="tabs"><button data-t="meth" class="on">Méthode</button><button data-t="plan">Plan</button><button data-t="types">Par type</button><button data-t="quiz">Quiz</button><button data-t="stats">Statistiques</button></div>
+<div class="tabs" id="tabs"><button data-t="meth" class="on">Méthode</button><button data-t="plan">Plan</button><button data-t="types">Par type</button><button data-t="anim">Animations</button><button data-t="quiz">Quiz</button><button data-t="stats">Statistiques</button></div>
 
 <section id="v-meth">
 <div class="card"><h2>La méthode en 4 réflexes</h2>
@@ -117,6 +120,16 @@ input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:
 </div>
 </section>
 
+<section id="v-anim" style="display:none">
+<div class="card"><h2>Comme à l'examen : on vous donne la zone</h2>
+<p class="mute">Choisissez un secteur. L'animation montre la recherche pas à pas : la zone, le repère principal, la latitude, la longitude, puis l'amer, avec sa distance et sa direction depuis le repère.</p>
+<select id="asec"></select>
+<div class="chips" id="amode"><button data-m="demo" class="on">▶ Voir les exemples</button><button data-m="train">✋ À vous de trouver</button></div>
+<svg class="map" id="anim" viewBox="0 0 640 430"></svg><svg width="0" height="0" style="position:absolute"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e8a400"/></marker></defs></svg>
+<div class="steps" id="asteps"></div>
+<div class="cap" id="acap"></div>
+<div class="row" style="margin-top:8px" id="abtn"></div>
+</div></section>
 <section id="v-quiz" style="display:none"></section>
 <section id="v-stats" style="display:none"></section>
 <p class="mute" style="font-size:12px;margin-top:18px">Positions : liste « Repérage des principaux amers de la carte 9999 » (Ma Formation Nautique). Voyants et feux des marques : système de balisage AISM, région A (cours de navigation).</p>
@@ -133,7 +146,7 @@ const pos=a=>`${a.L} – ${a.G}`;
 const fmt=d=>{const g=Math.floor(d),m=(d-g)*60;return g+"°"+m.toFixed(1).replace(".",",")+"′"};
 /* onglets */
 $("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;const t=b.dataset.t;[...$("tabs").children].forEach(x=>x.classList.toggle("on",x==b));
- ["meth","plan","types","quiz","stats"].forEach(s=>$("v-"+s).style.display=s==t?"block":"none");if(t=="quiz")quizMenu();if(t=="stats")stats();window.scrollTo(0,0)};
+ ["meth","plan","types","anim","quiz","stats"].forEach(s=>$("v-"+s).style.display=s==t?"block":"none");if(t=="quiz")quizMenu();if(t=="anim")animInit();if(t=="stats")stats();window.scrollTo(0,0)};
 /* tableau des secteurs */
 $("sectab").innerHTML=D.secs.map((s,i)=>{const A=D.amers.filter(a=>a.s==i),la=A.map(a=>a.la),lo=A.map(a=>a.lo);
  return `<tr><td><b>${s.nom}</b></td><td>${s.ou}</td><td>${fmt(Math.min(...la))} à ${fmt(Math.max(...la))}</td><td>${fmt(Math.min(...lo))} à ${fmt(Math.max(...lo))}</td></tr>`}).join("");
@@ -181,7 +194,79 @@ function drawZ(){const a=D.amers[Z.list[Z.i]];let q,opts,good;
 function endZ(){const d=load();d[Z.k]=d[Z.k]||{tries:[]};d[Z.k].tries.push({t:Date.now(),ok:Z.ok});save(d);
  $("v-quiz").innerHTML=`<div class="card"><h2>${QT[Z.k]}</h2><div class="res ${Z.ok>=8?'ok':'ko'}">${Z.ok} / 10</div><div class="row"><button class="btn primary" id="za">Recommencer</button><button class="btn" id="zm">Menu</button></div></div>`;
  $("za").onclick=()=>startZ(Z.k);$("zm").onclick=quizMenu}
+
+/* ---------- animations par secteur ---------- */
+const VB0=[0,0,640,430];let VB=[...VB0],RUN=0,AM="demo",AS=0,AE=0,TR=null;
+const fr1=x=>x.toFixed(1).replace(".",",");
+function secAm(i){return D.amers.map((a,j)=>({...a,j})).filter(a=>a.s==i)}
+function secBox(i){const A=secAm(i),xs=A.map(a=>X(a.lo)),ys=A.map(a=>Y(a.la));let x0=Math.min(...xs)-28,x1=Math.max(...xs)+28,y0=Math.min(...ys)-28,y1=Math.max(...ys)+28;
+ let w=x1-x0,h=y1-y0;const r=640/430;if(w/h<r){const nw=h*r;x0-=(nw-w)/2;w=nw}else{const nh=w/r;y0-=(nh-h)/2;h=nh}if(w<120){const k=120/w;x0-=(w*k-w)/2;y0-=(h*k-h)/2;w*=k;h*=k}return[x0,y0,w,h]}
+function relTo(a,b){const dN=(b.la-a.la)*60,dE=-(b.lo-a.lo)*60*Math.cos(a.la*Math.PI/180);const d=Math.hypot(dN,dE);let z=Math.atan2(dE,dN)*180/Math.PI;if(z<0)z+=360;return{d,z:Math.round(z)}}
+const dir8=z=>["Nord","Nord-Est","Est","Sud-Est","Sud","Sud-Ouest","Ouest","Nord-Ouest"][Math.round(z/45)%8];
+const vers=z=>{const d=dir8(z);return /^[EO]/.test(d)?"l'"+d:"le "+d};
+const au=z=>{const d=dir8(z);return /^[EO]/.test(d)?"à l'"+d:"au "+d};
+const sh=n=>n.replace(/\s*\(.*\)/,"");
+function base(i,hl){const k=VB[2]/640,fs=18*k;let g="";
+ const mLat=(Y(47)-Y(47+1/60)),mLon=(X(3)-X(3+1/60))*-1;const pick=v=>v<=1?1:v<=2?2:5;
+ const eLat=pick(Math.ceil(fs*1.4/mLat)),eLon=pick(Math.ceil(fs*4.4/Math.abs(mLon)));
+ const step=VB[2]<300?0.5:(VB[2]<500?1:5);
+ for(let m=14;m<=35;m+=step){const y=Y(47+m/60);const lab=Number.isInteger(m)&&m%Math.max(eLat,step<5?1:5)==0;g+=`<line x1="-50" y1="${y}" x2="700" y2="${y}" stroke="#9cc3dc" stroke-width="${(lab?1.2:.5)*k}"/>`;
+  if(lab)g+=`<text x="${VB[0]+3*k}" y="${y-3*k}" font-size="${fs}" fill="#2a5d7f" font-weight="600">${m}′</text>`}
+ for(let m=-40;m<=15;m+=step){const lo=3+m/60,x=X(lo);const d=Math.floor(lo+1e-9),mm=Math.round((lo-d)*60);const lab=Number.isInteger(m)&&((m%Math.max(eLon,step<5?1:5))+100)%Math.max(eLon,step<5?1:5)==0;g+=`<line x1="${x}" y1="-50" x2="${x}" y2="500" stroke="#9cc3dc" stroke-width="${(lab?1.2:.5)*k}"/>`;
+  if(lab)g+=`<text x="${x+2*k}" y="${VB[1]+VB[3]-5*k}" font-size="${fs}" fill="#2a5d7f" font-weight="600">${d}°${String(mm).padStart(2,"0")}′</text>`}
+ g+=`<text x="${VB[0]+VB[2]-4*k}" y="${VB[1]+fs+2*k}" text-anchor="end" font-size="${fs*.9}" fill="#2a5d7f">lat. 47° N · long. W</text>`;
+ const [bx,by,bw,bh]=secBox(i);if(hl)g+=`<rect x="${bx+6}" y="${by+6}" width="${bw-12}" height="${bh-12}" fill="#ffe066" fill-opacity=".18" stroke="#e8a400" stroke-width="${2.5*k}" stroke-dasharray="${8*k} ${5*k}" rx="${8*k}"/>`;
+ D.amers.forEach(a=>{const x=X(a.lo),y=Y(a.la);g+=`<circle cx="${x}" cy="${y}" r="${(a.s==i?5:3)*k}" fill="${a.s==i?COL[a.t]:"#9aa6b8"}" opacity="${a.s==i?.85:.5}"/>`});
+ return g}
+function setVB(v){VB=v;$("anim").setAttribute("viewBox",v.join(" "))}
+function zoomTo(v,ms,cb,tok){const a=[...VB],t0=performance.now();function f(t){if(tok!==RUN)return;const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;setVB(a.map((x,i)=>x+(v[i]-x)*e));if(p<1)requestAnimationFrame(f);else cb&&cb()}requestAnimationFrame(f)}
+function lineAnim(id,x1,y1,x2,y2,ms,tok,cb){const el=document.getElementById(id),t0=performance.now();function f(t){if(tok!==RUN)return;const p=Math.min(1,(t-t0)/ms);el.setAttribute("x2",x1+(x2-x1)*p);el.setAttribute("y2",y1+(y2-y1)*p);if(p<1)requestAnimationFrame(f);else cb&&cb()}requestAnimationFrame(f)}
+function sym(a,k){const x=X(a.lo),y=Y(a.la);return a.t=="phare"?`<path d="M${x} ${y} l${15*k} ${-30*k} a${10*k} ${10*k} 0 0 0 ${-18*k} ${-7*k} z" fill="#d6336c" opacity=".7"/><circle cx="${x}" cy="${y}" r="${8*k}" fill="#d6336c" stroke="#fff" stroke-width="${2*k}"/>`:`<circle cx="${x}" cy="${y}" r="${8*k}" fill="${COL[a.t]}" stroke="#fff" stroke-width="${2*k}"/>`}
+function animInit(){if(!$("asec").options.length){$("asec").innerHTML=D.secs.map((sc,i)=>`<option value="${i}">${sc.nom} — ${secAm(i).length-1} exemples</option>`).join("");
+ $("asec").onchange=()=>{AS=+$("asec").value;AE=0;go()};
+ $("amode").onclick=e=>{const b=e.target.closest("button");if(!b)return;AM=b.dataset.m;[...$("amode").children].forEach(x=>x.classList.toggle("on",x==b));AE=0;go()}}
+ go()}
+function go(){RUN++;if(AM=="demo")demo();else train()}
+function steps(n,k){$("asteps").innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<=k?'on':''}"></i>`).join("")}
+function demo(){const tok=RUN,i=AS,A=secAm(i),ref=A[0],ex=A.slice(1),a=ex.length?ex[AE%ex.length]:ref,sc=D.secs[i];
+ setVB(VB0);$("anim").innerHTML=base(i,true);steps(6,0);
+ $("abtn").innerHTML=`<button class="btn" id="arp">↺ Revoir</button><button class="btn primary" id="anx">Exemple suivant ▶ (${AE%Math.max(1,ex.length)+1}/${Math.max(1,ex.length)})</button>`;
+ $("arp").onclick=()=>go();$("anx").onclick=()=>{AE++;go()};
+ $("acap").innerHTML=`<b>① La zone de l'exercice :</b> ${sc.nom} (${sc.ou} de la carte). On cherche <b>${a.n}</b>.`;
+ const box=secBox(i),W8=t=>new Promise(r=>setTimeout(()=>{if(tok===RUN)r()},t));
+ (async()=>{await W8(1600);
+  await new Promise(r=>zoomTo(box,1300,r,tok));const k=VB[2]/640;$("anim").innerHTML=base(i,true);steps(6,1);
+  $("acap").innerHTML=`<b>② On ne regarde plus que cette zone.</b> Elle va de ${fmt(Math.min(...A.map(x=>x.la)))} à ${fmt(Math.max(...A.map(x=>x.la)))} N et de ${fmt(Math.min(...A.map(x=>x.lo)))} à ${fmt(Math.max(...A.map(x=>x.lo)))} W.`;
+  await W8(2200);
+  $("anim").insertAdjacentHTML("beforeend",sym(ref,k)+`<text x="${X(ref.lo)+12*k}" y="${Y(ref.la)+24*k}" font-size="${20*k}" font-weight="700" fill="#14213d" stroke="#fff" stroke-width="${4*k}" paint-order="stroke">${ref.n.replace(/\s*\(.*\)/,"")}</text>`);steps(6,2);
+  $("acap").innerHTML=`<b>③ Le repère principal d'abord :</b> ${ref.n}. C'est le plus visible de la zone (${TN[ref.t].toLowerCase()}) : on le trouve en premier, puis on tourne autour.`;
+  if(a===ref){steps(6,5);$("acap").innerHTML+=`<br><small>Ce secteur n'a qu'un seul autre amer.</small>`;return}
+  await W8(2600);
+  const y=Y(a.la),x=X(a.lo);
+  $("anim").insertAdjacentHTML("beforeend",`<line id="lh" x1="${VB[0]}" y1="${y}" x2="${VB[0]}" y2="${y}" stroke="#c92a2a" stroke-width="${3*k}" stroke-dasharray="${9*k} ${5*k}"/><rect x="${VB[0]}" y="${y-27*k}" width="${165*k}" height="${25*k}" fill="#c92a2a" rx="${4*k}"/><text x="${VB[0]+5*k}" y="${y-9*k}" font-size="${19*k}" fill="#fff" font-weight="700">${a.L}</text>`);steps(6,3);
+  $("acap").innerHTML=`<b>④ La latitude ${a.L}</b> se lit sur l'échelle de <b>gauche</b> (ou de droite). On trace l'horizontale. Plus le chiffre est grand, plus on est <b>haut</b>.`;
+  await new Promise(r=>lineAnim("lh",VB[0],y,VB[0]+VB[2],y,1400,tok,r));await W8(1200);
+  $("anim").insertAdjacentHTML("beforeend",`<line id="lv" x1="${x}" y1="${VB[1]}" x2="${x}" y2="${VB[1]}" stroke="#1971c2" stroke-width="${3*k}" stroke-dasharray="${9*k} ${5*k}"/><rect x="${x+3*k}" y="${VB[1]+3*k}" width="${180*k}" height="${25*k}" fill="#1971c2" rx="${4*k}"/><text x="${x+8*k}" y="${VB[1]+21*k}" font-size="${19*k}" fill="#fff" font-weight="700">${a.G}</text>`);steps(6,4);
+  $("acap").innerHTML=`<b>⑤ La longitude ${a.G}</b> se lit sur l'échelle du <b>haut</b> (ou du bas). On trace la verticale. Attention : plus le chiffre est grand, plus on est à <b>gauche</b> (Ouest).`;
+  await new Promise(r=>lineAnim("lv",x,VB[1],x,VB[1]+VB[3],1400,tok,r));await W8(900);
+  const rel=relTo(ref,a);
+  $("anim").insertAdjacentHTML("beforeend",`<line x1="${X(ref.lo)}" y1="${Y(ref.la)}" x2="${x}" y2="${y}" stroke="#e8a400" stroke-width="${4*k}" marker-end="url(#ar)"/><circle cx="${x}" cy="${y}" r="${20*k}" fill="none" stroke="#c92a2a" stroke-width="${3.5*k}"><animate attributeName="r" values="${12*k};${28*k};${12*k}" dur="1.2s" repeatCount="indefinite"/></circle>${sym(a,k)}<text x="${x+12*k}" y="${y-14*k}" font-size="${21*k}" font-weight="800" fill="#14213d" stroke="#fff" stroke-width="${3*k}" paint-order="stroke">${a.n.replace(/\s*\(.*\)/,"")}</text>`);steps(6,5);
+  $("acap").innerHTML=`<b>⑥ Le croisement, c'est ${a.n}.</b> ${TN[a.t]}, à <b>${fr1(rel.d)} mille${rel.d>=2?'s':''} au ${String(rel.z).padStart(3,"0")}°</b> (vers ${vers(rel.z)}) du repère principal.<br><small>À retenir pour aller vite : « ${sh(a.n)} est ${au(rel.z)} de ${sh(ref.n)} ».</small>`;
+ })()}
+/* entraînement : toucher le bon point */
+function train(){const tok=RUN,i=AS,A=secAm(i);if(!TR||TR.s!==i)TR={s:i,ok:0,n:0,order:A.map((_,j)=>j).sort(()=>Math.random()-.5)};
+ const a=A[TR.order[TR.n%A.length]];const box=secBox(i);setVB(box);const k=box[2]/640;steps(0,0);
+ let g=base(i,false);A.forEach(b=>{g+=`<g data-j="${b.j}"><circle cx="${X(b.lo)}" cy="${Y(b.la)}" r="${22*k}" fill="transparent"/>${sym(b,k)}</g>`});$("anim").innerHTML=g;
+ $("acap").innerHTML=`<b>Zone : ${D.secs[i].nom}.</b> Touchez <b>${a.n}</b>.<br><small>Score : ${TR.ok} / ${TR.n} · <a href="#" id="hint">indice : ses coordonnées</a></small>`;
+ $("hint").onclick=e=>{e.preventDefault();$("hint").outerHTML=`<b>${a.L} – ${a.G}</b>`};
+ $("abtn").innerHTML=`<button class="btn" id="arz">Recommencer ce secteur</button>`;$("arz").onclick=()=>{TR=null;go()};
+ $("anim").onclick=e=>{if(tok!==RUN||AM!=="train")return;const gg=e.target.closest("g[data-j]");if(!gg)return;const j=+gg.dataset.j,ok=j===a.j;TR.n++;if(ok)TR.ok++;
+  const b=D.amers[j];$("anim").insertAdjacentHTML("beforeend",`<circle cx="${X(a.lo)}" cy="${Y(a.la)}" r="${18*k}" fill="none" stroke="#1a9c46" stroke-width="${4*k}"/>`+(ok?"":`<circle cx="${X(b.lo)}" cy="${Y(b.la)}" r="${18*k}" fill="none" stroke="#c92a2a" stroke-width="${4*k}"/>`)+`<text x="${X(a.lo)+12*k}" y="${Y(a.la)-14*k}" font-size="${21*k}" font-weight="800" fill="#14213d" stroke="#fff" stroke-width="${3*k}" paint-order="stroke">${a.n.replace(/\s*\(.*\)/,"")}</text>`);
+  const rel=relTo(A[0],a);
+  $("acap").innerHTML=`<b class="${ok?'okc':'koc'}">${ok?'Juste.':'Non, vous avez touché '+b.n+'.'}</b> ${a.n} : ${a.L} – ${a.G}${a!==A[0]?`, à ${fr1(rel.d)} M au ${String(rel.z).padStart(3,"0")}° de ${A[0].n.replace(/\s*\(.*\)/,"")}`:''}.<br><small>Score : ${TR.ok} / ${TR.n}</small>`;
+  const d=load();d.anim=d.anim||{};d.anim[i]=d.anim[i]||{ok:0,n:0};d.anim[i].n++;if(ok)d.anim[i].ok++;save(d);
+  $("abtn").innerHTML=`<button class="btn primary" id="anx2">Suivant ▶</button>`;$("anx2").onclick=()=>{$("anim").onclick=null;go()};$("anim").onclick=null}}
 function stats(){const d=load();$("v-stats").innerHTML=`<div class="card"><h2>Statistiques</h2><table><tr><th>Quiz</th><th>Essais</th><th>Dernier</th><th>Meilleur</th><th>Moyenne</th></tr>${Object.keys(QT).map(k=>{const t=(d[k]&&d[k].tries)||[];return `<tr><td>${QT[k]}</td><td>${t.length}</td><td>${t.length?t[t.length-1].ok+'/10':'—'}</td><td>${t.length?Math.max(...t.map(x=>x.ok))+'/10':'—'}</td><td>${t.length?(t.reduce((s,x)=>s+x.ok,0)/t.length).toFixed(1).replace('.',',')+'/10':'—'}</td></tr>`}).join("")}</table>
- <div class="row" style="margin-top:10px"><button class="btn" id="raz">Effacer les statistiques</button></div><p class="mute">Les statistiques restent sur cet appareil uniquement.</p></div>`;
+ <h3>« À vous de trouver », par secteur</h3><table><tr><th>Secteur</th><th>Réussis</th><th>Essais</th></tr>${D.secs.map((sc,i)=>{const t=(d.anim||{})[i];return `<tr><td>${sc.nom}</td><td>${t?t.ok:0}</td><td>${t?t.n:0}${t&&t.n?" ("+Math.round(t.ok/t.n*100)+" %)":""}</td></tr>`}).join("")}</table><div class="row" style="margin-top:10px"><button class="btn" id="raz">Effacer les statistiques</button></div><p class="mute">Les statistiques restent sur cet appareil uniquement.</p></div>`;
  $("raz").onclick=()=>{if(confirm("Effacer les statistiques ?")){save({});stats()}}}
 </script></body></html>
