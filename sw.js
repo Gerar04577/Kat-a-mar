@@ -1,6 +1,6 @@
 /* Kat-a-Mar — service worker — v172
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v176";
+const CACHE = "kat-a-mar-v177";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
 const FILES = ["./", "./index.html", "./permis-hauturier.html", "./hauturier-entrainement.html", "./hauturier-hors-carte.html", "./hauturier-qcm.html", "./hauturier-amers.html", "./hauturier-prendre-coordonnees.html", "./hauturier-carte-9999-releve.html", "./hauturier-coordonnees.html", "./hauturier-regle-cras.html", "./hauturier-exercices-cras.html", "./hauturier-probleme-dumet-hoedic.html", "./hauturier-vecteurs-courant.html", "./hauturier-pourquoi-multiplier.html", "./hauturier-triangles-quelconques.html", "./hauturier-recettes-rapides.html",
