@@ -25,7 +25,7 @@ svg{width:100%;height:auto;display:block;background:#f7fafd;border:1px solid #e3
 .leg span{margin-right:12px;white-space:nowrap}
 table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid var(--line);padding:6px;text-align:left}th{background:#eef2f7}
 </style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
-<div class="v">Maquette pas à pas · version 1.2 · chaque sinus et cosinus expliqué par son petit triangle rectangle · les deux recettes rapides et exactes : tracer, puis contrôler à la calculatrice</div>
+<div class="v">Maquette pas à pas · version 1.3 · chaque sinus et cosinus expliqué par son petit triangle rectangle · les deux recettes rapides et exactes : tracer, puis contrôler à la calculatrice</div>
 <h1>Le courant : tracer et calculer vite</h1>
 
 <div class="card">
@@ -127,7 +127,7 @@ const E2={
    const P0=[c[0]+r*Math.cos(s0),c[1]+r*Math.sin(s0)],P1x=[c[0]+r*Math.cos(s1),c[1]+r*Math.sin(s1)];
    if(h)el('path',{d:`M${P0[0]} ${P0[1]} A${r} ${r} 0 0 1 ${P1x[0]} ${P1x[1]}`,fill:'none',stroke:HI,'stroke-width':12});
    el('path',{d:`M${P0[0]} ${P0[1]} A${r} ${r} 0 0 1 ${P1x[0]} ${P1x[1]}`,fill:'none',stroke:'#5b6577','stroke-width':3,'stroke-dasharray':'7 5'});
-   text(P1x[0]+8,P1x[1]+4,'arc du compas,','#5b6577','start',12,h);text(P1x[0]+8,P1x[1]+20,'rayon 6','#5b6577','start',12,h)},
+   text(P1x[0]+8,P1x[1]+4,'pivot du compas,','#5b6577','start',12,h);text(P1x[0]+8,P1x[1]+20,'rayon 6','#5b6577','start',12,h)},
  B:h=>{el('circle',{cx:B2[0],cy:B2[1],r:6,fill:'#1a9c46'});text(B2[0]+12,B2[1]+4,'B','#137a37','start',16,h)},
  blue:h=>{arrow(K2p,B2,'#1565c0','b',6,h);text((K2p[0]+B2[0])/2+12,(K2p[1]+B2[1])/2+10,'bateau 6 nd','#1565c0','start',15,h)},
  NK:h=>north(K2p,60,h),
@@ -163,12 +163,12 @@ const SH=[
  ]},
 {t:'Recette 2 — route fond voulue → cap',E:E2,
  order:['petit2','NA','NK','route','A','green','AF','FB','trav','cour','compas','blue','B','theta','alpha','cap','vf','hyp2'],
- leg:'<span><i style="background:#1a9c46"></i>route fond</span><span><i style="background:#e07a00"></i>courant</span><span><i style="background:#1565c0"></i>bateau (le cap cherché)</span><span><i style="background:#5b6577"></i>arc du compas</span><span><i style="background:#c62828"></i>courant « en travers »</span><span><i style="background:#7b3fbf"></i>angle θ</span><span><i style="background:#a51c1c"></i>angle α</span><span>┆ Nord</span><span>1 petit trait = 1 nœud</span>',
+ leg:'<span><i style="background:#1a9c46"></i>route fond</span><span><i style="background:#e07a00"></i>courant</span><span><i style="background:#1565c0"></i>bateau (le cap cherché)</span><span><i style="background:#5b6577"></i>pivot du compas à pointes sèches</span><span><i style="background:#c62828"></i>courant « en travers »</span><span><i style="background:#7b3fbf"></i>angle θ</span><span><i style="background:#a51c1c"></i>angle α</span><span>┆ Nord</span><span>1 petit trait = 1 nœud</span>',
  steps:[
  {k:'T',add:['A','NA'],txt:'Énoncé : on veut suivre la route fond <b>045°</b>. Vitesse du bateau <b>6 nœuds</b>. Courant portant au <b>090°</b> à <b>2,5 nœuds</b>. Quel cap afficher ?'},
  {k:'T',add:['route'],txt:'<b>Tracé ①</b> — Depuis A, la route fond voulue au 045°, <b>sans longueur</b> (on ne sait pas encore jusqu\'où on ira en 1 heure).'},
  {k:'T',add:['cour'],txt:'<b>Tracé ②</b> — Le <b>courant d\'abord</b>, depuis A : au 090°, longueur 2,5 (2 traits et demi). On arrive au point <b>K</b>. (Le courant est la seule flèche connue en entier.)'},
- {k:'T',add:['compas'],txt:'<b>Tracé ③</b> — Pointe du compas sur K, ouverture = vitesse du bateau = <b>6</b>. On trace un arc qui coupe la route fond.'},
+ {k:'T',add:['compas'],txt:'<b>Tracé ③</b> — Compas à <b>pointes sèches</b> ouvert à la vitesse du bateau = <b>6</b>. Une pointe sur K, on fait <b>pivoter</b> jusqu\'à ce que l\'autre pointe touche la route fond, et on marque ce point au crayon (pas d\'arc à tracer).'},
  {k:'T',add:['B'],txt:'L\'arc coupe la route fond au point <b>B</b> : c\'est là que le bateau sera dans 1 heure.'},
  {k:'T',add:['NK','blue','cap','green'],txt:'<b>Tracé ④</b> — K → B (bleu) donne le <b>cap</b> : on le mesure au rapporteur depuis un Nord retracé en K. A → B (vert) donne la <b>vitesse fond</b>. Maintenant, on contrôle par le calcul.'},
  {k:'C',add:['theta'],txt:'<b>Calcul ①</b> — L\'angle θ entre la route fond et le courant :',calc:'θ = 90 − 45 = 45°'},
