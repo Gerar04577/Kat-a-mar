@@ -40,6 +40,9 @@ input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
 .chips button{min-height:38px;border-radius:19px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 14px system-ui;padding:4px 12px;cursor:pointer}
 .chips button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.spd{display:flex;align-items:center;gap:8px;margin:8px 0;font:600 14px system-ui}.spd input{flex:1;accent-color:var(--accent);min-height:30px}.spd b{min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+.srch{width:100%;font:600 17px system-ui;min-height:46px;padding:8px 12px;border-radius:12px;border:2px solid var(--accent);background:var(--card);color:var(--ink)}
+.sres{margin:6px 0}.sres .am b{color:var(--accent)}
 .info{min-height:48px;margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--acc2);font-size:15px}
 .am{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:6px 0;font-size:15px;cursor:pointer}
 .am span:last-child{color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums;font-size:13px}
@@ -50,7 +53,7 @@ input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:
 .steps{display:flex;gap:4px;margin:6px 0}.steps i{flex:1;height:6px;border-radius:3px;background:var(--line)}.steps i.on{background:var(--accent)}
 select{font:600 16px system-ui;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px;width:100%}
 </style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
-<div class="v">Repérage des amers · version 1.1 · carte SHOM 9999 · 84 amers en 11 secteurs · méthode, plan, exemples, animations par secteur, entraînement, quiz et statistiques</div>
+<div class="v">Repérage des amers · version 1.2 · carte SHOM 9999 · 84 amers en 11 secteurs · méthode, plan, exemples, recherche, animations par secteur à vitesse réglable, entraînement, quiz et statistiques</div>
 <h1>Trouver vite un amer sur la carte 9999</h1>
 <div class="rule">À l'examen, l'énoncé donne la zone de l'exercice, mais <b>c'est vous qui devez trouver les amers</b> sur la carte. Il n'y a pas de Ctrl+F sur le papier : il faut savoir <b>où chercher</b> et <b>à quoi ressemble</b> ce qu'on cherche.</div>
 <div class="tabs" id="tabs"><button data-t="meth" class="on">Méthode</button><button data-t="plan">Plan</button><button data-t="types">Par type</button><button data-t="anim">Animations</button><button data-t="quiz">Quiz</button><button data-t="stats">Statistiques</button></div>
@@ -87,7 +90,7 @@ select{font:600 16px system-ui;min-height:44px;border-radius:10px;border:1px sol
 <section id="v-plan" style="display:none">
 <div class="card"><h2>Plan des 84 amers</h2>
 <p class="mute">Positions exactes de la liste, sans le dessin des côtes. Touchez un point pour voir son nom. Le Nord est en haut ; l'Ouest (3° W) est à gauche.</p>
-<div class="chips" id="flt"><button data-f="all" class="on">Tous</button><button data-f="phare">Phares</button><button data-f="tourelle">Tourelles</button><button data-f="bouee">Bouées</button><button data-f="perche">Perches</button><button data-f="clocher">Église / tour</button></div>
+<input class="srch" id="q" type="search" placeholder="🔍 Rechercher un amer (ex. : Teignouse, Er Rouzès…)" autocomplete="off" autocorrect="off"><div class="sres" id="qres"></div><div class="chips" id="flt"><button data-f="all" class="on">Tous</button><button data-f="phare">Phares</button><button data-f="tourelle">Tourelles</button><button data-f="bouee">Bouées</button><button data-f="perche">Perches</button><button data-f="clocher">Église / tour</button></div>
 <p class="mute" style="margin:4px 0">Couleurs : <b style="color:#d6336c">● phare</b> · <b style="color:#5f3dc4">● tourelle</b> · <b style="color:#e8590c">● bouée</b> · <b style="color:#2b8a3e">● perche</b> · <b style="color:#495057">● église / tour</b>. Tournez l'iPhone en paysage pour agrandir le plan.</p><svg class="map" id="map" viewBox="0 0 640 430"></svg>
 <div class="info" id="info">Touchez un point.</div>
 <h3>Liste par secteur</h3><div id="lst"></div></div>
@@ -125,7 +128,7 @@ select{font:600 16px system-ui;min-height:44px;border-radius:10px;border:1px sol
 <p class="mute">Choisissez un secteur. L'animation montre la recherche pas à pas : la zone, le repère principal, la latitude, la longitude, puis l'amer, avec sa distance et sa direction depuis le repère.</p>
 <select id="asec"></select>
 <div class="chips" id="amode"><button data-m="demo" class="on">▶ Voir les exemples</button><button data-m="train">✋ À vous de trouver</button></div>
-<svg class="map" id="anim" viewBox="0 0 640 430"></svg><svg width="0" height="0" style="position:absolute"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e8a400"/></marker></defs></svg>
+<div class="spd"><span>🐢 Lent</span><input type="range" id="spd" min="0.3" max="3" step="0.1" value="1" aria-label="Vitesse de l'animation"><span>Rapide 🐇</span><b id="spdv">×1</b></div><svg class="map" id="anim" viewBox="0 0 640 430"></svg><svg width="0" height="0" style="position:absolute"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e8a400"/></marker></defs></svg>
 <div class="steps" id="asteps"></div>
 <div class="cap" id="acap"></div>
 <div class="row" style="margin-top:8px" id="abtn"></div>
@@ -196,7 +199,7 @@ function endZ(){const d=load();d[Z.k]=d[Z.k]||{tries:[]};d[Z.k].tries.push({t:Da
  $("za").onclick=()=>startZ(Z.k);$("zm").onclick=quizMenu}
 
 /* ---------- animations par secteur ---------- */
-const VB0=[0,0,640,430];let VB=[...VB0],RUN=0,AM="demo",AS=0,AE=0,TR=null;
+const VB0=[0,0,640,430];let TGT=null,VB=[...VB0],RUN=0,AM="demo",AS=0,AE=0,TR=null;
 const fr1=x=>x.toFixed(1).replace(".",",");
 function secAm(i){return D.amers.map((a,j)=>({...a,j})).filter(a=>a.s==i)}
 function secBox(i){const A=secAm(i),xs=A.map(a=>X(a.lo)),ys=A.map(a=>Y(a.la));let x0=Math.min(...xs)-28,x1=Math.max(...xs)+28,y0=Math.min(...ys)-28,y1=Math.max(...ys)+28;
@@ -219,28 +222,28 @@ function base(i,hl){const k=VB[2]/640,fs=18*k;let g="";
  D.amers.forEach(a=>{const x=X(a.lo),y=Y(a.la);g+=`<circle cx="${x}" cy="${y}" r="${(a.s==i?5:3)*k}" fill="${a.s==i?COL[a.t]:"#9aa6b8"}" opacity="${a.s==i?.85:.5}"/>`});
  return g}
 function setVB(v){VB=v;$("anim").setAttribute("viewBox",v.join(" "))}
-function zoomTo(v,ms,cb,tok){const a=[...VB],t0=performance.now();function f(t){if(tok!==RUN)return;const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;setVB(a.map((x,i)=>x+(v[i]-x)*e));if(p<1)requestAnimationFrame(f);else cb&&cb()}requestAnimationFrame(f)}
-function lineAnim(id,x1,y1,x2,y2,ms,tok,cb){const el=document.getElementById(id),t0=performance.now();function f(t){if(tok!==RUN)return;const p=Math.min(1,(t-t0)/ms);el.setAttribute("x2",x1+(x2-x1)*p);el.setAttribute("y2",y1+(y2-y1)*p);if(p<1)requestAnimationFrame(f);else cb&&cb()}requestAnimationFrame(f)}
+function zoomTo(v,ms,cb,tok){ms/=SPD;const a=[...VB],t0=performance.now();function f(t){if(tok!==RUN)return;const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;setVB(a.map((x,i)=>x+(v[i]-x)*e));if(p<1)requestAnimationFrame(f);else cb&&cb()}requestAnimationFrame(f)}
+function lineAnim(id,x1,y1,x2,y2,ms,tok,cb){ms/=SPD;const el=document.getElementById(id),t0=performance.now();function f(t){if(tok!==RUN)return;const p=Math.min(1,(t-t0)/ms);el.setAttribute("x2",x1+(x2-x1)*p);el.setAttribute("y2",y1+(y2-y1)*p);if(p<1)requestAnimationFrame(f);else cb&&cb()}requestAnimationFrame(f)}
 function sym(a,k){const x=X(a.lo),y=Y(a.la);return a.t=="phare"?`<path d="M${x} ${y} l${15*k} ${-30*k} a${10*k} ${10*k} 0 0 0 ${-18*k} ${-7*k} z" fill="#d6336c" opacity=".7"/><circle cx="${x}" cy="${y}" r="${8*k}" fill="#d6336c" stroke="#fff" stroke-width="${2*k}"/>`:`<circle cx="${x}" cy="${y}" r="${8*k}" fill="${COL[a.t]}" stroke="#fff" stroke-width="${2*k}"/>`}
-function animInit(){if(!$("asec").options.length){$("asec").innerHTML=D.secs.map((sc,i)=>`<option value="${i}">${sc.nom} — ${secAm(i).length-1} exemples</option>`).join("");
- $("asec").onchange=()=>{AS=+$("asec").value;AE=0;go()};
- $("amode").onclick=e=>{const b=e.target.closest("button");if(!b)return;AM=b.dataset.m;[...$("amode").children].forEach(x=>x.classList.toggle("on",x==b));AE=0;go()}}
+function animInit(){spdInit();if(!$("asec").options.length){$("asec").innerHTML=D.secs.map((sc,i)=>`<option value="${i}">${sc.nom} — ${secAm(i).length-1} exemples</option>`).join("");
+ $("asec").onchange=()=>{AS=+$("asec").value;AE=0;TGT=null;go()};
+ $("amode").onclick=e=>{const b=e.target.closest("button");if(!b)return;AM=b.dataset.m;TGT=null;[...$("amode").children].forEach(x=>x.classList.toggle("on",x==b));AE=0;go()}}
  go()}
 function go(){RUN++;if(AM=="demo")demo();else train()}
 function steps(n,k){$("asteps").innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<=k?'on':''}"></i>`).join("")}
-function demo(){const tok=RUN,i=AS,A=secAm(i),ref=A[0],ex=A.slice(1),a=ex.length?ex[AE%ex.length]:ref,sc=D.secs[i];
+function demo(){const tok=RUN,i=AS,A=secAm(i),ref=A[0],ex=A.slice(1),a=TGT!=null?(A.find(x=>x.j===TGT)||ref):(ex.length?ex[AE%ex.length]:ref),sc=D.secs[i];
  setVB(VB0);$("anim").innerHTML=base(i,true);steps(6,0);
  $("abtn").innerHTML=`<button class="btn" id="arp">↺ Revoir</button><button class="btn primary" id="anx">Exemple suivant ▶ (${AE%Math.max(1,ex.length)+1}/${Math.max(1,ex.length)})</button>`;
- $("arp").onclick=()=>go();$("anx").onclick=()=>{AE++;go()};
+ $("arp").onclick=()=>go();$("anx").onclick=()=>{if(TGT!=null){const k=A.findIndex(x=>x.j===TGT);AE=Math.max(0,k);TGT=null}else AE++;go()};
  $("acap").innerHTML=`<b>① La zone de l'exercice :</b> ${sc.nom} (${sc.ou} de la carte). On cherche <b>${a.n}</b>.`;
- const box=secBox(i),W8=t=>new Promise(r=>setTimeout(()=>{if(tok===RUN)r()},t));
+ const box=secBox(i),W8=t=>new Promise(r=>setTimeout(()=>{if(tok===RUN)r()},t/SPD));
  (async()=>{await W8(1600);
   await new Promise(r=>zoomTo(box,1300,r,tok));const k=VB[2]/640;$("anim").innerHTML=base(i,true);steps(6,1);
   $("acap").innerHTML=`<b>② On ne regarde plus que cette zone.</b> Elle va de ${fmt(Math.min(...A.map(x=>x.la)))} à ${fmt(Math.max(...A.map(x=>x.la)))} N et de ${fmt(Math.min(...A.map(x=>x.lo)))} à ${fmt(Math.max(...A.map(x=>x.lo)))} W.`;
   await W8(2200);
   $("anim").insertAdjacentHTML("beforeend",sym(ref,k)+`<text x="${X(ref.lo)+12*k}" y="${Y(ref.la)+24*k}" font-size="${20*k}" font-weight="700" fill="#14213d" stroke="#fff" stroke-width="${4*k}" paint-order="stroke">${ref.n.replace(/\s*\(.*\)/,"")}</text>`);steps(6,2);
   $("acap").innerHTML=`<b>③ Le repère principal d'abord :</b> ${ref.n}. C'est le plus visible de la zone (${TN[ref.t].toLowerCase()}) : on le trouve en premier, puis on tourne autour.`;
-  if(a===ref){steps(6,5);$("acap").innerHTML+=`<br><small>Ce secteur n'a qu'un seul autre amer.</small>`;return}
+  if(a.j===ref.j){steps(6,5);$("acap").innerHTML+=TGT!=null?`<br><small>C'est lui l'amer recherché : ${a.L} – ${a.G}. Les autres amers de la zone se repèrent à partir de lui.</small>`:`<br><small>Ce secteur n'a qu'un seul autre amer.</small>`;return}
   await W8(2600);
   const y=Y(a.la),x=X(a.lo);
   $("anim").insertAdjacentHTML("beforeend",`<line id="lh" x1="${VB[0]}" y1="${y}" x2="${VB[0]}" y2="${y}" stroke="#c92a2a" stroke-width="${3*k}" stroke-dasharray="${9*k} ${5*k}"/><rect x="${VB[0]}" y="${y-27*k}" width="${165*k}" height="${25*k}" fill="#c92a2a" rx="${4*k}"/><text x="${VB[0]+5*k}" y="${y-9*k}" font-size="${19*k}" fill="#fff" font-weight="700">${a.L}</text>`);steps(6,3);
@@ -253,6 +256,19 @@ function demo(){const tok=RUN,i=AS,A=secAm(i),ref=A[0],ex=A.slice(1),a=ex.length
   $("anim").insertAdjacentHTML("beforeend",`<line x1="${X(ref.lo)}" y1="${Y(ref.la)}" x2="${x}" y2="${y}" stroke="#e8a400" stroke-width="${4*k}" marker-end="url(#ar)"/><circle cx="${x}" cy="${y}" r="${20*k}" fill="none" stroke="#c92a2a" stroke-width="${3.5*k}"><animate attributeName="r" values="${12*k};${28*k};${12*k}" dur="1.2s" repeatCount="indefinite"/></circle>${sym(a,k)}<text x="${x+12*k}" y="${y-14*k}" font-size="${21*k}" font-weight="800" fill="#14213d" stroke="#fff" stroke-width="${3*k}" paint-order="stroke">${a.n.replace(/\s*\(.*\)/,"")}</text>`);steps(6,5);
   $("acap").innerHTML=`<b>⑥ Le croisement, c'est ${a.n}.</b> ${TN[a.t]}, à <b>${fr1(rel.d)} mille${rel.d>=2?'s':''} au ${String(rel.z).padStart(3,"0")}°</b> (vers ${vers(rel.z)}) du repère principal.<br><small>À retenir pour aller vite : « ${sh(a.n)} est ${au(rel.z)} de ${sh(ref.n)} ».</small>`;
  })()}
+/* vitesse des animations (mémorisée sur l'appareil) */
+let SPD=1;try{SPD=+localStorage.getItem("kam-anim-vitesse")||1}catch(e){}
+function spdInit(){const r=$("spd");if(!r)return;r.value=SPD;$("spdv").textContent="×"+String(SPD).replace(".",",");r.oninput=()=>{SPD=+r.value;$("spdv").textContent="×"+String(SPD).replace(".",",");try{localStorage.setItem("kam-anim-vitesse",SPD)}catch(e){}}}
+/* recherche */
+const nrm=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[’'`-]/g," ");
+function search(){const q=nrm($("q").value.trim());if(q.length<2){$("qres").innerHTML="";return}
+ const w=q.split(/\s+/),R=D.amers.map((a,i)=>({a,i,h:nrm(a.n+" "+TN[a.t]+" "+D.secs[a.s].nom)})).filter(o=>w.every(x=>o.h.includes(x)));
+ $("qres").innerHTML=R.length?`<div class="mute">${R.length} résultat${R.length>1?"s":""}</div>`+R.slice(0,15).map(o=>`<div class="am" data-i="${o.i}"><span><b>${o.a.n}</b><br><small>${TN[o.a.t]} · ${D.secs[o.a.s].nom}</small></span><span>${o.a.L}<br>${o.a.G}<br><a href="#" data-an="${o.i}">▶ animation</a></span></div>`).join(""):`<div class="mute">Aucun amer trouvé.</div>`}
+$("q").oninput=search;
+$("qres").onclick=e=>{const an=e.target.closest("[data-an]");if(an){e.preventDefault();animFor(+an.dataset.an);return}
+ const r=e.target.closest(".am[data-i]");if(!r)return;showA(+r.dataset.i);$("map").scrollIntoView({behavior:"smooth",block:"center"})};
+function animFor(gi){const a=D.amers[gi],A=secAm(a.s),k=A.findIndex(x=>x.j===gi);AS=a.s;AM="demo";AE=0;TGT=gi;
+ [...$("tabs").children].find(b=>b.dataset.t=="anim").click();$("asec").value=AS;[...$("amode").children].forEach(x=>x.classList.toggle("on",x.dataset.m=="demo"));go();setTimeout(()=>$("asec").scrollIntoView({behavior:"smooth",block:"start"}),50)}
 /* entraînement : toucher le bon point */
 function train(){const tok=RUN,i=AS,A=secAm(i);if(!TR||TR.s!==i)TR={s:i,ok:0,n:0,order:A.map((_,j)=>j).sort(()=>Math.random()-.5)};
  const a=A[TR.order[TR.n%A.length]];const box=secBox(i);setVB(box);const k=box[2]/640;steps(0,0);
