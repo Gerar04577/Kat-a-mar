@@ -18,7 +18,7 @@ svg{width:100%;height:auto;display:block;background:#f3f8fc;border-radius:12px}
 .leg{font-size:13px;color:#5b6577;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px}.leg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
 table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid #d9dee7;padding:5px 7px;text-align:left}th{background:#f0f4fa}
 </style></head><body><a href="./hauturier-entrainement.html" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:#f4f6f9;color:#0b5c8a;font-weight:600;text-decoration:none;border-bottom:1px solid #d9dee7">‹ Retour</a><div class="w">
-<div class="v">Exercices type examen · version 1.3 · carte, règle Cras, compas à pointes, caps et courant · chaque exercice pas à pas</div>
+<div class="v">Exercices type examen · version 1.4 · carte, règle Cras, compas à pointes, caps et courant · + 5 exercices du livre « trouver le courant » · chaque exercice pas à pas</div>
 <h1>Exercices d'examen avec la règle Cras</h1>
 <div class="tabs" id="tabs"></div>
 <div class="card">
@@ -47,7 +47,7 @@ table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid 
 <script>
 const R=Math.PI/180,NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id),svg=$('s'),HI='#ffe14d';
 const BL='#1565c0',GR='#1a9c46',OR='#e07a00',PU='#7b3fbf',RD='#c62828',DK='#14213d';
-const K=36,px=([x,y])=>[30+x*K,400-y*K];
+let K=36,OX=30,OY=400,SB=1;const px=([x,y])=>[OX+x*K,OY-y*K];
 const dir=d=>[Math.sin(d*R),Math.cos(d*R)];                  // monde : (Est, Nord)
 const sdir=d=>[Math.sin(d*R),-Math.cos(d*R)];                // écran
 const wadd=(P,d,s)=>[P[0]+dir(d)[0]*s,P[1]+dir(d)[1]*s];
@@ -70,13 +70,13 @@ function arcW(Pw,r,d1,d2,c,lab,hi,lr){const C=px(Pw),d=d2-d1;if(Math.abs(d)<.3)r
 function north(Pw,L=70){const P=px(Pw);line(P,[P[0],P[1]-L],DK,2,'5 5');text(P[0],P[1]-L-5,'N',DK,'middle',13)}
 /* fond de carte : méridiens, parallèles, échelle des latitudes */
 function chart(){el('rect',{x:0,y:0,width:420,height:420,fill:'#f3f8fc'});
- for(let x=0;x<=10;x+=2){const a=px([x,0]);line([a[0],0],[a[0],420],BL,1,'3 6')}
- for(let y=0;y<=11;y+=2){const a=px([0,y]);line([24,a[1]],[420,a[1]],GR,1,'3 6')}
+ for(let x=Math.floor(-OX/K/2)*2;x<=(420-OX)/K;x+=2){const a=px([x,0]);line([a[0],0],[a[0],420],BL,1,'3 6')}
+ for(let y=Math.floor((OY-420)/K/2)*2;y<=OY/K;y+=2){const a=px([0,y]);line([24,a[1]],[420,a[1]],GR,1,'3 6')}
  el('rect',{x:0,y:0,width:24,height:420,fill:'#fff',stroke:'#9aa7b8'});scaleTicks();
  text(222,414,'méridiens (bleu) · parallèles (vert) · échelle des latitudes à gauche : 1 trait = 1′ = 1 mille','#5b6577','middle',9)}
-function scaleTicks(){for(let y=0;y<=10;y++){const a=px([0,y]);line([15,a[1]],[24,a[1]],DK,2);text(8,a[1]+4,String(y),DK,'middle',10)}}
-function scaleMark(d,hi,lab){const a=px([0,1]),b=px([0,1+d]);el('rect',{x:1,y:b[1],width:22,height:a[1]-b[1],fill:hi?HI:'#ffe9a8',opacity:.9});scaleTicks();
- line([22,a[1]],[22,b[1]],RD,3);text(28,(a[1]+b[1])/2+4,lab||(fr(d)+' milles'),RD,'start',14,hi,'#fff')}
+function scaleTicks(){const y0=Math.ceil((OY-420)/K);for(let y=y0;y<=OY/K;y++){const a=px([0,y]);line([15,a[1]],[24,a[1]],DK,2);text(8,a[1]+4,String(y-y0),DK,'middle',10)}}
+function scaleMark(d,hi,lab){const a=px([0,SB]),b=px([0,SB+d]);el('rect',{x:1,y:b[1],width:22,height:a[1]-b[1],fill:hi?HI:'#ffe9a8',opacity:.9});scaleTicks();
+ line([22,a[1]],[22,b[1]],RD,3);text(28,b[1]-8,lab||(fr(d)+' milles'),RD,'start',14,hi,'#fff')}
 function compas(Pw,Qw,hi,lab){const P=px(Pw),Q=px(Qw),m=[(P[0]+Q[0])/2,(P[1]+Q[1])/2],L=Math.hypot(Q[0]-P[0],Q[1]-P[1]);const n=[-(Q[1]-P[1])/L,(Q[0]-P[0])/L];const A=add(m,n,-Math.min(70,L*.45));
  if(hi){line(A,P,HI,10);line(A,Q,HI,10)}line(A,P,'#5b6577',3);line(A,Q,'#5b6577',3);el('circle',{cx:A[0],cy:A[1],r:6,fill:'#5b6577'});
  if(lab)text(A[0],A[1]-10,lab,'#5b6577','middle',12,hi)}
@@ -212,9 +212,91 @@ EX.push({t:'5 · Où suis-je avec le courant ?',
   {k:1,add:['comp','sc'],rm:['cB'],txt:'<b>Compas</b> entre A et la position de 15 h 00, reporté sur l\'<mark>échelle des latitudes</mark> : environ 4,4 milles en 1 h.',calc:'Vf ≈ 4,4 nd'},
   {k:2,add:['ang'],rm:['comp','sc'],txt:'<b>Contrôle à la calculatrice</b> (recette 1) : écart = 150 − 30 = 120. Dans l\'axe = 2 × cos 120 = −1 → avant = 5 − 1 = 4. En travers = 2 × sin 120 = 1,73.',calc:'Vf = √(4² + 1,73²) = 4,36 · δ = tan⁻¹(1,73 ÷ 4) = 23,4° · Rf = 30 + 23,4 = 053°'},
   {k:3,add:[],hi:['rf','Q'],txt:'<b>Réponses</b> : route fond <b>053°</b>, vitesse fond <b>4,36 nœuds</b>, position à 15 h 00 = bout de la route fond.',calc:'Rf 053° · Vf 4,36 nd · point à 15 h 00'}]})}
+
+/* ===== exercices du livre : trouver le courant (positions : liste des amers de l'école ; Le Chariot : carte 9999) ===== */
+const R_=Math.PI/180,frc=(v,n=2)=>(Math.round(v*Math.pow(10,n))/Math.pow(10,n)).toString().replace('.',',');
+const pos=([la,lo])=>{const q=v=>frc(Math.round(v*20)/20,2);return `47°${q(la)}′ N – 00${2+Math.floor(lo/60)}°${String(q(lo%60)).padStart(2,'0').replace(/^(\d),/,'0$1,')}′ W`};
+const POINT_CARD={0:'Nord',45:'Nord-Est',90:'Est',135:'Sud-Est',180:'Sud',225:'Sud-Ouest',270:'Ouest',315:'Nord-Ouest'};
+function offLL([la,lo],b,d){const c=Math.cos((47+la/60)*R_);return [la+d*Math.cos(b*R_),lo-d*Math.sin(b*R_)/c]}
+function cour(c){
+ const DL=c.Dof?offLL(c.ref,...c.Dof):c.ref,dist=c.V*c.t,EL=offLL(DL,c.Rs,dist),RL=offLL(c.ref2,...c.Rof),
+  cosm=Math.cos((47+DL[0]/60)*R_),W=([la,lo])=>[-(lo-DL[1])*cosm,la-DL[0]];
+ const D=[0,0],E=W(EL),Rp=W(RL),P1=W(c.ref),P2=W(c.ref2),ang=(a,b)=>(Math.atan2(b[0]-a[0],b[1]-a[1])/R_+360)%360,len=(a,b)=>Math.hypot(b[0]-a[0],b[1]-a[1]);
+ const Cd=ang(E,Rp),Cl=len(E,Rp),Vc=Cl/c.t,Rf=ang(D,Rp),Fl=len(D,Rp),Vf=Fl/c.t;
+ // cadrage automatique
+ const xs=[D,E,Rp,P1,P2].map(p=>p[0]),ys=[D,E,Rp,P1,P2].map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ const Kx=Math.min(60,300/Math.max(x1-x0,.1),290/Math.max(y1-y0,.1),340/Math.max(dist,Fl));
+ const X={K:Kx,OX:(95+395)/2-(x0+x1)/2*Kx,OY:(60+330)/2+(y0+y1)/2*Kx};X.SB=(X.OY-392)/Kx;
+ const L=c.lab||{},lb=(k,d)=>L[k]||d,h1=c.t==1,tt=h1?'1 heure':'une demi-heure',f3r=v=>f3(v),
+  dOff=c.Dof?`<b>Position de départ D (${c.h0})</b> : on prend <mark>${frc(c.Dof[1],1)} mille</mark> au compas sur l'échelle des latitudes et on le reporte ${c.Dof[0]%90?`dans le <b>${POINT_CARD[c.Dof[0]]}</b> (au ${f3(c.Dof[0])}°, à la règle Cras)`:`plein <b>${POINT_CARD[c.Dof[0]]}</b>`} de <b>${c.n1}</b>.`:`<b>Position de départ D (${c.h0})</b> : on est <b>au niveau</b> de la bouée <b>${c.n1}</b> : D est sur la bouée.`,
+  rOff=`<b>Position réelle R (${c.h1})</b> : on repère <b>${c.n2}</b>, et on reporte <mark>${frc(c.Rof[1],1)} mille</mark> ${c.Rof[0]%90?`dans le <b>${POINT_CARD[c.Rof[0]]}</b> (au ${f3(c.Rof[0])}°)`:`plein <b>${POINT_CARD[c.Rof[0]]}</b>`}.`;
+ const cC=wadd(E,Cd,Cl/2),cA=wadd(D,c.Rs,dist*.55),cB=wadd(D,Rf,Fl*.45),mid=(a,b)=>px([(a[0]+b[0])/2,(a[1]+b[1])/2]);
+ Object.assign(X,{t:c.t_,
+ en:`<b>Énoncé (livre, ex. ${c.no}).</b> ${c.en} <b>Donnez les caractéristiques du courant ainsi que Rf et Vf.</b><br><small>Positions prises dans la liste des amers de l'école${c.no==2?' ; Le Chariot lu sur la carte 9999':''}.${c.note?' '+c.note:''}</small>`,
+ leg:[[DK,'amers'],[BL,'route surface (sans courant)'],[OR,'courant'],[GR,'route fond'],['#d6e7fb','règle Cras'],[RD,'distance sur l\'échelle']],
+ E:{P1:h=>pt(P1,c.n1s,DK,...lb('P1',[0,-14,h,'middle']).slice(0,2),h,lb('P1',[0,0,0,'middle'])[3]),
+   D:h=>{if(c.Dof)seg(P1,D,'#5b6577',2,'4 4');pt(D,'D '+c.h0,DK,...lb('D',[0,26]).slice(0,2),h,lb('D',[0,0,0,'middle'])[3])},
+   scD:h=>scaleMark(c.Dof?c.Dof[1]:0,h,c.Dof?frc(c.Dof[1],1)+' mille':''),
+   cA:h=>cras(cA,c.Rs,h),
+   boat:h=>{vec(D,E,BL,'b',h,true);const m=mid(D,E);text(m[0]+(L.bt?L.bt[0]:0),m[1]+(L.bt?L.bt[1]:-14),f3(c.Rs)+'° · '+frc(dist,1)+' milles',BL,L.bt?L.bt[2]:'middle',13,h)},
+   scE:h=>scaleMark(dist,h,frc(dist,1)+' milles'),comp1:h=>compas(D,E,h,''),
+   E:h=>pt(E,'E (estime)',BL,...lb('E',[8,-12]).slice(0,2),h,lb('E',[0,0,0,'start'])[3]),
+   P2:h=>pt(P2,c.n2s,DK,...lb('P2',[0,-14]).slice(0,2),h,lb('P2',[0,0,0,'middle'])[3]),
+   R:h=>{seg(P2,Rp,'#5b6577',2,'4 4');pt(Rp,'R '+c.h1+' (réel)',RD,...lb('R',[0,26]).slice(0,2),h,lb('R',[0,0,0,'middle'])[3])},
+   cour:h=>{vec(E,Rp,OR,'o',h,false,6);const m=mid(E,Rp),o=L.co||[14,5,'start'];text(m[0]+o[0],m[1]+o[1],'courant '+frc(Cl,2)+' M',OR,o[2],14,h)},
+   cC:h=>cras(cC,Cd,h),
+   scC:h=>scaleMark(Cl,h,frc(Cl,2)+' mille'),
+   rf:h=>vec(D,Rp,GR,'g',h,false),
+   cB:h=>cras(cB,Rf,h),
+   scF:h=>scaleMark(Fl,h,frc(Fl,2)+' milles'),comp2:h=>compas(D,Rp,h,''),
+   ang:h=>{north(D,100);const a1=Rf>180?Rf:0,a2=Rf>180?360:Rf;arcW(D,44,a1,a2,GR,'Rf '+f3(Rf)+'°',h,L.ar||92)}},
+ order:['rf','boat','cour','ang','cA','cB','cC','comp1','comp2','scD','scE','scC','scF','P1','P2','D','E','R'],
+ steps:[
+  {k:1,add:['P1'],txt:`<b>L'idée</b> : on compare <mark>où on croyait arriver</mark> (sans courant) avec <mark>où on est vraiment</mark>. La différence = le courant. On repère d'abord <b>${c.n1}</b> sur la carte.`},
+  {k:1,add:c.Dof?['scD','D']:['D'],txt:dOff,calc:'D = '+pos(DL)},
+  {k:2,add:[],rm:['scD'],txt:h1?`<b>Distance parcourue dans l'eau</b> en <b>1 heure</b> : elle est égale à la vitesse.`:`<b>Distance parcourue dans l'eau</b> en une demi-heure. Attention : 30 minutes = <b>0,5 heure</b>.`,calc:`distance = vitesse × durée = ${frc(c.V,1)} × ${frc(c.t,1)} = ${frc(dist,1)} milles`},
+  {k:1,add:['cA'],txt:`<b>Règle Cras</b> posée sur D, flèche dans le sens de la route, centre sur un méridien : on pivote jusqu'à lire <mark>${c.Rs}</mark>. On trace le trait le long de la règle.`},
+  {k:1,add:['boat','scE','comp1','E'],rm:['cA'],txt:`On reporte <mark>${frc(dist,1)} milles</mark> au compas (pris sur l'échelle des latitudes) le long de ce trait : c'est le point <b>E</b>, la position <b>estimée</b>, là où l'on serait <b>sans courant</b>.`,calc:'E ≈ '+pos(EL)},
+  {k:1,add:['P2','R'],rm:['scE','comp1'],txt:rOff,calc:'R = '+pos(RL)},
+  {k:1,add:['cour','cC'],txt:`<b>Le courant = la flèche E → R</b> (de l'estime vers le réel). Règle Cras sur E → R, dans le sens de la flèche : on lit <mark>${f3(Cd)}</mark>. ${c.cdTxt||''}`,calc:`direction du courant = ${f3(Cd)}° (il porte VERS le ${c.cdName})`},
+  {k:1,add:['scC'],rm:['cC'],txt:`On mesure E → R au compas sur l'échelle des latitudes : <mark>${frc(Cl,2)} mille</mark>${h1?' en 1 heure.':'. Mais c\'est le chemin fait en <b>une demi-heure</b> !'}`},
+  {k:2,add:[],rm:['scC'],hi:['cour'],txt:h1?`<b>Vitesse du courant</b> : en 1 heure, la longueur mesurée <b>est</b> la vitesse.`:`<b>Vitesse du courant</b> : pour avoir des nœuds (milles par <b>heure</b>), on divise par 0,5, c'est-à-dire qu'on <b>double</b>.`,calc:`Vc = ${frc(Cl,2)} ÷ ${frc(c.t,1)} = ${frc(Vc,2)} ≈ ${frc(Vc,1)} nœud`},
+  {k:1,add:['rf','cB'],txt:`<b>Route fond = la flèche D → R</b> (où l'on est vraiment allé). Règle Cras sur D → R : on lit <mark>${f3(Rf)}</mark>.`,calc:`Rf = ${f3(Rf)}°`},
+  {k:1,add:['scF','comp2'],rm:['cB'],txt:`On mesure D → R au compas sur l'échelle des latitudes : <mark>${frc(Fl,2)} milles</mark> en ${tt}.`},
+  {k:2,add:['ang'],rm:['scF','comp2'],txt:h1?`<b>Vitesse fond</b> : en 1 heure, la longueur mesurée est la vitesse.`:`<b>Vitesse fond</b> : on double aussi.`,calc:`Vf = ${frc(Fl,2)} ÷ ${frc(c.t,1)} = ${frc(Vf,2)} ≈ ${frc(Vf,1)} nœuds`},
+  {k:3,add:[],hi:['cour','rf'],txt:`<b>Réponses</b> : courant qui porte au <b>${f3(Cd)}°</b> à <b>${frc(Vc,1)} nœud</b> · route fond <b>${f3(Rf)}°</b> · vitesse fond <b>${frc(Vf,1)} nœuds</b>. ${c.logic}`,calc:`Courant ${f3(Cd)}° – ${frc(Vc,1)} nd · Rf ${f3(Rf)}° · Vf ${frc(Vf,1)} nd`}]});
+ EX.push(X)}
+cour({no:1,t_:'6 · Courant : Castouillet → Bayonnelles',h0:'08h00',h1:'09h00',ref:[18.2,34.3],Dof:null,Rs:352,V:5,t:1,ref2:[22.75,35.2],Rof:[270,0.5],
+ n1:'« Basse Castouillet »',n1s:'Basse Castouillet',n2:'« Les Bayonnelles »',n2s:'Les Bayonnelles',cdName:'Sud-Ouest',
+ en:'À <b>08 h 00</b>, vous êtes <b>au niveau</b> de la bouée cardinale Ouest <b>« Basse Castouillet »</b>. Toutes corrections faites (déviation, déclinaison, vent), vous faites route au <b>Rs = 352°</b> à <b>5 nœuds</b>. Au bout d\'<b>une heure</b>, vous êtes à <b>0,5 mille à l\'Ouest</b> de la bouée <b>« Les Bayonnelles »</b>.',
+ logic:'Logique : le courant pousse vers le Sud-Ouest, un peu contre nous et vers la gauche : la route 352° glisse à gauche (346°) et la vitesse baisse (5 → 4,7).',
+ lab:{P1:[10,4,0,'start'],D:[10,20,0,'start'],E:[0,-14,0,'middle'],P2:[10,4,0,'start'],R:[-8,24,0,'end'],co:[-16,-2,'end'],bt:[12,0,'start']}});
+cour({no:2,t_:'7 · Courant : Le Chariot → Les Galères',h0:'09h00',h1:'09h30',ref:[18.9,53.85],Dof:[180,0.5],Rs:271,V:12,t:0.5,ref2:[18.8,62.7],Rof:[180,1],
+ n1:'« Le Chariot »',n1s:'Le Chariot',n2:'« Les Galères »',n2s:'Les Galères',cdName:'Sud',cdTxt:'E et R sont sur le <b>même méridien</b> et R est plus bas : plein Sud.',
+ en:'À <b>09 h 00</b>, vous êtes à <b>0,5 mille au Sud</b> de la bouée cardinale Sud <b>« Le Chariot »</b> (47°18,9′ N – 002°53,85′ W). Toutes corrections faites, vous faites route au <b>Rs = 271°</b> à <b>12 nœuds</b>. Au bout d\'<b>une demi-heure</b>, vous êtes à <b>1 mille au Sud</b> de la bouée <b>« Les Galères »</b>.',
+ note:'Le livre dit « cardinale Est » pour Les Galères, la liste de l\'école dit « cardinale Ouest » : sa position (47°18,8′ N – 003°02,7′ W) ne change pas le calcul.',
+ logic:'Logique : le courant pousse vers le Sud, donc la route 271° glisse vers la gauche (264°) ; il est presque de travers, donc la vitesse change à peine (12 → 12,1).',
+ lab:{P1:[-8,-8,0,'end'],D:[-6,26,0,'end'],E:[8,-12,0,'start'],P2:[4,-14,0,'start'],R:[-4,28,0,'start']}});
+cour({no:3,t_:'8 · Courant : Recherche → La Chèvre',h0:'10h00',h1:'11h00',ref:[25.65,50.3],Dof:[270,0.3],Rs:193,V:5,t:1,ref2:[21.15,52.45],Rof:[0,0.5],
+ n1:'« Recherche »',n1s:'Recherche',n2:'« La Chèvre »',n2s:'La Chèvre',cdName:'Nord',cdTxt:'La flèche monte presque droit : c\'est presque plein Nord.',
+ en:'À <b>10 h 00</b>, vous êtes à <b>0,3 mille à l\'Ouest</b> de la bouée cardinale Ouest <b>« Recherche »</b>. Toutes corrections faites, vous faites route au <b>Rs = 193°</b> à <b>5 nœuds</b>. Au bout d\'<b>une heure</b>, vous êtes à <b>0,5 mille au Nord</b> de la bouée de danger isolé <b>« La Chèvre »</b>.',
+ logic:'Logique : le courant vient presque de face (il porte vers le Nord alors qu\'on va vers le Sud) : la vitesse baisse nettement (5 → 4,2) et la route ne bouge presque pas (193° → 196°).',
+ lab:{P1:[10,-8,0,'start'],D:[10,22,0,'start'],E:[10,14,0,'start'],P2:[10,6,0,'start'],R:[-10,-6,0,'end'],co:[-14,8,'end'],bt:[12,0,'start']}});
+cour({no:4,t_:'9 · Courant : Castouillet → Bayonnelles (2)',h0:'11h00',h1:'12h00',ref:[18.2,34.3],Dof:[270,0.5],Rs:358,V:5.5,t:1,ref2:[22.75,35.2],Rof:[90,0.3],
+ n1:'« Basse Castouillet »',n1s:'Basse Castouillet',n2:'« Les Bayonnelles »',n2s:'Les Bayonnelles',cdName:'Sud-Sud-Est',
+ en:'À <b>11 h 00</b>, vous êtes à <b>0,5 mille à l\'Ouest</b> de la bouée cardinale Ouest <b>« Basse Castouillet »</b>. Toutes corrections faites, vous faites route au <b>Rs = 358°</b> à <b>5,5 nœuds</b>. Au bout d\'<b>une heure</b>, vous êtes à <b>0,3 mille à l\'Est</b> de la bouée <b>« Les Bayonnelles »</b>.',
+ note:'Le livre dit « cardinale Est » pour Les Bayonnelles ici, et « cardinale Ouest » à l\'exercice 1 ; la liste de l\'école dit Ouest. La position utilisée est la même.',
+ logic:'Logique : le courant pousse vers le Sud-Sud-Est, donc contre nous et vers la droite : la route 358° glisse à droite (002°) et la vitesse baisse (5,5 → 4,6).',
+ lab:{P1:[10,4,0,'start'],D:[-10,20,0,'end'],E:[-10,-10,0,'end'],P2:[-10,-10,0,'end'],R:[10,20,0,'start'],co:[12,0,'start'],bt:[-12,0,'end']}});
+cour({no:5,t_:'10 · Courant : Dumet → Kervoyal',h0:'12h00',h1:'13h00',ref:[24.75,37.1],Dof:[45,1],Rs:36,V:6,t:1,ref2:[30.4,32.55],Rof:[135,1],
+ n1:'phare de l\'île Dumet',n1s:'Phare Dumet',n2:'la tourelle « Basse de Kervoyal »',n2s:'Basse de Kervoyal',cdName:'Sud-Ouest',
+ en:'À <b>12 h 00</b>, vous êtes à <b>1 mille dans le Nord-Est</b> du <b>phare de l\'île Dumet</b>. Toutes corrections faites, vous faites route au <b>Rs = 036°</b> à <b>6 nœuds</b>. Au bout d\'<b>une heure</b>, vous êtes à <b>1 mille dans le Sud-Est</b> de la tourelle <b>« Basse de Kervoyal »</b>.',
+ cdTxt:'La flèche du courant est exactement à l\'opposé de la route : <b>036 + 180 = 216</b>.',
+ logic:'Logique : le courant vient pile de face (216° = 036° + 180°) : la route ne change pas (036°) et la vitesse diminue simplement de la vitesse du courant (6 − 0,76 = 5,24).',
+ lab:{P1:[10,10,0,'start'],D:[10,18,0,'start'],E:[-4,-14,0,'middle'],P2:[-10,-8,0,'end'],R:[-10,22,0,'end'],co:[-14,2,'end'],bt:[-12,0,'end']}});
 /* ===================== moteur ===================== */
 let ce=0,cs=0;
-function render(){const X=EX[ce],st=X.steps[cs];svg.innerHTML='';defs();chart();
+function render(){const X=EX[ce],st=X.steps[cs];K=X.K||36;OX=X.OX??30;OY=X.OY??400;SB=X.SB??1;svg.innerHTML='';defs();chart();
  const on=new Set();for(let i=0;i<=cs;i++){(X.steps[i].add||[]).forEach(k=>on.add(k));(X.steps[i].rm||[]).forEach(k=>on.delete(k))}
  const now=new Set([...(st.add||[]),...(st.hi||[])]);X.order.forEach(k=>{if(on.has(k))X.E[k](now.has(k))});
  $('en').innerHTML=X.en;$('ttl').textContent=X.t;$('cnt').textContent=`Étape ${cs+1} / ${X.steps.length}`;$('bar').style.width=((cs+1)/X.steps.length*100)+'%';
