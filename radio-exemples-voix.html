@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Radio · exemples à écouter</title>
+<!-- Kat-a-Mar · exemples d'appels radio lus à voix haute (MAYDAY, PAN PAN) · v1.0 -->
+<style>
+:root{--bg:#f4f6f9;--paper:#fff;--ink:#14212e;--mute:#5b6b7b;--line:#d9e0e8;--navy:#0b4f7c;--red:#c62828;--org:#d9771f;--hl:#fff3c4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e161f;--paper:#16212c;--ink:#e6edf3;--mute:#9fb0c0;--line:#2a3846;--navy:#7cc0ff;--hl:#4a3f12}}
+:root[data-theme="dark"]{--bg:#0e161f;--paper:#16212c;--ink:#e6edf3;--mute:#9fb0c0;--line:#2a3846;--navy:#7cc0ff;--hl:#4a3f12}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.5;padding:0 16px 60px}
+.bar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin:0 -16px;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px}
+.bar a{font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:6px 12px;font-size:15px}
+.v{font-size:12px;color:var(--mute);margin:12px 0 2px}
+h1{font-size:23px;margin:2px 0 8px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}
+.card h2{margin:0 0 4px;font-size:20px}.card .sub{color:var(--mute);font-size:14px;margin:0 0 10px}
+.mayday h2{color:var(--red)}.panpan h2{color:var(--org)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px}
+button{font:inherit;font-weight:800;border-radius:12px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:10px 14px;cursor:pointer;min-height:44px}
+button.main{background:var(--navy);color:#fff}
+.l{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:start;padding:8px 6px;border-radius:10px;border-top:1px solid var(--line)}
+.l:first-of-type{border-top:0}
+.l.on{background:var(--hl)}
+.l button{padding:0;width:40px;height:40px;min-height:40px;border-radius:50%;font-size:15px}
+.en{font-weight:800}.fr{color:var(--mute);font-style:italic;font-size:15px}
+.opt{display:flex;flex-direction:column;gap:8px;font-size:15px}
+.opt label{display:flex;align-items:center;gap:8px}
+.opt input[type=range]{flex:1;accent-color:var(--navy)}
+.warn{font-size:14px;color:var(--mute)}
+.step{font-size:14px;background:var(--bg);border-radius:10px;padding:8px 10px;margin:0 0 8px}
+</style>
+</head>
+<body>
+<div class="bar"><a href="./permis-belge.html">‹ Retour</a></div>
+<div class="v">Radio · exemples à écouter · version 1.0 · forme des messages : manuel IBPT 2025 p. 23-25</div>
+<h1>Écouter un MAYDAY et un PAN PAN</h1>
+<p class="warn">Indicatif <b>OR1234</b> et MMSI <b>205 123 456</b> : <b>inventés</b> pour l'exemple. Les chiffres se disent <b>un par un</b>. La voix est celle de votre iPhone (anglais).</p>
+
+<div class="card opt">
+ <label>Vitesse de lecture <input type="range" id="rate" min="0.6" max="1.2" step="0.05" value="0.85"><b id="ratev">0,85</b></label>
+ <label><input type="checkbox" id="lirefr"> Lire aussi la traduction en français après chaque ligne</label>
+</div>
+
+<div id="ex"></div>
+
+<p class="warn">Si vous n'entendez rien : vérifiez que le bouton « silencieux » de l'iPhone n'est pas activé et montez le volume.</p>
+
+<script>
+const EX=[
+{id:"m",cls:"mayday",t:"🔴 MAYDAY : incendie moteur",sub:"Détresse : danger grave et imminent. Étape 1 : touche DISTRESS (nature « Fire »). Étape 2 : canal 16, à la voix.",
+ L:[
+ ["MAYDAY MAYDAY MAYDAY","Détresse, détresse, détresse","Mayday. Mayday. Mayday."],
+ ["THIS IS Kat a Mar, Kat a Mar, Kat a Mar","Ici Kat a Mar, Kat a Mar, Kat a Mar","This is Kat a Mar. Kat a Mar. Kat a Mar."],
+ ["Call sign OR1234, MMSI 205 123 456","Indicatif OR1234, MMSI 205 123 456","Call sign. Oscar Romeo, one two three four. M M S I: two zero five, one two three, four five six."],
+ ["MAYDAY Kat a Mar, call sign OR1234, MMSI 205 123 456","Détresse, Kat a Mar, indicatif OR1234, MMSI 205 123 456","Mayday. Kat a Mar. Call sign, Oscar Romeo, one two three four. M M S I: two zero five, one two three, four five six."],
+ ["My position: 51°15′ North, 002°45′ East","Ma position : 51°15′ Nord, 002°45′ Est","My position. Five one degrees, one five minutes North. Zero zero two degrees, four five minutes East."],
+ ["4 miles north-west of Oostende","À 4 milles au nord-ouest d'Oostende","Four miles, north west of Oostende."],
+ ["Fire in engine room, out of control","Incendie dans le compartiment moteur, impossible à maîtriser","Fire in engine room. Out of control."],
+ ["I require immediate assistance","Je demande une assistance immédiate","I require immediate assistance."],
+ ["2 persons on board, wearing life jackets","2 personnes à bord, gilets portés","Two persons on board. Wearing life jackets."],
+ ["White motor boat, 7.5 metres","Bateau à moteur blanc, 7,5 mètres","White motor boat. Seven point five metres."],
+ ["OVER","À vous (j'attends la réponse)","Over."]]},
+{id:"p",cls:"panpan",t:"🟠 PAN PAN : panne moteur",sub:"Urgence : problème sérieux, pas de danger immédiat pour la vie. Étape 1 : appel ASN « All ships », catégorie Urgency. Étape 2 : canal 16, à la voix.",
+ L:[
+ ["PAN PAN, PAN PAN, PAN PAN","Urgence, urgence, urgence","Pan pan. Pan pan. Pan pan."],
+ ["ALL STATIONS, ALL STATIONS, ALL STATIONS","À toutes les stations (×3)","All stations. All stations. All stations."],
+ ["THIS IS Kat a Mar, Kat a Mar, Kat a Mar","Ici Kat a Mar (×3)","This is Kat a Mar. Kat a Mar. Kat a Mar."],
+ ["Call sign OR1234, MMSI 205 123 456","Indicatif OR1234, MMSI 205 123 456","Call sign. Oscar Romeo, one two three four. M M S I: two zero five, one two three, four five six."],
+ ["My position: 51°20′ North, 002°50′ East","Ma position : 51°20′ Nord, 002°50′ Est","My position. Five one degrees, two zero minutes North. Zero zero two degrees, five zero minutes East."],
+ ["Engine failure, drifting north-east","Panne moteur, je dérive vers le nord-est","Engine failure. Drifting north east."],
+ ["Wind south-west, force 5","Vent de sud-ouest, force 5","Wind south west. Force five."],
+ ["I require a tow","Je demande un remorquage","I require a tow."],
+ ["2 persons on board, no immediate danger","2 personnes à bord, pas de danger immédiat","Two persons on board. No immediate danger."],
+ ["OVER","À vous","Over."]]}];
+const $=id=>document.getElementById(id);
+$("ex").innerHTML=EX.map(e=>`<div class="card ${e.cls}"><h2>${e.t}</h2><p class="sub">${e.sub}</p>
+ <div class="btns"><button class="main" data-all="${e.id}">▶ Écouter tout</button><button data-stop="1">■ Stop</button></div>
+ ${e.L.map((l,i)=>`<div class="l" id="${e.id}${i}"><button data-one="${e.id}:${i}" aria-label="Écouter">▶</button><div><div class="en">${l[0]}</div><div class="fr">${l[1]}</div></div></div>`).join("")}</div>`).join("");
+let RATE=.85;try{RATE=+localStorage.getItem("kam-radio-rate")||.85}catch(e){}
+$("rate").value=RATE;$("ratev").textContent=String(RATE).replace(".",",");
+$("rate").oninput=()=>{RATE=+$("rate").value;$("ratev").textContent=String(RATE).replace(".",",");try{localStorage.setItem("kam-radio-rate",RATE)}catch(e){}};
+const S=window.speechSynthesis;let voices=[],tok=0;
+function loadV(){voices=S?S.getVoices():[]}if(S){loadV();S.onvoiceschanged=loadV}
+const pick=lang=>voices.find(v=>v.lang==lang)||voices.find(v=>v.lang&&v.lang.startsWith(lang.slice(0,2)));
+function say(txt,lang){return new Promise(r=>{const u=new SpeechSynthesisUtterance(txt);u.lang=lang;const v=pick(lang);if(v)u.voice=v;u.rate=RATE;u.onend=r;u.onerror=r;S.speak(u)})}
+const clear=()=>document.querySelectorAll(".l.on").forEach(x=>x.classList.remove("on"));
+async function play(e,from,to){if(!S){alert("La lecture vocale n'est pas disponible sur cet appareil.");return}
+ S.cancel();const my=++tok;for(let i=from;i<=to;i++){if(my!==tok)return;clear();const row=$(e.id+i);row.classList.add("on");row.scrollIntoView({block:"nearest",behavior:"smooth"});
+  await say(e.L[i][2],"en-GB");if(my!==tok)return;if($("lirefr").checked)await say(e.L[i][1],"fr-FR");await new Promise(r=>setTimeout(r,350))}
+ if(my===tok)clear()}
+document.addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;
+ if(b.dataset.all){const e=EX.find(x=>x.id==b.dataset.all);play(e,0,e.L.length-1)}
+ else if(b.dataset.one){const [id,i]=b.dataset.one.split(":");const e=EX.find(x=>x.id==id);play(e,+i,+i)}
+ else if(b.dataset.stop){tok++;S&&S.cancel();clear()}});
+</script>
+</body>
+</html>
