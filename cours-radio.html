@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Cours radio VHF · Kat-a-Mar</title>
+<!-- Kat-a-Mar · Cours de radiotéléphonie : manuel IBPT 2025 (certificat restreint) réécrit en entier + tableau des fréquences et des balises · v1.0 -->
+<style>
+:root{--bg:#f4f6f9;--paper:#fff;--ink:#14212e;--mute:#5b6b7b;--line:#d9e0e8;--navy:#0b4f7c;--red:#c62828;--org:#d9771f;--grn:#1f8a4c;--tip:#eef6ff;--warn:#fff4e5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e161f;--paper:#16212c;--ink:#e6edf3;--mute:#9fb0c0;--line:#2a3846;--navy:#7cc0ff;--tip:#13283c;--warn:#33270f}}
+:root[data-theme="dark"]{--bg:#0e161f;--paper:#16212c;--ink:#e6edf3;--mute:#9fb0c0;--line:#2a3846;--navy:#7cc0ff;--tip:#13283c;--warn:#33270f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.55;padding:0 16px 70px}
+.bar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin:0 -16px;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;display:flex;gap:8px}
+.bar a{font-weight:700;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:10px;padding:6px 12px;font-size:15px}
+.v{font-size:12px;color:var(--mute);margin:12px 0 2px}
+h1{font-size:24px;margin:2px 0 8px;line-height:1.25}
+h3{font-size:18px;margin:18px 0 6px;color:var(--navy)}
+h4{font-size:16px;margin:14px 0 4px}
+p{margin:8px 0}
+details{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:800;font-size:18px;display:flex;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary .n{flex:0 0 32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+summary::after{content:"▸";margin-left:auto;color:var(--mute);transition:transform .2s}
+details[open] summary::after{transform:rotate(90deg)}
+.c{padding:0 16px 16px}
+.clair{background:var(--tip);border-left:4px solid var(--navy);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:16px}
+.clair b:first-child{color:var(--navy)}
+.att{background:var(--warn);border-left:4px solid var(--org);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:16px}
+.exam{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:var(--grn);border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.hors{background:var(--mute)}
+.tw{overflow-x:auto;margin:10px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--paper)}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{background:var(--bg);font-size:14px}
+td.k{font-weight:800;white-space:nowrap}
+.radio{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;white-space:pre-wrap}
+.radio .fr{color:var(--mute);font-style:italic}
+ul,ol{padding-left:22px;margin:6px 0}li{margin:3px 0}
+.toc a{color:var(--navy);text-decoration:none}
+.src{font-size:13px;color:var(--mute)}
+.svgbox{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px;margin:10px 0}
+svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+<div class="bar"><a href="./permis-belge.html">‹ Retour</a></div>
+<div class="v">Cours radio · version 1.0 · réécriture complète du « Manuel de préparation à l'examen pour obtenir le certificat restreint de radiotéléphoniste de station de navire », IBPT, version 2025 (55 pages) · rien n'a été retiré · + tableau des fréquences et des balises</div>
+<h1>Cours de radiotéléphonie VHF (manuel IBPT 2025)</h1>
+<p>Ce cours reprend <b>tout</b> le manuel officiel de l'IBPT, réécrit en français simple, chapitre par chapitre. Les encadrés bleus <b>« En clair »</b> expliquent avec des mots simples ; les encadrés orange signalent les <b>pièges</b>. Le badge <span class="exam">EXAMEN</span> rappelle que le chapitre est matière d'examen ; les <b>annexes</b> du manuel ne le sont pas <span class="exam hors">HORS EXAMEN</span>.</p>
+<div class="clair"><b>À l'examen</b> (certificat restreint VHF) : <b>25 questions</b> à choix multiple sur ordinateur, il faut <b>60 %</b>. Le certificat VHF vaut à la fois <b>en mer et sur les voies intérieures</b> : toute la matière doit être connue. Pour le <b>SRC</b> (VHF avec ASN) : 33 questions, dont 10 sur cette matière VHF.</div>
+
+<details class="toc"><summary><span class="n">≡</span>Sommaire</summary><div class="c"><ol>
+<li><a href="#t0">Tableau des fréquences et des balises</a></li>
+<li><a href="#t1">Introduction</a></li>
+<li><a href="#t2">Généralités, législation, autorisation, certificat</a></li>
+<li><a href="#t3">Le matériel : VHF fixe, portable, GSM, conformité</a></li>
+<li><a href="#t4">Fréquences, canaux, portée, simplex/duplex</a></li>
+<li><a href="#t5">Les canaux en mer (eaux belges)</a></li>
+<li><a href="#t6">Les canaux en navigation intérieure</a></li>
+<li><a href="#t7">Utiliser la VHF : règles, langues, alphabet</a></li>
+<li><a href="#t8">Priorités : détresse, urgence, sécurité, routine, essais</a></li>
+<li><a href="#t9">En mer : veille, MRCC Oostende, correspondance publique</a></li>
+<li><a href="#t10">Sur les voies intérieures : Rainwat, antennes, ATIS, AIS</a></li>
+<li><a href="#t11">Glossaire</a></li>
+<li><a href="#t12">Annexe : législation (hors examen)</a></li>
+<li><a href="#t13">Annexe : exemples de communications CCNR (hors examen)</a></li>
+<li><a href="#t14">Annexe : alerte ASN de détresse (SRC) (hors examen)</a></li>
+<li><a href="#t15">Annexe : zones où l'ATIS est obligatoire (hors examen)</a></li>
+</ol></div></details>
+
+<!-- ============ 0. TABLEAU ============ -->
+<details id="t0" open><summary><span class="n">★</span>Tableau des fréquences et des balises</summary><div class="c">
+<p>Deux tableaux de synthèse pour tout retrouver d'un coup d'œil. Le premier regroupe <b>toutes les fréquences</b> (canaux VHF du manuel et autres fréquences de sécurité) ; le second <b>tous les types de balises</b> de détresse : à quoi elles servent et comment s'en servir.</p>
+
+<h3>1. Les fréquences et canaux</h3>
+<p class="src">Canaux VHF : manuel IBPT p. 16-17. Fréquences en MHz données seulement pour les canaux simplex (une seule fréquence) ; les canaux duplex (07, 18, 20, 22, 31, 82…) utilisent deux fréquences.</p>
+<div class="tw"><table>
+<tr><th>Canal / fréquence</th><th>À quoi il sert</th><th>Comment l'utiliser</th></tr>
+<tr><td class="k">16<br>156,800 MHz</td><td><b>Détresse, urgence, sécurité</b> en phonie. Canal d'appel des stations côtières.</td><td>Veille <b>autant que possible</b> en navigation. MAYDAY, PAN PAN, SÉCURITÉ s'y annoncent. Appel navire-navire seulement en dernier recours, très bref. <b>Jamais d'essai</b> sur le 16. De préférence en anglais.</td></tr>
+<tr><td class="k">70<br>156,525 MHz</td><td><b>ASN</b> (appel sélectif numérique) du SMDSM.</td><td>Uniquement numérique : <b>toujours bloqué pour la voix</b>. Certificat SMDSM (SRC…) obligatoire. Après une alerte ASN de détresse ou d'urgence → passer sur le <b>16</b>. <b>Interdit</b> sur les voies intérieures.</td></tr>
+<tr><td class="k">06<br>156,300 MHz</td><td>Navire-navire : 1<sup>er</sup> canal <b>international</b>. En Belgique : <b>pilotage</b>.</td><td>Communications entre bateaux sur la navigation.</td></tr>
+<tr><td class="k">07</td><td><b>Oostende Radio</b> : avis aux navigateurs en mer ; canal de travail d'Oostende Radio.</td><td>Écouter les avis ; essais radio avec Oostende Radio.</td></tr>
+<tr><td class="k">08<br>156,400 MHz</td><td>Navire-navire : 1<sup>er</sup> canal <b>en Belgique</b>.</td><td>Communications professionnelles entre bateaux.</td></tr>
+<tr><td class="k">10<br>156,500 MHz</td><td>Voies intérieures : 1<sup>er</sup> canal bateau-bateau ; <b>canal d'urgence</b> et messages de sécurité de Radio Ostende ; MAYDAY en navigation intérieure.</td><td>Puissance réduite 1 W.</td></tr>
+<tr><td class="k">13<br>156,650 MHz</td><td><b>Sécurité de la navigation</b> uniquement.</td><td>Rien d'autre que la sécurité de la navigation.</td></tr>
+<tr><td class="k">15 et 17<br>156,750 / 156,850 MHz</td><td><b>Intraship</b> : communications à bord d'un même navire (ou d'un convoi).</td><td>Portables autorisés ; 1 W.</td></tr>
+<tr><td class="k">18, 20, 22</td><td>Voies intérieures : <b>écluses</b>.</td><td>Appeler l'écluse ; 1 W.</td></tr>
+<tr><td class="k">31</td><td><b>Ports de plaisance</b> (mer et intérieur).</td><td>Appeler la marina.</td></tr>
+<tr><td class="k">37L</td><td>Marinas <b>britanniques</b>.</td><td>Seulement dans les eaux territoriales britanniques.</td></tr>
+<tr><td class="k">67<br>156,375 MHz</td><td><b>Recherche et sauvetage (SAR)</b> ; lutte contre les catastrophes écologiques.</td><td>Pendant les opérations de sauvetage. Veillé 24 h/24 par le MRCC Oostende.</td></tr>
+<tr><td class="k">72<br>156,625 MHz</td><td>Voies intérieures : <b>social et familial</b> (en plus du 77).</td><td>0,5 à 1 W seulement. En mer : non (seul le 77).</td></tr>
+<tr><td class="k">73<br>156,675 MHz</td><td><b>Antipollution</b>.</td><td>Lutte contre la pollution.</td></tr>
+<tr><td class="k">75 et 76<br>156,775 / 156,825 MHz</td><td><b>AIS longue portée</b> (Long Range AIS).</td><td>Aussi utilisable à 1 W par les autorités portuaires.</td></tr>
+<tr><td class="k">77<br>156,875 MHz</td><td><b>Social et familial</b> entre navires (seul canal social en mer).</td><td>0,5 à 1 W seulement.</td></tr>
+<tr><td class="k">82</td><td>Approvisionnement ou <b>soutage</b>.</td><td>Autorisation préalable de l'IBPT.</td></tr>
+<tr><td class="k">87H = AIS1<br>161,975 MHz</td><td><b>AIS</b> (identification automatique).</td><td>Automatique. Aussi utilisé par les AIS-SART, AIS-MOB, AIS-EPIRB.</td></tr>
+<tr><td class="k">88H = AIS2<br>162,025 MHz</td><td><b>AIS</b>.</td><td>Idem.</td></tr>
+<tr><td class="k">Autres canaux</td><td>Tous les canaux non listés.</td><td>Seulement avec autorisation préalable de l'IBPT et mention sur l'autorisation.</td></tr>
+<tr><td class="k">Bande VHF marine</td><td>156,025 à 162,025 MHz.</td><td>Ligne droite jusqu'à l'horizon : portée = 2,25 × (√T + √R) milles.</td></tr>
+<tr><td class="k">2 187,5 kHz (MF)</td><td><b>ASN</b> sur ondes moyennes (zone A2).</td><td>Veillé par MRCC Oostende, Den Helder, CROSS Gris-Nez.</td></tr>
+<tr><td class="k">2 182 kHz (MF)</td><td>Détresse en <b>phonie</b> sur ondes moyennes.</td><td>Veillé par le MRCC Oostende.</td></tr>
+<tr><td class="k">518 kHz</td><td><b>NAVTEX international</b> (en anglais) : avertissements de navigation, météo, SAR.</td><td>Réception automatique (≈ 250 milles). Messages A, B, D, L non refusables.</td></tr>
+<tr><td class="k">490 kHz</td><td><b>NAVTEX national</b> (langue du pays).</td><td>Idem.</td></tr>
+<tr><td class="k">406 MHz</td><td>Alerte des balises <b>EPIRB et PLB</b> vers les satellites Cospas-Sarsat.</td><td>Automatique dès que la balise est activée.</td></tr>
+<tr><td class="k">121,5 MHz</td><td><b>Radioralliement</b> (homing) des EPIRB/PLB.</td><td>Les sauveteurs le suivent pour arriver jusqu'à la balise.</td></tr>
+<tr><td class="k">9 GHz (bande X, 3 cm)</td><td>Radars qui déclenchent les <b>SART</b>.</td><td>Le SART apparaît en 12 points sur l'écran radar.</td></tr>
+</table></div>
+<p class="src">Sources : manuel IBPT 2025 p. 14-17 et 27-28 ; manuel NAVTEX de l'OMI ; Cospas-Sarsat ; normes OMI sur les SART.</p>
+
+<h3>2. Les balises et appareils de localisation</h3>
+<div class="att"><b>Certificat :</b> l'utilisation d'un <b>EPIRB, d'un SART ou d'un AIS-SART</b> demande un certificat <b>SMDSM</b> (SRC, LRC, ROC ou GOC), comme la VHF avec ASN (manuel p. 4). Tous les appareils radio du bord doivent figurer sur l'<b>autorisation de station</b>.</div>
+<div class="tw"><table>
+<tr><th>Balise</th><th>Fréquence / identité</th><th>À quoi elle sert</th><th>Comment l'utiliser</th></tr>
+<tr><td class="k">EPIRB<br><small>radiobalise de localisation des sinistres</small></td><td>406 MHz (satellites) + 121,5 MHz (ralliement). Codée avec l'identité du navire.</td><td>Alerte de détresse <b>du navire</b>, reçue par les satellites <b>Cospas-Sarsat</b> et transmise au MRCC, avec la position si GPS intégré. C'est le <b>moyen d'alerte secondaire</b> : le premier est la VHF ASN (manuel p. 51).</td><td>• Fixée sur son support, souvent avec <b>largueur hydrostatique</b> (HRU) qui la libère seule si le bateau coule (vers 1,5 à 4 m de fond) : elle remonte et émet.<br>• Sinon : la prendre, l'activer (ON), la laisser <b>flotter</b> attachée au radeau, antenne dégagée.<br>• L'<b>enregistrer</b> ; vérifier dates de pile et de HRU ; tester avec le bouton <b>test</b> du fabricant.<br>• Déclenchée par erreur : l'<b>éteindre</b> et <b>prévenir le MRCC</b> (059 70 10 00).</td></tr>
+<tr><td class="k">PLB<br><small>balise personnelle</small></td><td>406 MHz + 121,5 MHz.</td><td>Même principe que l'EPIRB mais pour <b>une personne</b> (portée sur soi, dans le gilet).</td><td>Activation <b>manuelle</b> ; déplier l'antenne et la tenir vers le ciel, hors de l'eau. Enregistrée au nom du propriétaire.</td></tr>
+<tr><td class="k">SART radar<br><small>répondeur radar</small></td><td>Répond aux radars de <b>9 GHz</b> (bande X).</td><td>Fait apparaître la position du radeau sur le radar des sauveteurs : <b>ligne de 12 points</b>, puis <b>arcs</b> et <b>cercles</b> quand on est à moins d'environ 1 mille.</td><td>L'activer en abandonnant le navire ; le fixer <b>le plus haut possible</b> dans le radeau (au moins 1 m au-dessus de l'eau) : vu à environ 5 milles par un radar de navire, beaucoup plus par un avion.</td></tr>
+<tr><td class="k">AIS-SART</td><td>Canaux <b>AIS1/AIS2</b> ; identité <b>970 XX YYYY</b> (donnée par le fabricant).</td><td>Envoie sa <b>position GPS</b> sur l'AIS : visible sur tous les écrans AIS et traceurs proches (symbole cercle avec croix, « SART ACTIVE »).</td><td>L'activer en abandonnant le navire, le placer en hauteur (mât fourni). Portée = ligne de vue VHF (quelques milles).</td></tr>
+<tr><td class="k">AIS-MOB<br><small>homme à la mer</small></td><td>AIS1/AIS2 ; identité <b>972 XX YYYY</b> (fabricant).</td><td>Balise <b>personnelle</b> d'homme à la mer : affiche la position de la personne tombée à l'eau sur l'AIS de son bateau et des bateaux proches.</td><td>Fixée sur le gilet ; se déclenche souvent toute seule au gonflage, sinon à la main. Faire immédiatement la manœuvre de récupération ; MAYDAY si nécessaire.</td></tr>
+<tr><td class="k">AIS-EPIRB</td><td>AIS ; identité <b>974 XX YYYY</b> (fabricant).</td><td>Signal de localisation <b>AIS</b> émis par une balise de détresse, pour guider les navires proches.</td><td>Comme une EPIRB ; les numéros 970/972/974 <b>ne sont pas des MMSI</b> et ne sont pas dans la base MARS (manuel p. 9).</td></tr>
+<tr><td class="k">VHF ASN<br><small>(pour mémoire)</small></td><td>Canal 70 + 16 ; MMSI 205…</td><td><b>Premier moyen d'alerte</b> en zone A1.</td><td>Touche DISTRESS (cache soulevé, &gt; 3 s), puis MAYDAY sur le 16. Voir l'annexe ASN.</td></tr>
+</table></div>
+<p class="src">Sources : manuel IBPT 2025 p. 4, 9, 28 et 51 ; Cospas-Sarsat ; normes OMI (EPIRB à dégagement libre, SART) ; UIT-R M.585 (identités 970/972/974).</p>
+</div></details>
+
+<!-- ============ 1. INTRO ============ -->
+<details id="t1"><summary><span class="n">1</span>Introduction <span class="exam">EXAMEN</span></summary><div class="c">
+<p>Le manuel contient toute la matière de l'examen du <b>certificat restreint</b> : il permet d'utiliser une station radio <b>VHF</b> (bande de <b>156,025 à 162,025 MHz</b>) <b>en mer et sur les voies de navigation intérieure</b>.</p>
+<p>La radio du bord permet de communiquer <b>entre navires</b> et entre <b>un navire et la terre</b>, ce que d'autres moyens (par exemple le GSM, voir chapitre 3) ne peuvent pas garantir.</p>
+<p>Pour les navires en mer qui ne sont <b>pas soumis à la convention SOLAS</b> (la plaisance, par exemple), l'<b>OMI recommande</b> une installation avec <b>appel sélectif numérique</b> (ASN, en anglais DSC). Mais une installation ASN, tout comme l'utilisation d'un <b>EPIRB</b>, d'un <b>SART</b> ou d'un <b>AIS-SART</b>, exige un <b>certificat SMDSM</b> (en anglais GMDSS) : <b>SRC, LRC, ROC ou GOC</b>.</p>
+<div class="clair"><b>En clair :</b> le certificat restreint suffit pour une VHF <b>sans</b> ASN. Dès qu'il y a l'ASN (touche rouge DISTRESS), une balise EPIRB ou un SART à bord, il faut au moins le <b>SRC</b>.</div>
+</div></details>
+
+<!-- ============ 2. GENERALITES ============ -->
+<details id="t2"><summary><span class="n">2</span>Généralités, législation, autorisation, certificat <span class="exam">EXAMEN</span></summary><div class="c">
+<h3>Les services radiotéléphoniques en mer et sur les voies intérieures</h3>
+<p>La radio maritime doit <b>garantir la sécurité des personnes à bord</b> et faciliter les échanges. Elle permet quatre types de communications :</p>
+<ul><li>la <b>sécurité et le sauvetage</b> des personnes et des navires (détresse, urgence, sécurité) ;</li>
+<li><b>navire ↔ terre</b> (correspondance publique, opérations portuaires) ;</li>
+<li><b>entre navires</b> (« intership » ou « ship-ship ») ;</li>
+<li><b>entre stations à bord d'un même navire</b> (« intraship »).</li></ul>
+
+<h3>Législation belge et internationale</h3>
+<h4>Navigation maritime</h4>
+<p>L'équipement radio <b>obligatoire</b> à bord relève du <b>SPF Mobilité et Transports</b> (pour les eaux maritimes) : mobilit.belgium.be/fr/navigation/navigation-de-plaisance/navire/equipement. Les obligations dépendent de la <b>zone</b> de navigation. Les eaux belges sont découpées ainsi :</p>
+<div class="tw"><table><tr><th>Zone</th><th>Étendue</th></tr>
+<tr><td class="k">0</td><td>Lacs et étangs (pas encore applicable)</td></tr>
+<tr><td class="k">1</td><td>Toutes les eaux intérieures reliées à la mer, sauf l'Escaut maritime inférieur</td></tr>
+<tr><td class="k">2</td><td>L'Escaut maritime inférieur</td></tr>
+<tr><td class="k">3</td><td>Les ports de la côte</td></tr>
+<tr><td class="k">4</td><td>Du littoral jusqu'à 6 milles</td></tr>
+<tr><td class="k">5</td><td>De 6 à 60 milles</td></tr>
+<tr><td class="k">6</td><td>De 60 à 200 milles</td></tr>
+<tr><td class="k">7</td><td>Au-delà de 200 milles</td></tr></table></div>
+<p>Selon le manuel IBPT :</p>
+<ul><li><b>jusqu'à la zone 2</b>, une VHF fixe peut être remplacée par une <b>portable</b> ;</li>
+<li><b>à partir de la zone 3</b>, une VHF <b>fixe</b> est obligatoire et une VHF <b>avec ASN</b> est conseillée ;</li>
+<li><b>zones 6 et 7</b> : VHF fixe <b>avec ASN obligatoire</b> + une <b>portable</b> supplémentaire ;</li>
+<li>VHF avec ASN de <b>classe D</b> → examen <b>SRC</b> ; VHF avec ASN de <b>classe A</b> → au moins l'examen <b>ROC</b> ;</li>
+<li><b>plaisance professionnelle</b> (navigation de plaisance organisée professionnellement) : VHF fixe avec ASN obligatoire <b>dès la zone 5</b>, et examen <b>ROC</b>.</li></ul>
+<div class="att"><b>Attention :</b> l'arrêté ministériel du 12/11/2020 (annexe 1) et la liste du SPF de 2021 n'imposent la VHF fixe qu'aux bateaux à moteur de <b>plus de 7 m</b> et aux voiliers habitables (zones 1 à 5). Pour l'examen IBPT, retenez ce que dit le manuel ; pour votre bateau, c'est l'arrêté qui fait foi.</div>
+
+<h4>Navigation intérieure (bateaux à moteur)</h4>
+<div class="tw"><table><tr><th>Bateau</th><th>VHF (« mariphone ») obligatoire</th><th>Deux VHF obligatoires</th></tr>
+<tr><td>Petit bateau ≤ 7 m</td><td>Non</td><td>Non</td></tr>
+<tr><td>Petit bateau de 7 à 20 m</td><td>Oui, depuis le 01/01/2009</td><td>Non, mais conseillé</td></tr>
+<tr><td>Grand bateau</td><td>Oui, depuis le 01/01/2007</td><td>Oui, depuis le 01/01/2007</td></tr></table></div>
+<p>Pour compter les VHF, on ne distingue pas fixe et portable ; il est toutefois <b>fortement recommandé</b> d'avoir au moins une <b>fixe</b>.</p>
+<p>Un <b>grand bateau</b>, c'est : un bateau de <b>20 m ou plus</b> ; ou, quelle que soit sa longueur, un <b>bac</b> (transbordeur), un <b>bateau à passagers</b>, un <b>bateau en train de pêcher</b>, une <b>barge de poussage</b>.</p>
+<p>Un grand bateau doit pouvoir écouter <b>deux canaux en même temps</b> (bateau-bateau et informations nautiques). Comme la <b>double veille est interdite</b> sur les voies intérieures, il lui faut <b>deux VHF</b>.</p>
+
+<h3>Autorité et responsabilités</h3>
+<p>La radio du bord est placée sous l'autorité du <b>capitaine ou skipper</b>. Il doit faire respecter les règles et exiger que chaque utilisateur ait un <b>certificat d'opérateur</b> délivré ou reconnu par l'IBPT.</p>
+<p>Le <b>propriétaire</b> est responsable des règles <b>administratives</b> : autorisation de station, changements d'adresse, programmation correcte des appareils…</p>
+
+<h3>Autorisation de station</h3>
+<ul>
+<li>Tout propriétaire d'un navire <b>sous droit belge</b> qui utilise la radio (mer ou intérieur) doit avoir une <b>autorisation de station</b> délivrée par l'<b>IBPT</b> (article 13/1 de la loi du 13 juin 2005).</li>
+<li>L'<b>original</b> doit toujours être <b>à bord</b> et présenté sur demande à toute autorité compétente.</li>
+<li>Données pas à jour → l'autorisation peut être <b>suspendue ou révoquée</b> (article 10 de l'AR du 18 décembre 2009 sur les radiocommunications privées).</li>
+<li>L'IBPT ne délivre l'autorisation que pour un navire <b>enregistré en Belgique</b> (lettre d'enregistrement ou certificat de jaugeage).</li>
+<li>Demande : formulaire du site ibpt.be/consommateurs/maritime + documents (copie de la lettre d'enregistrement ou du certificat de jaugeage…), par la poste ou scannés à <b>maritime@ibpt.be</b>. Stations côtières ou terrestres : via <b>licencesradio@ibpt.be</b>.</li>
+<li><b>On n'achète l'appareil qu'après avoir reçu l'autorisation</b> ; idem pour tout appareil supplémentaire. Si l'on achète un bateau qui a déjà une VHF : <b>60 jours</b> pour demander l'autorisation.</li>
+<li>L'appareil ne peut être utilisé que par quelqu'un qui a le <b>certificat d'opérateur</b> adapté.</li>
+<li>Changement administratif, d'appareils ou de <b>nom du bateau</b> → demander une autorisation <b>adaptée</b>.</li>
+<li>Vente ou mise hors service du bateau → <b>renvoyer immédiatement</b> l'autorisation à l'IBPT.</li>
+<li>L'autorisation reprend <b>tous</b> les moyens radio du bord, <b>portables compris</b>.</li>
+</ul>
+<p>Elle mentionne notamment : l'<b>indicatif d'appel</b> ; les coordonnées du titulaire ; le <b>nom et le numéro d'enregistrement</b> du navire ; la <b>liste des appareils</b> ; le code <b>MMSI</b> ; éventuellement le code <b>ATIS</b> ; éventuellement des <b>canaux spécifiques</b>. Elle contient aussi les <b>conditions d'autorisation</b> : les enfreindre peut entraîner sa révocation.</p>
+<div class="clair"><b>En clair :</b> l'autorisation de station, c'est la <b>permission de détenir l'appareil</b>. Elle doit refléter exactement l'équipement à bord. <b>Interdit</b> de la corriger à la main.</div>
+
+<h3>Certificat d'opérateur</h3>
+<ul><li>Toute personne qui utilise une station radio maritime doit avoir un <b>certificat d'opérateur</b>.</li>
+<li>Le <b>certificat restreint</b> (certificat VHF) est délivré par l'IBPT après réussite d'un examen.</li>
+<li>Il est valable <b>5 ans</b> ; l'IBPT prévient <b>6 semaines</b> avant l'échéance… à condition d'avoir votre adresse correcte : signalez tout <b>changement d'adresse</b>.</li>
+<li>Délivré uniquement à des personnes physiques d'<b>au moins 15 ans</b>.</li></ul>
+
+<h3>Identification des stations</h3>
+<ul><li>L'<b>UIT</b> attribue des séries de lettres par pays ; la Belgique a la série <b>ONA à OTZ</b>.</li>
+<li>L'<b>indicatif d'appel</b> est l'identification unique utilisée dans les communications radio (exemple du manuel : OS1256).</li>
+<li>Le <b>MMSI</b> (Maritime Mobile Service Identity) est un code unique de <b>9 chiffres</b> attribué par l'IBPT, programmé dans l'ASN, l'EPIRB et l'AIS. Les <b>3 premiers chiffres</b> (le <b>MID</b>) désignent le pays : <b>205</b> pour la Belgique, suivi de 6 chiffres.</li>
+<li>Les AIS doivent être programmés avec le MMSI du navire. L'identification unique est capitale pour la <b>détresse</b> et les <b>VTS</b> (services de trafic). Ces données sont dans la base mondiale de l'UIT, <b>MARS</b> ; les administrations la mettent à jour <b>chaque mois</b>.</li>
+<li><b>AIS-SART (970 XX YYYY)</b>, <b>AIS-MOB (972 XX YYYY)</b>, <b>AIS-EPIRB (974 XX YYYY)</b> : ce <b>ne sont pas des MMSI</b> ; ils sont attribués par le <b>fabricant</b>, s'appellent « numéros d'identification maritime » et ne sont pas dans MARS.</li></ul>
+
+<h3>Examen</h3>
+<p>Organisé par l'IBPT, <b>au moins une fois par mois</b> (plus si la demande est forte). Sur ordinateur : <b>25 questions</b> à choix multiple, <b>60 %</b> pour réussir. La matière est le manuel <b>sans les annexes</b>. Le certificat VHF vaut en mer <b>et</b> sur les voies intérieures : il faut tout connaître.</p>
+
+<h3>Contrôle</h3>
+<p>Les autorités de contrôle (officiers de police judiciaire de l'IBPT, police fédérale et locale, agents du SPF Mobilité – Transport maritime et Contrôle de la navigation, douane…) peuvent exiger <b>immédiatement l'original</b> de l'autorisation. Le titulaire doit leur <b>donner accès</b> à la station et faciliter leur travail. À l'étranger, d'autres administrations peuvent exiger la même chose, et certains pays infligent de <b>fortes amendes</b>.</p>
+
+<h3>Sanctions</h3>
+<ul><li><b>Pas d'autorisation de station</b> = infraction à l'article 13/1 § 1<sup>er</sup> de la loi du 13 juin 2005 : <b>saisie</b> de l'équipement et poursuites possibles (articles 145 et 147). D'autres autorités peuvent ajouter leurs sanctions.</li>
+<li>L'autorisation est <b>révoquée</b> si ses conditions ne sont pas respectées, ou en cas de violation de l'article 41 (secret).</li>
+<li>Infractions graves : poursuites ; un <b>procès-verbal</b> est toujours envoyé au parquet du Procureur du Roi.</li></ul>
+
+<h3>Secret des communications</h3>
+<p>Toutes les personnes qui exploitent la station, et toutes celles qui peuvent connaître le <b>contenu</b> ou même l'<b>existence</b> d'une communication radio, doivent garder le <b>secret</b> (article 41 de la loi du 13 juin 2005 et article 314bis du Code pénal). Les infractions sont poursuivies pénalement (articles 145 et 147).</p>
+<p>Ne sont <b>pas</b> soumises au secret les informations « <b>À TOUTES LES STATIONS DE NAVIRE</b> », par exemple les <b>bulletins météo</b> et les informations de navigation intérieure adressées à tous les navires. Seul un <b>juge (d'instruction)</b> peut dispenser du secret.</p>
+</div></details>
+
+<!-- ============ 3. MATERIEL ============ -->
+<details id="t3"><summary><span class="n">3</span>Le matériel : VHF fixe, portable, GSM, conformité <span class="exam">EXAMEN</span></summary><div class="c">
+<h3>VHF fixe</h3>
+<ul><li>Puissance d'une station de navire : <b>0,5 à 1 W</b> (faible) et <b>6 à 25 W</b> (élevée), réglée avec le bouton <b>HI/LO</b>.</li>
+<li>Un <b>AIS</b> ne peut pas dépasser <b>12,5 W</b>.</li>
+<li>Une VHF fixe a sa propre <b>alimentation</b> à bord et sa propre <b>antenne</b> installée sur le navire.</li></ul>
+<div class="svgbox"><svg viewBox="0 0 640 230" font-family="Arial, Helvetica, sans-serif">
+<rect x="10" y="10" width="620" height="210" rx="26" fill="#e9edf1" stroke="#7b8794" stroke-width="2"/>
+<rect x="40" y="40" width="150" height="120" fill="#fff" stroke="#111" stroke-width="2"/><text x="115" y="130" font-size="82" font-weight="700" fill="#c62828" text-anchor="middle">16</text>
+<rect x="205" y="40" width="44" height="44" fill="#fff" stroke="#111" stroke-width="2"/><path d="M227 50 l14 18 h-28z" fill="#111"/>
+<rect x="205" y="110" width="44" height="44" fill="#fff" stroke="#111" stroke-width="2"/><path d="M227 144 l14 -18 h-28z" fill="#111"/>
+<rect x="40" y="172" width="70" height="30" rx="4" fill="#2d6cdf"/><text x="75" y="193" font-size="15" fill="#fff" text-anchor="middle">POWER</text>
+<rect x="200" y="170" width="60" height="30" rx="4" fill="#c62828"/><text x="230" y="191" font-size="16" fill="#fff" text-anchor="middle">16</text>
+<rect x="270" y="110" width="70" height="30" rx="4" fill="#2d6cdf"/><text x="305" y="131" font-size="15" fill="#fff" text-anchor="middle">HI/LO</text>
+<rect x="270" y="170" width="70" height="30" rx="4" fill="#2d6cdf"/><text x="305" y="191" font-size="15" fill="#fff" text-anchor="middle">DUAL</text>
+<circle cx="520" cy="70" r="28" fill="#cfe3ff" stroke="#111" stroke-width="2"/><text x="520" y="122" font-size="15" text-anchor="middle">VOL.</text>
+<circle cx="520" cy="160" r="28" fill="#cfe3ff" stroke="#111" stroke-width="2"/><text x="520" y="210" font-size="15" text-anchor="middle">SQL.</text>
+</svg></div>
+<ul><li><b>POWER</b> : allumer / éteindre.</li>
+<li><b>VOL.</b> (volume) : régler le haut-parleur ou l'écouteur.</li>
+<li><b>SQL.</b> (squelch, « circuit silencieux ») : fixe le seuil à partir duquel un signal reçu est entendu, pour couper le bruit de fond. <b>Mal réglé</b>, on n'entend plus les stations <b>faibles</b>.</li>
+<li><b>DUAL</b> : active la <b>double veille</b>. <b>Interdit</b> sur les voies intérieures.</li>
+<li><b>HI/LO</b> : puissance élevée / faible. <b>16</b> : accès direct au canal 16.</li></ul>
+
+<h3>VHF portable (portophone)</h3>
+<ul><li>Puissance réglée entre <b>0,5 et 6 W</b>.</li>
+<li>Portée et autonomie de batterie <b>nettement inférieures</b> à une fixe ; et on la <b>perd</b> plus facilement.</li>
+<li>Autorisée si : elle figure sur l'<b>autorisation de station</b> ; l'utilisateur a un <b>certificat</b> ; elle n'est utilisée <b>qu'à bord</b>, jamais à quai (à quai il faut une autorisation spécifique de 4<sup>e</sup> catégorie, AR du 18/12/2009) ; sur les voies intérieures elle doit toujours avoir l'<b>ATIS</b> (arrangement Rainwat) — le code ATIS est lié au bateau qui l'a reçu ; à l'étranger, suivre la réglementation locale.</li></ul>
+
+<h3>Réduction de puissance</h3>
+<p>Sur les voies intérieures, la VHF doit pouvoir réduire automatiquement sa puissance à <b>0,5–1 W</b> sur les canaux <b>bateau-bateau</b>, <b>bateau-autorités portuaires</b> et <b>de bord</b>. Les administrations peuvent l'exiger aussi pour les canaux d'informations nautiques (liste : annexe 2 de l'arrangement Rainwat). Cela vaut aussi pour les portables.</p>
+
+<h3>Double veille (Dual Watch) et triple veille (Tri Watch)</h3>
+<p>Elles permettent d'écouter deux canaux ou plus avec un seul appareil. <b>Interdites sur les voies intérieures</b> : pour y écouter deux canaux, il faut <b>deux appareils</b>.</p>
+
+<h3>Le GSM (smartphone)</h3>
+<p>Utile à terre, souvent efficace sur les voies intérieures et le long de la côte, mais <b>pas fiable pour la sécurité</b> :</p>
+<ol><li>pas de <b>priorité</b> : ligne occupée ou réseau saturé = on attend, même en détresse ;</li>
+<li>une seule personne à la fois, et seulement si on a son numéro ; pendant l'appel on n'entend rien d'autre ;</li>
+<li>impossible de parler <b>directement aux secours</b> en route, et les <b>navires proches n'entendent rien</b> : coordination difficile ;</li>
+<li>une VHF se <b>localise</b> par les ondes radio, pas un smartphone en mer ;</li>
+<li>risque de <b>saturation</b> du réseau, de <b>perte de connexion</b>, et la <b>batterie</b> tient peu.</li></ol>
+
+<h3>Conformité (marquages)</h3>
+<ul><li>Appareils mis sur le marché <b>après le 08/04/2000</b> : marquage <b>CE</b> (directive 1995/5/CE ou 2014/53/UE) ou marquage « <b>barre à roue</b> » (directive maritime 96/98/CE ou 2014/90/UE). Le marquage n'est pas le même pour les voies intérieures et la mer, et on distingue navires SOLAS et non-SOLAS.</li>
+<li><b>Voies intérieures</b> : marquage CE complet « <b>CE NBnr !</b> » (NBnr = numéro de l'organisme notifié ; le <b>point d'exclamation</b> = bandes de fréquences <b>non harmonisées</b>).</li>
+<li>Appareils mis sur le marché <b>avant le 08/04/2001</b> : ancien numéro d'agrément <b>RTT/…</b>.</li>
+<li>Voies intérieures : la décision <b>2000/637/CE</b> impose aussi l'<b>ATIS</b> et la <b>réduction de puissance</b>.</li>
+<li>Navires <b>SOLAS</b> en mer : certificat d'examen « <b>CE de type</b> » + marquage « barre à roue » (96/98/CE ou 2014/90/UE).</li>
+<li>Navires <b>non-SOLAS</b> en mer : même marquage CE que pour les voies intérieures (1995/5/CE ou 2014/53/UE) ; les appareils « barre à roue » sont aussi admis.</li></ul>
+</div></details>
+
+<!-- ============ 4. FREQUENCES ============ -->
+<details id="t4"><summary><span class="n">4</span>Fréquences, canaux, portée, simplex/duplex <span class="exam">EXAMEN</span></summary><div class="c">
+<ul><li>Fréquences VHF marines : <b>156,025 à 162,025 MHz</b>, utilisées en <b>simplex, duplex ou semi-duplex</b>.</li>
+<li>La <b>portée</b> dépend de la <b>hauteur d'antenne</b>, de la <b>puissance</b> et de l'environnement (propagation, conditions atmosphériques, relief, emplacement…).</li>
+<li>En mer, la VHF va <b>en ligne droite jusqu'à l'horizon</b> : la hauteur des antennes (émetteur et récepteur) fait l'essentiel.</li></ul>
+<div class="clair"><b>Formule de portée théorique en mer :</b> <b>2,25 × (√T + √R) = distance en milles</b>, T et R = hauteurs des antennes de l'émetteur et du récepteur, en mètres au-dessus de l'eau.<br>Exemple du manuel : deux yachts avec une antenne à 16 m → 2,25 × (4 + 4) = <b>18 milles</b> environ. (1 mille = 1 852 m.)</div>
+<h3>Canaux</h3>
+<p>Plus simple que les fréquences : chaque <b>canal</b> correspond à une fréquence et porte <b>2 chiffres</b> (on dit « canal 16 » plutôt que « 156,800 MHz »). Certains canaux ont <b>4 chiffres</b> : ce sont d'anciens canaux duplex transformés en simplex. <b>1027</b> = partie <b>inférieure</b> de l'ancien canal 27, <b>2027</b> = partie <b>supérieure</b> (le « 10 » ou « 20 » est souvent écrit en plus petit).</p>
+<h3>Modes d'émission et de réception</h3>
+<ul><li><b>Duplex</b> : deux fréquences, une pour l'émission du navire (réception de la côte), l'autre pour l'émission de la côte (réception du navire) : on peut <b>parler et écouter en même temps</b>, comme au téléphone.</li>
+<li><b>Semi-duplex</b> : seule la station côtière reçoit les appels des navires, mais <b>tous</b> les navires entendent la station côtière.</li>
+<li><b>Simplex</b> : une seule fréquence, on parle <b>chacun son tour</b> ; on passe la parole en disant systématiquement « <b>OVER</b> ».</li></ul>
+<p>Duplex et semi-duplex utilisent <b>deux</b> fréquences ; le simplex <b>une seule</b>.</p>
+</div></details>
+
+<!-- ============ 5. CANAUX MER ============ -->
+<details id="t5"><summary><span class="n">5</span>Les canaux en mer (eaux belges) <span class="exam">EXAMEN</span></summary><div class="c">
+<div class="tw"><table><tr><th>Canal</th><th>Usage</th></tr>
+<tr><td class="k">06</td><td>« Intership » : 1<sup>er</sup> canal navire-navire <b>international</b>. En Belgique : utilisé par les <b>services de pilotage</b>.</td></tr>
+<tr><td class="k">07</td><td><b>Oostende Radio</b> (avis au personnel naviguant en mer).</td></tr>
+<tr><td class="k">08</td><td>« Intership » : 1<sup>er</sup> canal navire-navire <b>en Belgique</b>.</td></tr>
+<tr><td class="k">13</td><td>Uniquement la <b>sécurité de la navigation</b>.</td></tr>
+<tr><td class="k">16</td><td><b>Détresse, urgence et sécurité</b> : 156,8 MHz, fréquence de détresse internationale, à utiliser <b>en premier</b> pour les appels, messages et communications de détresse, qui ont la <b>priorité absolue</b>. Sans détresse en cours : canal d'<b>appel</b> des stations côtières ; entre navires, seulement <b>en dernier recours</b> et le plus bref possible. <b>Veille obligatoire autant que possible</b> en navigation, par solidarité. L'<b>anglais</b> étant la langue commune, on émet la détresse en anglais si possible.</td></tr>
+<tr><td class="k">15 et 17</td><td>« Intraship » : communications <b>à bord d'un même navire</b>.</td></tr>
+<tr><td class="k">31</td><td>Canal pour les <b>ports de plaisance</b>.</td></tr>
+<tr><td class="k">67</td><td>Canal international de <b>recherche et sauvetage</b> (SAR) en mer ; aussi la lutte contre les catastrophes écologiques.</td></tr>
+<tr><td class="k">70</td><td>Canal <b>ASN</b> international du SMDSM, réservé au <b>numérique</b>. Les navires SMDSM doivent le veiller. Après un appel ASN de détresse ou d'urgence → <b>passer sur le 16</b>. ASN = certificat <b>SMDSM</b> obligatoire. Sur une VHF sans ASN, le 70 doit être <b>bloqué</b>. Le 70 est <b>toujours bloqué pour la voix</b>.</td></tr>
+<tr><td class="k">73</td><td><b>Antipollution</b>.</td></tr>
+<tr><td class="k">75 et 76</td><td><b>AIS longue portée</b> ; aussi utilisable à 1 W par les autorités portuaires.</td></tr>
+<tr><td class="k">77</td><td>Communications <b>familiales et sociales</b> entre navires, à faible puissance (<b>0,5 à 1 W</b>).</td></tr>
+<tr><td class="k">82</td><td>Approvisionnement ou <b>soutage</b> : soumis à l'autorisation préalable de l'IBPT.</td></tr>
+<tr><td class="k">87H – AIS1</td><td>AIS, 161,975 MHz.</td></tr>
+<tr><td class="k">88H – AIS2</td><td>AIS, 162,025 MHz.</td></tr>
+</table></div>
+<p><b>Autres canaux</b> : tous ceux qui ne figurent pas à l'annexe 2 (canaux VHF de la navigation maritime) ne sont utilisables qu'avec l'<b>autorisation préalable de l'IBPT</b> et s'ils sont <b>inscrits sur l'autorisation</b>. En particulier le <b>37L</b>, utilisé en Angleterre entre marinas et plaisanciers : seulement dans les <b>eaux territoriales britanniques</b>.</p>
+</div></details>
+
+<!-- ============ 6. CANAUX INTERIEUR ============ -->
+<details id="t6"><summary><span class="n">6</span>Les canaux en navigation intérieure <span class="exam">EXAMEN</span></summary><div class="c">
+<div class="tw"><table><tr><th>Canal</th><th>Usage</th></tr>
+<tr><td class="k">10</td><td>« Intership » : 1<sup>er</sup> canal ; <b>canal d'urgence</b> et canal des messages de sécurité de Radio Ostende.</td></tr>
+<tr><td class="k">15 et 17</td><td>« Intraship » : communications à bord.</td></tr>
+<tr><td class="k">18, 20 et 22</td><td><b>Écluses</b>.</td></tr>
+<tr><td class="k">31</td><td><b>Ports de plaisance</b>.</td></tr>
+<tr><td class="k">70</td><td>Canal ASN : l'<b>ASN est interdit</b> sur les voies intérieures ! Toujours bloqué pour la voix.</td></tr>
+<tr><td class="k">72</td><td><b>Social et familial</b> (en plus du 77), selon l'arrangement sur les voies intérieures ; faible puissance (0,5–1 W). Même règle aux Pays-Bas, en France et en Allemagne ; ailleurs, consulter l'arrangement (annexe 3).</td></tr>
+<tr><td class="k">73</td><td><b>Antipollution</b>.</td></tr>
+<tr><td class="k">77</td><td><b>Social et familial</b>, faible puissance (0,5–1 W).</td></tr>
+<tr><td class="k">82</td><td>Approvisionnement ou soutage, avec autorisation préalable de l'IBPT.</td></tr>
+<tr><td class="k">87H – AIS1 / 88H – AIS2</td><td>AIS, 161,975 / 162,025 MHz.</td></tr>
+</table></div>
+<div class="att"><b>Piège :</b> canal social en <b>mer</b> = <b>77</b> seulement ; sur les <b>voies intérieures</b> = <b>72 et 77</b>.</div>
+</div></details>
+
+<!-- ============ 7. UTILISATION ============ -->
+<details id="t7"><summary><span class="n">7</span>Utiliser la VHF : règles, langues, alphabet <span class="exam">EXAMEN</span></summary><div class="c">
+<h3>Généralités</h3>
+<p>Les communications en navigation intérieure suivent le <b>Règlement des radiocommunications de l'UIT</b>. En principe, on ne transmet que des informations sur la <b>sécurité des personnes</b>, la <b>navigation</b> ou la <b>sécurité des bateaux</b>. Les stations terrestres veillent leur canal pendant leurs heures de service.</p>
+<h3>Précautions</h3>
+<p>Avant d'émettre, vérifier qu'on ne <b>dérange aucune autre communication</b>, surtout une détresse (priorité absolue). Un <b>essai</b> doit être réduit au minimum, <b>10 secondes maximum</b>, avec l'indicatif d'appel suivi du mot « <b>test</b> », dits lentement et clairement.</p>
+<h3>Discipline des communications</h3>
+<ul><li>limiter les communications au <b>strict minimum</b> ;</li>
+<li>appliquer strictement les règles de procédure ;</li>
+<li>phrases <b>courtes</b>, parler <b>lentement et clairement</b> ;</li>
+<li>conversations <b>professionnelles</b> seulement sur les canaux navire-navire, informations nautiques, navire-port et de bord ;</li>
+<li>conversations sociales : <b>72 et 77</b> sur les voies intérieures, <b>77 seulement en mer</b> (autres règles possibles à l'étranger) ;</li>
+<li>ne pas garder le bouton d'émission enfoncé plus que nécessaire ;</li>
+<li><b>réduire la puissance</b> autant que possible pour ne brouiller personne ;</li>
+<li><b>pas de musique</b> ;</li>
+<li>confirmer la réception d'une notification adressée à son navire.</li></ul>
+<h3>Instructions de la station côtière</h3>
+<p>Il faut <b>respecter</b> ses instructions : demande de <b>silence radio</b>, <b>réduction de puissance</b>, <b>veille sur un canal</b> donné… <b>En cas de danger</b>, on peut y déroger, mais il faut ensuite en <b>informer</b> la station côtière.</p>
+<h3>Accusé de réception</h3>
+<p>Sur demande, il faut <b>accuser réception</b> des messages reçus.</p>
+<h3>Déroulement d'une communication</h3>
+<ul><li>On s'identifie par le <b>nom</b> du navire (ou de la station côtière), par l'<b>indicatif d'appel</b>, ou par les deux (nom puis indicatif).</li>
+<li>Avant son identification, on dit <b>« ICI » ou « THIS IS »</b> ; si la liaison est mauvaise, <b>« DE »</b> (prononcé <b>DELTA ECHO</b>).</li>
+<li>Pour passer la parole : <b>« À VOUS » ou « OVER »</b>. Pour terminer : <b>« TERMINÉ » ou « OUT »</b>.</li>
+<li>« <b>OVER AND OUT</b> » est <b>interdit</b> : OVER = j'attends une réponse, OUT = c'est fini. C'est contradictoire.</li></ul>
+<h3>Langues</h3>
+<h4>Navigation intérieure</h4>
+<ul><li>Bateau ↔ station terrestre fixe : <b>langue du pays</b> de la station terrestre.</li>
+<li>Bateau ↔ bateau : langue du pays où l'on navigue ; en cas de difficulté, la langue prévue par les règlements de police ; à défaut, anglais, français, néerlandais, allemand ou autre langue appropriée.</li>
+<li>Là où aucun « Règlement général de police pour la navigation sur les eaux intérieures » ne s'applique : bateau ↔ autorités portuaires = <b>anglais en premier</b> (langue du pays en secours) ; bateau ↔ bateau = <b>anglais en premier</b> pour la navigation (arrangement Rainwat, Bucarest 18/04/2012, adapté à Brest le 18/10/2023).</li></ul>
+<h4>Navigation maritime</h4>
+<ul><li>Navire ↔ station côtière : langue du pays de la station côtière <b>ou anglais</b>.</li>
+<li>Navire ↔ navire : langue du pays du navire appelé <b>ou anglais</b>.</li></ul>
+<h3>Épellation</h3>
+<p>En cas de difficulté, on épelle les mots avec l'alphabet ci-dessous et on donne les <b>nombres chiffre par chiffre</b>.</p>
+<div class="tw"><table><tr><th>Lettre</th><th>Mot</th><th>Prononciation</th><th>Lettre</th><th>Mot</th><th>Prononciation</th></tr>
+<tr><td>A</td><td>Alfa</td><td>AL FAH</td><td>N</td><td>Novembre</td><td>NO VÈMM BER</td></tr>
+<tr><td>B</td><td>Bravo</td><td>BRA VO</td><td>O</td><td>Oscar</td><td>OSS KAR</td></tr>
+<tr><td>C</td><td>Charlie</td><td>TCHA LI ou CHAR LI</td><td>P</td><td>Papa</td><td>PAH PAH</td></tr>
+<tr><td>D</td><td>Delta</td><td>DEL TA</td><td>Q</td><td>Québec</td><td>KÉ BEK</td></tr>
+<tr><td>E</td><td>Echo</td><td>ÈK O</td><td>R</td><td>Romeo</td><td>RO MI O</td></tr>
+<tr><td>F</td><td>Foxtrot</td><td>FOX TROTT</td><td>S</td><td>Sierra</td><td>SI ER RAH</td></tr>
+<tr><td>G</td><td>Golf</td><td>GOLF</td><td>T</td><td>Tango</td><td>TANG GO</td></tr>
+<tr><td>H</td><td>Hôtel</td><td>HO TÈLL</td><td>U</td><td>Uniform</td><td>YOU NI FORM ou OU NI FORM</td></tr>
+<tr><td>I</td><td>India</td><td>IN DI AH</td><td>V</td><td>Victor</td><td>VIK TAR</td></tr>
+<tr><td>J</td><td>Juliett</td><td>DJOU LI ÈTT</td><td>W</td><td>Whiskey</td><td>OUISS KI</td></tr>
+<tr><td>K</td><td>Kilo</td><td>KI LO</td><td>X</td><td>X-ray</td><td>EKSS RÉ</td></tr>
+<tr><td>L</td><td>Lima</td><td>LI MAH</td><td>Y</td><td>Yankee</td><td>YANG KI</td></tr>
+<tr><td>M</td><td>Mike</td><td>MA ÏK</td><td>Z</td><td>Zulu</td><td>ZOU LOU</td></tr></table></div>
+<div class="tw"><table><tr><th>Chiffre / signe</th><th>Mot de code</th><th>Prononciation</th></tr>
+<tr><td>0</td><td>NADAZERO</td><td>NAH-DAH-ZÉ-ROH</td></tr><tr><td>1</td><td>UNAONE</td><td>OU-NAH-OUANN</td></tr>
+<tr><td>2</td><td>BISSOTWO</td><td>BIS-SO-TOU</td></tr><tr><td>3</td><td>TERRATHREE</td><td>TÉ-RAH-TRI</td></tr>
+<tr><td>4</td><td>KARTEFOUR</td><td>KAR-TE-FOU-EUR</td></tr><tr><td>5</td><td>PANTAFIVE</td><td>PAN-TAH-FA-IF</td></tr>
+<tr><td>6</td><td>SOXISIX</td><td>SOK-SI-SIKS</td></tr><tr><td>7</td><td>SETTESEVEN</td><td>SE-TE-SEV'N</td></tr>
+<tr><td>8</td><td>OKTOEIGHT</td><td>OK-TOH-ÉIT</td></tr><tr><td>9</td><td>NOVENINE</td><td>NO-VE-NAÏ-NEU</td></tr>
+<tr><td>Virgule décimale</td><td>DECIMAL</td><td>DE-SI-MAL</td></tr><tr><td>Point</td><td>STOP</td><td>STOP</td></tr></table></div>
+<p class="src">Dans le manuel, les syllabes accentuées des lettres sont en gras ; pour les chiffres, toutes les syllabes sont accentuées de la même manière.</p>
+</div></details>
+
+<!-- ============ 8. PRIORITES ============ -->
+<details id="t8"><summary><span class="n">8</span>Priorités : détresse, urgence, sécurité, routine, essais <span class="exam">EXAMEN</span></summary><div class="c">
+<h3>Ordre de priorité</h3>
+<p>Toutes les stations (à bord et à terre) donnent la priorité aux messages sur la <b>sécurité des personnes</b> (sur l'eau, à terre et dans les airs). Ces messages sont annoncés par un mot spécial :</p>
+<ol><li><b>MAYDAY</b> : détresse ;</li><li><b>PAN PAN</b> : urgence ;</li><li><b>SÉCURITÉ</b> : sécurité ;</li><li>autres : <b>routine</b>.</li></ol>
+<div class="clair"><b>Les exemples du manuel :</b> panne <b>par tempête avec risque d'échouement</b> → <b>MAYDAY</b> ; panne <b>par vent de force 5 dans une zone de trafic</b> → <b>PAN PAN</b> ; panne <b>par temps calme dans une zone à faible trafic</b> → <b>SÉCURITÉ</b>.</div>
+<p>Mots clés à utiliser <b>tels quels, sans les traduire</b> : « MAYDAY », « MAYDAY RELAY », « SILENCE MAYDAY », « RECEIVED », « SILENCE FINI », « PAN PAN », « SÉCURITÉ », « THIS IS », « ALL STATIONS ». Leur prononciation est fixée par le Règlement des radiocommunications. La suite se dit dans une langue autorisée sur la voie d'eau.</p>
+
+<h3>Détresse</h3>
+<p>Détresse = <b>danger imminent</b> pour une personne ou un navire, qui demande une <b>aide immédiate</b>. C'est le <b>commandant</b> qui décide s'il y a détresse (aussi pour un danger à terre). <b>Aucune règle</b> ne peut empêcher de tout faire pour sauver des vies ou parer au danger. Pendant une détresse, les stations qui n'y participent pas gardent le <b>silence radio</b>.</p>
+<p>Sur les <b>voies intérieures</b>, un MAYDAY est permis en cas d'urgence (danger imminent, collision, incendie…) ; il s'émet en principe sur le <b>canal 10</b>, ou sur le canal d'une écluse proche (canal imposé), ou sur un canal fixé par le règlement général de police. En mer, d'autres règles s'appliquent (canal 16, ASN).</p>
+<h4>Appel de détresse</h4>
+<div class="radio">MAYDAY MAYDAY MAYDAY      <span class="fr">(prononcé « m'aider », 3 fois)</span>
+THIS IS (ou ICI)
+[nom du navire] ×3
+[indicatif d'appel ou autre identification]</div>
+<h4>Message de détresse (juste après)</h4>
+<div class="radio">MAYDAY
+[nom du navire]
+[indicatif d'appel]
+[position]      <span class="fr">(sur les voies intérieures : au point kilométrique)</span>
+[nature de la détresse]
+[type d'assistance nécessaire]
+[autres informations utiles]</div>
+<h4>Relais de détresse (station qui n'est pas elle-même en détresse)</h4>
+<div class="radio">MAYDAY RELAY ×3      <span class="fr">(prononcé « m'aider relais »)</span>
+ALL STATIONS ×3   (ou le nom de la station côtière ×3)
+THIS IS (ou ICI)
+[nom de la station relais] ×3
+[indicatif d'appel de la station relais]</div>
+<p>Suivi d'un message de détresse qui reprend autant que possible les informations du message initial.</p>
+<h4>Accusé de réception d'un message de détresse</h4>
+<ul><li><b>Informations nautiques</b> : c'est la <b>station côtière</b> qui accuse réception.</li>
+<li><b>Navire ↔ autorité portuaire</b> : attendre l'accusé de l'autorité portuaire ; si rien après <b>une minute</b>, une station de navire doit prendre en charge la communication de détresse.</li>
+<li><b>Navire ↔ navire</b> : <b>tout navire à proximité</b> doit accuser réception.</li></ul>
+<div class="radio">MAYDAY
+[nom + indicatif de la station en détresse]
+THIS IS (ou ICI)
+[nom + indicatif de la station qui accuse réception]
+RECEIVED (ou REÇU)
+MAYDAY</div>
+<h4>Silence radio pendant une détresse</h4>
+<p>Le poste de trafic, la centrale de secteur, l'unité qui coordonne le sauvetage, la station en détresse ou une autre station peuvent imposer le silence aux stations qui gênent :</p>
+<div class="radio">SILENCE MAYDAY      <span class="fr">(prononcé « silence m'aider »)</span>
+[nom du bateau ou indicatif de la station qui gêne] (ou ALL STATIONS)
+SILENCE MAYDAY</div>
+<p>Tant qu'elles n'ont pas reçu l'autorisation de reprendre, les stations qui ne sont pas en détresse <b>n'émettent plus</b> sur les fréquences de la détresse et se comportent de façon à ne pas la perturber.</p>
+<p>Un <b>trafic restreint</b> peut ensuite être autorisé par le signal <b>PRUDENCE</b> :</p>
+<div class="radio">MAYDAY
+CQ ×3      <span class="fr">(« à tous », prononcé CHARLIE QUEBEC)</span>
+ICI (ou DE, prononcé DELTA ECHO)
+[identification de la station qui émet]
+[heure du message]
+[identification de la station en détresse]
+PRUDENCE</div>
+<h4>Fin de la détresse</h4>
+<p>La station qui a demandé le silence annonce la fin :</p>
+<div class="radio">MAYDAY
+ALL STATIONS ×3
+THIS IS (ou ICI)
+[nom de la station appelante] ×3
+[indicatif d'appel]
+[heure de la notification]
+SILENCE FINI</div>
+
+<h3>Urgence</h3>
+<p>Message sur la sécurité de l'équipage ou du navire <b>sans danger imminent</b> : par exemple une <b>maladie sans danger de mort</b>, ou des <b>dommages sans danger immédiat</b> (un échouement sans fuite de cargaison).</p>
+<div class="radio">PAN PAN ×3
+[nom de la station appelée] ×3 (ou ALL STATIONS ×3)
+THIS IS (ou ICI)
+[nom de la station appelante] ×3
+[indicatif d'appel]
+[message : motif de l'urgence, position, etc.]</div>
+
+<h3>Sécurité</h3>
+<p>Message contenant un <b>avertissement nautique</b> ou <b>météorologique important</b>.</p>
+<div class="radio">SÉCURITÉ ×3      <span class="fr">(prononcé « sécurité »)</span>
+[nom de la station appelée] ×3 (ou ALL STATIONS ×3)
+THIS IS (ou ICI)
+[nom de la station appelante] ×3
+[indicatif d'appel]</div>
+<p>Après l'annonce (en anglais), le message lui-même peut continuer dans la <b>langue locale</b>.</p>
+
+<h3>Routine</h3>
+<h4>Navire → terre et navire → navire</h4>
+<div class="radio">[nom de la station appelée] (jusqu'à 3 fois)
+THIS IS (ou ICI)
+[type de navire] et [nom du navire appelant] (jusqu'à 3 fois)
+[position]
+[sens de navigation]      <span class="fr">(pas forcément dans le port)</span>
+[objet de la communication]</div>
+<h4>Terre → navire</h4>
+<div class="radio">[nom de la station appelée] (jusqu'à 3 fois)  ou  ALL STATIONS / APPEL À TOUS LES NAVIRES (jusqu'à 3 fois)
+THIS IS (ou ICI)
+[nom de la station côtière] (jusqu'à 3 fois)
+[objet de la communication]</div>
+<p>Si la liaison est <b>bonne</b> : le nom de la station appelée <b>une fois</b>, et le nom de l'appelant (ou type + nom du navire) <b>deux fois</b>. Une fois la liaison établie, une seule fois suffit.</p>
+
+<h3>Essais</h3>
+<p>Pas dans le trafic ordinaire et <b>certainement pas sur le canal 16</b> ; seulement quand aucune autre communication n'est en cours. <b>10 secondes maximum</b>, avec le nom de la station suivi de « <b>en essai</b> », dits lentement et distinctement. Exemple sur le canal de travail d'Oostende Radio (canal 7) :</p>
+<div class="radio">Oostende Radio, Oostende Radio
+ICI OS1256
+En essai
+Over
+   <span class="fr">— Oostende Radio répond :</span>
+OS1256
+ICI Oostende Radio
+Je vous reçois clairement et distinctement
+Over
+   <span class="fr">— fin :</span>
+ICI OS1256
+Merci
+Terminé</div>
+</div></details>
+
+<!-- ============ 9. MER ============ -->
+<details id="t9"><summary><span class="n">9</span>En mer : veille, MRCC Oostende, correspondance publique <span class="exam">EXAMEN</span></summary><div class="c">
+<h3>Veille</h3>
+<p>Un navire <b>astreint</b> est un navire où une station radio est <b>obligatoire</b> (convention SOLAS). Le <b>canal 16</b> est la fréquence de détresse internationale : les navires astreints le veillent <b>en permanence</b> (dans la mesure du possible). Pour les autres, ce n'est <b>pas obligatoire</b>, mais <b>conseillé</b> autant que possible, par exemple avec la <b>double veille</b> (interdite sur les voies intérieures) : l'appareil passe sur le 16 quelques centièmes de seconde <b>toutes les 2,5 secondes</b>, et y reste tant qu'il y a une émission.</p>
+<h3>Centres de coordination et de sauvetage</h3>
+<h4>Belgique : MRCC Oostende</h4>
+<p>Le <b>MRCC</b> (Maritime Rescue Coordination Centre) d'Ostende est le <b>premier point de contact pour tous les incidents en mer</b> : les appels y arrivent, y sont analysés, et le MRCC envoie et coordonne les moyens navals et aériens. Il est :</p>
+<ul><li>le point de contact <b>permanent</b> pour tous les incidents en mer ;</li>
+<li>chargé de la <b>coordination et du suivi</b> de tous les incidents ;</li>
+<li>chargé de coordonner l'<b>assistance et l'évacuation médicales</b> ;</li>
+<li>le premier point de contact en cas de <b>pollution</b> en mer.</li></ul>
+<p>Veille <b>24 h/24, 7 j/7</b> sur : VHF <b>16</b> et <b>67</b>, ASN <b>70</b>, ASN <b>2187,5 kHz</b>, MF <b>2182 kHz</b> (phonie). Téléphone 24 h/24 : <b>+32 59 70 10 00</b> et <b>+32 59 70 11 00</b>.</p>
+<p>Depuis le printemps 2016, les opérateurs de la station radiomaritime <b>Oostende Radio</b> (anciennement OSU, services radiomaritimes SRM) travaillent dans les mêmes locaux. Oostende Radio diffuse pour le MRCC les <b>informations de sécurité maritime (MSI)</b>, dont les bulletins et alertes <b>météo</b>, mais <b>ne traite pas les incidents</b>.</p>
+<p>Le MRCC dépend du département « Scheepvaartbegeleiding » de l'agence « Maritieme Dienstverlening en Kust » (gouvernement flamand) ; Oostende Radio dépend de la <b>Composante Marine</b> de la Défense (fédéral).</p>
+<h4>Pays-Bas : garde côtière de Den Helder</h4><p>Veille permanente VHF <b>16</b> ; ASN VHF <b>70</b> et MF <b>2187,5 kHz</b>.</p>
+<h4>France : CROSS Gris-Nez</h4><p>Veille permanente VHF <b>16</b> ; ASN VHF <b>70</b> et MF <b>2187,5 kHz</b>.</p>
+<h3>Correspondance publique – CIAC</h3>
+<p>De moins en moins de stations offrent ce service (appeler un numéro de téléphone à terre via la radio). En Belgique, <b>Oostende Radio</b> le propose encore. Il faut un <b>abonnement</b> auprès d'une <b>autorité comptable</b>, identifiée par un code <b>CIAC</b> à donner à chaque communication. Exemple du manuel :</p>
+<div class="radio">Oostende Radio, Oostende Radio
+ICI OS1256 OS1256
+Sur le canal 7
+Over
+OS1256 ICI Oostende Radio
+Quelle est votre position ? Over
+Oostende Radio ICI OS1256
+Ma position est à 3 milles à l'ouest de Nieuwpoort. Over
+OS1256 ICI Oostende Radio
+Libérez le canal 85. Over
+ICI OS1256
+Je libère le canal 85
+   <span class="fr">— sur le canal 85 :</span>
+Oostende Radio ICI OS1256
+Sur le canal 85
+Mon code d'identification est bravo-echo-two-one
+Je souhaite établir une communication avec le 0015551256. Over
+OS1256 bien reçu, restez à l'écoute
+OS1256 ICI Oostende Radio
+Vous pouvez parler. Over</div>
+<p>La communication est alors établie ; comme c'est du simplex, on continue à utiliser <b>OVER</b> et <b>OUT</b>.</p>
+</div></details>
+
+<!-- ============ 10. INTERIEUR ============ -->
+<details id="t10"><summary><span class="n">10</span>Sur les voies intérieures : Rainwat, antennes, ATIS, AIS <span class="exam">EXAMEN</span></summary><div class="c">
+<h3>L'arrangement Rainwat</h3>
+<p>Accord sur la radio des voies intérieures signé par : Allemagne, Autriche, <b>Belgique</b>, Bulgarie, Croatie, France, Hongrie, Luxembourg, Moldavie, Pays-Bas, Pologne, Serbie, Slovaquie, République tchèque, Suisse et Ukraine (16 pays).</p>
+<h3>Installer l'antenne VHF</h3>
+<ul><li>Antenne <b>verticale</b> et <b>isolée</b>, à <b>au moins 4 m</b> de toute grande masse métallique qui la dépasse en hauteur.</li>
+<li>Pour les navires astreints : sommet de l'antenne pas plus de <b>12 m</b> au-dessus de la marque de franc-bord (ou d'enfoncement).</li>
+<li>Éclairage <b>LED</b> à moins de 4 m de l'antenne : <b>fortement déconseillé</b>, l'alimentation des LED brouille la VHF.</li>
+<li>Elle ne fonctionne bien que <b>verticale</b> : inclinée vers l'arrière « comme sur une voiture de sport », elle ne fonctionne pas !</li>
+<li>Longueur correcte (<b>environ 1 m</b>) : sinon portée réduite, et au pire l'appareil peut être <b>endommagé</b>.</li></ul>
+<h3>Câble et connecteurs</h3>
+<p>Câble <b>coaxial</b> (le même type que pour une antenne de télévision) : 1. <b>âme</b> (fil de cuivre central), 2. <b>isolant</b>, 3. <b>tresse</b> métallique, 4. <b>isolant</b> extérieur. Pour relier la VHF à l'antenne : impédance de <b>50 ohms</b>. Connexion câble-antenne bien <b>étanche</b> : l'eau dans le câble réduit la portée et peut faire tomber l'appareil en panne.</p>
+<h3>Les 5 types de communications sur les voies intérieures</h3>
+<p>On appelle une station sur le <b>premier canal</b> (canal d'appel) du réseau concerné.</p>
+<div class="tw"><table><tr><th>Type</th><th>Définition</th><th>Mode et puissance</th><th>Contenu</th></tr>
+<tr><td class="k">Bateau-bateau (intership)</td><td>Entre bateaux, par exemple pour convenir de la route à suivre.</td><td>Simplex, réduction automatique à 1 W max.</td><td><b>Seulement</b> sécurité des personnes, navigation, sécurité des bateaux. Social/privé : <b>uniquement 77 et 72</b>.</td></tr>
+<tr><td class="k">Informations nautiques</td><td>Bateaux ↔ autorités qui gèrent les voies (état des voies, conseils, guidage du trafic).</td><td>Duplex, semi-duplex (pour les bateaux) ou simplex. En Belgique et aux Pays-Bas : 1 W max.</td><td>Seulement sécurité / navigation.</td></tr>
+<tr><td class="k">Bateau-autorités portuaires</td><td>Bateaux ↔ autorités des ports (places de stationnement, navigation dans le port).</td><td>Simplex, 1 W max automatique.</td><td>Seulement sécurité / navigation.</td></tr>
+<tr><td class="k">De bord (intraship)</td><td>À bord d'un bateau ou d'un convoi.</td><td>Simplex, 1 W max ; portables autorisés sur 15/17.</td><td>Seulement sécurité / navigation.</td></tr>
+<tr><td class="k">Correspondance publique</td><td>Vers les réseaux téléphoniques publics.</td><td colspan="2">Service non obligatoire.</td></tr></table></div>
+<h3>L'ATIS</h3>
+<ul><li>ATIS = <b>Automatic Transmitter Identification System</b> : identification automatique de l'émetteur du bateau (norme ETSI EN 300 698-1, annexe B).</li>
+<li><b>Obligatoire</b> sur les voies intérieures des pays de l'arrangement régional (Bucarest 18/04/2012, modifié à Brest 18/10/2023).</li>
+<li>Toutes les VHF du bord, <b>portables compris</b>, doivent émettre l'ATIS. Le signal part <b>automatiquement à la fin de chaque émission</b> (quand on relâche le bouton) ; en émission longue, <b>toutes les 5 minutes</b>.</li>
+<li>Lors d'un appel <b>ASN</b>, l'ATIS n'est pas émis — mais rappel : l'<b>ASN est interdit</b> sur les voies intérieures (et demande un certificat SMDSM).</li>
+<li>L'ATIS ne change rien aux communications ni aux systèmes de navigation.</li>
+<li>Un boîtier ATIS séparé doit être relié à l'émetteur par une <b>connexion électrique</b> protégée contre les coupures ; pas de liaison acoustique.</li>
+<li>L'utilisateur <b>ne peut pas</b> déconnecter ni reprogrammer l'ATIS.</li></ul>
+<h4>Structure du code ATIS : Z MID X1 X2 X3 X4 X5 X6</h4>
+<div class="tw"><table><tr><th>Z</th><th>MID</th><th>X1X2</th><th>X3X4X5X6</th></tr>
+<tr><td>Toujours <b>9</b></td><td>Numéro du pays d'enregistrement du bateau (UIT) : <b>205</b> pour la Belgique</td><td>La <b>2<sup>e</sup> ou 3<sup>e</sup> lettre</b> de l'indicatif, en chiffres : 01 = A, 02 = B, 03 = C, etc.</td><td>Les <b>4 chiffres</b> de l'indicatif d'appel</td></tr></table></div>
+<div class="clair"><b>Exemple du manuel : OS2563.</b> Z = 9 ; MID = 205 ; 2<sup>e</sup> lettre « S » = 19<sup>e</sup> lettre → 19 ; chiffres 2563 → code ATIS <b>9 205 19 2563</b>.</div>
+<h3>L'AIS sur les voies intérieures</h3>
+<ul><li>L'AIS échange des <b>données de navigation</b> sur la bande VHF marine. L'AIS intérieur suit le standard maritime ; les <b>services d'information fluviale</b> (SIF, en anglais RIS) l'utilisent.</li>
+<li>Chaque bateau équipé voit tout de suite l'<b>identité</b>, les <b>données de navigation</b> et les <b>manœuvres</b> des autres. Les centres de trafic suivent le trafic grâce aux stations AIS à terre. Il sert à <b>prévenir les collisions</b>.</li>
+<li><b>Classe A</b> : obligatoire pour les bateaux astreints, utilisable par tous ; elle adapte la fréquence d'émission à la vitesse et à la manœuvre.</li>
+<li><b>Classe B</b> (fonctions limitées) : pour les bateaux non astreints, par exemple la <b>plaisance</b> ; émet de façon subordonnée et moins souvent.</li>
+<li>L'AIS doit être programmé avec le <b>MMSI</b>, l'<b>indicatif</b> et le <b>nom</b> du bateau exactement comme sur l'autorisation.</li>
+<li>Ne pas placer l'antenne AIS <b>près</b> de l'antenne VHF.</li></ul>
+<h3>Enregistrement</h3><p>Les stations terrestres peuvent <b>enregistrer</b> les communications pour documentation.</p>
+<h3>Obligation de certificat</h3><p>Seul un titulaire du <b>certificat restreint</b> peut faire fonctionner ou surveiller une station de bateau sur les voies intérieures. Ce certificat, délivré selon l'arrangement Rainwat, est <b>reconnu par tous les pays signataires</b>.</p>
+<h3>Participer au service maritime</h3>
+<p>Les stations de bateau fluviales peuvent participer au service maritime VHF ; d'autres règles s'appliquent aux installations équipées SMDSM pour naviguer sur les voies maritimes. Parfois, un bateau de navigation intérieure doit être équipé du <b>SMDSM</b> : en achetant une VHF avec « <b>CH 70 ASN</b> », ou en faisant transformer (de façon autorisée) la station existante. Il faut alors un certificat <b>SRC, LRC, ROC ou GOC</b>.</p>
+<p>Certains appareils <b>basculent</b> entre réglages « voies intérieures » (ATIS, réduction de puissance…) et « mer » (ASN…). Il faut choisir le bon réglage : <b>ATIS activé en fluvial</b>, <b>ASN activé en mer</b>.</p>
+</div></details>
+
+<!-- ============ 11. GLOSSAIRE ============ -->
+<details id="t11"><summary><span class="n">11</span>Glossaire <span class="exam">EXAMEN</span></summary><div class="c">
+<div class="tw"><table><tr><th>Terme</th><th>Explication</th></tr>
+<tr><td class="k">CIAC</td><td>Code d'identification de l'autorité comptable : organisme reconnu qui gère la comptabilité des comptes maritimes internationaux ; communiqué à l'opérateur de la station qui établit la liaison.</td></tr>
+<tr><td class="k">AIS</td><td>Système d'identification automatique : transmet la position (GPS) d'un navire vers un système (radar, écran) à bord ou à terre.</td></tr>
+<tr><td class="k">ATIS</td><td>Identification automatique des émetteurs radio des bateaux sur les voies intérieures.</td></tr>
+<tr><td class="k">Navigation intérieure</td><td>Qui s'applique sur les voies de navigation intérieure.</td></tr>
+<tr><td class="k">Canal imposé</td><td>Canal utilisé par les postes de trafic et les bateaux pour la protection des personnes et la sécurité de la navigation (surtout en Belgique et aux Pays-Bas) ; utilisé à la fois pour le bateau-bateau et les informations nautiques sur un secteur.</td></tr>
+<tr><td class="k">Radiocommunications de bord (intraship)</td><td>À bord d'un bateau ou dans un groupe de bateaux remorqués ou poussés, y compris les instructions pour les aussières et l'amarrage.</td></tr>
+<tr><td class="k">Administrations contractantes</td><td>Administrations des pays signataires de l'arrangement Rainwat.</td></tr>
+<tr><td class="k">CCNR</td><td>Commission centrale pour la navigation du Rhin ; publie le « Guide de radiocommunication pour la navigation intérieure » (ccr-zkr.org).</td></tr>
+<tr><td class="k">Comité Rainwat</td><td>Gère, harmonise et améliore l'arrangement régional ; liste des points de contact et texte de l'arrangement (Bucarest 2012) sur rainwat.ctu.eu ; 16 pays signataires.</td></tr>
+<tr><td class="k">ASN (DSC)</td><td>Appel sélectif numérique, <b>uniquement autorisé en mer</b>.</td></tr>
+<tr><td class="k">SMDSM (GMDSS)</td><td>Système mondial de détresse et de sécurité en mer.</td></tr>
+<tr><td class="k">OMI (IMO)</td><td>Organisation maritime internationale, responsable de la sécurité de la navigation ; la convention <b>SOLAS</b> est un de ses textes majeurs.</td></tr>
+<tr><td class="k">UIT (ITU)</td><td>Union internationale des télécommunications : coordonne les fréquences dans le monde et normalise ; son <b>Règlement des radiocommunications</b> (RR) est un outil majeur.</td></tr>
+<tr><td class="k">Base MARS</td><td>Base mondiale de l'UIT de tous les navires en mer.</td></tr>
+<tr><td class="k">Service maritime de radiotéléphonie</td><td>Service mobile entre stations côtières et navires, ou entre navires.</td></tr>
+<tr><td class="k">Correspondance publique</td><td>Communications entre navires et réseaux téléphoniques publics.</td></tr>
+<tr><td class="k">Procédure d'appel</td><td>Façon d'établir une liaison radio.</td></tr>
+<tr><td class="k">Installation radioélectrique</td><td>Station radio à bord, qui peut comprendre plusieurs émetteurs.</td></tr>
+<tr><td class="k">Radiotéléphonie intérieure</td><td>Service international de radiotéléphonie mobile VHF sur les voies intérieures.</td></tr>
+<tr><td class="k">Informations nautiques</td><td>Liaisons entre bateaux et autorités des voies intérieures (stations fixes ou mobiles).</td></tr>
+<tr><td class="k">Bateau-autorités portuaires</td><td>Liaisons entre bateaux et autorités des ports intérieurs (si possible des stations terrestres).</td></tr>
+<tr><td class="k">Indicatif d'appel (call sign)</td><td>Identifiant de chaque navire/bateau, <b>unique au monde</b>.</td></tr>
+<tr><td class="k">Squelch (circuit silencieux)</td><td>Active le haut-parleur dès que le signal reçu dépasse un seuil réglable ; évite d'entendre les navires trop lointains.</td></tr>
+<tr><td class="k">Station de navire</td><td>Station radio mobile à bord d'un navire qui n'est pas amarré en permanence.</td></tr>
+<tr><td class="k">Puissance apparente rayonnée</td><td>Puissance émise par l'antenne.</td></tr>
+<tr><td class="k">Navire-navire (intership)</td><td>Liaisons entre stations de navire.</td></tr>
+<tr><td class="k">Centre de trafic</td><td>Centre qui reçoit notamment les appels de la navigation maritime.</td></tr>
+<tr><td class="k">Poste de trafic</td><td>Centrale (Pays-Bas, Suisse) qui reçoit les appels (dont la détresse), informe sur l'état de la voie et peut guider le trafic.</td></tr>
+<tr><td class="k">Navigation maritime</td><td>Zones où s'applique le règlement de navigation maritime.</td></tr>
+<tr><td class="k">Puissance à la sortie de l'émetteur</td><td>Puissance mesurée à la sortie de l'émetteur.</td></tr>
+</table></div>
+</div></details>
+
+<!-- ============ 12. LEGISLATION ============ -->
+<details id="t12"><summary><span class="n">12</span>Annexe : législation <span class="exam hors">HORS EXAMEN</span></summary><div class="c">
+<h3>Organisations et règlements internationaux</h3>
+<ul><li>Convention de l'UIT (MB 13/11/1999).</li><li>Règlement des radiocommunications (RR), Genève 2020.</li><li>SOLAS, convention internationale pour la sauvegarde de la vie humaine en mer (Londres, 1974).</li><li>Arrangement régional sur le service de radiocommunications des voies intérieures (Bucarest, 18/04/2012, et révisions).</li><li>Directive 1999/5/CE ou 2014/53/UE.</li><li>Directive 96/98/CE ou 2014/90/UE ; décision 2000/637/CE.</li><li>CCNR : Guide de radiocommunication pour la navigation intérieure, partie générale (ccr-zkr.org).</li></ul>
+<h3>Loi du 13 juin 2005 relative aux communications électroniques (extraits)</h3>
+<ul>
+<li><b>Art. 13/1 § 1<sup>er</sup></b> : nul ne peut <b>détenir ou utiliser</b> un équipement hertzien sans <b>autorisation</b> de radiocommunications privées (art. 39) ou droit d'utilisation du spectre (art. 18). Exception : respecter les conditions d'une <b>autorisation générale</b> (art. 13/2 § 3). <b>§ 2</b> : le Roi peut fixer les cas où ces autorisations ne sont pas requises.</li>
+<li><b>Art. 39 § 5</b> : le Roi peut imposer la <b>réussite d'un examen</b> pour certaines catégories de stations, et déléguer à l'IBPT les conditions et l'organisation.</li>
+<li><b>Art. 41</b> : sauf les officiers de police judiciaire visés (pour le 2°), nul ne peut, en Belgique ou à bord d'un bateau, d'un aéronef ou de tout support sous droit belge : <b>1°</b> émettre ou tenter d'émettre des signaux d'alarme, d'urgence ou de détresse ou des appels de détresse <b>faux ou trompeurs</b> ; <b>2°</b> capter ou tenter de capter des communications qui ne lui sont pas destinées (hors art. 314bis du Code pénal). Si on en reçoit involontairement, on ne peut ni les reproduire, ni les communiquer, ni les utiliser, ni même révéler qu'elles existent (sauf cas prévus par la loi).</li>
+<li><b>Art. 145 § 1<sup>er</sup></b> : amende de <b>50 à 100 000 €</b> pour qui enfreint notamment les articles 15, 32, 33, 35, <b>41</b>, 42, 45, 46, 106/2, 107/5, 124, 126 à 127/3, 133 et leurs arrêtés d'exécution.</li>
+<li><b>§ 2</b> : amende de <b>200 à 2 000 €</b> et prison de <b>8 jours à 1 an</b> (ou l'une des deux) pour qui enfreint l'<b>article 13/1 § 1<sup>er</sup></b> (pas d'autorisation) et les arrêtés de l'article 16. Amende de <b>500 à 50 000 €</b> et prison de <b>1 à 4 ans</b> (ou l'une des deux) pour : 1° les communications électroniques frauduleuses pour un avantage illicite ; 3° l'installation d'un appareil destiné à ces infractions, et la tentative.</li>
+<li><b>§ 3bis</b> : amende de <b>20 à 300 €</b> et prison de <b>15 jours à 2 ans</b> (ou l'une des deux) pour qui utilise des communications électroniques pour <b>importuner</b> son correspondant ou causer des dommages (et l'appareil installé pour cela, et la tentative).</li>
+<li><b>§ 3ter</b> : amende de <b>50 à 50 000 €</b> et prison de <b>6 mois à 3 ans</b> (ou l'une des deux) pour l'usage frauduleux ou malveillant, dans l'exercice de ses fonctions, des données visées à l'article 126, et pour qui les détient, révèle ou utilise en sachant leur origine.</li>
+<li><b>§ 4</b> : la <b>confiscation</b> des appareils non conformes aux articles 32, 33, 35 et 37 est toujours prononcée.</li>
+<li><b>Art. 147</b> : confiscation toujours prononcée des enregistrements obtenus illégalement et des objets ayant servi à enfreindre l'article 41 et l'article 145 § 3, et des produits et accessoires ayant servi à enfreindre l'article 13/1 § 1<sup>er</sup>, 41 et les arrêtés de l'article 16, <b>même s'ils n'appartiennent pas au condamné</b> ; pas de sursis possible pour cette confiscation (art. 8 § 1<sup>er</sup> de la loi du 29/06/1964 non applicable).</li>
+</ul>
+</div></details>
+
+<!-- ============ 13. EXEMPLES CCNR ============ -->
+<details id="t13"><summary><span class="n">13</span>Annexe : exemples de communications CCNR <span class="exam hors">HORS EXAMEN</span></summary><div class="c">
+<p>Extraits du Guide de radiocommunication pour la navigation intérieure de la CCNR (2017), donnés dans le manuel en allemand, français et néerlandais. Les mots de procédure restent en anglais.</p>
+<h3>Détresse : collision (automoteur « Karin »)</h3>
+<p>L'automoteur « Karin » appelle la centrale de secteur d'Oberwesel sur le canal 18 (informations nautiques) après une collision :</p>
+<div class="radio">MAYDAY, MAYDAY, MAYDAY
+THIS IS
+Automoteur Karin, Automoteur Karin, Automoteur Karin
+FM 1234
+MAYDAY
+Automoteur Karin
+FM 1234
+Avalant près de Mannheim, p.k. 424,30
+Suis entré en collision avec un automoteur-citerne
+De la cargaison s'écoule
+Danger d'incendie
+Prenez les mesures nécessaires</div>
+<p>Réponse d'Oberwesel :</p>
+<div class="radio">MAYDAY
+Automoteur Karin
+THIS IS
+Oberwesel Revierzentrale
+RECEIVED
+MAYDAY</div>
+<p>Oberwesel informe ensuite la navigation :</p>
+<div class="radio">MAYDAY RELAY, MAYDAY RELAY, MAYDAY RELAY
+ALL STATIONS, ALL STATIONS, ALL STATIONS
+THIS IS
+Oberwesel Revierzentrale ×3
+[indicatif d'Oberwesel]
+Collision près de Mannheim p.k. 424,30 entre l'automoteur Karin et un automoteur-citerne
+L'automoteur-citerne perd sa cargaison
+De l'essence s'écoule
+Navigation interrompue jusqu'à nouvel ordre du p.k. 423,00 au p.k. 431,00</div>
+<p>À la fin de la détresse :</p>
+<div class="radio">MAYDAY
+ALL STATIONS ×3
+THIS IS
+Oberwesel Revierzentrale ×3
+[indicatif d'Oberwesel]
+10 heures 15
+Automoteur Karin
+Indicatif FM 1234
+SILENCE FINI</div>
+<h3>Détresse : homme à la mer (automoteur-citerne « Corinna »)</h3>
+<p>Sur le canal 10 (bateau-bateau) :</p>
+<div class="radio">MAYDAY, MAYDAY, MAYDAY
+THIS IS
+Automoteur-citerne Corinna ×3
+OED4711
+MAYDAY
+Automoteur-citerne Corinna
+OED4711
+Avalant près du p.k. danubien 1501,35
+Homme à la mer
+Interrompre la navigation
+Suivre les informations ultérieures</div>
+<p>Fin de la détresse :</p>
+<div class="radio">MAYDAY
+ALL STATIONS ×3
+THIS IS
+Automoteur-citerne Corinna
+OED4711
+10 heures 15
+Automoteur-citerne Corinna
+OED4711
+SILENCE FINI</div>
+<h3>Urgence : blessé (automoteur « Mara »)</h3>
+<p>Aide médicale sans danger de mort ; canal 22 (informations nautiques), centrale de Duisbourg :</p>
+<div class="radio">PAN PAN, PAN PAN, PAN PAN
+Duisburg Revierzentrale ×3
+THIS IS
+Automoteur Mara ×3
+OED1147
+Avalant près du p.k. 805,75
+Demande de l'aide médicale
+Matelot blessé, probablement fracture du bras</div>
+<p>Réponse :</p>
+<div class="radio">PAN PAN
+Automoteur Mara ×3
+OED1147
+THIS IS
+Duisburg Revierzentrale ×3
+J'ai compris
+J'appelle une ambulance
+Je vous informerai du lieu où l'ambulance vous attend
+Restez à l'écoute</div>
+<h3>Sécurité : brouillard (poste de trafic de Dordrecht)</h3>
+<p>Sur le canal imposé 19 :</p>
+<div class="radio">SÉCURITÉ, SÉCURITÉ, SÉCURITÉ
+ALL STATIONS ×3
+THIS IS
+Dordrecht verkeerspost ×3
+Épais brouillard dans le secteur de Dordrecht sur l'Oude Maas
+Visibilité de 50 m environ</div>
+<h3>Routine : entrée d'écluse (automoteur-citerne « Sylvia »)</h3>
+<p>Canal 22, écluse de Birsfelden :</p>
+<div class="radio">Écluse de Birsfelden (3 fois au plus)
+THIS IS (ou ICI)
+Automoteur-citerne Sylvia (3 fois au plus)
+Chargé, avalant près de Grenzach
+L'entrée dans le garage de l'écluse est-elle libre ?
+   <span class="fr">— l'écluse :</span>
+Automoteur-citerne Sylvia (3 fois au plus)
+THIS IS (ou ICI)
+Écluse de Birsfelden (3 fois au plus)
+L'entrée est libre
+   <span class="fr">— accusé de réception :</span>
+Écluse de Birsfelden
+THIS IS (ou ICI)
+Automoteur-citerne Sylvia
+J'ai compris, l'entrée est libre</div>
+<h3>Routine : message de l'écluse de Hasselt</h3>
+<p>Canal 20 :</p>
+<div class="radio">ALL STATIONS (ou « à toutes les stations de bateau », 3 fois au plus)
+THIS IS (ou ICI)
+Écluse de Hasselt (3 fois au plus)
+Sur le canal Albert aura lieu à partir de 18 h 30 une manifestation sportive à l'aval de l'écluse.
+La navigation sera interrompue de 18 h 00 à 20 h 00.</div>
+<h3>Routine : sortie du Main (automoteur-citerne « Britta »)</h3>
+<p>Canal 10 (bateau-bateau) :</p>
+<div class="radio">ALL STATIONS dans le secteur de l'embouchure du Main (3 fois au plus)
+THIS IS (ou ICI)
+Automoteur-citerne Britta (3 fois au plus)
+Avalant sur le Main à environ 1 km avant l'embouchure
+Veux monter le Rhin
+Y a-t-il des montants ou des avalants dans le voisinage ?
+   <span class="fr">— l'automoteur « Tanja » répond :</span>
+Automoteur-citerne Britta (3 fois au plus)
+THIS IS (ou ICI)
+Automoteur Tanja (3 fois au plus)
+Montant à 500 m à l'aval de l'embouchure du Main
+Pas d'autre navigation
+   <span class="fr">— Britta accuse réception :</span>
+Automoteur Tanja (3 fois au plus)
+THIS IS (ou ICI)
+Automoteur-citerne Britta
+J'ai compris, merci
+Bonne route</div>
+</div></details>
+
+<!-- ============ 14. ASN ============ -->
+<details id="t14"><summary><span class="n">14</span>Annexe : alerte ASN de détresse (SRC) <span class="exam hors">HORS EXAMEN VHF · matière SRC</span></summary><div class="c">
+<p>Le manuel reproduit le schéma officiel « Guidance on distress alerts » (alerte de détresse par ASN, en mer). Les étapes :</p>
+<ol><li>Soulever le <b>cache</b> de la touche <b>DISTRESS</b>.</li>
+<li>Si on a le temps, choisir la <b>nature</b> de la détresse (incendie, voie d'eau…) ; sinon l'alerte part « non désignée ».</li>
+<li>Appuyer sur <b>DISTRESS plus de 3 secondes</b>, jusqu'à ce que le signal sonore et lumineux devienne continu : l'alerte part sur le <b>canal 70</b> avec le MMSI, la position et l'heure.</li>
+<li>Passer sur le <b>canal 16</b> et dire l'appel et le message de détresse, en ajoutant le <b>MMSI</b> :</li></ol>
+<div class="radio">MAYDAY MAYDAY MAYDAY
+THIS IS [nom] ×3, [indicatif], MMSI [9 chiffres]
+MAYDAY [nom], [indicatif], MMSI [9 chiffres]
+[position]
+[nature de la détresse]
+[aide demandée]
+[autres informations]
+OVER</div>
+<p>La VHF répète seule l'alerte (environ toutes les 3 min 30 à 4 min 30) jusqu'à l'accusé de réception d'une station côtière. Le schéma rappelle que l'<b>EPIRB est le moyen d'alerte secondaire</b>.</p>
+<p>Voir aussi le <a href="./qcm-src.html">QCM SRC</a> et la page <a href="./radio-exemples-voix.html">Écouter un MAYDAY et un PAN PAN</a>.</p>
+</div></details>
+
+<!-- ============ 15. ATIS ZONES ============ -->
+<details id="t15"><summary><span class="n">15</span>Annexe : zones où l'ATIS est obligatoire <span class="exam hors">HORS EXAMEN</span></summary><div class="c">
+<p>Les cartes du manuel montrent <b>en noir</b> les eaux où l'ATIS est obligatoire (« ATIS verplicht ! ») et <b>en bleu</b> celles où il ne l'est pas (« Geen ATIS verplicht ! »). D'après ces cartes :</p>
+<div class="tw"><table><tr><th>Secteur</th><th>ATIS non obligatoire (bleu)</th><th>ATIS obligatoire (noir)</th></tr>
+<tr><td class="k">Oostende – Zeebrugge – Bruges</td><td>La mer, les ports d'Oostende et de Zeebrugge, le canal Oostende–Bruges et le canal de Zeebrugge à Bruges</td><td>Le canal vers l'écluse de Plassendale (Sluis Passendale) et les canaux au-delà de Bruges</td></tr>
+<tr><td class="k">Nieuwpoort</td><td>Le port et l'Yser jusqu'au nœud d'écluses</td><td>Le canal Nieuwpoort–Plassendale et les voies au-delà des écluses</td></tr>
+<tr><td class="k">Anvers</td><td>L'Escaut (Beneden Schelde) et les bassins du port d'Anvers</td><td>Le canal Albert au-delà de la Royerssluis et l'Escaut en amont du tunnel Kennedy</td></tr>
+<tr><td class="k">Gand</td><td>Le canal Gand–Terneuzen jusqu'au port de Gand</td><td>Les canaux autour de Gand (ring) au-delà de l'écluse d'Evergem et du Mariakerkebrug</td></tr></table></div>
+<div class="clair"><b>En clair :</b> dans les eaux accessibles aux navires de mer (mer, ports de la côte, canaux maritimes vers Bruges, Escaut et port d'Anvers, canal Gand–Terneuzen), pas d'obligation d'ATIS ; dès qu'on passe dans les <b>voies intérieures</b> derrière ces zones, l'ATIS est obligatoire.</div>
+<p class="src">Lecture des cartes des pages 52 à 55 du manuel. En cas de doute sur une limite exacte, se référer aux cartes originales du manuel IBPT.</p>
+</div></details>
+
+<p class="src" style="margin-top:22px">Source : IBPT, « Manuel de préparation à l'examen pour obtenir le certificat restreint de radiotéléphoniste de station de navire », version 2025 — Institut belge des services postaux et des télécommunications, boulevard du Roi Albert II 32 bte 10, 1000 Bruxelles, T +32 2 226 88 88, www.ibpt.be. Le document original reste disponible dans le groupe « Cours officiels ». Compléments du tableau : OMI (manuel NAVTEX, normes EPIRB et SART), Cospas-Sarsat, UIT-R M.585 et M.541.</p>
+</body>
+</html>

@@ -1,9 +1,9 @@
 /* Kat-a-Mar — service worker — v182
    Le numéro doit toujours correspondre à const VERSION dans index.html. */
-const CACHE = "kat-a-mar-v189";
+const CACHE = "kat-a-mar-v190";
 /* Les cours (hauturier, permis belge) sont des pages à part du dépôt : sans
    elles dans cette liste, elles ne seraient jamais disponibles sans réseau. */
-const FILES = ["./", "./index.html", "./permis-hauturier.html", "./hauturier-entrainement.html", "./hauturier-hors-carte.html", "./hauturier-qcm.html", "./qcm-src.html", "./radio-exemples-voix.html", "./hauturier-amers.html", "./hauturier-prendre-coordonnees.html", "./hauturier-carte-9999-releve.html", "./hauturier-coordonnees.html", "./hauturier-regle-cras.html", "./hauturier-exercices-cras.html", "./hauturier-probleme-dumet-hoedic.html", "./hauturier-vecteurs-courant.html", "./hauturier-pourquoi-multiplier.html", "./hauturier-triangles-quelconques.html", "./hauturier-recettes-rapides.html",
+const FILES = ["./", "./index.html", "./permis-hauturier.html", "./hauturier-entrainement.html", "./hauturier-hors-carte.html", "./hauturier-qcm.html", "./qcm-src.html", "./radio-exemples-voix.html", "./cours-radio.html", "./hauturier-amers.html", "./hauturier-prendre-coordonnees.html", "./hauturier-carte-9999-releve.html", "./hauturier-coordonnees.html", "./hauturier-regle-cras.html", "./hauturier-exercices-cras.html", "./hauturier-probleme-dumet-hoedic.html", "./hauturier-vecteurs-courant.html", "./hauturier-pourquoi-multiplier.html", "./hauturier-triangles-quelconques.html", "./hauturier-recettes-rapides.html",
                "./permis-belge.html", "./permis-belge-m1.html",
                "./permis-belge-erreurs.html", "./permis-belge-qcm-balises.html",
                "./permis-belge-qcm-feux-sons.html", "./permis-belge-cotier-feux.html", "./permis-belge-cotier-sons.html", "./permis-belge-sons-animes.html", "./permis-belge-logique-sons.html", "./permis-belge-cotier-meteo.html", "./permis-belge-cotier-caps.html", "./permis-belge-erreurs-cotier.html", "./permis-belge-pratique-helice.html", "./permis-belge-pratique-manoeuvres.html", "./permis-belge-pratique-amarres.html", "./permis-belge-cotier-secours.html", "./permis-belge-cotier-port-ostende.html", "./permis-belge-longueurs.html", "./permis-belge-croisements.html", "./permis-belge-priorites.html", "./permis-belge-cotier-gisements.html",
