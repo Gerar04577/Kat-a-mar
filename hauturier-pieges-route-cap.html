@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Route, cap et relèvements</title>
+<!-- Kat-a-Mar · animations pas à pas avec les pièges : route→cap, cap→route, relèvement, gisement, deux points relevés · v1.3 (gisement : données de l'exercice partout) -->
+<style>
+:root{--bg:#f4f6f9;--paper:#fff;--ink:#14212e;--mute:#5b6b7b;--line:#d9e0e8;--navy:#0b4f7c;--rf:#c62828;--rs:#1565c0;--ct:#2e7d32;--zv:#7b1fa2;--bad:#ef6c00;--badbg:#fff3e0;--okbg:#e8f5e9;--sea:#eaf3fb;--hl:#fff3c4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e161f;--paper:#16212c;--ink:#e6edf3;--mute:#9fb0c0;--line:#2a3846;--navy:#7cc0ff;--rf:#ff8a80;--rs:#82b1ff;--ct:#81c784;--zv:#ce93d8;--bad:#ffb74d;--badbg:#3a2a12;--okbg:#14301d;--sea:#122233;--hl:#4a3f12}}
+:root[data-theme="dark"]{--bg:#0e161f;--paper:#16212c;--ink:#e6edf3;--mute:#9fb0c0;--line:#2a3846;--navy:#7cc0ff;--rf:#ff8a80;--rs:#82b1ff;--ct:#81c784;--zv:#ce93d8;--bad:#ffb74d;--badbg:#3a2a12;--okbg:#14301d;--sea:#122233;--hl:#4a3f12}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.5;padding:0 16px 70px}
+.wrap{max-width:760px;margin:0 auto}
+.back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 -16px;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 6px;background:var(--bg);color:var(--navy);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line)}
+.v{font-size:12px;color:var(--mute);margin:14px 0 2px}
+h1{font-size:23px;margin:2px 0 10px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:0 0 10px;scrollbar-width:none}
+.tabs button{flex:0 0 auto}
+button{font:inherit;font-weight:700;border-radius:12px;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:8px 13px;cursor:pointer;min-height:44px}
+button.on{background:var(--navy);color:var(--paper)}
+button:disabled{opacity:.35}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.card h2{font-size:19px;margin:0 0 6px}
+.enonce{font-size:15.5px}
+.enonce ul{margin:6px 0;padding-left:20px}
+details summary{font-weight:800;cursor:pointer;color:var(--navy)}
+.map{background:var(--sea);border-radius:12px;overflow:hidden}
+svg.chart{display:block;width:100%;height:auto}
+svg text{font-family:inherit;font-size:13px;fill:var(--ink);paint-order:stroke;stroke:var(--sea)!important;stroke-width:4px!important;stroke-dasharray:none!important;stroke-linejoin:round}
+svg text.b{font-weight:800}
+.ln{stroke-width:2.6;fill:none;stroke-linecap:round}
+.rf{stroke:var(--rf)}.rs{stroke:var(--rs)}.ct{stroke:var(--ct)}.zv{stroke:var(--zv)}.ink{stroke:var(--ink)}.mute{stroke:var(--mute)}
+.bad{stroke:var(--bad);stroke-dasharray:7 5}
+.thin{stroke-width:1.3}.dash{stroke-dasharray:5 5}
+text.rf{fill:var(--rf)}text.rs{fill:var(--rs)}text.ct{fill:var(--ct)}text.zv{fill:var(--zv)}text.bad{fill:var(--bad)}text.mute{fill:var(--mute)}
+.pt{fill:var(--ink)}.ptbad{fill:var(--bad)}
+.draw{animation:draw var(--dur,1.2s) ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.fade{opacity:0;animation:fade calc(var(--dur,1.2s)*.6) ease forwards calc(var(--dur,1.2s)*.45)}
+@keyframes fade{to{opacity:1}}
+.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
+.ctrl .n{font-weight:800;min-width:92px;text-align:center}
+.spd{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--mute);margin-top:8px}
+.spd input{flex:1;accent-color:var(--navy)}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:14px;margin:4px 0 0}
+.chain .bx{border:1.5px solid var(--line);border-radius:9px;padding:3px 7px;text-align:center;min-width:52px;background:var(--bg)}
+.chain .bx b{display:block;font-size:12px;color:var(--mute)}
+.chain .bx span{font-weight:800}
+.chain .bx.new{background:var(--hl);border-color:var(--navy)}
+.chain .ar{color:var(--mute)}
+.dir{font-size:13px;color:var(--mute);margin:2px 0 0}
+.step h2{color:var(--navy)}
+.trap{background:var(--badbg);border-left:5px solid var(--bad);border-radius:10px;padding:9px 11px;margin:10px 0 0;font-size:15.5px}
+.trap b.t{color:var(--bad)}
+.ok{background:var(--okbg);border-radius:10px;padding:8px 11px;margin:8px 0;font-size:15.5px}
+.f{font-family:ui-monospace,Menlo,monospace;font-weight:700;background:var(--bg);border-radius:6px;padding:1px 5px;white-space:nowrap}
+.mini{max-width:330px;margin:8px auto 0}
+.mini svg{width:100%;height:auto;display:block;background:var(--sea);border-radius:10px}
+.mini svg text{stroke:var(--sea)}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+ol.pg li{margin:0 0 9px}
+.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--mute);margin:6px 2px 0}
+.leg i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:4px;border-radius:2px}
+</style>
+</head>
+<body>
+<a href="./hauturier-entrainement.html" class="back">‹ Retour</a>
+<div class="wrap">
+<div class="v">Route, cap, relèvement, gisement · animations pas à pas avec les pièges · version 1.3</div>
+<h1>Pas à pas, avec les pièges</h1>
+<div class="tabs" id="tabs"></div>
+<div id="main"></div>
+</div>
+
+<script>
+/* ================= outils de dessin ================= */
+const NS="http://www.w3.org/2000/svg";
+const rad=d=>d*Math.PI/180;
+const P=(p,b,d)=>({x:p.x+Math.sin(rad(b))*d,y:p.y-Math.cos(rad(b))*d});
+let DUR=1.2;
+function el(g,tag,at,isNew){const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);g.appendChild(e);
+ if(isNew){const dashed=(at.class||"").match(/bad|dash/);
+  if(tag==="line"||tag==="path"){if(dashed){e.classList.add("fade")}else{const L=e.getTotalLength();e.style.strokeDasharray=L;e.style.strokeDashoffset=L;e.classList.add("draw");
+   const m=at["marker-end"];if(m){e.removeAttribute("marker-end");setTimeout(()=>e.setAttribute("marker-end",m),DUR*900)}}}
+  else e.classList.add("fade")}
+ return e}
+function line(g,a,b,cls,n,mk){const at={x1:a.x,y1:a.y,x2:b.x,y2:b.y,class:"ln "+cls};if(mk)at["marker-end"]=`url(#m-${mk})`;return el(g,"line",at,n)}
+function txt(g,p,s,cls,n,anc){const e=el(g,"text",{x:p.x,y:p.y,class:cls||"","text-anchor":anc||"start"},n);e.textContent=s;return e}
+function dot(g,p,n,cls){return el(g,"circle",{cx:p.x,cy:p.y,r:4.5,class:cls||"pt"},n)}
+function arcPath(c,b0,b1,r){const a=P(c,b0,r),b=P(c,b1,r),d=((b1-b0)%360+360)%360;return `M${a.x},${a.y} A${r},${r} 0 ${d>180?1:0} 1 ${b.x},${b.y}`}
+function arc(g,c,b0,b1,r,cls,n){return el(g,"path",{d:arcPath(c,b0,b1,r),class:"ln thin "+cls},n)}
+function nord(g,c,r,n){line(g,c,P(c,0,r+12),"mute thin dash",n);txt(g,P(c,0,r+15),"N","mute",n,"middle")}
+function angle(g,c,b,r,label,cls,n,dx,dy){nord(g,c,r,n);arc(g,c,0,b,r,cls,n);const q=P(c,b/2,r+10);txt(g,{x:q.x+(dx||0),y:q.y+(dy||0)},label,"b "+cls,n)}
+function boat(g,c,b,n,cls){return el(g,"path",{d:"M0,-15 C7,-7 7,7 5,13 L-5,13 C-7,7 -7,-7 0,-15Z",transform:`translate(${c.x},${c.y}) rotate(${b})`,style:"fill:var(--paper);stroke:var(--ink);stroke-width:1.6"},n)}
+function phare(g,c,label,n,anc,dx,dy){el(g,"circle",{cx:c.x,cy:c.y,r:6,style:"fill:#f9a825;stroke:var(--ink);stroke-width:1.4"},n);txt(g,{x:c.x+(dx||0),y:c.y+(dy||0)},label,"b",n,anc||"start")}
+function faux(g,p,s,n,anc){txt(g,p,"✘ "+s,"b bad",n,anc||"start")}
+const defs=()=>`<defs>${["rf","rs","ct","zv","ink","bad"].map(k=>`<marker id="m-${k}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--${k==="ink"?"ink":k})"/></marker>`).join("")}</defs>`;
+
+/* petit schéma : le vent pousse le bateau (angle exagéré pour qu'on le voie) */
+function miniDer(cvTxt,rsTxt){const c={x:165,y:70},cv=154,rs=168;
+ const a=P(c,cv,95),b=P(c,rs,95),w1=P({x:285,y:22},225,48),w2=P({x:300,y:48},225,48);
+ return `<div class="mini"><svg viewBox="0 0 330 185" role="img" aria-label="Le vent de nord-est pousse le bateau vers tribord">${defs()}
+ <line x1="${c.x}" y1="${c.y}" x2="${a.x}" y2="${a.y}" class="ln ink dash"/><line x1="${c.x}" y1="${c.y}" x2="${b.x}" y2="${b.y}" class="ln rs" marker-end="url(#m-rs)"/>
+ <path d="M0,-15 C7,-7 7,7 5,13 L-5,13 C-7,7 -7,-7 0,-15Z" transform="translate(${c.x},${c.y}) rotate(${cv})" style="fill:var(--paper);stroke:var(--ink);stroke-width:1.6"/>
+ <line x1="285" y1="22" x2="${w1.x}" y2="${w1.y}" class="ln mute" marker-end="url(#m-ink)"/><line x1="300" y1="48" x2="${w2.x}" y2="${w2.y}" class="ln mute" marker-end="url(#m-ink)"/>
+ <text x="246" y="16" class="b">vent de NE</text>
+ <text x="${a.x+6}" y="${a.y+4}" class="b">Cv ${cvTxt}</text><text x="${b.x-6}" y="${b.y+14}" class="b rs" text-anchor="end">Rs ${rsTxt}</text>
+ <text x="10" y="18" class="mute">angle exagéré</text>
+ <text x="205" y="98">bâbord ↗</text><text x="70" y="70" text-anchor="end">↙ tribord</text>
+ </svg></div>`}
+
+/* ================= les exercices ================= */
+const EX=[];
+
+/* ---------- 1. De la route au cap ---------- */
+(()=>{const K=50,A={x:70,y:80},B=P(A,153,7*K),C=P(A,30,.5*K);
+ const u={x:Math.sin(rad(153)),y:-Math.cos(rad(153))},c={x:C.x-A.x,y:C.y-A.y},uc=u.x*c.x+u.y*c.y,R=5.2*K;
+ const t=uc+Math.sqrt(uc*uc-(c.x*c.x+c.y*c.y)+R*R),H={x:A.x+t*u.x,y:A.y+t*u.y},W5=P(A,153,R);
+ const Z={x:236,y:178},Zc={x:Z.x+(C.x-A.x)*4,y:Z.y+(C.y-A.y)*4};
+ const loupe=(g,n)=>{el(g,"rect",{x:198,y:50,width:154,height:188,rx:10,style:"fill:var(--paper);stroke:var(--mute);stroke-width:1.2"},n);txt(g,{x:206,y:68},"🔍 loupe ×4","b",n);line(g,Z,P(Z,153,62),"rf",n);dot(g,Z,n);txt(g,{x:Z.x-8,y:Z.y+4},"A","b",n,"end")};
+ EX.push({id:"rc",tab:"1 · Route → cap",title:"De la route au cap (contrer le courant)",vb:"0 0 360 450",
+ keys:["Cc","W","Cv","Der","Rs","Ct","Rf"],dir:"← On <b>remonte</b> la chaîne : on part de la Rf et on arrive au Cc. Les signes de W et de la dérive s'<b>inversent</b>.",
+ enonce:`<ul><li>Départ <b>00 h 15</b> au point A ; vous voulez aller au point B, à <b>7 milles</b>.</li><li>Vitesse : <b>5,2 nœuds</b>.</li><li>Courant : porte au <b>030°</b> à <b>0,5 nœud</b>.</li><li>Vent de <b>nord-est</b> : dérive <b>3°</b>.</li><li>Déclinaison D = <b>6° W</b> ; déviation du compas de <b>route</b> d = <b>4° E</b> ; déviation du compas de <b>relèvement</b> = 5° W.</li></ul>On cherche : le <b>Cc</b> à donner au barreur et l'<b>heure d'arrivée</b>.`,
+ steps:[
+ {t:"0 · On place le départ et l'arrivée",x:`On pointe A (départ) et B (arrivée) sur la carte. Rien d'autre pour l'instant.`,
+  d:(g,n)=>{dot(g,A,n);txt(g,{x:A.x-8,y:A.y+4},"A","b",n,"end");dot(g,B,n);txt(g,{x:B.x+8,y:B.y+4},"B (arrivée)","b",n)}},
+ {t:"1 · Tracer la Rf",x:`On relie A à B : c'est la <b>route fond (Rf)</b>, la ligne qu'on veut suivre <b>sur le fond</b>. On la mesure à la règle Cras : <b>Rf = 153°</b>. C'est un angle <b>vrai</b> (tout ce qu'on mesure sur la carte est vrai).`,
+  trap:`<b class="t">Piège : la règle à l'envers.</b> Si la flèche de la règle Cras pointe vers A au lieu de B, on lit <b>333°</b> (153 + 180). Toujours : la flèche dans le sens où l'on va.`,
+  ch:{Rf:"153°"},
+  d:(g,n)=>{line(g,A,B,"rf",n,"rf");angle(g,A,153,30,"Rf 153°","rf",n,-92,44)},
+  td:(g,n)=>{const q=P(A,333,40);line(g,A,q,"bad",n,"bad");faux(g,{x:q.x+4,y:q.y+14},"333°",n)}},
+ {t:"2 · Porter le courant, depuis A, pour 1 heure",x:`Depuis le <b>départ A</b>, on trace le courant dans sa direction (<b>030°</b>) et sur la distance qu'il fait <b>en 1 heure</b> : <b>0,5 mille</b>. On arrive au point <b>C</b> : c'est là que l'eau aurait emporté un bouchon en une heure.`,
+  trap:`<b class="t">Piège : le courant « vient de ».</b> Un courant « au 030° » <b>va vers</b> le 030° (c'est le contraire du vent, qui se donne d'où il vient). Le tracer vers 210° inverse tout le triangle.`,
+  ch:{Ct:"030° · 0,5"},
+  d:(g,n)=>{line(g,A,C,"ct",n,"ct");txt(g,{x:C.x+10,y:C.y-4},"C · courant 0,5 M","b ct",n);loupe(g,n);line(g,Z,Zc,"ct",n,"ct");dot(g,Zc,n);txt(g,{x:Zc.x+8,y:Zc.y+4},"C","b ct",n)},
+  td:(g,n)=>{const q=P(A,210,25);line(g,A,q,"bad",n,"bad");faux(g,{x:q.x-6,y:q.y+12},"210°",n,"end")}},
+ {t:"3 · La Vs aux pointes sèches, du bout du courant jusqu'à la Rf",x:`On ouvre les pointes sèches à <b>5,2 milles</b> (la Vs pour 1 heure, prise sur l'échelle des <b>latitudes</b>, sur le côté de la carte). On pique une pointe sur <b>C</b>, et l'autre pointe vient <b>toucher la ligne de Rf</b> : on marque ce point <b>H</b>. C'est la position à <b>1 heure</b>.`,
+  trap:`<b class="t">Piège n°1 de l'examen : mettre les 5,2 milles SUR la Rf.</b> En partant de A et en comptant 5,2 milles le long de la Rf, on obtient le point orange : il est <b>0,3 mille trop loin</b>. Les 5,2 milles, c'est le chemin <b>dans l'eau</b> : ils partent du <b>bout du courant</b> (C), pas du départ.`,
+  d:(g,n)=>{el(g,"path",{d:arcPath(C,145,166,R),class:"ln thin ink dash"},n);dot(g,H,n);txt(g,{x:H.x+9,y:H.y+4},"H · 1 h","b",n)},
+  td:(g,n)=>{dot(g,W5,n,"ptbad");faux(g,{x:W5.x+9,y:W5.y+16},"5,2 M sur la Rf",n)}},
+ {t:"4 · Tracer et mesurer la Rs",x:`On trace de <b>C vers H</b> : c'est la <b>route surface (Rs)</b>, le chemin du bateau <b>dans l'eau</b>. Sa longueur vaut 5,2 milles. On la mesure : <b>Rs = 157,5°</b>.<div class="ok">Le calcul le confirme : α = sin⁻¹(0,5 × sin(030 − 153) ÷ 5,2) = −4,6°, donc Rs = 153 + 4,6 = 157,6° → <b>157,5°</b> au demi-degré.</div>`,
+  trap:`<b class="t">Piège : mesurer dans le mauvais sens.</b> La Rs se mesure de <b>C vers H</b> (le sens où va le bateau). Mesurée de H vers C, on lit <b>337,5°</b>. Et la ligne A–H, ce n'est pas la Rs : c'est la Rf.`,
+  ch:{Rs:"157,5°"},
+  d:(g,n)=>{line(g,C,H,"rs",n,"rs");const m={x:(C.x+H.x)/2,y:(C.y+H.y)/2};txt(g,{x:m.x+12,y:m.y},"Rs 157,5°","b rs",n);txt(g,{x:m.x+12,y:m.y+17},"5,2 M dans l'eau","b rs",n);line(g,Zc,P(Zc,157.6,150),"rs",n);txt(g,{x:322,y:150},"Rs","b rs",n)},
+  td:(g,n)=>{const q=P(H,337.6,70);line(g,H,q,"bad",n,"bad");faux(g,{x:H.x+10,y:H.y-30},"337,5°",n)}},
+ {t:"5 · La Vf se lit sur la Rf",x:`La distance <b>A → H</b> se mesure aux pointes sèches : <b>4,9 milles</b>. Comme c'est le chemin fait sur le fond <b>en 1 heure</b>, la <b>vitesse fond Vf = 4,9 nœuds</b>. Le courant, qui vient de trois-quarts avant, nous fait perdre 0,3 nœud.`,
+  trap:`<b class="t">Piège : croire que Vf = Vs.</b> On n'avance <b>pas</b> à 5,2 nœuds sur le fond. Et on ne mesure jamais la Vf sur la Rs.`,
+  d:(g,n)=>{const a=P(A,243,14),b=P(H,243,14);line(g,a,b,"ink thin",n);const m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};txt(g,{x:m.x-8,y:m.y},"Vf 4,9 M en 1 h","b",n,"end")}},
+ {t:"6 · La dérive : on la retire (on remonte)",x:`Le vent vient du <b>nord-est</b>. Le bateau va vers le sud-sud-est : le vent arrive donc par <b>bâbord</b> et le pousse vers <b>tribord</b> → dérive tribord = <b>+3°</b>.<br>Pour <b>remonter</b> de la Rs au Cv, on inverse le signe : <span class="f">Cv = Rs − Der = 157,5 − 3 = 154,5°</span>.${miniDer("154,5°","157,5°")}<p>Le bateau doit <b>pointer</b> à 154,5° pour <b>glisser</b> sur 157,5°.</p>`,
+  trap:`<b class="t">Piège : ajouter la dérive au lieu de la retirer.</b> 157,5 + 3 = 160,5° : le vent nous pousserait encore plus loin à droite. En remontant, on fait le <b>contraire</b> de ce que fait le vent.`,
+  ch:{Der:"+3° (tribord)",Cv:"154,5°"}},
+ {t:"7 · Calculer W avec la BONNE déviation",x:`W = D + d. On barre avec le compas de <b>route</b>, donc on prend sa déviation : <span class="f">W = −6 + 4 = −2°</span> (Est = +, Ouest = −).`,
+  trap:`<b class="t">Piège : prendre la déviation du compas de relèvement.</b> L'énoncé donne deux déviations. Avec celle du compas de relèvement (5° W), on trouverait W = −11° : faux. Compas de <b>route</b> pour le cap ; compas de <b>relèvement</b> pour les relèvements.`,
+  ch:{W:"−2°"}},
+ {t:"8 · Le cap compas : on retire W (on remonte)",x:`En descendant, on fait Cv = Cc + W. En <b>remontant</b>, on inverse : <span class="f">Cc = Cv − W = 154,5 − (−2) = 156,5°</span>.<div class="ok">Vérification en redescendant : 156,5 − 2 = 154,5 (Cv) ; + 3 = 157,5 (Rs) ✔</div>`,
+  trap:`<b class="t">Piège : garder le signe.</b> 154,5 + (−2) = 152,5° est faux : en remontant, <b>moins un moins = plus</b>. La vérification en redescendant attrape cette erreur à tous les coups.`,
+  ch:{Cc:"156,5°"}},
+ {t:"9 · L'heure d'arrivée : avec la Vf",x:`Distance A → B mesurée sur la Rf : <b>7 milles</b>. Temps = 60 × D ÷ Vf = 60 × 7 ÷ 4,9 = <b>85,7 → 86 minutes</b> = 1 h 26. Arrivée : 00 h 15 + 1 h 26 = <b>01 h 41</b>.`,
+  trap:`<b class="t">Piège : diviser par la Vs.</b> 60 × 7 ÷ 5,2 = 81 minutes → arrivée annoncée à 01 h 36, <b>5 minutes trop tôt</b>. La distance est prise sur la Rf, on la divise donc par la vitesse sur la Rf : la Vf.`,
+  d:(g,n)=>{txt(g,{x:B.x+8,y:B.y+22},"arrivée 01 h 41","b",n)},
+  td:(g,n)=>{faux(g,{x:B.x-10,y:B.y+40},"01 h 36 (÷ 5,2)",n,"end")}}
+ ]})})();
+
+/* ---------- 2. Du cap à la route ---------- */
+(()=>{const K=45,A={x:90,y:44},S=P(A,161,7.8*K),E=P(S,30,.75*K),S5=P(A,161,5.2*K);
+ EX.push({id:"cr",tab:"2 · Cap → route",title:"Du cap à la route (subir le courant)",vb:"0 0 360 440",
+ keys:["Cc","W","Cv","Der","Rs","Ct","Rf"],dir:"→ On <b>descend</b> la chaîne : on part du Cc et on arrive à la Rf. On <b>ajoute</b> tout, avec son signe.",
+ enonce:`<ul><li>À <b>10 h 00</b> vous êtes au point A. Le barreur tient le <b>Cc 160°</b>.</li><li>Vitesse : <b>5,2 nœuds</b>.</li><li>Déclinaison D = <b>6° W</b> ; déviation du compas de route d = <b>4° E</b>.</li><li>Vent de <b>nord-est</b> : dérive <b>3°</b>.</li><li>Courant : porte au <b>030°</b> à <b>0,5 nœud</b>.</li></ul>On cherche : la <b>Rf</b>, la <b>Vf</b> et la <b>position estimée à 11 h 30</b>.`,
+ steps:[
+ {t:"0 · Le point de départ",x:`On pointe A, la position de 10 h 00.`,ch:{Cc:"160°"},
+  d:(g,n)=>{dot(g,A,n);txt(g,{x:A.x-8,y:A.y+4},"A · 10 h 00","b",n,"end")}},
+ {t:"1 · W = D + d",x:`<span class="f">W = −6 + 4 = −2°</span>. Règle des signes : <b>Est = +</b>, <b>Ouest = −</b>.`,
+  trap:`<b class="t">Piège : les signes.</b> Écrire 6 + 4 = 10° (en oubliant que 6° W est négatif) ou −6 − 4 = −10° (en oubliant que 4° E est positif). Avant de calculer, mettez le signe devant chaque valeur.`,ch:{W:"−2°"}},
+ {t:"2 · Le cap vrai",x:`On <b>descend</b> : <span class="f">Cv = Cc + W = 160 + (−2) = 158°</span>. C'est la direction où pointe l'étrave, par rapport au nord vrai.`,
+  trap:`<b class="t">Piège : soustraire au lieu d'ajouter.</b> 160 − (−2) = 162° est faux : on ne fait « Cv − W » qu'en <b>remontant</b>.`,ch:{Cv:"158°"},
+  d:(g,n)=>{line(g,A,P(A,158,120),"ink dash",n);const q=P(A,158,70);txt(g,{x:q.x-10,y:q.y},"Cv 158° (axe)","b",n,"end")}},
+ {t:"3 · La dérive : on l'ajoute",x:`Vent de nord-est, bateau vers le sud-sud-est : le vent arrive par <b>bâbord</b> et pousse vers <b>tribord</b> → <b>+3°</b>.<br><span class="f">Rs = Cv + Der = 158 + 3 = 161°</span>.${miniDer("158°","161°")}`,
+  trap:`<b class="t">Piège : le côté de la dérive.</b> Le vent pousse le bateau <b>loin de lui</b>. Vent par bâbord → dérive tribord (+). Vent par tribord → dérive bâbord (−). Si on se trompe de côté, on trouve 155° au lieu de 161°.`,ch:{Der:"+3° (tribord)",Rs:"161°"}},
+ {t:"4 · Tracer la Rs pour TOUTE la durée",x:`De 10 h 00 à 11 h 30, il y a <b>1 h 30 = 1,5 heure</b>. Distance dans l'eau = Vs × temps = 5,2 × 1,5 = <b>7,8 milles</b>. Depuis A, on trace la Rs (161°) sur 7,8 milles → point S.`,
+  trap:`<b class="t">Piège : oublier la durée.</b> Poser seulement 5,2 milles (1 heure) donne le point orange, à 11 h 00 et non 11 h 30.`,
+  d:(g,n)=>{line(g,A,S,"rs",n,"rs");angle(g,A,161,24,"Rs 161°","rs",n,8,12);dot(g,S,n);txt(g,{x:S.x-10,y:S.y+16},"S · 7,8 M dans l'eau","b rs",n,"end")},
+  td:(g,n)=>{dot(g,S5,n,"ptbad");faux(g,{x:S5.x-12,y:S5.y+4},"5,2 M seulement",n,"end")}},
+ {t:"5 · Ajouter le courant au bout, pour la même durée",x:`Depuis S, on trace le courant : 030°, sur 0,5 × 1,5 = <b>0,75 mille</b> → point <b>E</b>. C'est la <b>position estimée à 11 h 30</b>.`,
+  trap:`<b class="t">Piège double.</b> ① Oublier la durée pour le courant aussi (0,5 au lieu de 0,75). ② Tracer le courant vers 210° : il <b>va vers</b> 030°.`,ch:{Ct:"030° · 0,75"},
+  d:(g,n)=>{line(g,S,E,"ct",n,"ct");dot(g,E,n);txt(g,{x:E.x+8,y:E.y-6},"E · estimée 11 h 30","b",n)},
+  td:(g,n)=>{const q=P(S,210,34);line(g,S,q,"bad",n,"bad");faux(g,{x:q.x-6,y:q.y+12},"210°",n,"end")}},
+ {t:"6 · La Rf : de A vers E",x:`On relie <b>A à E</b> : c'est la <b>route fond</b>, le chemin réel sur le fond. On la mesure : <b>Rf = 156,5°</b>. Le courant nous a repoussés un peu vers l'est par rapport à la Rs.`,
+  trap:`<b class="t">Piège : mesurer de E vers A</b> (on lirait 336,5°), ou prendre la Rs pour la Rf.`,ch:{Rf:"156,5°"},
+  d:(g,n)=>{line(g,A,E,"rf",n,"rf");const q=P(A,156.6,200);txt(g,{x:q.x+10,y:q.y},"Rf 156,5°","b rf",n)}},
+ {t:"7 · La Vf : distance A–E divisée par la durée",x:`A → E mesure <b>7,35 milles</b>, parcourus en <b>1,5 heure</b> : <span class="f">Vf = 7,35 ÷ 1,5 = 4,9 nœuds</span>.`,
+  trap:`<b class="t">Piège : écrire Vf = 7,35 nœuds.</b> 7,35, c'est une <b>distance</b> pour 1 h 30, pas une vitesse. Il faut diviser par le temps.`,
+  d:(g,n)=>{const a=P(A,66.6,14),b=P(E,66.6,14);line(g,a,b,"ink thin",n);const m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};txt(g,{x:m.x+8,y:m.y},"7,35 M en 1 h 30","b",n)}}
+ ]})})();
+
+/* ---------- 3. Relèvement ---------- */
+(()=>{const B={x:130,y:320},T=P(B,71,175),Q1=P(B,6.5,215),Q2=P(B,6.5,262),Bas=P(B,186.5,40);
+ EX.push({id:"rl",tab:"3 · Relèvement",title:"Relèvement au compas + alignement",vb:"0 0 360 380",
+ keys:["Zc","W","Zv"],dir:"→ On <b>descend</b> : Zv = Zc + W, avec le W du compas qui a servi à relever.",
+ enonce:`<ul><li>À <b>00 h 15</b>, vous êtes sur l'<b>alignement</b> du port, noté sur la carte <b>« 2 Dir 006,5° »</b>.</li><li>Au même instant, vous relevez le phare de la <b>Teignouse</b> au compas de relèvement : <b>Zc = 082°</b>.</li><li>D = <b>6° W</b> ; déviation du compas de <b>relèvement</b> = <b>5° W</b> ; déviation du compas de route = 4° E.</li></ul>On cherche : la position à 00 h 15. <i>(Schéma, pas à l'échelle de la carte.)</i>`,
+ steps:[
+ {t:"0 · Les amers",x:`Sur la carte : les deux feux de l'alignement du port, et le phare de la Teignouse.`,
+  d:(g,n)=>{phare(g,Q1,"feu avant",n,"start",10,4);phare(g,Q2,"feu arrière",n,"start",10,4);phare(g,T,"Teignouse",n,"end",-10,-10)}},
+ {t:"1 · L'alignement : il est déjà vrai",x:`« 2 Dir 006,5° » est écrit <b>sur la carte</b> : c'est déjà un angle <b>vrai</b>. On trace la droite qui passe par les deux feux et on la prolonge vers la mer. Le bateau est quelque part sur cette ligne, au <b>sud</b> des feux (on les voit dans le 006,5°).`,
+  trap:`<b class="t">Piège : corriger l'alignement.</b> Retirer 11° (006,5 − 11 = 355,5°) donne une ligne fausse. On ne corrige que ce qui a été lu sur un <b>compas</b>. Ce qui est lu sur la carte est déjà vrai.`,
+  d:(g,n)=>{line(g,Q2,Bas,"rf",n);txt(g,{x:Bas.x+8,y:Bas.y-2},"alignement 006,5°","b rf",n)},
+  td:(g,n)=>{const a=P(Q1,175.5,300),b=P(Q1,355.5,60);line(g,b,a,"bad",n);faux(g,{x:a.x-6,y:a.y-28},"355,5°",n,"end")}},
+ {t:"2 · Quelle déviation pour le relèvement ?",x:`Le relèvement a été pris avec le <b>compas de relèvement</b> → on prend <b>sa</b> déviation : <b>5° W = −5</b>.`,
+  trap:`<b class="t">Piège : la déviation du compas de route.</b> L'énoncé en donne deux exprès. Avec 4° E, W = −2 et Zv = 080° : faux.`},
+ {t:"3 · W puis Zv",x:`<span class="f">W = D + d = −6 + (−5) = −11°</span><br><span class="f">Zv = Zc + W = 082 + (−11) = 071°</span>`,
+  trap:`<b class="t">Piège : le signe.</b> 082 + 11 = 093° est faux. Déclinaison et déviation Ouest = <b>moins</b>.`,ch:{Zc:"082°",W:"−11°",Zv:"071°"}},
+ {t:"4 · Tracer le relèvement : depuis le phare, vers 251°",x:`Le relèvement 071° va <b>du bateau vers le phare</b>. Sur la carte, on ne connaît que le phare : on pose la règle sur le phare et on trace dans le sens <b>opposé</b>, 071 + 180 = <b>251°</b>. Le bateau est donc à l'<b>ouest-sud-ouest</b> du phare.`,
+  trap:`<b class="t">Piège : tracer vers 071° depuis le phare.</b> On mettrait le bateau de l'autre côté du phare, à l'est-nord-est : il serait à terre ou loin de l'alignement.`,
+  d:(g,n)=>{const e=P(T,251,215);line(g,T,e,"zv",n);const m=P(T,251,90);txt(g,{x:m.x,y:m.y-22},"Zv 071°, tracé vers 251°","b zv",n,"middle")},
+  td:(g,n)=>{const e=P(T,71,70);line(g,T,e,"bad",n,"bad");faux(g,{x:e.x-60,y:e.y+20},"vers 071°",n)}},
+ {t:"5 · Le point : l'intersection",x:`Le bateau est à la fois sur l'alignement et sur le relèvement : il est à leur <b>intersection</b>. On lit ses coordonnées sur les bords de la carte (latitude sur le côté, longitude en haut ou en bas).`,
+  d:(g,n)=>{el(g,"circle",{cx:B.x,cy:B.y,r:9,class:"ln ink"},n);txt(g,{x:B.x-14,y:B.y+22},"point 00 h 15","b",n,"end")}}
+ ]})})();
+
+/* ---------- 4. Gisement (refait en v1.2 : un seul dessin par étape, du plus simple au plus complet) ---------- */
+(()=>{
+ const tw=(g,p,s,cls,n,anc)=>txt(g,p,s,cls,n,anc);
+ /* la rose du bateau : 0 à l'avant, tribord en vert, bâbord en rouge ; elle tourne AVEC le bateau */
+ function roseBateau(g,c,cv,r,n,small){
+  el(g,"path",{d:arcPath(c,cv+0.5,cv+179.5,r),class:"ln",style:"stroke:#2e7d32;stroke-width:5;opacity:.55"},n);
+  el(g,"path",{d:arcPath(c,cv+180.5,cv+359.5,r),class:"ln",style:"stroke:#c62828;stroke-width:5;opacity:.55"},n);
+  for(let a=0;a<360;a+=30){line(g,P(c,cv+a,r-5),P(c,cv+a,r+5),"ink thin",n)}
+  boat(g,c,cv,n);
+  if(!small){const L=[[0,"0° avant"],[90,"090° tribord"],[180,"180° arrière"],[270,"270° bâbord"]];
+   L.forEach(([a,s])=>{const q=P(c,cv+a,r+18);tw(g,{x:q.x,y:q.y+5},s,"b",n,"middle")})}
+ }
+ function nordFixe(g,c,r,n){line(g,c,P(c,0,r),"ink thin",n,"ink");txt(g,P(c,0,r+12),"N","b",n,"middle")}
+ function vise(g,c,z,r,label,n){const f=P(c,z,r);line(g,c,f,"zv",n,"zv");phare(g,f,label,n,z>180?"end":"start",z>180?-10:10,-8)}
+ const C0={x:180,y:190};
+ EX.push({id:"gs",tab:"4 · Gisement",title:"Le gisement, expliqué depuis le début",vb:"0 0 360 360",solo:true,
+ keys:["Cc","W","Cv","G","Zv"],dir:"Le gisement se compte depuis l'<b>avant du bateau</b> ; pour le tracer sur la carte, on le transforme en relèvement vrai : <b>Zv = Cv + G</b>.",
+ enonce:`<ul><li>Le barreur tient le <b>Cc 095°</b>. D = <b>3° W</b>, d (compas de route) = <b>2° W</b>.</li><li>On voit le phare A <b>60° sur tribord</b> (gisement 060°) et le phare B <b>45° sur bâbord</b> (gisement 315°).</li></ul>On cherche : la position. On y arrive à l'étape 8 ; les étapes 0 à 5 expliquent d'abord ce qu'est un gisement, avec ces deux phares (l'étape 5 est un exemple à part).`,
+ steps:[
+ {t:"0 · Le gisement se compte depuis l'avant du bateau",x:`Oubliez le nord pour l'instant. Le gisement est un angle mesuré <b>sur le bateau</b> :<ul><li><b>0°</b> = droit devant (l'étrave) ;</li><li><b>090°</b> = sur le côté droit, <b>tribord</b> (en vert) ;</li><li><b>180°</b> = derrière ;</li><li><b>270°</b> = sur le côté gauche, <b>bâbord</b> (en rouge).</li></ul>On tourne dans le <b>sens des aiguilles d'une montre</b>, comme pour un cap. Image : l'avant est à midi, tribord à 3 h, l'arrière à 6 h, bâbord à 9 h.`,
+  d:(g,n)=>{roseBateau(g,C0,0,110,n)}},
+ {t:"1 · Phare A « 60° tribord » = gisement 060°",x:`On voit le <b>phare A</b> sur la droite de l'avant. L'angle entre l'avant et le phare est de <b>60°</b>, côté tribord. Son gisement est <b>060°</b>. On dit aussi « 60° tribord ».`,
+  d:(g,n)=>{roseBateau(g,C0,0,110,false);arc(g,C0,0,60,62,"zv",n);txt(g,P(C0,30,76),"60°","b zv",n,"middle");vise(g,C0,60,150,"phare A",n)}},
+ {t:"2 · Phare B « 45° bâbord » = gisement 315°",x:`De l'autre côté : le <b>phare B</b> est <b>45° à gauche</b> de l'avant. On le dit « <b>45° bâbord</b> ». Compté de 0 à 360 dans le sens des aiguilles d'une montre, cela fait <b>360 − 45 = 315°</b>.<div class="ok">« 45° bâbord » et « gisement 315° », c'est la même chose.</div>`,
+  trap:`<b class="t">Piège : écrire gisement 045° pour « 45° bâbord ».</b> 045°, c'est à droite (tribord). Côté bâbord, on fait <b>360 − l'angle</b>.`,
+  d:(g,n)=>{roseBateau(g,C0,0,110,false);arc(g,C0,315,360,62,"zv",n);txt(g,P(C0,337,80),"45°","b zv",n,"middle");vise(g,C0,315,150,"phare B",n)}},
+ {t:"3 · Le gisement TOURNE avec le bateau",x:`Voici <b>le phare A</b>, toujours <b>60° tribord</b>, vu de deux bateaux :<ul><li>à gauche, le bateau pointe vers le <b>nord</b> (Cv 000°) : le phare est dans le <b>060°</b> du nord ;</li><li>à droite, le bateau pointe vers l'<b>est</b> (Cv 090°) : le phare est dans le <b>150°</b> du nord.</li></ul>Le gisement n'a pas changé (60°), mais la <b>direction réelle</b> du phare a changé, parce que le bateau a tourné.<div class="ok">Sur la carte, on a besoin de la direction <b>par rapport au nord</b> (le relèvement vrai Zv). Il faut donc <b>ajouter le cap</b> du bateau.</div>`,
+  d:(g,n)=>{const a={x:92,y:215},b={x:272,y:215};
+   roseBateau(g,a,0,48,n,true);nordFixe(g,a,92,n);arc(g,a,0,60,36,"zv",n);vise(g,a,60,82,"",n);txt(g,{x:a.x,y:a.y+80},"Cv 000° + 60°","b",n,"middle");txt(g,{x:a.x,y:a.y+98},"= Zv 060°","b zv",n,"middle");
+   roseBateau(g,b,90,48,n,true);nordFixe(g,b,92,n);arc(g,b,90,150,36,"zv",n);vise(g,b,150,82,"",n);txt(g,{x:b.x,y:b.y+80},"Cv 090° + 60°","b",n,"middle");txt(g,{x:b.x+16,y:b.y+98},"= Zv 150°","b zv",n,"middle");
+   txt(g,{x:180,y:40},"phare A, toujours 60° tribord","b",n,"middle")}},
+ {t:"4 · La formule : Zv = Cv + G",x:`Pour aller du <b>nord</b> jusqu'au phare, on fait deux morceaux :<ol><li>du nord jusqu'à l'<b>avant du bateau</b> : c'est le <b>Cv</b> (090°) ;</li><li>de l'avant jusqu'au <b>phare</b> : c'est le <b>gisement</b> (060°).</li></ol><span class="f">Zv = Cv + G = 090 + 060 = 150°</span><br>Avec « tribord / bâbord » : tribord → on <b>ajoute</b> l'angle ; bâbord → on le <b>retire</b>.`,
+  ch:{Cv:"090°",G:"060°",Zv:"150°"},
+  d:(g,n)=>{roseBateau(g,C0,90,70,false,true);nordFixe(g,C0,150,n);arc(g,C0,0,90,48,"ink",n);txt(g,P(C0,45,62),"Cv 090°","b",n,"start");arc(g,C0,90,150,58,"zv",n);txt(g,{x:P(C0,120,74).x+4,y:P(C0,120,74).y},"G 060°","b zv",n);arc(g,C0,0,150,112,"rf",n);txt(g,{x:P(C0,75,124).x+2,y:P(C0,75,124).y},"Zv 150°","b rf",n);vise(g,C0,150,150,"phare A",n)}},
+ {t:"5 · Autre exemple : si on dépasse 360°",x:`<i>(Exemple à part, hors de l'exercice.)</i> Bateau au <b>Cv 300°</b>, phare au <b>gisement 100°</b>.<br><span class="f">Zv = 300 + 100 = 400 → 400 − 360 = 040°</span><br>Un angle ne dépasse jamais 360° : un tour complet ramène au nord.`,
+  trap:`<b class="t">Piège : écrire Zv = 400°.</b> Sur la règle Cras, ça n'existe pas. On retire 360.`,ch:{Cv:"300°",G:"100°",Zv:"040°"},
+  d:(g,n)=>{roseBateau(g,C0,300,70,false,true);nordFixe(g,C0,150,n);arc(g,C0,300,400,58,"zv",n);txt(g,{x:P(C0,350,74).x,y:P(C0,350,74).y},"G 100°","b zv",n,"middle");arc(g,C0,0,40,116,"rf",n);txt(g,{x:P(C0,22,128).x+4,y:P(C0,22,128).y},"Zv 040°","b rf",n);vise(g,C0,40,150,"phare",n);line(g,C0,P(C0,300,130),"ink",n,"ink");const q=P(C0,300,138);txt(g,{x:q.x,y:q.y-6},"avant · Cv 300°","b",n,"middle")}},
+ {t:"6 · Quel cap utiliser ? Le Cv",x:`Le gisement part de l'<b>étrave</b>. Il faut donc la direction <b>réelle</b> de l'étrave par rapport au nord vrai : le <b>Cv</b>.<br>Le barreur lit le <b>Cc</b> sur son compas ; on le corrige :<br><span class="f">W = D + d = −3 + (−2) = −5°</span><br><span class="f">Cv = Cc + W = 095 − 5 = 090°</span><br><b>Le gisement, lui, ne se corrige pas</b> : il est mesuré sur le bateau, sans compas.`,
+  trap:`<b class="t">Piège ① : partir du Cc.</b> 095 + 60 = 155° : faux de 5°.<br><b class="t">Piège ② : partir de la Rs.</b> La dérive change le <b>chemin</b> du bateau, pas la direction où pointe son <b>étrave</b>. On ajoute le gisement au Cv, jamais à la Rs.<br><b class="t">Piège ③ : corriger aussi le gisement avec W.</b> On corrigerait deux fois.`,
+  ch:{Cc:"095°",W:"−5°",Cv:"090°"},
+  d:(g,n)=>{nordFixe(g,C0,150,false);line(g,C0,P(C0,95,150),"bad",n);const q=P(C0,97,120);txt(g,{x:340,y:q.y+28},"Cc 095° (lu au compas)","b bad",n,"end");line(g,C0,P(C0,90,150),"ink",n,"ink");txt(g,{x:P(C0,90,120).x,y:P(C0,90,120).y-12},"Cv 090°","b",n,"middle");boat(g,C0,90,n)}},
+ {t:"7 · Sur la carte : on trace depuis le phare, en sens inverse",x:`Le phare A est au gisement 060°, donc <span class="f">Zv = 090 + 060 = 150°</span>.<br>Ce 150° va <b>du bateau vers le phare</b>. Mais sur la carte, on ne sait pas où est le bateau : on part du <b>phare</b> et on trace dans le sens <b>opposé</b> :<br><span class="f">150 + 180 = 330°</span><br>Le bateau est quelque part sur cette ligne.`,
+  trap:`<b class="t">Piège : tracer 150° depuis le phare.</b> On mettrait le bateau de l'autre côté du phare (en orange).`,ch:{Cc:"095°",W:"−5°",Cv:"090°",G:"060°",Zv:"150°"},
+  d:(g,n)=>{const A={x:255,y:265};phare(g,A,"phare A",false,"start",10,4);line(g,A,P(A,330,240),"zv",n);const m=P(A,330,150);txt(g,{x:m.x-10,y:m.y},"tracé au 330°","b zv",n,"end");txt(g,{x:m.x-10,y:m.y+16},"(Zv 150° + 180°)","zv",n,"end")},
+  td:(g,n)=>{const A={x:255,y:265};line(g,A,P(A,150,90),"bad",n);faux(g,{x:A.x-60,y:A.y+80},"tracé au 150°",n)}},
+ {t:"8 · Deux phares → la position",x:`Phare B : <b>45° bâbord</b> = gisement 315°.<br><span class="f">Zv = 090 + 315 = 405 → 045°</span> (ou plus simple : 090 − 45 = 045°).<br>Depuis le phare B, on trace en sens inverse : <span class="f">045 + 180 = 225°</span>.<br>Les deux lignes se coupent : c'est la <b>position</b> du bateau. On lit ses coordonnées sur les bords de la carte.<div class="ok">Vérification : le bateau pointe vers l'est (090°) ; le phare A (60° tribord) est devant à droite, vers le sud-est ; le phare B (45° bâbord) est devant à gauche, vers le nord-est. Le dessin a du sens ✔</div>`,
+  ch:{Cc:"095°",W:"−5°",Cv:"090°",G:"315° (45° bâb.)",Zv:"045°"},
+  d:(g,n)=>{const X={x:150,y:190},A=P(X,150,130),B=P(X,45,130);
+   phare(g,A,"phare A",false,"start",10,4);line(g,A,P(A,330,200),"zv",false);
+   phare(g,B,"phare B",n,"start",10,4);line(g,B,P(B,225,200),"zv",n);
+   boat(g,X,90,n);el(g,"circle",{cx:X.x,cy:X.y,r:24,class:"ln ink"},n);txt(g,{x:X.x-28,y:X.y+40},"position","b",n,"end")}}
+ ]})})();
+
+/* ---------- 5. Deux points relevés : la Rf, avec ou sans courant, avec ou sans vent ---------- */
+(()=>{const K=38,P1={x:46,y:96},P2=P(P1,120,7.5*K),C=P(P1,200,1.2*K),Cbad=P(P1,20,1.2*K),C1h=P(P1,200,.8*K);
+ const fix=(g,p,angs,n)=>{angs.forEach(a=>{line(g,P(p,a,46),P(p,a+180,46),"zv thin",n)});el(g,"circle",{cx:p.x,cy:p.y,r:7,class:"ln ink"},n)};
+ EX.push({id:"dp",tab:"5 · Deux points relevés",title:"La route entre deux points relevés",vb:"0 0 360 330",
+ keys:["Cc","W","Cv","Der","Rs","Ct","Rf"],dir:"← On <b>remonte</b> : on part de la Rf (ligne entre les deux points) et on retire, dans l'ordre, le courant, puis la dérive, puis W.",
+ enonce:`<ul><li>À <b>09 h 00</b>, trois relèvements au compas donnent le point 1. À <b>10 h 30</b>, trois autres donnent le point 2.</li><li>D = <b>4° W</b> ; d = <b>3° W</b> → W = −7°. Chaque Zc est d'abord corrigé : Zv = Zc − 7.</li><li>On regarde 4 cas : ① ni courant ni vent ; ② vent seul (vent du <b>nord</b>, dérive <b>4°</b>) ; ③ et ④ avec un courant qui porte au <b>200°</b> à <b>0,8 nœud</b>.</li></ul>On cherche : Rf, Vf, puis Rs, Vs, Cv et Cc à chaque fois. <i>(Schéma.)</i>`,
+ steps:[
+ {t:"0 · Deux points par relèvements",x:`Chaque point vient de <b>trois relèvements corrigés</b> (Zv = Zc + W = Zc − 7), tracés depuis les amers. Là où ils se coupent : la position.<br>Ces positions sont <b>réelles</b> : c'est là où le bateau était vraiment, par rapport au <b>fond</b>.`,
+  trap:`<b class="t">Piège : tracer les Zc sans les corriger.</b> Les trois lignes ne se couperaient plus au même endroit (grand chapeau), et le point serait faux.`,
+  d:(g,n)=>{fix(g,P1,[15,75,140],n);txt(g,{x:P1.x+10,y:P1.y-12},"point 1 · 09 h 00","b",n);fix(g,P2,[30,95,160],n);txt(g,{x:P2.x-12,y:P2.y+30},"point 2 · 10 h 30","b",n,"end")}},
+ {t:"1 · La ligne entre les deux points = la Rf",x:`On relie le point 1 au point 2. C'est le chemin <b>réellement</b> parcouru sur le fond : la <b>route fond</b>. On mesure <b>Rf = 120°</b> et <b>7,5 milles</b>.<br>Durée : 09 h 00 → 10 h 30 = <b>1,5 heure</b>. <span class="f">Vf = 7,5 ÷ 1,5 = 5,0 nœuds</span>.`,
+  trap:`<b class="t">Piège : appeler cette ligne « Cv ».</b> Le Cv, c'est la direction où pointe l'étrave : il ne se trace pas entre deux positions. <b>Autre piège</b> : écrire Vf = 7,5 nœuds, en oubliant de diviser par 1,5 heure.`,
+  ch:{Rf:"120°"},
+  d:(g,n)=>{line(g,P1,P2,"rf",n,"rf");const m={x:(P1.x+P2.x)/2,y:(P1.y+P2.y)/2};txt(g,{x:m.x+12,y:m.y-10},"Rf 120° · 7,5 M","b rf",n)}},
+ {t:"2 · Cas ① : ni courant ni vent",x:`L'eau ne bouge pas et le vent ne pousse pas : le chemin sur le fond est le chemin dans l'eau, qui est aussi la direction de l'étrave.<br><span class="f">Rf = Rs = Cv = 120°</span> ; <span class="f">Vs = Vf = 5,0 nœuds</span><br><span class="f">Cc = Cv − W = 120 − (−7) = 127°</span>`,
+  trap:`<b class="t">Piège : Cc = 120 − 7 = 113°.</b> En remontant, on <b>inverse</b> le signe de W : moins un moins = plus.`,
+  ch:{Ct:"aucun",Rs:"120°",Der:"0",Cv:"120°",W:"−7°",Cc:"127°"}},
+ {t:"3 · Cas ② : vent seul, pas de courant",x:`Pas de courant : <span class="f">Rs = Rf = 120°</span> et Vs = Vf = 5,0 nœuds.<br>Le vent du <b>nord</b> arrive par <b>bâbord</b> (le bateau va vers l'est-sud-est) et le pousse vers <b>tribord</b> : dérive <b>+4°</b>.<br><span class="f">Cv = Rs − Der = 120 − 4 = 116°</span> ; <span class="f">Cc = 116 + 7 = 123°</span>`,
+  trap:`<b class="t">Piège : ajouter la dérive.</b> 120 + 4 = 124° est faux : le bateau doit <b>viser plus à gauche</b> (116°) pour que le vent le ramène sur 120°.`,
+  ch:{Ct:"aucun",Rs:"120°",Der:"+4°",Cv:"116°",W:"−7°",Cc:"123°"}},
+ {t:"4 · Cas ③ : avec courant. On porte le courant depuis le point 1",x:`Le courant a agi pendant <b>1 h 30</b> : 0,8 × 1,5 = <b>1,2 mille</b>, vers le <b>200°</b>. On le trace depuis le <b>point 1</b> → point C.`,
+  trap:`<b class="t">Piège ① : courant pour 1 heure seulement</b> (0,8 mille au lieu de 1,2). <b>Piège ② : le tracer vers 020°.</b> Un courant « au 200° » <b>va vers</b> 200°.`,
+  ch:{Ct:"200° · 1,2 M"},
+  d:(g,n)=>{line(g,P1,C,"ct",n,"ct");txt(g,{x:C.x-14,y:C.y+26},"C · courant 1,2 M","b ct",n)},
+  td:(g,n)=>{line(g,P1,Cbad,"bad",n,"bad");faux(g,{x:Cbad.x+8,y:Cbad.y-4},"vers 020°",n);dot(g,C1h,n,"ptbad")}},
+ {t:"5 · Relier C au point 2 : c'est la Rs",x:`La ligne <b>C → point 2</b> est le chemin <b>dans l'eau</b> : la <b>Rs</b>. On mesure <b>Rs = 111°</b> et <b>7,4 milles</b>.<br><span class="f">Vs = 7,4 ÷ 1,5 = 4,9 nœuds</span>.<div class="ok">Contrôle par le calcul : (7,5 M au 120°) − (1,2 M au 200°) = 7,39 M au 110,8° → 111° ✔</div>Le courant poussait vers le sud-sud-ouest : pour arriver au point 2, le bateau a dû faire route plus au nord (111° au lieu de 120°) et il a avancé moins vite dans l'eau (4,9 au lieu de 5,0).`,
+  trap:`<b class="t">Piège : garder Rs = Rf = 120°.</b> Dès qu'il y a un courant, la ligne entre les deux points n'est <b>plus</b> la Rs. Il faut d'abord retirer le courant.`,
+  ch:{Rs:"111°",Der:"?",Cv:"?",W:"?",Cc:"?"},
+  d:(g,n)=>{line(g,C,P2,"rs",n,"rs");const m={x:(C.x+P2.x)/2,y:(C.y+P2.y)/2};txt(g,{x:m.x+40,y:m.y+26},"Rs 111° · 7,4 M dans l'eau","b rs",n,"end")}},
+ {t:"6 · Cas ④ : courant ET vent",x:`On repart de la Rs trouvée (111°) et on retire la dérive, puis W :<br><span class="f">Cv = Rs − Der = 111 − 4 = 107°</span><br><span class="f">Cc = Cv − W = 107 + 7 = 114°</span><div class="ok">Vérification en redescendant : 114 − 7 = 107 (Cv) ; + 4 = 111 (Rs) ; + courant → Rf 120° ✔</div>
+  <table><tr><th>Cas</th><th>Rs</th><th>Cv</th><th>Cc</th></tr><tr><td>① rien</td><td>120°</td><td>120°</td><td>127°</td></tr><tr><td>② vent</td><td>120°</td><td>116°</td><td>123°</td></tr><tr><td>③ courant</td><td>111°</td><td>111°</td><td>118°</td></tr><tr><td>④ courant + vent</td><td>111°</td><td>107°</td><td>114°</td></tr></table>`,
+  trap:`<b class="t">Piège : l'ordre.</b> On retire <b>d'abord le courant</b> (sur la carte, avec le triangle), <b>puis</b> la dérive, <b>puis</b> W. C'est la chaîne lue de droite à gauche.`,
+  ch:{Rs:"111°",Der:"+4°",Cv:"107°",W:"−7°",Cc:"114°"}}
+ ]})})();
+
+/* ================= affichage ================= */
+const SIGNES=`<div class="card"><h2>Les règles de signe (à savoir par cœur)</h2>
+<table><tr><th>Valeur</th><th>Signe</th></tr>
+<tr><td>Déclinaison D, déviation d</td><td><b>Est = +</b> · <b>Ouest = −</b></td></tr>
+<tr><td>Dérive (Der)</td><td>Vent par bâbord → poussé à <b>tribord = +</b> · vent par tribord → <b>bâbord = −</b></td></tr></table>
+<table><tr><th>On descend (du cap à la route)</th><th>On remonte (de la route au cap)</th></tr>
+<tr><td><span class="f">W = D + d</span></td><td><span class="f">W = D + d</span></td></tr>
+<tr><td><span class="f">Cv = Cc + W</span></td><td><span class="f">Cc = Cv − W</span></td></tr>
+<tr><td><span class="f">Rs = Cv + Der</span></td><td><span class="f">Cv = Rs − Der</span></td></tr>
+<tr><td>Rf = Rs + courant (triangle)</td><td>Rs = trouvée par le triangle depuis la Rf</td></tr></table>
+<table><tr><th>Relèvements</th><th>Formule</th></tr>
+<tr><td>Relèvement au compas</td><td><span class="f">Zv = Zc + W</span> (W avec la déviation du compas <b>de relèvement</b>)</td></tr>
+<tr><td>Gisement</td><td><span class="f">Zv = Cv + G</span> (tribord +, bâbord −)</td></tr>
+<tr><td>Alignement, secteur de feu lus sur la carte</td><td>déjà vrais : <b>aucune correction</b></td></tr></table>
+<div class="ok">Sur la carte, on ne trace <b>que des angles vrais</b> : Cv, Rs, Rf, Zv.</div></div>`;
+const PIEGES=`<div class="card"><h2>Les pièges, en une liste</h2><ol class="pg">
+<li>Mettre la <b>Vs sur la Rf</b>. Elle part du <b>bout du courant</b> et vient toucher la Rf.</li>
+<li>Tracer le <b>courant</b> vers d'où il vient. Un courant « au 030° » <b>va vers</b> 030°.</li>
+<li>Porter le courant <b>ailleurs qu'au départ</b> (route → cap), ou <b>oublier la durée</b> (0,5 nœud pendant 1 h 30 = 0,75 mille).</li>
+<li>Prendre la <b>Vs pour la Vf</b>. La Vf se lit sur la Rf, et c'est elle qui donne le <b>temps</b> : 60 × D ÷ Vf.</li>
+<li>Lire un angle avec la <b>règle à l'envers</b> (erreur de 180°). La flèche pointe dans le sens où l'on va.</li>
+<li>Oublier les <b>signes</b> : Est +, Ouest −.</li>
+<li>En <b>remontant</b>, garder les mêmes signes. On les <b>inverse</b> : Cv = Rs − Der, Cc = Cv − W.</li>
+<li>Se tromper de <b>côté pour la dérive</b>. Le vent pousse le bateau <b>loin de lui</b>.</li>
+<li>Prendre la <b>mauvaise déviation</b> : compas de route pour les caps, compas de relèvement pour les relèvements.</li>
+<li><b>Corriger un alignement</b> ou un secteur lu sur la carte. Il est déjà vrai.</li>
+<li>Tracer un relèvement <b>vers Zv depuis l'amer</b>. Depuis l'amer, on trace vers <b>Zv ± 180°</b>.</li>
+<li>Ajouter le gisement au <b>Cc</b> ou à la <b>Rs</b>. On l'ajoute au <b>Cv</b>.</li>
+<li>Corriger le <b>gisement</b> avec W. On corrige le cap, jamais le gisement.</li>
+<li>Appeler « Cv » la ligne entre <b>deux points relevés</b>. C'est la <b>Rf</b> ; elle n'est aussi la Rs que s'il n'y a <b>pas de courant</b>.</li>
+<li>Avec un courant, garder Rs = Rf. On retire <b>d'abord le courant</b> (triangle), <b>puis</b> la dérive, <b>puis</b> W.</li>
+<li>Diviser une <b>distance</b> sans la ramener à une <b>vitesse</b> (7,35 M en 1 h 30 → 4,9 nœuds).</li>
+</ol><div class="ok">Le réflexe qui attrape la moitié des pièges : <b>refaire le chemin à l'envers</b> pour vérifier (Cc → Cv → Rs) et regarder si le dessin a du sens (le courant pousse-t-il bien du bon côté ?).</div></div>`;
+
+const TABS=[{id:"sg",tab:"Signes"},...EX,{id:"pg",tab:"Pièges"}];
+let cur=1,step=0,showTrap=false;
+try{const s=JSON.parse(localStorage.getItem("kam-pieges-pos-v13")||"{}");if(s.cur!=null){cur=s.cur;step=s.step||0}DUR=+localStorage.getItem("kam-anim-vitesse")||1.2}catch(e){}
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem("kam-pieges-pos-v13",JSON.stringify({cur,step}))}catch(e){}}
+function tabs(){$("tabs").innerHTML=TABS.map((t,i)=>`<button class="${i===cur?"on":""}" data-tab="${i}">${t.tab}</button>`).join("")}
+function chainAt(ex,s){const v={},nw={};for(let i=0;i<=s;i++){const c=ex.steps[i].ch||{};for(const k in c){v[k]=c[k];if(i===s)nw[k]=1}}return {v,nw}}
+function render(){tabs();save();const T=TABS[cur];
+ if(T.id==="sg"){$("main").innerHTML=SIGNES;return}
+ if(T.id==="pg"){$("main").innerHTML=PIEGES;return}
+ const ex=T,s=ex.steps[step],{v,nw}=chainAt(ex,step);
+ $("main").innerHTML=`<div class="card enonce"><details ${step===0?"open":""}><summary>Énoncé : ${ex.title}</summary>${ex.enonce}</details></div>
+ <div class="card"><div class="map"><svg class="chart" id="cv" viewBox="${ex.vb}" style="--dur:${DUR}s" role="img" aria-label="${ex.title}, étape ${step}"></svg></div>
+ <div class="leg"><span><i style="background:var(--rf)"></i>Rf / tracé sur la carte</span><span><i style="background:var(--rs)"></i>Rs</span><span><i style="background:var(--ct)"></i>courant</span><span><i style="background:var(--zv)"></i>relèvement</span><span><i style="background:var(--bad)"></i>piège (faux)</span></div>
+ <div class="chain">${ex.keys.map((k,i)=>`${i?'<span class="ar">→</span>':""}<div class="bx ${nw[k]?"new":""}"><b>${k}</b><span>${v[k]||"?"}</span></div>`).join("")}</div>
+ <div class="dir">${ex.dir}</div>
+ <div class="ctrl"><button id="prev" ${step===0?"disabled":""}>◀</button><span class="n">Étape ${step} / ${ex.steps.length-1}</span><button id="next" ${step===ex.steps.length-1?"disabled":""}>▶</button><button id="again">↺ Rejouer</button>
+ ${s.td?`<button id="trapb" class="${showTrap?"on":""}">⚠ ${showTrap?"Cacher":"Voir"} le piège</button>`:""}</div>
+ <label class="spd">Vitesse <input type="range" id="spd" min="0.4" max="3" step="0.1" value="${3.4-DUR}"><span>${DUR<0.9?"rapide":DUR>1.8?"lente":"normale"}</span></label></div>
+ <div class="card step"><h2>${s.t}</h2><div>${s.x}</div>${s.trap?`<div class="trap">${s.trap}</div>`:""}</div>`;
+ const svg=$("cv");svg.innerHTML=defs();const g=document.createElementNS(NS,"g");svg.appendChild(g);
+ const nn=document.createElementNS(NS,"g");svg.appendChild(nn);
+ txt(nn,{x:340,y:22},"N ↑","b",false,"end");
+ if(!ex.solo)for(let i=0;i<step;i++)ex.steps[i].d&&ex.steps[i].d(g,false);
+ s.d&&s.d(g,true);
+ if(showTrap&&s.td)s.td(g,true);
+ $("prev").onclick=()=>{step--;showTrap=false;render()};
+ $("next").onclick=()=>{step++;showTrap=false;render()};
+ $("again").onclick=()=>render();
+ if($("trapb"))$("trapb").onclick=()=>{showTrap=!showTrap;render()};
+ $("spd").oninput=e=>{DUR=+(3.4-e.target.value).toFixed(1);try{localStorage.setItem("kam-anim-vitesse",DUR)}catch(_){}}
+ $("spd").onchange=()=>render();
+}
+$("tabs").onclick=e=>{const b=e.target.closest("button[data-tab]");if(!b)return;cur=+b.dataset.tab;step=0;showTrap=false;render();window.scrollTo(0,0)};
+if(cur>=TABS.length)cur=1;if(TABS[cur].steps&&step>=TABS[cur].steps.length)step=0;render();
+</script>
+</body>
+</html>
