@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>QCM SRC</title>
+<style>
+:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--acc2:#e3eef7;--ok:#1a9c46;--okbg:#e6f5ea;--ko:#c92a2a;--kobg:#fdecea;--warn:#fff6d6;--warnb:#b58a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--acc2:#16283a;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--acc2:#16283a;--okbg:#14301f;--kobg:#3a1c1a;--warn:#2e2810}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:max(10px,env(safe-area-inset-top)) 16px 40px}
+.back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 0 8px;padding:6px 0;background:var(--bg);color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.w{max-width:680px;margin:0 auto}.v{font-size:12px;color:var(--mute)}
+h1{font-size:23px;margin:4px 0 6px}h2{font-size:20px;margin:0 0 8px}h3{font-size:17px;margin:14px 0 6px;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.btn{min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 15px system-ui;cursor:pointer;padding:8px 14px}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn:disabled{opacity:.45}
+.col{display:grid;gap:8px}.row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{flex:1}
+.mute{color:var(--mute);font-size:14px}
+.bar{height:9px;background:var(--line);border-radius:5px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:9px;background:var(--accent)}
+.qq{font-size:19px;font-weight:700;margin:10px 0}
+.msg{font:13px/1.45 ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;white-space:pre-wrap;margin:8px 0}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;min-height:54px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:500 16px/1.35 system-ui;padding:9px 12px;cursor:pointer}
+.opts button.good{background:var(--okbg);border-color:var(--ok)}.opts button.bad{background:var(--kobg);border-color:var(--ko)}
+.exp{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:16px}
+.src{font-size:13px;color:var(--mute);margin-top:6px}
+.res{font-size:28px;font-weight:900;text-align:center;margin:6px 0;border-radius:14px;padding:12px}
+.res.ok{background:var(--okbg);color:var(--ok)}.res.ko{background:var(--kobg);color:var(--ko)}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}th{color:var(--mute);font-size:12px}
+.rev{border-left:4px solid var(--line);padding:8px 10px;margin:8px 0;background:var(--bg);border-radius:0 10px 10px 0;font-size:15px}
+.rev.k{border-color:var(--ko)}.rev.o{border-color:var(--ok)}.rev small{display:block;color:var(--mute);margin-top:4px}
+.okc{color:var(--ok);font-weight:800}.koc{color:var(--ko);font-weight:800}
+.chart{display:flex;align-items:flex-end;gap:6px;height:120px;border-bottom:1px solid var(--line);padding-top:6px}
+.chart div{flex:1;max-width:44px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--mute)}
+.chart b{display:block;width:100%;border-radius:5px 5px 0 0;background:var(--accent)}
+.chart b.ok{background:var(--ok)}
+.pill{display:inline-block;font:700 12px system-ui;padding:2px 8px;border-radius:8px;background:var(--acc2);color:var(--accent)}
+.fiche table{font-size:13px;margin:6px 0}.fiche td,.fiche th{padding:5px 4px}.fiche p,.fiche ol{font-size:14px;margin:6px 0}
+details.fd{margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--card)}details.fd summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:14px;min-height:32px;display:flex;align-items:center}
+.note{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:8px 12px;font-size:14px;margin-top:8px}
+</style></head><body><a class="back" href="./permis-belge.html">‹ Retour</a><div class="w">
+<div class="v">QCM SRC · version 1.0 · 43 questions de votre cours Socrative SRCGMDSS, avec explications, fiches à retenir, statistiques, progression et reprise des erreurs</div>
+<h1>QCM SRC</h1>
+<div id="app"></div>
+<p class="mute" style="font-size:12px">Sources : votre cours Socrative SRCGMDSS ; manuel VHF de l'IBPT 2025 ; Convention SOLAS (GMDSS) ; Cospas-Sarsat ; manuel NAVTEX de l'OMI. Les statistiques restent sur cet appareil uniquement.</p>
+</div>
+<script>
+const F={
+zones:{t:"Les zones GMDSS et le matériel",h:`<table><tr><th>Zone</th><th>Couverte par</th><th>Matériel en plus</th></tr>
+<tr><td><b>A1</b></td><td>une station VHF avec ASN (20 à 30 milles)</td><td>VHF avec ASN</td></tr>
+<tr><td><b>A2</b></td><td>une station MF, hors A1 (150 à 300 milles)</td><td>+ MF avec ASN</td></tr>
+<tr><td><b>A3</b></td><td>les satellites géostationnaires Inmarsat, hors A1 et A2</td><td>+ Inmarsat ou HF</td></tr>
+<tr><td><b>A4</b></td><td>tout le reste : les régions polaires</td><td>+ HF</td></tr></table>
+<p>C'est la <b>zone</b> qui fixe le matériel. Le tonnage décide seulement <b>si</b> le navire est soumis au GMDSS (SOLAS).</p>`},
+sigles:{t:"Les sigles à connaître",h:`<table><tr><th>Sigle</th><th>En entier</th><th>En français / rôle</th></tr>
+<tr><td><b>GMDSS</b></td><td>Global Maritime Distress and Safety System</td><td>SMDSM : le système mondial de détresse et de sécurité</td></tr>
+<tr><td><b>IMO</b></td><td>International <b>Maritime</b> Organisation</td><td>OMI : sécurité des navires (SOLAS, GMDSS)</td></tr>
+<tr><td><b>ITU</b></td><td>International Telecommunication Union</td><td>UIT : les fréquences et les règles radio</td></tr>
+<tr><td><b>MMSI</b></td><td>Maritime Mobile <b>Service</b> <b>Identity</b></td><td>le <b>numéro</b> à 9 chiffres du bateau</td></tr>
+<tr><td><b>MSI</b></td><td>Maritime Safety Information</td><td>les <b>messages</b> de sécurité (navigation, météo)</td></tr>
+<tr><td><b>DSC</b></td><td>Digital Selective Calling</td><td>ASN : appel sélectif numérique (canal 70)</td></tr>
+<tr><td><b>LUT</b></td><td>Local User Terminal</td><td>la station au sol qui reçoit le satellite</td></tr>
+<tr><td><b>MCC</b></td><td>Mission Control Centre</td><td>vérifie l'alerte, trouve le pays responsable</td></tr>
+<tr><td><b>RCC</b></td><td>Rescue Coordination Centre</td><td>organise les secours (Belgique : MRCC Ostende)</td></tr>
+<tr><td><b>SART</b></td><td><b>S</b>earch <b>A</b>nd <b>R</b>escue <b>T</b>ransponder</td><td>répondeur radar du radeau</td></tr>
+<tr><td><b>AIS-SART</b></td><td>AIS Search And Rescue <b>Transmitter</b></td><td>émetteur AIS du radeau</td></tr>
+<tr><td><b>EPIRB</b></td><td>Emergency Position Indicating Radio Beacon</td><td>balise du <b>bateau</b></td></tr>
+<tr><td><b>ELT</b></td><td>Emergency Locator Transmitter</td><td>balise de l'<b>avion</b></td></tr>
+<tr><td><b>PLB</b></td><td>Personal Locator Beacon</td><td>balise de la <b>personne</b></td></tr></table>
+<p>Piège « Maritime Coordination Center » : ce nom n'existe pas. Le centre des secours, c'est le RCC.</p>`},
+chaine:{t:"Le trajet d'une alerte Cospas-Sarsat",h:`<ol><li>La <b>balise</b> (EPIRB, PLB, ELT) émet sur <b>406 MHz</b>, sans arrêt, dès son activation.</li>
+<li>Le <b>satellite</b> capte le signal et le renvoie vers le sol (1544,5 MHz).</li>
+<li>Le <b>LUT</b>, station au sol, reçoit l'alerte.</li>
+<li>Le <b>MCC</b> vérifie l'alerte et cherche le pays responsable de la zone.</li>
+<li>Le <b>RCC</b> de ce pays organise les secours (hélicoptère, canot).</li></ol>`},
+omi:{t:"OMI ou UIT ?",h:`<table><tr><th></th><th>OMI (IMO)</th><th>UIT (ITU)</th></tr>
+<tr><td>Domaine</td><td>la <b>sécurité des navires</b></td><td>les <b>ondes radio</b></td></tr>
+<tr><td>Ce qu'elle fait</td><td>SOLAS, création du GMDSS (1988, en vigueur le 1er février 1999)</td><td>fréquences, canaux, règles radio, base des MMSI</td></tr></table>
+<p>L'OMI s'occupe du <b>bateau</b>, l'UIT de la <b>radio</b>.</p>`},
+gammes:{t:"Les gammes de fréquences",h:`<table><tr><th>Gamme</th><th>De … à</th><th>Appareils</th></tr>
+<tr><td><b>MF</b></td><td>300 kHz à 3 MHz</td><td>NAVTEX 518 et 490 kHz</td></tr>
+<tr><td><b>HF</b></td><td>3 à 30 MHz</td><td>NAVTEX tropical 4209,5 kHz ; radio longue distance</td></tr>
+<tr><td><b>VHF</b></td><td>30 à 300 MHz</td><td>VHF marine, AIS, <b>AIS-SART</b> (161,975 et 162,025 MHz), ralliement 121,5 MHz</td></tr>
+<tr><td><b>UHF</b></td><td>300 MHz à 3 GHz</td><td><b>EPIRB et PLB 406 MHz</b> ; <b>Inmarsat</b> 1,5 à 1,6 GHz</td></tr>
+<tr><td><b>SHF</b></td><td>3 à 30 GHz</td><td>radar et <b>SART</b> (9 GHz, bande X)</td></tr></table>
+<p>L'ordre complet : VLF, LF, MF, HF, VHF, UHF, SHF, EHF (×10 à chaque case). Regardez d'abord l'<b>unité</b> : kHz → MF ; environ 160 MHz → VHF ; 406 MHz → UHF ; GHz → SHF.</p>`},
+balises:{t:"Les balises côte à côte",h:`<table><tr><th></th><th>EPIRB</th><th>PLB</th><th>SART</th><th>AIS-SART</th></tr>
+<tr><td>Pour</td><td>le bateau</td><td>la personne</td><td>le radeau</td><td>le radeau</td></tr>
+<tr><td>Fréquence</td><td>406 MHz (+121,5)</td><td>406 MHz (+121,5)</td><td>9 GHz (SHF)</td><td>162 MHz (VHF)</td></tr>
+<tr><td>Vue par</td><td>les satellites</td><td>les satellites</td><td>les radars bande X</td><td>l'écran AIS</td></tr>
+<tr><td>Mise en marche</td><td>seule dans l'eau (ou à la main)</td><td>à la main</td><td><b>à la main</b> (bouton)</td><td>à la main</td></tr>
+<tr><td>Elle…</td><td>émet sans arrêt</td><td>émet sans arrêt</td><td><b>répond</b> au radar</td><td>émet seule sa position GPS</td></tr>
+<tr><td>Batterie</td><td><b>48 h</b></td><td>24 h</td><td>96 h de veille + 8 h de réponse</td><td>96 h</td></tr></table>
+<p>Les 3 balises Cospas-Sarsat : <b>EPIRB</b> (bateau), <b>ELT</b> (avion), <b>PLB</b> (personne). Le SART et l'AIS-SART ne passent pas par les satellites.</p>`},
+situations:{t:"Quelle alerte pour quelle situation ?",h:`<table><tr><th>Situation</th><th>Ce qu'on fait</th></tr>
+<tr><td><b>Le bateau coule</b> ou on l'abandonne</td><td>MAYDAY (ASN + voix), puis <b>EPIRB</b> ; <b>SART</b> allumé dans le radeau</td></tr>
+<tr><td><b>Homme à la mer</b></td><td>appel à la voix sur le canal 16 ; PLB ou AIS-MOB si la personne en porte</td></tr>
+<tr><td><b>Blessé grave</b>, bateau en bon état</td><td>URGENCY / PAN PAN (MEDICO)</td></tr>
+<tr><td>Vous voyez un <b>SART</b> sur le radar</td><td>prévenir la station côtière ; sinon MAYDAY RELAY à la voix</td></tr></table>`},
+sat:{t:"LEOSAR, GEOSAR, MEOSAR",h:`<table><tr><th></th><th>Le satellite…</th><th>Position de la balise</th></tr>
+<tr><td><b>GEO</b>SAR</td><td><b>GÉO</b>stationnaire : immobile à 36 000 km au-dessus de l'équateur ; ne voit pas les pôles</td><td>pas d'effet Doppler → <b>seulement le GPS de la balise</b> ; sans GPS, alerte sans position</td></tr>
+<tr><td><b>LEO</b>SAR</td><td>orbite <b>basse</b> (Low Earth Orbit), il défile</td><td>calculée par <b>effet Doppler</b> : 1 à 3 milles (2 à 6 km), environ 2 milles ; il faut attendre son passage</td></tr>
+<tr><td><b>MEO</b>SAR</td><td>orbite <b>moyenne</b>, il défile</td><td>système récent, plus rapide et plus précis</td></tr></table>
+<p>L'effet Doppler, c'est la sirène de l'ambulance qui change de son quand elle <b>passe</b>. Ambulance arrêtée = pas de changement = pas de calcul. Balise avec GPS : environ 100 m.</p>`},
+sartvs:{t:"SART ou AIS-SART ?",h:`<table><tr><th></th><th>SART (radar)</th><th>AIS-SART</th></tr>
+<tr><td>Le T veut dire</td><td><b>Transponder</b> : il <b>répond</b></td><td><b>Transmitter</b> : il <b>émet</b></td></tr>
+<tr><td>Fonctionnement</td><td>en veille ; répond quand un radar l'atteint</td><td>envoie seul, chaque minute, sa position GPS</td></tr>
+<tr><td>Gamme</td><td><b>SHF</b> 9 GHz</td><td><b>VHF</b> 161,975 et 162,025 MHz</td></tr>
+<tr><td>On le voit</td><td>ligne de 12 points sur le radar</td><td>symbole sur l'écran AIS</td></tr>
+<tr><td>Portée</td><td>5 milles au moins, jusqu'à 10 selon la hauteur ; 30 milles pour un avion</td><td>portée VHF</td></tr></table>`},
+navtex:{t:"Le NAVTEX",h:`<p><b>Fréquences</b> : <b>518 kHz</b> = international, en anglais ; <b>490 kHz</b> = langue du pays ; 4209,5 kHz = tropical (HF). Toutes en MF sauf le tropical.</p>
+<p><b>En-tête</b> : ZCZC puis 4 caractères, par exemple <b>AA05</b> : 1re lettre = <b>qui</b> émet (la station) ; 2e lettre = <b>quoi</b> (le type) ; 2 chiffres = numéro (00 = prioritaire, toujours imprimé). Fin : NNNN.</p>
+<table><tr><th>Lettre</th><th>Type de message</th></tr>
+<tr><td><b>A</b></td><td>avertissement de navigation</td></tr><tr><td><b>B</b></td><td>avertissement <b>météo</b> (coup de vent) : l'<b>alerte</b></td></tr>
+<tr><td><b>C</b></td><td>glaces</td></tr><tr><td><b>D</b></td><td>recherche et sauvetage (SAR), détresse</td></tr>
+<tr><td><b>E</b></td><td><b>prévisions</b> météo : le bulletin</td></tr><tr><td><b>F</b></td><td>pilotage</td></tr><tr><td><b>G</b></td><td>AIS</td></tr>
+<tr><td><b>L</b></td><td>avertissement de navigation supplémentaire</td></tr></table>
+<p>A, B, D et L ne peuvent pas être refusés sur le récepteur. Truc : <b>B</b> comme <b>B</b>ourrasque, <b>E</b> comme <b>E</b>stimation.</p>`}
+};
+const Q=[
+{t:"NAVTEX",q:"Message NAVTEX reçu :",msg:"ZCZC AA05\n140800 UTC NOV 03\nIROISE\nGUNNERY EXERCISES IN 'R 154' AREA BOUNDED BY …\n- 180930 TO 181130 UTC NOV\nCANCEL THIS MSG 181900Z NOV\nNNNN",q2:"De quel type de message s'agit-il ?",o:["A : avertissement de navigation","B : avertissement météo (coup de vent)","D : recherche et sauvetage (SAR)","E : prévision météo"],a:0,e:"C'est la <b>2e lettre</b> qui donne le type. Dans « AA05 », la 1re lettre (A) est la station (CROSS Corsen), la 2e (A) est le type : avertissement de navigation. Le texte le confirme : exercices de tir dans une zone. 05 = numéro du message ; NNNN = fin.",s:"Manuel NAVTEX (OMI) ; cours SRCGMDSS",f:["navtex"]},
+{t:"Zones",q:"Quelle est la définition de la zone A4 ?",o:["La zone couverte par les radios HF, à l'exclusion des zones A1 et A2","La zone couverte par les radios HF, à l'exclusion de la zone A3","La zone en dehors de la couverture des satellites géostationnaires, à l'exclusion des zones A1 et A2"],a:2,e:"A4 = tout ce que ne couvrent ni A1 (VHF), ni A2 (MF), ni A3 (satellites géostationnaires) : ce sont les <b>régions polaires</b>. La HF sert en A4, mais elle porte aussi en A3 : elle ne définit donc pas la zone.",s:"Convention SOLAS ; cours SRCGMDSS",f:["zones"]},
+{t:"Détresse",q:"Accident grave à bord, vous avez besoin d'un secours médical immédiat. Quel appel faites-vous par DSC ?",o:["DSC URGENCY, puis vous passez sur le canal 16","DSC DISTRESS, puis vous passez sur le canal 16","DSC SAFETY, puis vous passez sur le canal 13"],a:0,e:"DISTRESS (MAYDAY) est réservé au danger grave et imminent pour le <b>navire</b>. Un blessé grave alors que le bateau flotte et manœuvre = <b>URGENCY</b> (PAN PAN, « PAN PAN MEDICO »), puis la voix sur le canal 16.",s:"Cours SRCGMDSS",f:["situations"]},
+{t:"Sigles",q:"L'abréviation MCC signifie :",o:["Mission Control Center","Mobile Center for Coordination","Maritime Coordination Center"],a:0,e:"MCC = <b>Mission Control Centre</b>, centre de contrôle de mission du système Cospas-Sarsat. Il reçoit les alertes des LUT, les vérifie, trouve le pays responsable de la zone et transmet au RCC de ce pays.",note:"Piège : « Maritime Coordination Center » sonne juste mais n'existe pas. Le centre qui organise les secours s'appelle le RCC.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["chaine","sigles"]},
+{t:"Sigles",q:"L'abréviation MMSI signifie :",o:["Maritime Mobile System Identity","Maritime Mobile System Identification","Maritime Mobile Service Identity","Maritime Mobile Safety Information"],a:2,e:"MMSI = Maritime Mobile <b>Service</b> <b>Identity</b> : « identité dans le service mobile maritime ». C'est le numéro à 9 chiffres attribué par l'IBPT (205 = Belgique). <b>S = Service</b> (ni System ni Safety), <b>I = Identity</b> (ni Identification ni Information).",s:"Manuel VHF IBPT 2025, p. 9",f:["sigles"]},
+{t:"Sigles",q:"L'abréviation IMO signifie :",o:["International Mobile Obstruction","International Mobile Organisation","International Maritime Organisation"],a:2,e:"IMO = International <b>Maritime</b> Organisation, en français <b>OMI</b>, Organisation maritime internationale : l'agence de l'ONU qui a écrit SOLAS et créé le GMDSS. Le M veut dire <b>Maritime</b> ; « Mobile » se trouve dans MMSI.",s:"OMI ; cours SRCGMDSS",f:["omi","sigles"]},
+{t:"Sigles",q:"L'abréviation MSI signifie :",o:["Mobile System Identification","Maritime Safety Information","Maritime Ship Identification"],a:1,e:"MSI = <b>Maritime Safety Information</b> : les messages de sécurité (avertissements de navigation, informations météo, autres informations urgentes). On les reçoit par <b>NAVTEX</b> (MF), <b>EGC</b> (Inmarsat) et <b>NBDP</b> (télex HF).",note:"MSI = des <b>messages</b> qu'on reçoit. MMSI = le <b>numéro</b> du bateau.",s:"Cours SRCGMDSS",f:["sigles"]},
+{t:"Détresse",q:"Dans le cas d'un homme à la mer (MOB), on doit :",o:["Envoyer l'EPIRB par-dessus bord et l'activer","Prévenir tous les bateaux en téléphonie sur VHF canal 16","Envoyer un message DSC « all ships » avec la priorité « distress »"],a:1,e:"On prévient tous les bateaux <b>à la voix sur le canal 16</b>. Dans le menu DSC « Distress », il n'y a pas de choix « All Ships » : il n'existe que pour « Urgency » et « Safety » ; une alerte de détresse part de toute façon vers toutes les stations. L'EPIRB est la balise du <b>bateau</b>, pas d'une personne (pour une personne : PLB ou AIS-MOB).",note:"Les VHF avec ASN proposent bien « Man overboard » dans la liste des natures de détresse : une alerte DISTRESS par ASN n'est donc pas interdite pour un homme à la mer. Ce qui est faux dans la réponse C, c'est « all ships ». À l'examen, répondez B.",s:"Cours SRCGMDSS",f:["situations"]},
+{t:"Zones",q:"Les appareils de radiocommunications nécessaires dans le système GMDSS sont déterminés par :",o:["La zone dans laquelle on navigue","Le tonnage brut du bateau","Le pays dans lequel le bateau est immatriculé"],a:0,e:"Plus on s'éloigne des côtes, plus il faut d'appareils : A1 VHF avec ASN ; A2 + MF ; A3 + Inmarsat ou HF ; A4 + HF. C'est donc la <b>zone</b> qui fixe la liste.",note:"Le tonnage décide si le navire est soumis au GMDSS (SOLAS : navires de charge de 300 tonneaux et plus, navires à passagers), mais pas de la liste du matériel. Le pavillon décide de l'administration qui contrôle.",s:"Convention SOLAS, chapitre IV ; cours SRCGMDSS",f:["zones"]},
+{t:"Sigles",q:"L'abréviation RCC signifie :",o:["Radio Certificate Committee","Regulations Coordination Committee","Rescue Coordination Center"],a:2,e:"RCC = <b>Rescue Coordination Centre</b>, centre de coordination des secours. Il reçoit l'alerte du MCC et organise les moyens de secours. En Belgique : le <b>MRCC d'Ostende</b> (M = Maritime).",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["chaine","sigles"]},
+{t:"Détresse",q:"Un appel de détresse DSC « DISTRESS RELAY » peut être envoyé quand :",o:["La station côtière demande d'émettre ce message en relais","Une radio DSC de classe D n'a pas les moyens d'émettre ce message","Le cas de détresse a besoin d'aide immédiate"],a:1,e:"Les VHF de plaisance sont de <b>classe D</b> : elles ne savent pas relayer par ASN la détresse d'un autre bateau. Le relais se fait donc <b>à la voix</b> sur le canal 16 : « MAYDAY RELAY » trois fois, puis le message.",note:"Sur un navire équipé d'une ASN de classe A, les règles de l'OMI permettent un relais ASN si le navire en détresse ne peut pas alerter lui-même ou si un RCC / une station côtière le demande : la réponse A n'est pas absurde en soi. La question est d'ailleurs mal formulée. Pensez « plaisance, classe D » et répondez B.",s:"Manuel VHF IBPT 2025, p. 23 ; cours SRCGMDSS",f:["situations"]},
+{t:"Sigles",q:"Quelle est l'organisation qui a mandaté la mise en œuvre du GMDSS ?",o:["L'Organisation maritime internationale (OMI ou IMO en anglais)","L'Union internationale des télécommunications (UIT ou ITU en anglais)","L'Organisation des Nations unies (ONU)","L'Organisation mondiale de la santé (OMS)"],a:0,e:"L'<b>OMI</b> a adopté le GMDSS en <b>1988</b> en modifiant SOLAS ; il est entièrement en vigueur depuis le <b>1er février 1999</b>. L'UIT fournit les fréquences et les règles radio, mais n'a pas créé le GMDSS.",s:"OMI, convention SOLAS chapitre IV",f:["omi"]},
+{t:"Fréquences",q:"Positionnez un AIS-SART dans l'échelle des fréquences :",o:["300 kHz à 3 MHz","3 à 30 MHz","30 MHz à 300 MHz","300 MHz à 3 GHz"],a:2,e:"L'AIS-SART émet sur les deux canaux AIS, <b>161,975 MHz</b> et <b>162,025 MHz</b> : c'est la gamme <b>VHF</b>, comme la VHF du bord. Ne confondez pas avec le SART radar, en SHF (9 GHz).",s:"Cours SRCGMDSS",f:["gammes","sartvs"]},
+{t:"SART",q:"Un SART sert à :",o:["Émettre un signal via satellite","Envoyer un signal de détresse qui apparaisse sur les autres radars","Être localisé sur des radars de bande X"],a:2,e:"Le SART n'émet rien de lui-même : il <b>répond</b> quand un radar <b>bande X</b> (9 GHz) l'atteint. Sur l'écran apparaît une <b>ligne de 12 points</b> qui pointe vers le radeau, puis des arcs et des cercles quand on s'approche. Le signal par satellite, c'est l'EPIRB.",s:"Cours SRCGMDSS ; OMI",f:["sartvs","balises"]},
+{t:"Balises",q:"Combien de temps la batterie d'une balise EPIRB doit-elle fonctionner ?",o:["24 heures","48 heures","96 heures"],a:1,e:"Une EPIRB doit émettre au moins <b>48 heures</b>. Elle est jaune ou orange, étanche à 10 m, et se libère seule de son support avant 4 m de profondeur. On remplace normalement sa batterie tous les 5 ans.",note:"Piège : 96 h, c'est la veille du SART ; 24 h, c'est la PLB.",s:"Cours SRCGMDSS",f:["balises"]},
+{t:"SART",q:"Le SART sera activé en cas de :",o:["Navire qui coule","Homme blessé","MOB (homme à la mer)"],a:0,e:"On emporte le SART dans le radeau quand on <b>abandonne le navire</b> et on l'allume à la main : il permet aux sauveteurs de trouver le <b>radeau</b>. Homme à la mer : voix sur le 16, PLB ou AIS-MOB. Blessé : PAN PAN.",s:"Cours SRCGMDSS",f:["situations"]},
+{t:"NAVTEX",q:"Que signifie la lettre E dans un type de message NAVTEX ?",o:["Alerte météo","Prévisions météo","Alerte à la navigation"],a:1,e:"E = <b>Meteorological forecast</b> : les <b>prévisions</b>, le bulletin normal. L'<b>alerte</b> météo (coup de vent) est la lettre <b>B</b>. Truc : E comme <b>E</b>stimation.",s:"Manuel NAVTEX (OMI) ; cours SRCGMDSS",f:["navtex"]},
+{t:"NAVTEX",q:"Que signifie la lettre B dans un type de message NAVTEX ?",o:["Alerte météo","Prévisions météo","Alerte à la navigation"],a:0,e:"B = <b>Meteorological warning</b> : l'<b>alerte</b> météo (avis de coup de vent). Les prévisions, c'est la lettre <b>E</b>. Truc : B comme <b>B</b>ourrasque.",s:"Manuel NAVTEX (OMI) ; cours SRCGMDSS",f:["navtex"]},
+{t:"NAVTEX",q:"Quelle est la fréquence internationale NAVTEX pour l'utilisation en anglais ?",o:["490 kHz","518 kHz","4209,5 kHz","406 MHz"],a:1,e:"<b>518 kHz</b> = NAVTEX international en anglais. 490 kHz = langue du pays ; 4209,5 kHz = NAVTEX tropical (HF) ; 406 MHz = balises EPIRB et PLB. Truc : 518, le plus grand nombre = le monde entier.",s:"Cours SRCGMDSS",f:["navtex"]},
+{t:"NAVTEX",q:"Quelle est la fréquence NAVTEX pour l'utilisation de la langue locale ?",o:["490 kHz","518 kHz","4209,5 kHz","406 MHz"],a:0,e:"<b>490 kHz</b> = NAVTEX national, dans la langue du pays. 518 kHz = international en anglais. Truc : 490, le plus petit = chez soi. Un récepteur double capte les deux sans réglage.",s:"Cours SRCGMDSS",f:["navtex"]},
+{t:"SART",q:"Je reçois un signal SART sur mon radar mais je n'ai pas reçu de message DSC. Que dois-je faire ?",o:["Ignorer","Appeler la station côtière la plus proche","Faire un appel Distress à tous les bateaux"],a:1,e:"Ce n'est pas <b>vous</b> qui êtes en détresse : un DISTRESS partirait avec <b>votre</b> MMSI et ferait croire que c'est votre bateau qui coule. On prévient la <b>station côtière</b> (MRCC), qui coordonne, en donnant sa position et la direction du SART, et on se dirige vers lui si possible. Si la station ne répond pas : MAYDAY RELAY à la voix sur le 16. On n'ignore jamais un SART.",s:"Cours SRCGMDSS",f:["situations"]},
+{t:"Satellites",q:"Quelle est la précision de la géolocalisation par LEOSAR ?",o:["2 à 6 km","5 à 10 km","10 à 20 km","Plus de 20 km"],a:0,e:"Les satellites LEOSAR défilent en orbite basse et calculent la position par <b>effet Doppler</b> : précision de <b>1 à 3 milles</b>, soit <b>2 à 6 km</b> (1 mille = 1,852 km). Il faut attendre le passage d'un satellite.",note:"Une autre question donne « 1 à 2 milles » : même idée (environ 2 milles). Si les réponses sont en km, choisissez 2 à 6 km.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["sat"]},
+{t:"Satellites",q:"Quelle est la précision de localisation approximative d'une balise ?",o:["5 à 7 milles","3 à 5 milles","1 à 2 milles"],a:2,e:"Sans GPS, une balise 406 MHz est localisée par effet Doppler à environ <b>1 à 2 milles</b> près. Avec un GPS intégré : environ <b>100 m</b>.",note:"La question LEOSAR donne « 1 à 3 milles (2 à 6 km) ». Si les réponses sont en milles, choisissez 1 à 2 milles ; en km, 2 à 6 km.",s:"Cours SRCGMDSS",f:["sat"]},
+{t:"Sigles",q:"L'abréviation SART signifie :",o:["Search and Rescue Transponder","Sea Aided Radio Transmitter","Service And Research Transponder"],a:0,e:"<b>SAR</b> = Search And Rescue (recherche et sauvetage), comme dans LEOSAR, GEOSAR, Cospas-Sarsat. <b>T</b> = <b>Transponder</b> : un appareil qui <b>répond</b>. C'est ce que fait le SART : il répond au radar.",s:"Cours SRCGMDSS",f:["sigles","sartvs"]},
+{t:"Fréquences",q:"Dans quelle gamme de fréquence travaille un transpondeur SART (VHF, MF, UHF, SHF…) ?",o:["MF","UHF","SHF","VHF"],a:2,e:"Le SART répond aux radars : il travaille sur leur fréquence, <b>9 GHz</b> (bande X), dans la gamme <b>SHF</b> (3 à 30 GHz). C'est l'<b>AIS</b>-SART qui est en VHF.",s:"Cours SRCGMDSS",f:["gammes","sartvs"]},
+{t:"SART",q:"La lettre « T » dans l'abréviation AIS-SART signifie :",o:["Transmitter","Transponder","Transceiver","Test"],a:0,e:"L'AIS-SART ne fait qu'<b>émettre</b> : il envoie seul, chaque minute, sa position GPS → <b>Transmitter</b>. Attention : dans le SART radar, le T veut dire <b>Transponder</b> (TRANSmitter + resPONDER) parce qu'il répond au radar. Transceiver = émetteur-récepteur, comme une VHF.",s:"Cours SRCGMDSS",f:["sartvs"]},
+{t:"Satellites",q:"La position d'une balise EPIRB dont le signal est capté par un satellite GEOSAR est calculée :",o:["Sur base de la position indiquée par le système GPS de l'EPIRB","Sur base du signal GPS du satellite","Par effet Doppler à partir du satellite","Par effet Doppler depuis le LUT"],a:0,e:"Un satellite <b>géostationnaire</b> est immobile par rapport à la Terre : <b>pas de mouvement, pas d'effet Doppler</b>. Il ne peut rien calculer et transmet seulement la position que le <b>GPS de la balise</b> a mise dans son message. Sans GPS, l'alerte arrive sans position.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["sat"]},
+{t:"Satellites",q:"La localisation d'une balise via satellite GEOSAR est réalisée :",o:["Par le LUT et effet Doppler","Par le GPS de la balise","Par le satellite"],a:1,e:"Règle : <b>GEOSAR = satellite immobile → pas d'effet Doppler → seulement le GPS de la balise</b>. L'effet Doppler vient du <b>mouvement</b> du satellite (LEOSAR) ; le LUT reçoit l'alerte, mais sans mouvement il n'y a rien à calculer.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["sat"]},
+{t:"Satellites",q:"Les satellites du système Cospas-Sarsat GEO sont :",o:["Des satellites radar","Des satellites géostationnaires","Des satellites non géostationnaires"],a:1,e:"<b>GEO</b> = <b>GÉO</b>stationnaire : à environ 36 000 km au-dessus de l'équateur, ils tournent à la vitesse de la Terre et paraissent immobiles. Ils ne voient pas les pôles. LEO = orbite basse, MEO = orbite moyenne : ceux-là défilent.",s:"Cospas-Sarsat",f:["sat"]},
+{t:"Fréquences",q:"Positionnez une balise EPIRB dans l'échelle des fréquences :",o:["300 kHz à 3 MHz","3 à 30 MHz","30 MHz à 300 MHz","300 MHz à 3 GHz"],a:3,e:"L'EPIRB envoie son alerte sur <b>406 MHz</b> : gamme <b>UHF</b> (300 MHz à 3 GHz).",note:"Elle émet aussi un petit signal de ralliement sur 121,5 MHz (VHF) pour guider les secours sur les derniers milles. La question porte sur la fréquence d'alerte : UHF.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["gammes"]},
+{t:"Balises",q:"Par qui doit être programmé le codage (MMSI) d'une balise PLB ou EPIRB ?",o:["L'opérateur radio","Un agent de l'IBPT","Le chef de bord","Un installateur agréé"],a:3,e:"Le codage est fait par un <b>professionnel</b> (installateur en radiocommunications, revendeur), avec le MMSI du navire sur lequel la balise sera installée. L'<b>IBPT attribue</b> le numéro mais ne programme pas ; le <b>propriétaire</b> est responsable de la programmation correcte mais ne code pas la balise lui-même.",s:"Manuel VHF IBPT 2025, p. 7 et 9 ; cours SRCGMDSS"},
+{t:"SART",q:"Quelle est la portée d'un répondeur SART suivant sa hauteur de fonctionnement ?",o:["3 à 7 milles","5 à 7 milles","5 à 10 milles"],a:2,e:"Posé à environ 1 m au-dessus de l'eau, un radar de navire doit le capter à <b>5 milles au moins</b> (norme OMI). Plus haut (sur un mât), il porte plus loin : <b>jusqu'à 10 milles</b>. Un avion peut le capter jusqu'à 30 milles.",s:"OMI ; cours SRCGMDSS",f:["sartvs"]},
+{t:"NAVTEX",q:"Que signifie la deuxième lettre d'un message NAVTEX ?",o:["Le type de message envoyé","Le nom de la station d'émission du message NAVTEX","La région à l'origine de ce message"],a:0,e:"En-tête ZCZC + 4 caractères, par exemple AA05 : <b>1re lettre = qui</b> émet (la station) ; <b>2e lettre = quoi</b>, le <b>type</b> de message ; 2 chiffres = numéro. La région n'apparaît pas dans l'en-tête.",s:"Manuel NAVTEX (OMI) ; cours SRCGMDSS",f:["navtex"]},
+{t:"Balises",q:"Quand utiliserez-vous un EPIRB ?",o:["En cas de MOB","Après un appel de détresse","Quand le bateau coule"],a:2,e:"L'EPIRB est la balise du <b>bateau</b> : on l'utilise quand le bateau est perdu (il coule, on l'abandonne). Elle se libère seule et se met en marche dans l'eau. On lance d'abord un MAYDAY si on en a le temps, mais ce n'est pas l'appel qui décide : un appel de détresse pour un blessé ne demande pas d'EPIRB.",s:"Cours SRCGMDSS",f:["situations"]},
+{t:"Fréquences",q:"Positionnez un NAVTEX sans fréquence tropicale dans l'échelle des fréquences :",o:["300 kHz à 3 MHz","3 à 30 MHz","30 MHz à 300 MHz","300 MHz à 3 GHz"],a:0,e:"Le NAVTEX émet sur <b>518 kHz</b> et <b>490 kHz</b> : des <b>kHz</b>, pas des MHz. 518 kHz = 0,518 MHz : gamme <b>MF</b>. « Sans fréquence tropicale » écarte le 4209,5 kHz, qui est en HF.",s:"Cours SRCGMDSS",f:["gammes","navtex"]},
+{t:"Détresse",q:"Quand on appuie sur le bouton Distress pendant 1 seconde, cela produit l'action suivante :",o:["La radio lance un appel de détresse","La radio affiche le menu des différents types de détresse","La radio propose le choix suivant : All Ships / Individual","La radio lance un appel test"],a:1,e:"Appui <b>court</b> = le <b>menu</b> pour choisir le type de détresse (incendie, voie d'eau, abordage, échouement, chavirement, naufrage, abandon, homme à la mer…). Appui <b>long</b> (environ 3 à 5 s, l'écran compte) = l'<b>alerte part</b>, « non précisée » si rien n'a été choisi. Pas de « All Ships » dans la détresse ; on ne teste jamais avec ce bouton.",note:"La durée exacte varie selon la marque. Retenez : court = choisir, long = envoyer.",s:"Cours SRCGMDSS"},
+{t:"SART",q:"Un SART se met en veille :",o:["Avec un bouton ON/OFF","Dès qu'il est jeté à l'eau","Après 5 minutes d'inactivité"],a:0,e:"On allume le SART <b>à la main</b> : il passe en <b>veille</b>, attend un radar (jusqu'à 96 h), puis répond (8 h). C'est l'<b>EPIRB</b> qui se met en marche seule au contact de l'eau.",s:"Cours SRCGMDSS",f:["balises"]},
+{t:"Balises",q:"L'EPIRB envoie :",o:["Un signal de détresse dès son activation","Un signal de détresse lors de la rencontre d'un satellite","Son signal lorsque le LUT lui demande sa position"],a:0,e:"Dès qu'elle est activée, l'EPIRB émet <b>sans arrêt</b> (une salve environ toutes les 50 s), qu'un satellite soit là ou non. Ce sont les satellites qui la captent. Personne ne l'interroge : c'est le <b>SART</b> qui attend qu'on l'interroge (par un radar).",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["balises"]},
+{t:"Fréquences",q:"Sur quelles fréquences fonctionnent les balises du système Cospas-Sarsat ?",o:["406 MHz et 121,5 MHz","490 MHz et 156 MHz","400 MHz et 121 MHz"],a:0,e:"<b>406 MHz</b> : l'alerte, captée par les satellites, qui identifient et localisent la balise. <b>121,5 MHz</b> : le radioralliement, pour guider les sauveteurs en phase finale. Pièges : 490 est le NAVTEX en kHz ; 156 MHz est la VHF marine.",note:"Depuis le 1er février 2009, les satellites n'écoutent plus le 121,5 MHz : il ne sert plus qu'au ralliement.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["gammes"]},
+{t:"Inmarsat",q:"L'Inmarsat C :",o:["Est une balise de localisation","N'est plus commercialisé","Ne transmet pas la voix"],a:2,e:"L'Inmarsat C est un terminal satellite de <b>messages écrits</b> (clavier, écran) : textes et données, bouton DISTRESS, réception des MSI par EGC. <b>Pas de voix.</b> On l'utilise surtout en zone A3. Ce n'est pas une balise : la balise, c'est l'EPIRB.",s:"Cours SRCGMDSS",f:["zones"]},
+{t:"Fréquences",q:"Positionnez un Inmarsat dans l'échelle des fréquences :",o:["300 kHz à 3 MHz","3 à 30 MHz","30 MHz à 300 MHz","300 MHz à 3 GHz"],a:3,e:"Inmarsat travaille autour de <b>1,5 à 1,6 GHz</b> (bande L) : gamme <b>UHF</b> (300 MHz à 3 GHz).",s:"Cours SRCGMDSS",f:["gammes"]},
+{t:"Balises",q:"Combien y a-t-il de modèles de balises ?",o:["2","3","4"],a:1,e:"Les 3 balises Cospas-Sarsat (406 MHz) : <b>EPIRB</b> pour le <b>bateau</b>, <b>ELT</b> pour l'<b>avion</b>, <b>PLB</b> pour la <b>personne</b>.",note:"Le SART, l'AIS-SART et l'AIS-MOB sont aussi des appareils de détresse, mais pas des balises Cospas-Sarsat : ils ne passent pas par les satellites et ne comptent pas.",s:"Cospas-Sarsat ; cours SRCGMDSS",f:["balises","sigles"]},
+{t:"NAVTEX",q:"Des alertes de détresse sont-elles également diffusées par le système NAVTEX ?",o:["Non","Seulement si les autres systèmes radioélectriques sont tombés en panne","Oui","Seulement dans des cas exceptionnels"],a:2,e:"Oui : la station côtière peut diffuser la détresse sur le NAVTEX pour que tous les navires de la zone l'apprennent et portent assistance.",msgAfter:"518kHz\nZCZC ED00\nMAYDAY ALERT\n51-58N 002-26E\n7 METRE VESSEL\nREPORTED UPTURNED…",e2:"Lecture : <b>E</b> = la station ; <b>D</b> = recherche et sauvetage ; <b>00</b> = message prioritaire, toujours imprimé. Position : sud de la mer du Nord.",s:"Cours SRCGMDSS",f:["navtex"]}
+];
+const KEY="qcm-src-erreurs-v1",$=id=>document.getElementById(id),app=$("app");
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{tries:[],q:{}}}catch(e){return{tries:[],q:{}}}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function errIds(d){return Q.map((_,i)=>i).filter(i=>d.q[i]&&d.q[i].last===false)}
+let S=null;
+function home(){const d=load(),err=errIds(d),last=d.tries[d.tries.length-1];
+ app.innerHTML=`<div class="card"><h2>Choisissez</h2><p class="mute">${Q.length} questions · correction et explication après chaque réponse · ordre des questions et des réponses mélangé à chaque essai.</p>
+ <div class="col"><button class="btn primary" id="all">Tout le QCM (${Q.length} questions)</button>
+ <button class="btn" id="err" ${err.length?'':'disabled'}>Reprise des erreurs (${err.length} question${err.length>1?'s':''})</button>
+ <button class="btn" id="fi">Fiches à retenir</button>
+ <button class="btn" id="st">Statistiques et progression</button></div>
+ ${last?`<p class="mute" style="margin-bottom:0">Dernier essai : <b>${last.ok}/${last.n}</b> (${Math.round(last.ok/last.n*100)} %) · ${d.tries.length} essai${d.tries.length>1?'s':''} au total.</p>`:''}</div>`;
+ $("all").onclick=()=>start(Q.map((_,i)=>i),"Tout le QCM");$("err").onclick=()=>start(err,"Reprise des erreurs");$("st").onclick=stats;$("fi").onclick=fiches}
+function start(ids,mode){S={mode,list:shuffle(ids).map(id=>({id,ord:shuffle(Q[id].o.map((_,j)=>j))})),k:0,rep:[]};draw()}
+function draw(){const it=S.list[S.k],q=Q[it.id],n=S.list.length;
+ app.innerHTML=`<div class="card"><div class="mute">${S.mode} · question ${S.k+1} / ${n} <span class="pill">${q.t}</span></div><div class="bar"><i style="width:${S.k/n*100}%"></i></div>
+ <div class="qq">${q.q}</div>${q.msg?`<div class="msg">${q.msg}</div><div class="qq" style="margin-top:4px">${q.q2}</div>`:''}
+ <div class="opts" id="o">${it.ord.map(j=>`<button data-j="${j}">${q.o[j]}</button>`).join("")}</div><div id="fb"></div></div>`;
+ $("o").onclick=e=>{const b=e.target.closest("button");if(!b||S.rep[S.k]!==undefined)return;const j=+b.dataset.j;S.rep[S.k]=j;
+  [...$("o").children].forEach(x=>{const jj=+x.dataset.j;if(jj==q.a)x.classList.add("good");else if(jj==j)x.classList.add("bad")});
+  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}${q.msgAfter?`<div class="msg">${q.msgAfter}</div>`:''}${q.e2?`<div>${q.e2}</div>`:''}${q.note?`<div class="note">${q.note}</div>`:''}${(q.f||[]).map(k=>`<details class="fd"><summary>Fiche : ${F[k].t}</summary><div class="fiche">${F[k].h}</div></details>`).join('')}<div class="src">Source : ${q.s}</div></div>
+  <div class="row" style="margin-top:10px"><button class="btn primary" id="nx">${S.k<n-1?'Question suivante ▶':'Voir le résultat'}</button></div>`;
+  $("nx").onclick=()=>{if(S.k<n-1){S.k++;draw()}else end()}}}
+function end(){const d=load(),n=S.list.length;let ok=0;
+ S.list.forEach((it,i)=>{const good=S.rep[i]==Q[it.id].a;if(good)ok++;const r=d.q[it.id]||{n:0,ok:0};r.n++;if(good)r.ok++;r.last=good;d.q[it.id]=r});
+ d.tries.push({t:Date.now(),ok,n,mode:S.mode});save(d);const pc=Math.round(ok/n*100),err=errIds(d);
+ app.innerHTML=`<div class="card"><h2>${S.mode} : résultat</h2><div class="res ${pc>=60?'ok':'ko'}">${ok} / ${n} · ${pc} %</div>
+ <p class="mute">L'examen IBPT se réussit à 60 %. Objectif d'entraînement : 80 % ou plus.</p>
+ <div class="col"><button class="btn primary" id="re" ${err.length?'':'disabled'}>Reprendre mes erreurs (${err.length})</button><button class="btn" id="hm">Retour au menu</button></div>
+ <h3>Correction complète</h3>${S.list.map((it,i)=>{const q=Q[it.id],g=S.rep[i]==q.a;return `<div class="rev ${g?'o':'k'}"><b>${i+1}. ${q.q2||q.q}</b><br>${g?'<span class="okc">✔</span> ':'<span class="koc">✘ vous : '+q.o[S.rep[i]]+'</span><br>'}Bonne réponse : <b>${q.o[q.a]}</b><small>${q.e}</small></div>`}).join("")}</div>`;
+ $("re").onclick=()=>start(err,"Reprise des erreurs");$("hm").onclick=home;window.scrollTo(0,0)}
+function stats(){const d=load(),T=d.tries,last10=T.slice(-10);
+ const best=T.length?Math.max(...T.map(t=>Math.round(t.ok/t.n*100))):0;
+ let h=`<div class="card"><h2>Statistiques et progression</h2>
+ <table><tr><th>Essais</th><th>Dernier</th><th>Meilleur</th><th>À reprendre</th></tr><tr><td>${T.length}</td><td>${T.length?Math.round(T[T.length-1].ok/T[T.length-1].n*100)+' %':'—'}</td><td>${T.length?best+' %':'—'}</td><td>${errIds(d).length}</td></tr></table>
+ <h3>Progression (10 derniers essais)</h3>${last10.length?`<div class="chart">${last10.map(t=>{const p=Math.round(t.ok/t.n*100);return `<div>${p}%<b class="${p>=80?'ok':''}" style="height:${Math.max(p,3)}%"></b></div>`}).join("")}</div><p class="mute">Vert = 80 % ou plus. ${last10.map(t=>t.mode=="Reprise des erreurs"?'R':'T').join(" · ")} (T = tout le QCM, R = reprise des erreurs)</p>`:'<p class="mute">Aucun essai pour l\'instant.</p>'}
+ <h3>Réussite par question</h3><table><tr><th>Question</th><th>Réussite</th><th>Dernière</th></tr>
+ ${Q.map((q,i)=>{const r=d.q[i];return `<tr><td>${(q.q2||q.q).slice(0,70)}${(q.q2||q.q).length>70?'…':''}</td><td>${r?r.ok+'/'+r.n:'—'}</td><td>${r?(r.last?'<span class="okc">✔</span>':'<span class="koc">✘</span>'):'—'}</td></tr>`}).join("")}</table>
+ <div class="col" style="margin-top:12px"><button class="btn" id="hm">Retour au menu</button><button class="btn" id="raz">Effacer les statistiques</button></div></div>`;
+ app.innerHTML=h;$("hm").onclick=home;$("raz").onclick=()=>{if(confirm("Effacer toutes les statistiques ?")){save({tries:[],q:{}});stats()}}}
+function fiches(){app.innerHTML=`<div class="card"><h2>Fiches à retenir</h2><p class="mute">Les tableaux qui résument les pièges du cours SRC.</p>${Object.keys(F).map(k=>`<details class="fd"><summary>${F[k].t}</summary><div class="fiche">${F[k].h}</div></details>`).join('')}<div class="col" style="margin-top:12px"><button class="btn" id="hm">Retour au menu</button></div></div>`;$("hm").onclick=home;window.scrollTo(0,0)}
+home();
+</script></body></html>
