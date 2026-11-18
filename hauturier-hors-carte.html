@@ -36,7 +36,7 @@ ul,ol{padding-left:22px}li{margin:4px 0}
 input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
 .dz td:first-child{font-weight:800;width:42%}
 </style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
-<div class="v">Hauturier hors carte · version 1.1 · cours (aides électroniques et radio, météo, sécurité, marée), 3 QCM de 30 questions, 3 examens blancs, statistiques</div>
+<div class="v">Hauturier hors carte · version 1.2 · cours (aides électroniques et radio, météo, sécurité, marée), 3 QCM de 30 questions, 3 examens blancs, statistiques</div>
 <h1>Hauturier : tout ce qui n'est pas la carte</h1>
 <div class="tabs" id="tabs"><button data-t="regles" class="on">Conditions</button><button data-t="cours">Cours</button><button data-t="gps">QCM GPS-radio</button><button data-t="meteo">QCM Météo</button><button data-t="secu">QCM Sécurité</button><button data-t="blanc">Examens blancs</button><button data-t="stats">Statistiques</button></div>
 <section id="v-regles">
@@ -149,11 +149,13 @@ input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:
 <h3>Semi-hauturier (6 à 60 milles) : le matériel côtier, plus</h3>
 <ol>
 <li>gilet <b>150 N</b> par personne (pas de gilet à gonflage buccal seul) ;</li>
+<li><b>compas magnétique</b> obligatoire : le GPS ne le remplace plus ;</li>
 <li><b>VHF fixe</b> ;</li>
 <li><b>radeau de survie</b> pour toutes les personnes à bord ;</li>
 <li>matériel pour <b>faire le point, tracer et suivre une route</b> ;</li>
 <li><b>livre des feux</b> à jour (papier ou électronique) ;</li>
 <li><b>journal de bord</b> ;</li>
+<li><b>annuaire des marées</b> (ou document équivalent, papier ou numérique), sauf en Méditerranée ;</li>
 <li>moyen de <b>recevoir la météo marine</b> ;</li>
 <li><b>harnais</b> + longe : un pour le bord (bateau à moteur), un par personne (voilier) ;</li>
 <li><b>trousse de secours</b> réglementaire ;</li>
@@ -162,9 +164,9 @@ input[type=number]{font:700 18px system-ui;width:90px;padding:8px;border-radius:
 <ol><li><b>RLS</b> (radiobalise 406 MHz) enregistrée ;</li><li><b>VHF portative étanche</b> ;</li><li>radeau <b>type I (ISO 9650)</b>, classe II ou type approuvé.</li></ol>
 <p>Téléphone satellite : recommandé, pas obligatoire.</p>
 <h3>Rappel : matériel côtier (toujours exigé au-delà)</h3>
-<p>Matériel basique (gilets, lampe, extincteur, écope, remorquage, mouillage, heures et coefficients de marée sauf en Méditerranée, pavillon hors eaux territoriales) + bouée fer à cheval ou couronne, <b>3 feux rouges à main</b>, <b>compas magnétique</b>, <b>cartes officielles à jour</b>, <b>RIPAM</b> et document sur le balisage.</p>
-<div class="rule"><b>Écarts avec le cours Vagnon</b> (édition plus ancienne) : il ne cite pas la <b>VHF fixe</b> en semi-hauturier, il range l'annuaire des marées en semi-hauturier (le texte actuel le met dans le matériel de base) et il cite une corne de brume en côtier. Ici, c'est le <b>texte en vigueur de la Division 240</b> qui est suivi. Le jour de l'examen, si une question porte sur un de ces points, répondez selon le texte en vigueur.</div>
-<p class="src">Sources : Division 240, articles 240-2.03 à 240-2.06 et 240-2.20 (mer.gouv.fr) ; cours Vagnon p. 26 ; Figaro Nautisme (VHF, 2025).</p></div>
+<p>Matériel basique (gilets, lampe, extincteur, écope, remorquage, mouillage, heures et coefficients de marée sauf en Méditerranée, pavillon hors eaux territoriales) + bouée fer à cheval ou couronne, <b>3 feux rouges à main</b>, <b>compas magnétique</b> (ou GPS étanche faisant fonction de compas, en côtier seulement), <b>cartes officielles à jour</b>, <b>RIPAM</b> et document sur le balisage.</p>
+<div class="rule"><b>Écarts avec le cours Vagnon</b> (édition plus ancienne) : il ne cite pas la <b>VHF fixe</b> en semi-hauturier (obligatoire depuis le 1er janvier 2017) et il cite une corne de brume en côtier. L'annuaire des marées, lui, est bien du matériel semi-hauturier ; en basique et en côtier, il suffit d'un moyen de connaître les heures et coefficients de marée du jour. Ici, c'est le <b>texte en vigueur de la Division 240</b> qui est suivi. Le jour de l'examen, si une question porte sur un de ces points, répondez selon le texte en vigueur.</div>
+<p class="src">Sources : Division 240 (mer.gouv.fr) ; cours Vagnon p. 26 ; Figaro Nautisme (VHF, 2025).</p></div>
 
 <div class="card"><h2>4 · Calcul de marée : la règle des douzièmes</h2>
 <p>Entre une basse mer (BM) et une pleine mer (PM), environ 6 heures. On découpe le <b>marnage</b> (PM − BM) en 12 parts, les « douzièmes ». La mer monte (ou descend) de :</p>
@@ -218,10 +220,10 @@ gps:[
 ],
 meteo:[
 {q:"L'unité utilisée pour la pression atmosphérique est :",o:["l'isobare","l'hectopascal"],a:1,e:"La pression se mesure en hectopascals (hPa). L'isobare est une ligne d'égale pression.",s:S_VAG2},
-{q:"La pression moyenne au niveau de la mer est de :",o:["1 000 hPa","1 013 hPa","1 030 hPa"],a:1,e:"1 013 hPa. Au-dessus : conditions anticycloniques ; en dessous : conditions dépressionnaires.",s:S_VAG2},
+{q:"La pression moyenne au niveau de la mer est de :",o:["1 000 hPa","1 013 hPa","1 030 hPa"],a:1,e:"1 013 hPa. En gros, au-dessus on est plutôt en conditions anticycloniques, en dessous plutôt en conditions dépressionnaires. Mais un anticyclone ou une dépression se définissent par rapport aux pressions voisines, pas par ce seul chiffre.",s:S_VAG2},
 {q:"Dans l'hémisphère Nord, les vents tournent autour d'une dépression dans le sens des aiguilles d'une montre :",o:["Vrai","Faux"],a:1,e:"Faux : autour d'une dépression, le vent tourne dans le sens INVERSE des aiguilles d'une montre (hémisphère Nord).",s:S_VAG2},
 {q:"Dans l'hémisphère Nord, autour d'un anticyclone, le vent tourne :",o:["dans le sens des aiguilles d'une montre","dans le sens inverse des aiguilles d'une montre"],a:0,e:"Anticyclone : sens des aiguilles d'une montre. Dépression : sens inverse.",s:S_VAG2},
-{q:"Une dépression est :",o:["une zone de hautes pressions, au-dessus de 1 013 hPa","un marais barométrique","une zone de basses pressions, en dessous de 1 013 hPa"],a:2,e:"Dépression = basses pressions, notée D (ou L pour « Low » sur les cartes anglaises).",s:S_VAG2},
+{q:"Une dépression est :",o:["une zone de hautes pressions, au-dessus de 1 013 hPa","un marais barométrique","une zone de basses pressions, en dessous de 1 013 hPa"],a:2,e:"Dépression = basses pressions, notée D (ou L pour « Low » sur les cartes anglaises).",note:"C'est la formulation du cours Vagnon. Météo-France définit la dépression par rapport aux pressions voisines, sans chiffre fixe : une dépression peut avoir plus de 1 013 hPa en son centre. À l'examen, choisissez « basses pressions ».",s:S_VAG2},
 {q:"Les isobares sont :",o:["des lignes d'égale température","des lignes d'égale pression","des lignes d'égal vent"],a:1,e:"Isobare = ligne reliant les points de même pression, tracée en général tous les 5 hPa.",s:S_VAG2},
 {q:"Un gradient horizontal de pression élevé signifie :",o:["vent faible (isobares éloignées)","vent fort (isobares serrées)"],a:1,e:"Plus les isobares sont serrées, plus la pression change vite, plus le vent est fort.",s:S_VAG2},
 {q:"Une dorsale est :",o:["une zone où la pression varie très peu","un axe de hautes pressions prolongeant un anticyclone, pouvant faire obstacle aux perturbations","une zone de basses pressions sous 1 015 hPa"],a:1,e:"Dorsale = « langue » de hautes pressions qui prolonge un anticyclone.",s:S_VAG2},
@@ -267,7 +269,7 @@ secu:[
 {q:"La trousse de secours réglementaire est obligatoire :",o:["dès 2 milles","dès 6 milles d'un abri","seulement au-delà de 60 milles"],a:1,e:"Trousse de secours conforme : matériel semi-hauturier.",s:S_D240},
 {q:"Au-delà de 6 milles, un projecteur (dispositif lumineux) étanche pour rechercher une personne à la mer de nuit est :",o:["obligatoire","recommandé seulement"],a:0,e:"Obligatoire dès la zone semi-hauturière : portatif ou fixe, adapté à la recherche d'un homme à la mer de nuit.",s:S_D240},
 {q:"Combien de feux rouges à main faut-il à partir de la navigation côtière ?",o:["1","3","6"],a:1,e:"3 feux rouges à main, dès la zone côtière (et donc aussi au-delà).",s:S_D240},
-{q:"Le compas magnétique étanche est obligatoire :",o:["dès la navigation côtière","seulement au-delà de 60 milles"],a:0,e:"Compas magnétique : matériel côtier, donc aussi exigé au-delà de 6 milles.",s:S_D240},
+{q:"À partir de quelle zone le compas magnétique est-il obligatoire, sans pouvoir être remplacé par un GPS ?",o:["dès la navigation côtière (2 à 6 milles)","dès la navigation semi-hauturière (au-delà de 6 milles)","seulement au-delà de 60 milles"],a:1,e:"En côtier, on peut avoir un compas magnétique étanche OU un GPS étanche qui fait fonction de compas. Au-delà de 6 milles (semi-hauturier), le compas doit être magnétique : le GPS ne le remplace plus.",s:"Division 240 (mer.gouv.fr), matériel côtier et semi-hauturier"},
 {q:"Les cartes marines officielles à jour sont obligatoires :",o:["dès la navigation côtière, sur papier ou électroniques","seulement en papier, au-delà de 60 milles"],a:0,e:"Cartes officielles (ou extraits officiels) à jour, papier ou électroniques, dès la zone côtière.",s:S_D240},
 {q:"Le RIPAM et un document décrivant le balisage doivent être à bord :",o:["dès la navigation côtière","jamais"],a:0,e:"RIPAM (ou un résumé) et document sur le balisage : matériel côtier.",s:S_D240},
 {q:"Au-delà de 6 milles, il faut aussi le matériel permettant :",o:["de faire le point, de tracer et de suivre une route","de pêcher"],a:0,e:"Exemple : règle Cras, compas à pointes, crayon, carte.",s:S_D240},
@@ -317,7 +319,7 @@ function drawQ(){const v=$("v-quiz"),q=Q.list[Q.i],n=Q.list.length;
  <div class="qq">${q.q}</div><div class="opts" id="opts">${q.ord.map(j=>`<button data-j="${j}">${q.o[j]}</button>`).join("")}</div><div id="fb"></div></div>`;
  $("opts").onclick=e=>{const b=e.target.closest("button");if(!b||Q.rep[Q.i]!==undefined)return;const j=+b.dataset.j;Q.rep[Q.i]=j;
   [...$("opts").children].forEach(x=>{const jj=+x.dataset.j;if(jj==q.a)x.classList.add("good");else if(jj==j)x.classList.add("bad")});
-  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}<div class="src">Source : ${q.s}</div></div>
+  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}${q.note?`<div class="note" style="background:#fff6d6;color:#14213d;border-left:4px solid #b58a00;border-radius:0 8px 8px 0;padding:6px 8px;margin-top:6px;font-size:14px">⚠ ${q.note}</div>`:''}<div class="src">Source : ${q.s}</div></div>
   <div class="row" style="margin-top:10px"><button class="btn primary" id="nx">${Q.i<n-1?'Question suivante ▶':'Voir le résultat'}</button></div>`;
   $("nx").onclick=()=>{if(Q.i<n-1){Q.i++;drawQ()}else endQuiz()}}}
 function endQuiz(){const n=Q.list.length,ok=Q.list.filter((q,i)=>Q.rep[i]==q.a).length,pc=Math.round(ok/n*100);
