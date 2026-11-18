@@ -24,7 +24,7 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{border-bottom:1px
 .tip{background:#fff6d6;color:#14213d;border-left:5px solid #b58a00;border-radius:0 10px 10px 0;padding:8px 10px;font-size:15px;margin-top:10px}
 .f{font-size:19px;text-align:center;font-weight:800;margin:6px 0}
 </style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
-<div class="v">Animation · version 1.0 · le triangle du courant dans les deux sens (estime et cap à suivre)</div>
+<div class="v">Animation · version 1.1 · le triangle du courant dans les deux sens (estime et cap à suivre)</div>
 <h1>Où dessiner le courant ?</h1>
 <p style="margin:0">Exemple de l'examen blanc n°8, problème 2 : vitesse surface <b>11 nœuds</b>, courant qui <b>porte au 352° à 1,4 nœud</b>, tracé pour <b>1 heure</b>. Schéma, pas à l'échelle de la carte.</p>
 
@@ -80,7 +80,8 @@ I:[
 {t:`Compas ouvert à <b>11 milles</b> (vitesse surface × 1 h), pointe sèche <b>au bout du courant</b>. L'arc coupe la route fond au point <b>A</b> : c'est là que vous serez dans 1 heure.`,d:s=>steps.I[1].d()+`<path d="M${Cp[0]-11*K*Math.cos(0.35)} ${Cp[1]-11*K*Math.sin(0.35)} A${11*K} ${11*K} 0 0 0 ${Cp[0]-11*K*Math.cos(-0.25)} ${Cp[1]-11*K*Math.sin(-0.25)}" fill="none" stroke="${css('--arc')}" stroke-width="2" stroke-dasharray="5 4"/>`+`<circle cx="${A[0]}" cy="${A[1]}" r="5" fill="${css('--ink')}"/>`+lab(A,"A",css('--ink'),-12,5)},
 {t:`On joint le bout du courant à A : c'est la <span class="rs">route surface Rs ≈ ${f(RSaz)}</span>, le chemin du bateau dans l'eau. Distance départ → A = <b>vitesse fond ≈ ${VF.toFixed(1)} nœuds</b>.`,d:s=>steps.I[2].d()+arrow(Cp,A,css('--rs'),3,"","rs")+lab([(Cp[0]+A[0])/2,(Cp[1]+A[1])/2],"Rs "+f(RSaz),css('--rs'),0,-8)},
 {t:`<b>Pourquoi ça marche ?</b> En 1 heure, l'eau vous emmène de 1,4 mille vers le nord (<span class="c">courant</span>), et votre moteur vous fait faire 11 milles dans l'eau (<span class="rs">Rs</span>). Mis <b>bout à bout</b>, ces deux déplacements vous posent en A, sur la route voulue.`,d:s=>steps.I[3].d()},
-{t:`<b>Le même triangle dans l'autre ordre.</b> Si on avait tracé d'abord la <span class="rs">Rs</span> depuis le départ, puis le <span class="c">courant</span> à sa pointe, on arrive <b>exactement au même point A</b>. Les deux courants (pointillés) sont parallèles : c'est un parallélogramme. Le courant n'est jamais retourné, il change seulement de place.`,d:s=>steps.I[3].d()+arrow(D,E,css('--rs'),2.5,"6 4","rs")+arrow(E,A,css('--c'),3,"4 3","c")}
+{t:`<b>Le même triangle dans l'autre ordre.</b> Si on avait tracé d'abord la <span class="rs">Rs</span> depuis le départ, puis le <span class="c">courant</span> à sa pointe, on arrive <b>exactement au même point A</b>. Les deux courants (pointillés) sont parallèles : c'est un parallélogramme. Le courant n'est jamais retourné, il change seulement de place.`,d:s=>steps.I[3].d()+arrow(D,E,css('--rs'),2.5,"6 4","rs")+arrow(E,A,css('--c'),3,"4 3","c")},
+{t:`<b>Le vrai trajet du bateau.</b> Le bateau part bien du <b>départ</b> et avance sur la <span class="rf">route fond</span> (le trait vert) jusqu'à A. Mais son <b>étrave</b> pointe au <span class="rs">${f(RSaz)}</span>, un peu vers le sud, pour compenser le courant qui le pousse vers le nord : il avance « en crabe ». La ligne bleue tracée plus haut n'est <b>pas un chemin</b> : c'est une flèche qui sert seulement à <b>mesurer la direction</b> de la Rs.`,d:s=>steps.I[3].d(),anim:1}
 ],
 D:[
 {t:`Problème d'<b>estime</b> : on connaît le cap tenu, donc la <span class="rs">route surface</span>. On la trace <b>depuis le départ</b> : 11 milles en 1 heure.`,d:s=>arrow(D,E,css('--rs'),3,"","rs")+lab([(D[0]+E[0])/2,(D[1]+E[1])/2],"Rs "+f(RSaz),css('--rs'),0,26)},
@@ -89,7 +90,10 @@ D:[
 {t:`<b>Comparez avec l'autre onglet</b> : c'est le même triangle. Ici le courant est au <b>bout de la Rs</b> (on connaissait la Rs). Dans « Cap à suivre », il est <b>au départ</b> (on cherchait la Rs). Dans les deux cas il pointe vers le <b>352°</b>.`,d:s=>steps.D[2].d()+arrow(D,Cp,css('--c'),2.5,"4 3","c")+arrow(Cp,A,css('--rs'),2,"6 4","rs")}
 ]};
 let mode="I",k=0;
-function show(){const L=steps[mode];S.innerHTML=base()+L[k].d();$("tx").innerHTML=L[k].t;$("pv").disabled=k==0;$("nx").textContent=k==L.length-1?"Recommencer ↺":"Suivant ▶";
+let raf=null;
+function boat(p,az){return`<g transform="translate(${p[0]},${p[1]}) rotate(${az})"><path d="M0,-14 C6,-6 6,7 4,12 L-4,12 C-6,7 -6,-6 0,-14Z" fill="${css('--card')}" stroke="${css('--ink')}" stroke-width="2"/><line x1="0" y1="-14" x2="0" y2="-34" stroke="${css('--rs')}" stroke-width="2.5" stroke-dasharray="3 3"/></g>`}
+function show(){cancelAnimationFrame(raf);const L=steps[mode];S.innerHTML=base()+L[k].d();
+ if(L[k].anim){const st=L[k],t0=performance.now();(function g(t){const x=((t-t0)/5000)%1.15,e=Math.min(1,x);const p=[D[0]+(A[0]-D[0])*e,D[1]+(A[1]-D[1])*e];S.innerHTML=base()+st.d()+boat(p,RSaz);raf=requestAnimationFrame(g)})(t0)}$("tx").innerHTML=L[k].t;$("pv").disabled=k==0;$("nx").textContent=k==L.length-1?"Recommencer ↺":"Suivant ▶";
  $("dots").innerHTML=L.map((_,i)=>`<i class="${i==k?'on':''}"></i>`).join("");$("tI").classList.toggle("on",mode=="I");$("tD").classList.toggle("on",mode=="D")}
 $("nx").onclick=()=>{k=k==steps[mode].length-1?0:k+1;show()};$("pv").onclick=()=>{if(k>0){k--;show()}};
 $("tI").onclick=()=>{mode="I";k=0;show()};$("tD").onclick=()=>{mode="D";k=0;show()};
