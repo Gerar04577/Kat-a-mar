@@ -35,11 +35,21 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
 .chart b{display:block;width:100%;border-radius:5px 5px 0 0;background:var(--accent)}
 .chart b.ok{background:var(--ok)}
 .pill{display:inline-block;font:700 12px system-ui;padding:2px 8px;border-radius:8px;background:var(--acc2);color:var(--accent)}
+.ft{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}
+.ft th{background:#c9b458;color:#14213d;padding:5px 4px;text-align:left}
+.ft td{border:1px solid #444;padding:4px 5px;vertical-align:middle;color:var(--ink)}
+.ft td.g{font-weight:800;text-align:center;width:46px}
+.ft td.lim{font-size:12px;white-space:nowrap;width:62px}
+.ft td.fq{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.ft tr.m td.fq,.ft tr.m td.ap{background:#fff3a0;color:#14213d;font-weight:700}
+.ft tr.hl td.fq,.ft tr.hl td.ap{outline:3px solid #d1342b;outline-offset:-3px}
+.ft tr.hl td.ap::after{content:" ◄";color:#d1342b}
+.ft td.g-MF{background:#f4f1e4;color:#14213d}.ft td.g-HF{background:#d9b48f;color:#14213d}.ft td.g-VHF{background:#b5532f;color:#fff}.ft td.g-UHF{background:#a9c4ea;color:#14213d}.ft td.g-SHF{background:#3f5fc4;color:#fff}
 .fiche table{font-size:13px;margin:6px 0}.fiche td,.fiche th{padding:5px 4px}.fiche p,.fiche ol{font-size:14px;margin:6px 0}
 details.fd{margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--card)}details.fd summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:14px;min-height:32px;display:flex;align-items:center}
 .note{background:var(--warn);border-left:5px solid var(--warnb);border-radius:0 10px 10px 0;padding:8px 12px;font-size:14px;margin-top:8px}
 </style></head><body><a class="back" href="./permis-belge.html">‹ Retour</a><div class="w">
-<div class="v">QCM SRC · version 1.1 · 64 questions de votre cours Socrative SRCGMDSS et du tableau des fréquences, avec explications, fiches à retenir, statistiques, progression et reprise des erreurs</div>
+<div class="v">QCM SRC · version 1.2 · 64 questions de votre cours Socrative SRCGMDSS et du tableau des fréquences, avec explications, fiches à retenir, statistiques, progression et reprise des erreurs</div>
 <h1>QCM SRC</h1>
 <div id="app"></div>
 <p class="mute" style="font-size:12px">Sources : votre cours Socrative SRCGMDSS ; manuel VHF de l'IBPT 2025 ; Convention SOLAS (GMDSS) ; Cospas-Sarsat ; manuel NAVTEX de l'OMI. Les statistiques restent sur cet appareil uniquement.</p>
@@ -190,6 +200,24 @@ const Q=[
 ,{t:"Matériel",q:"Entre 6 et 60 milles d'un abri (zone semi-hauturière), quelle radio est exigée ?",o:["Une VHF fixe","Une VHF portable","Une EPIRB","Aucune"],a:0,e:"En zone <b>semi-hauturière</b> (6 à 60 milles d'un abri) : une <b>VHF fixe</b>, en veille sur le canal 16. Au-delà de 60 milles, on ajoute la VHF portable et l'EPIRB.",note:"Réglementation française (Division 240), présentée dans le cours.",s:"Cours SRCGMDSS ; Division 240",f:["distance"]}
 ,{t:"Matériel",q:"À partir de quelle distance d'un abri commence la zone hauturière ?",o:["6 milles","20 milles","60 milles","200 milles"],a:2,e:"Côtière : 0 à 6 milles ; semi-hauturière : 6 à 60 milles ; <b>hauturière : au-delà de 60 milles</b> d'un abri.",s:"Cours SRCGMDSS ; Division 240",f:["distance"]}
 ];
+
+const FR=[
+["MF","300 kHz","3 MHz",[["490 kHz","NAVTEX langue locale",1,["490"]],["518 kHz","NAVTEX anglais",1,["518"]],["2182 kHz","Détresse en phonie (MF)",0,["2182"]],["2187,5 kHz","ASN (DSC) MF",0,["2187"]],["2174,5 kHz","NBDP (télex) MF",0,["2174"]]]],
+["HF","3 MHz","30 MHz",[["4209,5 kHz","NAVTEX tropical",1,["4209"]],["4, 6, 8, 12, 16 MHz","Radio HF",0,["radio HF"]]]],
+["VHF","30 MHz","300 MHz",[["121,5 MHz","Ralliement (homing) EPIRB",1,["121,5"]],["156,8 MHz","Canal 16 (phonie)",0,["156,8"]],["156,525 MHz","Canal 70 (ASN)",0,["156,525"]],["161,975 MHz","AIS 1 (et AIS-SART)",0,["161,975","AIS-SART"]],["162,025 MHz","AIS 2 (et AIS-SART)",0,["162,025","AIS-SART"]]]],
+["UHF","300 MHz","3 GHz",[["406 MHz","EPIRB (et PLB)",1,["406"]],["1,6 GHz","Inmarsat",1,["Inmarsat","1,6 GHz"]]]],
+["SHF","3 GHz","30 GHz",[["9 GHz","SART et radar bande X (3 cm)",1,["9 GHz","bande X","3 cm",/(^|[^-])SART(?! *\()/]]]]];
+function FT(txt){txt=txt||"";
+ let h='<p style="font-size:13px;margin:4px 0">Surligné en jaune = à connaître. Chaque gamme = ×10. <span style="color:#d1342b">◄ = la question</span></p><table class="ft"><tr><th>Gamme</th><th>De … à</th><th>Fréquence</th><th>Appareil</th></tr>';
+ FR.forEach(([g,lo,hi,rows])=>rows.forEach((r,i)=>{const hit=!!txt&&(r[3].some(k=>k instanceof RegExp?k.test(txt):txt.includes(k))||new RegExp("gamme "+g+"\\b").test(txt));
+  h+=`<tr class="${r[2]?'m':''}${hit?' hl':''}">${i==0?`<td class="g g-${g}" rowspan="${rows.length}">${g}</td><td class="lim" rowspan="${rows.length}">${lo}<br>à<br>${hi}</td>`:''}<td class="fq">${r[0]}</td><td class="ap">${r[1]}</td></tr>`}));
+ return h+'</table><p style="font-size:13px;margin:4px 0">Truc : convertissez d\'abord l\'unité. 4209,5 kHz = 4,2 MHz → HF ; 518 kHz = 0,518 MHz → MF.</p>'}
+F.gammes.h=FT("")+F.gammes.h.slice(F.gammes.h.indexOf('<p class="mute"'));
+Q.forEach(q=>{const t=JSON.stringify([q.q,q.o,q.e]);if(/[kMG]Hz|gamme/i.test(t)){q.f=q.f||[];if(!q.f.includes("gammes"))q.f.unshift("gammes")}});
+const HL={"Dans quelle gamme de fréquence travaille un transpondeur SART":"9 GHz","Positionnez une balise EPIRB":"406","Positionnez un NAVTEX sans fréquence tropicale":"490 518","Combien y a-t-il de modèles de balises":"406"};
+Q.forEach(q=>{for(const k in HL)if(q.q.startsWith(k))q.hl=HL[k]});
+function hlTxt(q){return q.hl||[q.q,q.q2||"",q.o[q.a]].join(" ")}
+function fiche(k,q){return k==="gammes"?FT(hlTxt(q))+'<p class="mute" style="font-size:13px">'+F.gammes.h.split('<p class="mute"')[1].replace(/^[^>]*>/,''):F[k].h}
 const KEY="qcm-src-erreurs-v1",$=id=>document.getElementById(id),app=$("app");
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{tries:[],q:{}}}catch(e){return{tries:[],q:{}}}}
 function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
@@ -211,7 +239,7 @@ function draw(){const it=S.list[S.k],q=Q[it.id],n=S.list.length;
  <div class="opts" id="o">${it.ord.map(j=>`<button data-j="${j}">${q.o[j]}</button>`).join("")}</div><div id="fb"></div></div>`;
  $("o").onclick=e=>{const b=e.target.closest("button");if(!b||S.rep[S.k]!==undefined)return;const j=+b.dataset.j;S.rep[S.k]=j;
   [...$("o").children].forEach(x=>{const jj=+x.dataset.j;if(jj==q.a)x.classList.add("good");else if(jj==j)x.classList.add("bad")});
-  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}${q.msgAfter?`<div class="msg">${q.msgAfter}</div>`:''}${q.e2?`<div>${q.e2}</div>`:''}${q.note?`<div class="note">${q.note}</div>`:''}${(q.f||[]).map(k=>`<details class="fd"><summary>Fiche : ${F[k].t}</summary><div class="fiche">${F[k].h}</div></details>`).join('')}<div class="src">Source : ${q.s}</div></div>
+  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}${q.msgAfter?`<div class="msg">${q.msgAfter}</div>`:''}${q.e2?`<div>${q.e2}</div>`:''}${q.note?`<div class="note">${q.note}</div>`:''}${(q.f||[]).map(k=>`<details class="fd" ${j==q.a?'':'open'}><summary>${k==='gammes'?'Tableau des fréquences':'Fiche : '+F[k].t}</summary><div class="fiche">${fiche(k,q)}</div></details>`).join('')}<div class="src">Source : ${q.s}</div></div>
   <div class="row" style="margin-top:10px"><button class="btn primary" id="nx">${S.k<n-1?'Question suivante ▶':'Voir le résultat'}</button></div>`;
   $("nx").onclick=()=>{if(S.k<n-1){S.k++;draw()}else end()}}}
 function end(){const d=load(),n=S.list.length;let ok=0;
