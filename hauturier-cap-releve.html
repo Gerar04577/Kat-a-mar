@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cap et relèvement</title>
+<style>
+:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--cv:#1565c0;--gi:#e65100;--zv:#2e7d32;--n:#c62828;--sea:#e3f0fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--cv:#64b5f6;--gi:#ffb74d;--zv:#81c784;--n:#ef5350;--sea:#13263a}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--cv:#64b5f6;--gi:#ffb74d;--zv:#81c784;--n:#ef5350;--sea:#13263a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:0 16px 40px}
+.back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 -16px;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 6px;background:var(--bg);color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line)}
+.w{max-width:620px;margin:0 auto}.v{font-size:12px;color:var(--mute);margin-top:12px}
+h1{font-size:23px;margin:2px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+svg{width:100%;height:auto;display:block;background:var(--sea);border-radius:12px}
+.step{min-height:96px;font-size:16px}
+.row{display:flex;gap:8px;margin-top:10px}
+.btn{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px system-ui;cursor:pointer}
+.btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.4}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:8px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--accent)}
+.cv{color:var(--cv);font-weight:800}.gi{color:var(--gi);font-weight:800}.zv{color:var(--zv);font-weight:800}
+.f{font-size:20px;text-align:center;font-weight:800;margin:6px 0}
+label{display:block;font-size:15px;margin-top:10px}input[type=range]{width:100%;height:32px}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+.tip{background:#fff6d6;color:#14213d;border-left:5px solid #b58a00;border-radius:0 10px 10px 0;padding:8px 10px;font-size:15px;margin-top:10px}
+</style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
+<div class="v">Animation · version 1.0 · cap vrai (Cv), gisement et relèvement vrai (Zv)</div>
+<h1>Cv ou Zv ?</h1>
+
+<div class="card">
+<svg id="s" viewBox="0 0 360 360" aria-label="Animation cap et relèvement"></svg>
+<div class="step" id="tx"></div>
+<div class="row"><button class="btn" id="pv">◀ Précédent</button><button class="btn p" id="nx">Suivant ▶</button></div>
+<div class="dots" id="dots"></div>
+</div>
+
+<div class="card" id="libre" style="display:none">
+<b>À vous de jouer</b>
+<label>Cap vrai du bateau : <span class="cv" id="lcv"></span></label><input type="range" id="rcv" min="0" max="359" value="45">
+<label>Gisement du phare : <span class="gi" id="lgi"></span></label><input type="range" id="rgi" min="-180" max="180" value="75">
+<div class="f" id="calc"></div>
+<div class="row"><button class="btn" id="ex">Exemple au hasard</button></div>
+</div>
+
+<div class="card"><b>À retenir</b>
+<table><tr><th></th><th class="cv">Cv : cap vrai</th><th class="zv">Zv : relèvement vrai</th></tr>
+<tr><td>C'est…</td><td>la direction de l'<b>avant du bateau</b></td><td>la direction d'un <b>objet</b> vu du bateau</td></tr>
+<tr><td>Compté depuis</td><td>le nord vrai</td><td>le nord vrai</td></tr>
+<tr><td>Sert à</td><td>tracer la route</td><td>tracer une droite pour faire le point</td></tr></table>
+<div class="f"><span class="zv">Zv</span> = <span class="cv">Cv</span> + <span class="gi">gisement</span></div>
+<div class="tip">Gisement à <b>tribord</b> (droite) : on l'<b>ajoute</b>. À <b>bâbord</b> (gauche) : on le <b>retire</b>. Si le résultat dépasse 360°, on retire 360° ; s'il est négatif, on ajoute 360°.</div>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id),S=$("s"),C=180,R=150;
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function pt(a,r){const t=(a-90)*Math.PI/180;return[C+r*Math.cos(t),C+r*Math.sin(t)]}
+function arc(a0,a1,r,col,w){if(Math.abs(a1-a0)<.5)return"";const[x0,y0]=pt(a0,r),[x1,y1]=pt(a1,r);const large=Math.abs(a1-a0)>180?1:0,sw=a1>a0?1:0;
+ return`<path d="M${x0} ${y0}A${r} ${r} 0 ${large} ${sw} ${x1} ${y1}" fill="none" stroke="${col}" stroke-width="${w||4}" stroke-linecap="round"/>`}
+function lab(a,r,t,col,size){const[x,y]=pt(a,r);return`<text x="${x}" y="${y}" fill="${col}" font-size="${size||15}" font-weight="800" text-anchor="middle" dominant-baseline="middle" paint-order="stroke" stroke="${css('--sea')}" stroke-width="4">${t}</text>`}
+const n360=a=>((Math.round(a)%360)+360)%360,f3=a=>String(n360(a)).padStart(3,"0")+"°";
+let st={cv:0,gi:0,show:{n:1}};
+function draw(){const{cv,gi,show}=st,zv=cv+gi,N=css('--n'),CV=css('--cv'),GI=css('--gi'),ZV=css('--zv'),ink=css('--ink');
+ let h=`<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${css('--line')}" stroke-width="1.5"/>`;
+ for(let a=0;a<360;a+=30){const[x0,y0]=pt(a,R-6),[x1,y1]=pt(a,R);h+=`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${css('--mute')}"/>`;h+=lab(a,R+12,a,css('--mute'),10)}
+ const[nx,ny]=pt(0,R);h+=`<line x1="${C}" y1="${C}" x2="${nx}" y2="${ny}" stroke="${N}" stroke-width="2.5" stroke-dasharray="6 4"/>`+lab(0,R-18,"N vrai",N,14);
+ if(show.cv){h+=arc(0,cv,58,CV,5)+lab(cv/2,76,"Cv "+f3(cv),CV);const[bx,by]=pt(cv,R-10);h+=`<line x1="${C}" y1="${C}" x2="${bx}" y2="${by}" stroke="${CV}" stroke-width="2" stroke-dasharray="3 4"/>`}
+ if(show.gi){const[px,py]=pt(zv,R-22);h+=`<line x1="${C}" y1="${C}" x2="${px}" y2="${py}" stroke="${GI}" stroke-width="2.5"/>`+arc(cv,zv,96,GI,5)+lab(cv+gi/2,114,"gisement "+(gi>=0?"+":"−")+Math.abs(Math.round(gi))+"°",GI,13)}
+ if(show.zv){const z=((zv%360)+360)%360;h+=arc(0,z,128,ZV,6)+lab(Math.max(z-24,14),140,"Zv "+f3(zv),ZV)}
+ if(show.ph){const[px,py]=pt(zv,R-22);h+=`<g transform="translate(${px},${py})"><rect x="-5" y="-14" width="10" height="20" fill="#fff" stroke="${ink}"/><rect x="-5" y="-6" width="10" height="5" fill="${N}"/><circle r="4" cy="-17" fill="#ffd54f" stroke="${ink}"/></g>`}
+ h+=`<g transform="translate(${C},${C}) rotate(${cv})"><path d="M0,-30 C12,-14 12,14 9,26 L-9,26 C-12,14 -12,-14 0,-30Z" fill="${css('--card')}" stroke="${ink}" stroke-width="2"/><line x1="0" y1="-30" x2="0" y2="-44" stroke="${CV}" stroke-width="3"/></g>`;
+ S.innerHTML=h}
+let anim=null;function go(to,ms){const from={...st};cancelAnimationFrame(anim);const t0=performance.now();
+ (function f(t){const k=Math.min(1,(t-t0)/(ms||900)),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;st.cv=from.cv+(to.cv-from.cv)*e;st.gi=from.gi+(to.gi-from.gi)*e;st.show=to.show;draw();if(k<1)anim=requestAnimationFrame(f)})(t0)}
+const steps=[
+{s:{cv:0,gi:0,show:{n:1}},t:`Tous les angles se comptent depuis le <b style="color:var(--n)">nord vrai</b> (0°), dans le sens des aiguilles d'une montre, de 000° à 359°.`},
+{s:{cv:45,gi:0,show:{n:1,cv:1}},t:`Le bateau tourne : son avant pointe au 045°. C'est son <span class="cv">cap vrai Cv = 045°</span>. Le Cv, c'est la direction de l'<b>avant du bateau</b>.`},
+{s:{cv:45,gi:75,show:{n:1,cv:1,gi:1,ph:1}},t:`Vous voyez un phare à 75° sur votre droite (tribord). Cet angle, mesuré depuis l'<b>avant du bateau</b>, s'appelle le <span class="gi">gisement</span> : +75°.`},
+{s:{cv:45,gi:75,show:{n:1,cv:1,gi:1,ph:1,zv:1}},t:`Mesuré depuis le <b>nord vrai</b>, le phare est au 120°. C'est son <span class="zv">relèvement vrai Zv = 120°</span>.<div class="f"><span class="zv">Zv</span> = <span class="cv">045</span> + <span class="gi">75</span> = <span class="zv">120°</span></div>`},
+{s:{cv:120,gi:0,show:{n:1,cv:1,gi:1,ph:1,zv:1}},t:`Si vous mettez le cap droit sur le phare, le gisement devient 0 : alors, et seulement alors, <span class="cv">Cv</span> = <span class="zv">Zv</span> = 120°. Le reste du temps, ce sont deux angles différents.`},
+{s:{cv:30,gi:-70,show:{n:1,cv:1,gi:1,ph:1,zv:1}},t:`Phare à <b>bâbord</b> (gauche), 70° de l'avant : on <b>retire</b>. <span class="zv">Zv</span> = 030 − 70 = −40 → +360 = <span class="zv">320°</span>.`},
+{s:{cv:45,gi:75,show:{n:1,cv:1,gi:1,ph:1,zv:1}},t:`À vous : bougez les curseurs ci-dessous et regardez Zv changer.`,libre:1}];
+let k=0;function show(){const p=steps[k];go(p.s);$("tx").innerHTML=p.t;$("pv").disabled=k==0;$("nx").textContent=k==steps.length-1?"Recommencer ↺":"Suivant ▶";
+ $("dots").innerHTML=steps.map((_,i)=>`<i class="${i==k?'on':''}"></i>`).join("");$("libre").style.display=p.libre?"block":"none";if(p.libre){$("rcv").value=45;$("rgi").value=75;upd(false)}}
+$("nx").onclick=()=>{k=k==steps.length-1?0:k+1;show()};$("pv").onclick=()=>{if(k>0){k--;show()}};
+function upd(a){const cv=+$("rcv").value,gi=+$("rgi").value,zv=cv+gi;$("lcv").textContent=f3(cv);$("lgi").textContent=(gi>0?"+"+gi+"° (tribord)":gi<0?"−"+(-gi)+"° (bâbord)":"0° (droit devant)");
+ let c=`<span class="zv">Zv</span> = <span class="cv">${String(cv).padStart(3,"0")}</span> ${gi>=0?"+":"−"} <span class="gi">${Math.abs(gi)}</span>`;if(zv>=360)c+=` − 360`;if(zv<0)c+=` + 360`;$("calc").innerHTML=c+` = <span class="zv">${f3(zv)}</span>`;
+ const s={cv,gi,show:{n:1,cv:1,gi:1,ph:1,zv:1}};if(a)go(s,500);else{st=s;draw()}}
+$("rcv").oninput=()=>upd(false);$("rgi").oninput=()=>upd(false);
+$("ex").onclick=()=>{$("rcv").value=Math.floor(Math.random()*360);$("rgi").value=Math.floor(Math.random()*341)-170;upd(true)};
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",draw);
+show();
+</script></body></html>
