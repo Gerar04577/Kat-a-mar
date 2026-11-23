@@ -46,7 +46,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px
 .parts div{border-radius:12px;padding:10px;text-align:center;font:700 16px system-ui}
 .parts .ok{background:#e6f4e7;color:#2e7d32} .parts .ko{background:#fdecec;color:#c62828}
 </style></head><body><a class="back" href="./permis-belge.html">‹ Retour</a><div class="w">
-<div class="v">Examens blancs SRC · EXB v1.0 · 10 examens de 33 questions (23 SRC + 10 VHF) comme à l'IBPT · bâtis avec toutes les questions que vous avez ratées (73 SRC, 38 VHF) · chrono 30 min · réussite = 60 % dans CHAQUE partie</div>
+<div class="v">Examens blancs SRC · EXB v1.1 · 10 examens de 33 questions (23 SRC + 10 VHF) comme à l'IBPT · bâtis avec toutes les questions que vous avez ratées (73 SRC, 38 VHF) · chrono 30 min · réussite = 60 % dans CHAQUE partie · « Refaire mes erreurs » par examen</div>
 <h1>Examens blancs SRC</h1>
 <div id="app"></div>
 <p class="mute" style="font-size:12px">Répartition officielle (FAQ de l'IBPT) : 33 questions, 23 SRC + 10 VHF ; il faut 60 % dans chaque matière, soit 14/23 en SRC ET 6/10 en VHF. L'IBPT ne publie pas de durée : le chrono de 30 minutes est un choix d'entraînement. Sources des réponses : manuel VHF de l'IBPT 2025 et vos cours Socrative (pages citées sous chaque réponse). Les résultats restent sur cet appareil.</p>
@@ -61,32 +61,57 @@ function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function Qof(it){return it[0]=="s"?SRC[it[1]]:VHF[it[1]]}
 let S=null,T=null;
-function home(){clearInterval(T);const d=load();
- app.innerHTML=`<div class="card"><h2>Choisissez un examen</h2><p class="mute">33 questions · correction après chaque question · 30 minutes · réussi si SRC ≥ 14/23 <b>et</b> VHF ≥ 6/10.</p>
- <div class="grid10">${EXAMS.map((_,k)=>{const r=(d[k]||[]);const l=r[r.length-1];return `<button class="btn ${l?(l.ok?'':''):'primary'}" data-k="${k}">Examen ${k+1}<small>${l?`Dernier : SRC ${l.s}/23 · VHF ${l.v}/10 · ${l.ok?'✔ réussi':'✘ raté'}`:'pas encore fait'}</small></button>`}).join("")}</div></div>`;
- app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>start(+b.dataset.k))}
-function start(k){S={k,list:EXAMS[k].map(it=>({it,ord:shuffle(Qof(it).o.map((_,j)=>j))})),i:0,rep:[],t0:Date.now()};
+function errOf(d,k){return ((d.err||{})[k]||[])}
+function totErr(d){return EXAMS.reduce((n,_,k)=>n+errOf(d,k).length,0)}
+function home(){clearInterval(T);const d=load(),tot=totErr(d);
+ app.innerHTML=`<div class="card"><h2>Comment ça marche</h2>
+ <p class="mute" style="margin:0">1. <b>Faites un examen</b> : 33 questions, 30 minutes, correction après chaque question.<br>
+ 2. Chaque question <b>ratée</b> est mise de côté dans « Refaire mes erreurs » de <b>cet examen</b>.<br>
+ 3. <b>Refaites vos erreurs</b> (sans chrono) : une question réussie disparaît de la liste, une question encore ratée y reste.<br>
+ 4. Objectif : <b>0 erreur</b> à refaire dans chaque examen avant l'IBPT.</p></div>
+ <div class="card"><h2>Choisissez</h2>
+ <button class="btn ${tot?'primary':''}" id="allerr" ${tot?'':'disabled'} style="width:100%;margin-bottom:10px">🔁 Toutes mes erreurs, tous examens (${tot} question${tot>1?'s':''})</button>
+ ${EXAMS.map((_,k)=>{const r=(d[k]||[]),l=r[r.length-1],e=errOf(d,k).length;return `<div class="rev ${l?(l.ok?'o':'k'):''}" style="margin:8px 0">
+ <b>Examen ${k+1}</b> · <span class="mute">${l?`dernier : SRC ${l.s}/23 · VHF ${l.v}/10 · ${l.ok?'<span class="okc">✔ réussi</span>':'<span class="koc">✘ raté</span>'}`:'pas encore fait'}</span>
+ <div class="row" style="margin-top:6px;gap:8px;display:flex"><button class="btn primary" data-k="${k}" style="flex:1">▶ Faire l'examen</button>
+ <button class="btn" data-e="${k}" style="flex:1" ${e?'':'disabled'}>🔁 Refaire mes erreurs (${e})</button></div></div>`}).join("")}</div>`;
+ app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>start(+b.dataset.k));
+ app.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>redo([+b.dataset.e]));
+ $("allerr").onclick=()=>redo(EXAMS.map((_,k)=>k))}
+function start(k){S={mode:"exam",k,list:EXAMS[k].map((it,p)=>({it,k,p,ord:shuffle(Qof(it).o.map((_,j)=>j))})),i:0,rep:[],t0:Date.now()};
  clearInterval(T);T=setInterval(tick,1000);draw()}
+function redo(ks){const d=load();let list=[];ks.forEach(k=>errOf(d,k).forEach(p=>{const it=EXAMS[k][p];list.push({it,k,p,ord:shuffle(Qof(it).o.map((_,j)=>j))})}));
+ if(!list.length)return home();S={mode:"redo",ks,list:shuffle(list),i:0,rep:[]};clearInterval(T);draw()}
 function left(){return Math.max(0,DUREE-Math.floor((Date.now()-S.t0)/1000))}
 function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function tick(){const l=left(),el=$("tm");if(el){el.textContent="⏱ "+fmt(l);el.classList.toggle("low",l<300)}if(l<=0){clearInterval(T);end(true)}}
+function title(){return S.mode=="exam"?`Examen ${S.k+1}`:(S.ks.length>1?"Toutes mes erreurs":`Erreurs de l'examen ${S.ks[0]+1}`)}
 function draw(){const x=S.list[S.i],q=Qof(x.it),n=S.list.length;
- app.innerHTML=`<div class="card"><div class="timer" id="tm">⏱ ${fmt(left())}</div><div class="mute">Examen ${S.k+1} · question ${S.i+1} / ${n} <span class="pill">${x.it[0]=="s"?"SRC":"VHF"}</span></div><div class="bar"><i style="width:${S.i/n*100}%"></i></div>
+ app.innerHTML=`<div class="card">${S.mode=="exam"?`<div class="timer" id="tm">⏱ ${fmt(left())}</div>`:''}<div class="mute">${title()} · question ${S.i+1} / ${n} <span class="pill">${x.it[0]=="s"?"SRC":"VHF"}</span>${S.mode=="redo"&&S.ks.length>1?` <span class="pill">examen ${x.k+1}</span>`:''}</div><div class="bar"><i style="width:${S.i/n*100}%"></i></div>
  <div class="qq">${q.q}</div>${q.msg?`<div class="msg">${q.msg}</div><div class="qq" style="margin-top:4px">${q.q2}</div>`:''}
  <div class="opts" id="o">${x.ord.map(j=>`<button data-j="${j}">${q.o[j]}</button>`).join("")}</div><div id="fb"></div></div>`;
  $("o").onclick=e=>{const b=e.target.closest("button");if(!b||S.rep[S.i]!==undefined)return;const j=+b.dataset.j;S.rep[S.i]=j;
   [...$("o").children].forEach(y=>{const jj=+y.dataset.j;if(jj==q.a)y.classList.add("good");else if(jj==j)y.classList.add("bad")});
-  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${q.e}${q.note?`<div class="note">${q.note}</div>`:''}<div class="src">Source : ${q.s}</div></div>
+  $("fb").innerHTML=`<div class="exp"><b class="${j==q.a?'okc':'koc'}">${j==q.a?'Juste.':'Faux.'}</b> ${j==q.a?'':`Bonne réponse : <b>${q.o[q.a]}</b>.<br>`}${q.e}${q.note?`<div class="note">${q.note}</div>`:''}<div class="src">Source : ${q.s}</div></div>
   <div class="row" style="margin-top:10px"><button class="btn primary" id="nx">${S.i<n-1?'Question suivante ▶':'Voir le résultat'}</button></div>`;
   $("nx").onclick=()=>{if(S.i<n-1){S.i++;draw();window.scrollTo(0,0)}else end(false)}}}
-function end(temps){clearInterval(T);let s=0,v=0;S.list.forEach((x,i)=>{if(S.rep[i]==Qof(x.it).a){if(x.it[0]=="s")s++;else v++}});
- const okS=s>=14,okV=v>=6,ok=okS&&okV,d=load();(d[S.k]=d[S.k]||[]).push({t:Date.now(),s,v,ok});save(d);
- const dur=Math.min(DUREE,Math.floor((Date.now()-S.t0)/1000));
+function end(temps){clearInterval(T);const d=load();d.err=d.err||{};
+ if(S.mode=="redo"){let ok=0;S.list.forEach((x,i)=>{const g=S.rep[i]==Qof(x.it).a;if(g){ok++;d.err[x.k]=(d.err[x.k]||[]).filter(p=>p!=x.p)}});save(d);
+  const reste=S.ks.reduce((n,k)=>n+errOf(d,k).length,0);
+  app.innerHTML=`<div class="card"><h2>${title()} : ${ok} / ${S.list.length} réussies</h2>
+  <p class="${reste?'koc':'okc'}"><b>${reste?`Il reste ${reste} question${reste>1?'s':''} à refaire.`:'Plus aucune erreur à refaire ✔'}</b></p>
+  <h3>Correction</h3>${S.list.map((x,i)=>{const q=Qof(x.it),g=S.rep[i]==q.a;return `<div class="rev ${g?'o':'k'}"><b>${i+1}. [${x.it[0]=="s"?"SRC":"VHF"}] ${q.q2||q.q}</b><br>${g?'<span class="okc">✔ retirée de la liste</span>':'<span class="koc">✘ reste à refaire</span>'} · Bonne réponse : ${q.o[q.a]}</div>`}).join("")}
+  <div class="col" style="margin-top:12px">${reste?'<button class="btn primary" id="ag">🔁 Refaire celles qui restent</button>':''}<button class="btn" id="hm">Retour aux examens</button></div></div>`;
+  $("hm").onclick=home;if(reste)$("ag").onclick=()=>redo(S.ks);window.scrollTo(0,0);return}
+ let s=0,v=0,wrong=[];S.list.forEach((x,i)=>{if(S.rep[i]==Qof(x.it).a){if(x.it[0]=="s")s++;else v++}else wrong.push(x.p)});
+ const okS=s>=14,okV=v>=6,ok=okS&&okV;(d[S.k]=d[S.k]||[]).push({t:Date.now(),s,v,ok});
+ d.err[S.k]=[...new Set(errOf(d,S.k).concat(wrong))];save(d);
+ const dur=Math.min(DUREE,Math.floor((Date.now()-S.t0)/1000)),ne=d.err[S.k].length;
  app.innerHTML=`<div class="card"><h2>Examen ${S.k+1} : ${ok?'RÉUSSI ✔':'RATÉ ✘'}</h2>${temps?'<p class="koc"><b>Temps écoulé (30 min) : les questions sans réponse comptent comme fausses.</b></p>':''}
  <div class="parts"><div class="${okS?'ok':'ko'}">SRC<br>${s} / 23<br>${Math.round(s/23*100)} %</div><div class="${okV?'ok':'ko'}">VHF<br>${v} / 10<br>${v*10} %</div></div>
  <p class="mute">Il faut au moins 14/23 en SRC <b>et</b> 6/10 en VHF (60 % dans chaque matière). Temps utilisé : ${fmt(dur)}.</p>
- <h3>Correction</h3>${S.list.map((x,i)=>{const q=Qof(x.it),r=S.rep[i],g=r==q.a;return `<div class="rev ${g?'o':'k'}"><b>${i+1}. [${x.it[0]=="s"?"SRC":"VHF"}] ${q.q2||q.q}</b><br>${g?'<span class="okc">✔</span> ':'<span class="koc">✘</span> '}${r===undefined?'<i>pas de réponse</i> · ':''}Bonne réponse : ${q.o[q.a]}</div>`}).join("")}
- <div class="col" style="margin-top:12px"><button class="btn primary" id="hm">Retour aux examens</button></div></div>`;
- $("hm").onclick=home;window.scrollTo(0,0)}
+ <div class="col">${ne?`<button class="btn primary" id="re">🔁 Refaire mes erreurs de cet examen (${ne})</button>`:''}<button class="btn" id="hm">Retour aux examens</button></div>
+ <h3>Correction</h3>${S.list.map((x,i)=>{const q=Qof(x.it),r=S.rep[i],g=r==q.a;return `<div class="rev ${g?'o':'k'}"><b>${i+1}. [${x.it[0]=="s"?"SRC":"VHF"}] ${q.q2||q.q}</b><br>${g?'<span class="okc">✔</span> ':'<span class="koc">✘</span> '}${r===undefined?'<i>pas de réponse</i> · ':''}Bonne réponse : ${q.o[q.a]}</div>`}).join("")}</div>`;
+ $("hm").onclick=home;if(ne)$("re").onclick=()=>redo([S.k]);window.scrollTo(0,0)}
 home();
 </script></body></html>
