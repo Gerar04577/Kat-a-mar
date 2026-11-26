@@ -2,9 +2,9 @@
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Formules du courant</title>
 <style>
-:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--rs:#1565c0;--rf:#2e7d32;--c:#c62828;--sea:#e3f0fa;--arc:#8a6d00;--hi:#fff6d6}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--rs:#64b5f6;--rf:#81c784;--c:#ef5350;--sea:#13263a;--arc:#e0c060;--hi:#3a3216}}
-:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--rs:#64b5f6;--rf:#81c784;--c:#ef5350;--sea:#13263a;--arc:#e0c060;--hi:#3a3216}
+:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--rs:#1565c0;--rf:#2e7d32;--c:#c62828;--sea:#e3f0fa;--arc:#a86b00;--q:#f3c969}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--rs:#64b5f6;--rf:#81c784;--c:#ef5350;--sea:#13263a;--arc:#e0c060;--q:#8a6d1f}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--rs:#64b5f6;--rf:#81c784;--c:#ef5350;--sea:#13263a;--arc:#e0c060;--q:#8a6d1f}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:0 16px 40px}
 .back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 -16px;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 6px;background:var(--bg);color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line)}
@@ -13,68 +13,58 @@ h1{font-size:23px;margin:2px 0 8px}h2{font-size:19px;margin:4px 0 8px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
 svg{width:100%;height:auto;display:block;background:var(--sea);border-radius:12px;margin-top:10px}
 svg text{font-family:system-ui,sans-serif;font-weight:800;paint-order:stroke;stroke:var(--sea);stroke-width:4px}
-.cap{font-size:12px;color:var(--mute);margin:4px 2px 0}
-.g{opacity:0;transition:opacity .6s}.g.on{opacity:1}
-.step{min-height:150px;font-size:16px;margin-top:10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tab{flex:1 1 0;min-width:52px;min-height:46px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 14px system-ui;cursor:pointer;line-height:1.15}
+.tab.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.data{font-size:15px;color:var(--mute);margin-top:8px}
+.step{min-height:170px;font-size:16px;margin-top:10px}
 .row{display:flex;gap:8px;margin-top:10px}
 .btn{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px system-ui;cursor:pointer}
 .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}.btn:disabled{opacity:.4}
 .dots{display:flex;gap:6px;justify-content:center;margin-top:10px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--accent)}
-.rs{color:var(--rs);font-weight:800}.rf{color:var(--rf);font-weight:800}.c{color:var(--c);font-weight:800}
+.rs{color:var(--rs);font-weight:800}.rf{color:var(--rf);font-weight:800}.c{color:var(--c);font-weight:800}.ar{color:var(--arc);font-weight:800}
 table{width:100%;border-collapse:collapse;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:center}
-td.h,th.h{background:var(--hi);font-weight:800}
 .calc{font-family:ui-monospace,Menlo,monospace;font-size:15px;background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:8px;line-height:1.7}
 .tip{background:#fff6d6;color:#14213d;border-left:5px solid #b58a00;border-radius:0 10px 10px 0;padding:8px 10px;font-size:15px;margin-top:10px}
 .f{font-size:18px;font-weight:800;margin:8px 0}
-.res td{text-align:left}
 </style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
-<div class="v">Animation · version 1.0 · formules du courant appliquées à l'examen blanc n°1 (Vagnon), problème 1</div>
+<div class="v">Animation · version 1.1 · formules du courant : trouver le bon angle, 5 exemples dont l'examen blanc n°1 (Vagnon)</div>
 <h1>Vérifier Rf et Vf par le calcul</h1>
-<p style="margin:0">On découpe le <span class="c">courant</span> en deux morceaux : ce qui pousse <b>dans l'axe</b> du bateau (cosinus → vitesse) et ce qui pousse <b>sur le côté</b> (sinus → route).</p>
+<p style="margin:0">On découpe le <span class="c">courant</span> en deux morceaux : ce qui pousse <b>dans l'axe</b> du bateau (→ la vitesse) et ce qui pousse <b>sur le côté</b> (→ la route). Toute la difficulté est de trouver <b>le bon angle</b>.</p>
 
 <div class="card">
-<h2>Les données</h2>
-<table class="res">
-<tr><td>Route surface <span class="rs">Rs</span></td><td><b>099,5°</b></td></tr>
-<tr><td>Vitesse surface Vs</td><td><b>5 nœuds</b></td></tr>
-<tr><td><span class="c">Courant</span></td><td><b>porte au 340° à 0,8 nœud</b></td></tr>
-<tr><td>Départ / distance au WP</td><td><b>10 h 00 · 5,9 milles</b></td></tr>
-</table>
+<h2>La méthode en 4 étapes</h2>
+<ol style="margin:0;padding-left:22px">
+<li><b>a = direction du courant − Rs</b>. Si c'est négatif, on ajoute 360.</li>
+<li>On regarde dans quel <b>quart</b> tombe a (schéma ci-dessous) : il dit où va le courant par rapport au bateau.</li>
+<li>Le quart donne la soustraction pour trouver le <b>petit angle</b> (entre 0 et 90°), mesuré depuis l'avant ou l'arrière, le plus proche des deux.</li>
+<li>axe = Vc × cos(petit angle) · côté = Vc × sin(petit angle). Le quart donne les <b>signes</b>.</li>
+</ol>
+<svg viewBox="0 0 360 330" aria-label="Les quatre quarts autour du bateau">
+<line x1="180" y1="292" x2="180" y2="44" style="stroke:var(--rs)" stroke-width="2"/>
+<path d="M180 36 L172 52 L188 52 Z" style="fill:var(--rs)"/>
+<line x1="62" y1="165" x2="298" y2="165" style="stroke:var(--mute)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="180" y="26" font-size="13" text-anchor="middle" style="fill:var(--rs)">avant (a = 0°)</text>
+<text x="180" y="314" font-size="13" text-anchor="middle" style="fill:var(--ink)">arrière (a = 180°)</text>
+<text x="32" y="162" font-size="12" text-anchor="middle" style="fill:var(--mute)">bâbord</text><text x="32" y="178" font-size="12" text-anchor="middle" style="fill:var(--mute)">270°</text>
+<text x="328" y="162" font-size="12" text-anchor="middle" style="fill:var(--mute)">tribord</text><text x="328" y="178" font-size="12" text-anchor="middle" style="fill:var(--mute)">90°</text>
+<g font-size="12" text-anchor="middle">
+<rect x="196" y="62" width="136" height="84" rx="10" style="fill:var(--card);stroke:var(--line)"/>
+<text x="264" y="82" style="fill:var(--mute)">a de 0 à 90°</text><text x="264" y="106" font-size="14" style="fill:var(--ink)">petit = a</text><text x="264" y="130" style="fill:var(--ink)">axe + · côté +</text>
+<rect x="196" y="184" width="136" height="84" rx="10" style="fill:var(--card);stroke:var(--line)"/>
+<text x="264" y="204" style="fill:var(--mute)">a de 90 à 180°</text><text x="264" y="228" font-size="14" style="fill:var(--ink)">petit = 180 − a</text><text x="264" y="252" style="fill:var(--ink)">axe − · côté +</text>
+<rect x="28" y="184" width="136" height="84" rx="10" style="fill:var(--card);stroke:var(--line)"/>
+<text x="96" y="204" style="fill:var(--mute)">a de 180 à 270°</text><text x="96" y="228" font-size="14" style="fill:var(--ink)">petit = a − 180</text><text x="96" y="252" style="fill:var(--ink)">axe − · côté −</text>
+<rect x="28" y="62" width="136" height="84" rx="10" style="fill:var(--card);stroke:var(--line)"/>
+<text x="96" y="82" style="fill:var(--mute)">a de 270 à 360°</text><text x="96" y="106" font-size="14" style="fill:var(--ink)">petit = 360 − a</text><text x="96" y="130" style="fill:var(--ink)">axe + · côté −</text>
+</g></svg>
+<div class="tip"><b>axe +</b> : le courant va vers l'avant, il pousse le bateau (Vf augmente). <b>axe −</b> : il va vers l'arrière, il freine.<br><b>côté +</b> : il pousse vers tribord, Rf augmente. <b>côté −</b> : il pousse vers bâbord, Rf diminue.</div>
 </div>
 
 <div class="card">
-<svg id="carte" viewBox="0 0 360 200" aria-label="Vue de la carte, nord en haut">
-<defs>
-<marker id="mrs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--rs)"/></marker>
-<marker id="mrf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--rf)"/></marker>
-<marker id="mc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--c)"/></marker>
-<marker id="mg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--mute)"/></marker>
-</defs>
-<line x1="20" y1="50" x2="20" y2="18" style="stroke:var(--mute)" stroke-width="2" marker-end="url(#mg)"/>
-<text x="20" y="66" font-size="13" text-anchor="middle" style="fill:var(--mute)">N</text>
-<circle cx="40" cy="100" r="4" style="fill:var(--ink)"/>
-<text x="40" y="124" font-size="12" text-anchor="middle" style="fill:var(--ink)">10 h 00</text>
-<g id="m0" class="g"><line id="lRs" style="stroke:var(--rs)" stroke-width="3" marker-end="url(#mrs)"/><text id="tRs" font-size="13" text-anchor="middle" style="fill:var(--rs)">Rs 099,5° · 5 nd</text></g>
-<g id="m1" class="g"><line id="lC" style="stroke:var(--c)" stroke-width="3" marker-end="url(#mc)"/><text id="tC" font-size="12" text-anchor="end" style="fill:var(--c)">courant</text></g>
-<g id="m2" class="g"><line id="lRf" style="stroke:var(--rf)" stroke-width="3" marker-end="url(#mrf)"/><text id="tRf" font-size="13" text-anchor="middle" style="fill:var(--rf)">Rf 091° · 4,65 nd</text></g>
-</svg>
-<div class="cap">Vue de la carte, nord en haut, à l'échelle (1 heure de route).</div>
-
-<svg id="zoom" viewBox="0 0 360 230" aria-label="Zoom sur le courant, vu depuis le bateau">
-<defs>
-<marker id="zrs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--rs)"/></marker>
-<marker id="zc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--c)"/></marker>
-</defs>
-<text x="340" y="30" font-size="12" text-anchor="end" style="fill:var(--mute)">bâbord ↑</text>
-<text x="340" y="215" font-size="12" text-anchor="end" style="fill:var(--mute)">tribord ↓</text>
-<g id="z0" class="g"><line x1="30" y1="150" x2="198" y2="150" style="stroke:var(--rs)" stroke-width="3" marker-end="url(#zrs)"/><line x1="200" y1="150" x2="340" y2="150" style="stroke:var(--mute)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="290" y="140" font-size="12" text-anchor="middle" style="fill:var(--mute)">avant = 0°</text><text x="100" y="140" font-size="13" text-anchor="middle" style="fill:var(--rs)">Rs</text></g>
-<g id="z1" class="g"><line id="zlc" style="stroke:var(--c)" stroke-width="3.5" marker-end="url(#zc)"/><text id="ztc" font-size="13" text-anchor="start" style="fill:var(--c)">0,8 nd</text></g>
-<g id="z2" class="g"><path id="zarc" fill="none" style="stroke:var(--arc)" stroke-width="2"/><text x="250" y="200" font-size="14" text-anchor="middle" style="fill:var(--arc)">a = 240,5°</text></g>
-<g id="z3" class="g"><line id="zax" style="stroke:var(--ink)" stroke-width="2" stroke-dasharray="5 3"/><text id="ztax" font-size="12" text-anchor="middle" style="fill:var(--ink)">axe −0,4 nd</text></g>
-<g id="z4" class="g"><line id="zco" style="stroke:var(--ink)" stroke-width="2" stroke-dasharray="5 3"/><text id="ztco" font-size="12" text-anchor="end" style="fill:var(--ink)">côté −0,7 nd</text></g>
-</svg>
-<div class="cap">Zoom ×2,7 sur le courant, vu depuis le bateau : l'avant est à droite, tribord en bas.</div>
-
+<h2>Animation pas à pas</h2>
+<div class="tabs" id="tabs"></div>
+<div class="data" id="data"></div>
+<svg id="sc" viewBox="0 0 360 350" aria-label="Animation des angles"></svg>
 <div class="step" id="txt"></div>
 <div class="row"><button class="btn" id="prev">‹ Précédent</button><button class="btn p" id="auto">▶ Lecture</button><button class="btn" id="next">Suivant ›</button></div>
 <div class="dots" id="dots"></div>
@@ -83,55 +73,106 @@ td.h,th.h{background:var(--hi);font-weight:800}
 <div class="card">
 <h2>Les formules à retenir</h2>
 <div class="f">1. a = direction du courant − Rs <span style="font-weight:400;font-size:14px">(+ 360 si négatif)</span></div>
-<div class="f">2. Vf ≈ Vs + Vc × cos a</div>
-<div class="f">3. Rf ≈ Rs + 57 × (Vc × sin a) ÷ Vf</div>
+<div class="f">2. petit angle : selon le quart (schéma du haut)</div>
+<div class="f">3. Vf ≈ Vs ± Vc × cos(petit)</div>
+<div class="f">4. Rf ≈ Rs ± 57 × Vc × sin(petit) ÷ Vf</div>
 <table>
-<tr><th>angle</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr>
+<tr><th>petit angle</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr>
 <tr><td>cos</td><td>1</td><td>0,87</td><td>0,7</td><td>0,5</td><td>0</td></tr>
 <tr><td>sin</td><td>0</td><td>0,5</td><td>0,7</td><td>0,87</td><td>1</td></tr>
 </table>
-<div class="tip"><b>Signes selon a :</b> 0 à 90° cos + sin + · 90 à 180° cos − sin + · 180 à 270° cos − sin − · 270 à 360° cos + sin −.<br><b>co</b>sinus = <b>co</b>llé à l'angle (dans l'axe → vitesse) · <b>s</b>inus = <b>s</b>ur le côté (→ route). Sinus positif = poussé vers tribord, Rf augmente.</div>
-<div class="tip">Vf exacte = √(axe² + côté²) avec axe = Vs + Vc × cos a et côté = Vc × sin a. Ici √(4,6² + 0,7²) = 4,65 nœuds. La formule rapide (4,6) suffit pour contrôler un tracé.</div>
+<div class="tip"><b>Contrôle de bon sens :</b> courant vers l'arrière → Vf plus petite que Vs. Courant vers bâbord → Rf plus petite que Rs. Si votre résultat dit le contraire, il y a une erreur de signe.<br>Pourquoi 57 ? Le décalage côté ÷ Vf sort en radians ; 1 radian ≈ 57°.</div>
 </div>
 </div>
 <script>
-const $=id=>document.getElementById(id);
-const rad=d=>d*Math.PI/180;
-const D=[40,100],K=56,RS=99.5,VS=5,CA=340,VC=0.8;
-const P=(p,az,l)=>[p[0]+Math.sin(rad(az))*l*K,p[1]-Math.cos(rad(az))*l*K];
-const set=(id,a,b)=>{const e=$(id);e.setAttribute("x1",a[0]);e.setAttribute("y1",a[1]);e.setAttribute("x2",b[0]);e.setAttribute("y2",b[1]);};
-const at=(id,p)=>{$(id).setAttribute("x",p[0]);$(id).setAttribute("y",p[1]);};
-const T=P(D,RS,VS),E=P(T,CA,VC);
-set("lRs",D,T);at("tRs",[(D[0]+T[0])/2,(D[1]+T[1])/2+30]);
-set("lC",T,E);at("tC",[T[0]-14,T[1]+22]);
-set("lRf",D,E);at("tRf",[(D[0]+E[0])/2,(D[1]+E[1])/2-10]);
-const O=[200,150],Z=150,a=CA-RS,ca=Math.cos(rad(a)),sa=Math.sin(rad(a));
-const Ce=[O[0]+ca*VC*Z,O[1]+sa*VC*Z],Ax=[O[0]+ca*VC*Z,O[1]];
-set("zlc",O,Ce);at("ztc",[Ce[0]+20,Ce[1]+20]);
-set("zax",O,Ax);at("ztax",[(O[0]+Ax[0])/2-10,O[1]+52]);
-set("zco",Ax,Ce);at("ztco",[Ax[0]-8,(Ax[1]+Ce[1])/2]);
-const r=34;$("zarc").setAttribute("d",`M${O[0]+r} ${O[1]} A${r} ${r} 0 1 1 ${O[0]+r*ca} ${O[1]+r*sa}`);
-const S=[
-{s:["m0","z0"],t:`<b>1. Le bateau.</b> Il suit sa <span class="rs">route surface 099,5°</span> à <b>5 nœuds</b>. En 1 heure, il parcourt 5 milles <i>dans l'eau</i>. Dans le zoom, on tourne le dessin pour que l'avant du bateau soit à droite.`},
-{s:["m0","m1","z0","z1"],t:`<b>2. Le courant.</b> Il <b>porte au 340°</b> (il va vers le nord-nord-ouest) à <b>0,8 nœud</b>. On le dessine au bout de la <span class="rs">Rs</span>, dans le sens où il va.`},
-{s:["m0","m1","z0","z1","z2"],t:`<b>3. L'angle a.</b> On le mesure depuis l'avant du bateau, dans le sens des aiguilles d'une montre :<div class="calc">a = 340 − 099,5 = 240,5°</div>Entre 180° et 270° : le courant vient de l'avant et pousse sur bâbord.`},
-{s:["m0","m1","z0","z1","z2"],t:`<b>4. Lire le tableau.</b> On retire 180° : 240,5 − 180 = 60,5° ≈ <b>60°</b>. Entre 180° et 270°, cosinus et sinus sont tous les deux <b>négatifs</b>.<table style="margin-top:6px"><tr><th>angle</th><th>30°</th><th>45°</th><th class="h">60°</th></tr><tr><td>cos</td><td>0,87</td><td>0,7</td><td class="h">−0,5</td></tr><tr><td>sin</td><td>0,5</td><td>0,7</td><td class="h">−0,87</td></tr></table>`},
-{s:["m0","m1","z0","z1","z2","z3"],t:`<b>5. Dans l'axe (cosinus) → la vitesse.</b><div class="calc">Vc × cos a = 0,8 × (−0,5) = −0,4 nœud<br>Vf ≈ 5 − 0,4 = <b>4,6 nœuds</b></div>Signe moins : le courant <b>freine</b> le bateau.`},
-{s:["m0","m1","z0","z1","z2","z3","z4"],t:`<b>6. Sur le côté (sinus) → la route.</b><div class="calc">Vc × sin a = 0,8 × (−0,87) = −0,7 nœud</div>Signe moins : le courant pousse vers <b>bâbord</b>, donc la route va diminuer.`},
-{s:["m0","m1","m2","z0","z1","z2","z3","z4"],t:`<b>7. La route fond.</b><div class="calc">décalage = 57 × (−0,7) ÷ 4,6 = −8,7°<br>Rf ≈ 099,5 − 8,7 = 090,8° ≈ <b>091°</b></div>La <span class="rf">flèche verte</span> relie le départ à la pointe du courant. Corrigé : <b>091°</b> ✓`},
-{s:["m0","m1","m2","z0","z1","z2","z3","z4"],t:`<b>8. L'heure d'arrivée.</b> Avec Vf exacte = √(4,6² + 0,7²) = <b>4,65 nœuds</b> :<div class="calc">T = 5,9 ÷ 4,65 = 1,27 h = 1 h 16 min<br>Arrivée = 10 h 00 + 1 h 16 = <b>11 h 16</b></div>Corrigé : <b>4,65 nœuds et 11 h 16</b> ✓ (avec les coordonnées de la bouée, 5,84 milles, on trouve 11 h 15).`}
-];
-let i=0,timer=null;
-const dots=$("dots");S.forEach(()=>dots.appendChild(document.createElement("i")));
-function show(){const on=new Set(S[i].s);
- ["m0","m1","m2","z0","z1","z2","z3","z4"].forEach(id=>$(id).classList.toggle("on",on.has(id)));
- $("txt").innerHTML=S[i].t;[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i));
+const $=id=>document.getElementById(id),rad=d=>d*Math.PI/180;
+const EX=[
+{n:"Ex 1",rs:40,cd:70,vc:1,vs:6},
+{n:"Ex 2",rs:60,cd:180,vc:1,vs:6},
+{n:"Ex 3<br><small>examen</small>",rs:99.5,cd:340,vc:0.8,vs:5,dist:5.9,dep:600,src:"Examen blanc n°1 (Vagnon), problème 1"},
+{n:"Ex 4",rs:300,cd:255,vc:1,vs:6},
+{n:"Ex 5",rs:350,cd:20,vc:1,vs:6}];
+const TAB=[0,30,45,60,90],COS={0:1,30:0.87,45:0.7,60:0.5,90:0},SIN={0:0,30:0.5,45:0.7,60:0.87,90:1};
+const fr=(x,d)=>{let s=x.toFixed(d);if(s.includes("."))s=s.replace(/0+$/,"").replace(/\.$/,"");return s.replace(".",",")};
+const deg=(x,d=1)=>{x=((x%360)+360)%360;let s=fr(x,d),i=s.split(",")[0];return "0".repeat(Math.max(0,3-i.length))+s};
+const hm=m=>Math.floor(m/60)+" h "+String(Math.round(m%60)).padStart(2,"0");
+function calc(e){
+ const raw=e.cd-e.rs,a=((raw%360)+360)%360;
+ let q,small,sa,sc,qn,ref,sub;
+ if(a<=90){q=0;small=a;sa=1;sc=1;qn="avant tribord";ref="l'avant";sub=`petit = a = ${fr(a,1)}°`}
+ else if(a<=180){q=1;small=180-a;sa=-1;sc=1;qn="arrière tribord";ref="l'arrière";sub=`petit = 180 − ${fr(a,1)} = ${fr(small,1)}°`}
+ else if(a<=270){q=2;small=a-180;sa=-1;sc=-1;qn="arrière bâbord";ref="l'arrière";sub=`petit = ${fr(a,1)} − 180 = ${fr(small,1)}°`}
+ else{q=3;small=360-a;sa=1;sc=-1;qn="avant bâbord";ref="l'avant";sub=`petit = 360 − ${fr(a,1)} = ${fr(small,1)}°`}
+ const t=TAB.reduce((b,x)=>Math.abs(x-small)<Math.abs(b-small)?x:b,0);
+ const ax=+(e.vc*COS[t]).toFixed(2),co=+(e.vc*SIN[t]).toFixed(2);
+ const vf=+(e.vs+sa*ax).toFixed(2),dec=+(57*co/vf).toFixed(1),rf=e.rs+sc*dec;
+ const E=e.vs*Math.sin(rad(e.rs))+e.vc*Math.sin(rad(e.cd)),N=e.vs*Math.cos(rad(e.rs))+e.vc*Math.cos(rad(e.cd));
+ return{raw,a,q,small,t,sa,sc,qn,ref,sub,ax,co,vf,dec,rf,rfx:(Math.atan2(E,N)*180/Math.PI+360)%360,vfx:Math.hypot(E,N)};
+}
+const O=[180,178],R=112,LC=96;
+const P=(r,th)=>[O[0]+r*Math.sin(rad(th)),O[1]-r*Math.cos(rad(th))];
+const line=(a,b,st,w,mk,da)=>`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" style="stroke:var(${st})" stroke-width="${w}" ${da?`stroke-dasharray="${da}"`:""} ${mk?`marker-end="url(#${mk})"`:""}/>`;
+const txt=(p,s,col,sz,anc)=>`<text x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}" font-size="${sz||13}" text-anchor="${anc||"middle"}" dominant-baseline="central" style="fill:var(${col})">${s}</text>`;
+function arc(r,t1,sw,col,w){if(sw<=0.01)return"";const a=P(r,t1),b=P(r,t1+sw);return`<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)} A${r} ${r} 0 ${sw>180?1:0} 1 ${b[0].toFixed(1)} ${b[1].toFixed(1)}" fill="none" style="stroke:var(${col})" stroke-width="${w||2.5}"/>`}
+const mk=(id,c)=>`<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(${c})"/></marker>`;
+function draw(e,k,st,off){
+ const s=[`<defs>${mk("mr","--rs")}${mk("mc","--c")}</defs>`];
+ s.push(`<circle cx="${O[0]}" cy="${O[1]}" r="${R}" fill="none" style="stroke:var(--line)" stroke-width="1.5"/>`);
+ const tRs=e.rs+off,tC=e.cd+off,boat=st>=3;
+ if(st<=3){s.push(line(P(R-8,off),P(R+6,off),"--mute",3));s.push(txt(P(R+18,off),"N","--mute",15));}
+ if(boat){
+  if(st>=4){const q0=k.q*90;const a=P(R,q0),b=P(R,q0+90);s.push(`<path d="M${O[0]} ${O[1]} L${a[0]} ${a[1]} A${R} ${R} 0 0 1 ${b[0]} ${b[1]} Z" style="fill:var(--q)" fill-opacity=".35"/>`);}
+  s.push(line(P(R,180),O,"--mute",1.2,"","4 3"),line(P(R,270),P(R,90),"--mute",1.2,"","4 3"));
+  s.push(txt([O[0],O[1]+R+18],"arrière","--ink",13),txt([O[0]-R-6,O[1]-14],"bâbord","--mute",12,"middle"),txt([O[0]+R+6,O[1]-14],"tribord","--mute",12,"middle"));
+  s.push(`<path d="M${O[0]} ${O[1]-14} L${O[0]-8} ${O[1]+10} L${O[0]+8} ${O[1]+10} Z" style="fill:var(--rs)" fill-opacity=".5"/>`);
+ }
+ s.push(line(O,P(R,tRs),"--rs",3.5,"mr"));
+ const nr=((tRs%360)+360)%360,sh=(!boat&&(nr<14||nr>346))?(nr<14?16:-16):0;s.push(txt(P(R+18,tRs+sh),boat?"avant (Rs)":"Rs","--rs",13));
+ if(st>=1)s.push(line(O,P(LC,tC),"--c",3.5,"mc"));
+ if(st>=1&&st<5)s.push(txt(P(LC+16,tC),"courant","--c",12));
+ if(st<=2){s.push(arc(44,off,e.rs,"--rs",2));s.push(txt(P(58,e.rs/2),deg(e.rs)+"°","--rs",12));}
+ if(st>=1&&st<=2){s.push(arc(78,off,e.cd,"--c",2));const cm=Math.abs(e.cd/2-e.rs)<14?e.cd+12:e.cd/2;s.push(txt(P(91,cm),deg(e.cd)+"°","--c",12));}
+ if(st>=2&&st<=3){s.push(arc(24,tRs,k.a,"--arc",3));s.push(txt(P(34,tRs+k.a/2),"a","--arc",14));}
+ if(st>=4){const f=k.q===0?[0,k.a]:k.q===1?[k.a,180-k.a]:k.q===2?[180,k.a-180]:[k.a,360-k.a];
+  const Ty=P(LC,tC)[1],mid=f[0]+f[1]/2,ly=P(74,mid)[1];s.push(arc(58,f[0],f[1],"--arc",3.5));s.push(txt(P(st>=5&&Math.abs(ly-Ty)<8?42:74,mid),fr(k.small,1)+"°","--arc",13));}
+ if(st>=5){const T=P(LC,tC),A=[O[0],T[1]];
+  s.push(line(O,A,"--ink",2,"","5 3"),line(A,T,"--ink",2,"","5 3"));
+  const right=T[0]>O[0];
+  s.push(txt([O[0]+(right?-8:8),(O[1]+T[1])/2],"axe "+fr(k.ax,2),"--ink",12,right?"end":"start"));
+  s.push(txt([T[0]+(right?12:-12),T[1]],"côté "+fr(k.co,2),"--ink",12,right?"start":"end"));}
+ $("sc").innerHTML=s.join("");
+}
+function steps(e,k){
+ const L=[];
+ L.push(`<b>1. Sur la carte, nord en haut.</b> La <span class="rs">route surface</span> se mesure depuis le <b>nord</b>, dans le sens des aiguilles d'une montre : <span class="rs">Rs = ${deg(e.rs)}°</span>.`);
+ L.push(`<b>2. Le courant</b> se mesure aussi depuis le nord, dans le sens où il <b>va</b> (« il porte au… ») : <span class="c">${deg(e.cd)}°</span>.`);
+ L.push(`<b>3. L'angle a</b> part de <span class="rs">Rs</span> et tourne dans le sens des aiguilles d'une montre jusqu'au <span class="c">courant</span> (arc <span class="ar">orange</span>). Pour l'avoir, on enlève la route au courant :<div class="calc">a = ${deg(e.cd)} − ${deg(e.rs)} = ${fr(k.raw,1).replace("-","−")}${k.raw<0?`<br>négatif → + 360 = <b>${fr(k.a,1)}°</b>`:"°"}</div>`);
+ L.push(`<b>4. On tourne le dessin</b> pour mettre l'<b>avant du bateau en haut</b> (regardez le N bouger). Les angles ne changent pas : a vaut toujours <b>${fr(k.a,1)}°</b>. Mais on voit maintenant où va le courant <b>par rapport au bateau</b> : vers l'<b>${k.qn.split(" ")[0]}</b> et vers <b>${k.qn.split(" ")[1]}</b>.`);
+ L.push(`<b>5. Le petit angle.</b> a = ${fr(k.a,1)}° tombe dans le quart <b>${k.qn}</b> (zone jaune). On mesure l'angle entre le courant et ${k.ref} du bateau (arc orange) :<div class="calc">${k.sub}</div>${k.t!==k.small?`Dans le tableau, on prend le plus proche : <b>${k.t}°</b>. `:""}Tableau : cos ${k.t}° = ${fr(COS[k.t],2)} · sin ${k.t}° = ${fr(SIN[k.t],2)}`);
+ L.push(`<b>6. Les deux morceaux</b> (pointillés) :<div class="calc">axe = ${fr(e.vc,2)} × ${fr(COS[k.t],2)} = ${fr(k.ax,2)} nd → vers l'${k.sa>0?"avant : signe +":"arrière : signe −"}<br>côté = ${fr(e.vc,2)} × ${fr(SIN[k.t],2)} = ${fr(k.co,2)} nd → vers ${k.sc>0?"tribord : signe +":"bâbord : signe −"}</div>`);
+ L.push(`<b>7. La vitesse fond</b> (axe) :<div class="calc">Vf ≈ ${fr(e.vs,2)} ${k.sa>0?"+":"−"} ${fr(k.ax,2)} = <b>${fr(k.vf,2)} nœuds</b></div>Le courant ${k.sa>0?"pousse : Vf est plus grande":"freine : Vf est plus petite"} que la vitesse du bateau (${fr(e.vs,2)}). Calcul exact : ${fr(k.vfx,2)} nœuds.`);
+ L.push(`<b>8. La route fond</b> (côté) :<div class="calc">décalage = 57 × ${fr(k.co,2)} ÷ ${fr(k.vf,2)} = ${fr(k.dec,1)}°<br>Rf ≈ ${deg(e.rs)} ${k.sc>0?"+":"−"} ${fr(k.dec,1)} = ${deg(k.rf)}° ≈ <span class="rf">${deg(Math.round(k.rf),0)}°</span></div>Poussé vers ${k.sc>0?"tribord : Rf est plus grande":"bâbord : Rf est plus petite"} que Rs. Calcul exact : ${deg(k.rfx)}°.`);
+ if(e.dist){const m=e.dist/k.vfx*60;L.push(`<b>9. L'heure d'arrivée</b> avec Vf = ${fr(k.vfx,2)} nœuds :<div class="calc">T = ${fr(e.dist,1)} ÷ ${fr(k.vfx,2)} = ${fr(e.dist/k.vfx,2)} h = ${hm(m)} min<br>Arrivée = 10 h 00 + ${hm(m)} = <b>${hm(e.dep+m)}</b></div>Corrigé : 091°, 4,65 nœuds, 11 h 16 ✓`);}
+ return L;
+}
+let ex=2,i=0,timer=null,anim=null,E,K,S;
+const tabs=$("tabs");EX.forEach((e,n)=>{const b=document.createElement("button");b.className="tab";b.innerHTML=e.n;b.onclick=()=>{stop();load(n)};tabs.appendChild(b)});
+const target=()=>((-E.rs+540)%360)-180;
+function load(n){ex=n;E=EX[n];K=calc(E);S=steps(E,K);i=0;
+ [...tabs.children].forEach((b,j)=>b.classList.toggle("on",j===n));
+ $("data").innerHTML=`${E.src?E.src+" · ":""}Rs <b>${deg(E.rs)}°</b> · bateau <b>${fr(E.vs,2)} nd</b> · courant vers le <b>${deg(E.cd)}°</b> à <b>${fr(E.vc,2)} nd</b>${E.dist?` · ${fr(E.dist,1)} milles, départ 10 h 00`:""}`;
+ const d=$("dots");d.innerHTML="";S.forEach(()=>d.appendChild(document.createElement("i")));show(false);}
+function show(rotate){cancelAnimationFrame(anim);
+ const tg=target();
+ if(rotate&&i===3){const t0=performance.now(),dur=1600;const f=t=>{const p=Math.min(1,(t-t0)/dur),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;draw(E,K,3,tg*e);if(p<1)anim=requestAnimationFrame(f)};anim=requestAnimationFrame(f);}
+ else draw(E,K,i,i>=3?tg:0);
+ $("txt").innerHTML=S[i];[...$("dots").children].forEach((d,k)=>d.classList.toggle("on",k===i));
  $("prev").disabled=i===0;$("next").disabled=i===S.length-1;}
 function stop(){clearInterval(timer);timer=null;$("auto").textContent="▶ Lecture";}
-$("prev").onclick=()=>{stop();if(i>0){i--;show();}};
-$("next").onclick=()=>{stop();if(i<S.length-1){i++;show();}};
-$("auto").onclick=()=>{if(timer){stop();return;}if(i===S.length-1)i=0;show();$("auto").textContent="❚❚ Pause";
- timer=setInterval(()=>{if(i<S.length-1){i++;show();}else stop();},6000);};
-show();
+$("prev").onclick=()=>{stop();if(i>0){i--;show(false)}};
+$("next").onclick=()=>{stop();if(i<S.length-1){i++;show(true)}};
+$("auto").onclick=()=>{if(timer){stop();return}if(i===S.length-1){i=0;show(false)}$("auto").textContent="❚❚ Pause";
+ timer=setInterval(()=>{if(i<S.length-1){i++;show(true)}else stop()},6500)};
+load(2);
 </script>
 </body></html>
