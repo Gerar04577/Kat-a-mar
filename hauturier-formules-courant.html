@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Formules du courant</title>
+<style>
+:root{--bg:#f2f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d9dee7;--accent:#0b5c8a;--rs:#1565c0;--rf:#2e7d32;--c:#c62828;--sea:#e3f0fa;--arc:#8a6d00;--hi:#fff6d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--rs:#64b5f6;--rf:#81c784;--c:#ef5350;--sea:#13263a;--arc:#e0c060;--hi:#3a3216}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202c;--ink:#e8edf5;--mute:#9aa6b8;--line:#2a3442;--accent:#5fb0e8;--rs:#64b5f6;--rf:#81c784;--c:#ef5350;--sea:#13263a;--arc:#e0c060;--hi:#3a3216}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:0 16px 40px}
+.back{position:sticky;top:0;z-index:50;display:flex;align-items:center;min-height:44px;margin:0 -16px;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 6px;background:var(--bg);color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line)}
+.w{max-width:640px;margin:0 auto}.v{font-size:12px;color:var(--mute);margin-top:12px}
+h1{font-size:23px;margin:2px 0 8px}h2{font-size:19px;margin:4px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+svg{width:100%;height:auto;display:block;background:var(--sea);border-radius:12px;margin-top:10px}
+svg text{font-family:system-ui,sans-serif;font-weight:800;paint-order:stroke;stroke:var(--sea);stroke-width:4px}
+.cap{font-size:12px;color:var(--mute);margin:4px 2px 0}
+.g{opacity:0;transition:opacity .6s}.g.on{opacity:1}
+.step{min-height:150px;font-size:16px;margin-top:10px}
+.row{display:flex;gap:8px;margin-top:10px}
+.btn{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px system-ui;cursor:pointer}
+.btn.p{background:var(--accent);border-color:var(--accent);color:#fff}.btn:disabled{opacity:.4}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:10px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--accent)}
+.rs{color:var(--rs);font-weight:800}.rf{color:var(--rf);font-weight:800}.c{color:var(--c);font-weight:800}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:center}
+td.h,th.h{background:var(--hi);font-weight:800}
+.calc{font-family:ui-monospace,Menlo,monospace;font-size:15px;background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:8px;line-height:1.7}
+.tip{background:#fff6d6;color:#14213d;border-left:5px solid #b58a00;border-radius:0 10px 10px 0;padding:8px 10px;font-size:15px;margin-top:10px}
+.f{font-size:18px;font-weight:800;margin:8px 0}
+.res td{text-align:left}
+</style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
+<div class="v">Animation · version 1.0 · formules du courant appliquées à l'examen blanc n°1 (Vagnon), problème 1</div>
+<h1>Vérifier Rf et Vf par le calcul</h1>
+<p style="margin:0">On découpe le <span class="c">courant</span> en deux morceaux : ce qui pousse <b>dans l'axe</b> du bateau (cosinus → vitesse) et ce qui pousse <b>sur le côté</b> (sinus → route).</p>
+
+<div class="card">
+<h2>Les données</h2>
+<table class="res">
+<tr><td>Route surface <span class="rs">Rs</span></td><td><b>099,5°</b></td></tr>
+<tr><td>Vitesse surface Vs</td><td><b>5 nœuds</b></td></tr>
+<tr><td><span class="c">Courant</span></td><td><b>porte au 340° à 0,8 nœud</b></td></tr>
+<tr><td>Départ / distance au WP</td><td><b>10 h 00 · 5,9 milles</b></td></tr>
+</table>
+</div>
+
+<div class="card">
+<svg id="carte" viewBox="0 0 360 200" aria-label="Vue de la carte, nord en haut">
+<defs>
+<marker id="mrs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--rs)"/></marker>
+<marker id="mrf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--rf)"/></marker>
+<marker id="mc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--c)"/></marker>
+<marker id="mg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--mute)"/></marker>
+</defs>
+<line x1="20" y1="50" x2="20" y2="18" style="stroke:var(--mute)" stroke-width="2" marker-end="url(#mg)"/>
+<text x="20" y="66" font-size="13" text-anchor="middle" style="fill:var(--mute)">N</text>
+<circle cx="40" cy="100" r="4" style="fill:var(--ink)"/>
+<text x="40" y="124" font-size="12" text-anchor="middle" style="fill:var(--ink)">10 h 00</text>
+<g id="m0" class="g"><line id="lRs" style="stroke:var(--rs)" stroke-width="3" marker-end="url(#mrs)"/><text id="tRs" font-size="13" text-anchor="middle" style="fill:var(--rs)">Rs 099,5° · 5 nd</text></g>
+<g id="m1" class="g"><line id="lC" style="stroke:var(--c)" stroke-width="3" marker-end="url(#mc)"/><text id="tC" font-size="12" text-anchor="end" style="fill:var(--c)">courant</text></g>
+<g id="m2" class="g"><line id="lRf" style="stroke:var(--rf)" stroke-width="3" marker-end="url(#mrf)"/><text id="tRf" font-size="13" text-anchor="middle" style="fill:var(--rf)">Rf 091° · 4,65 nd</text></g>
+</svg>
+<div class="cap">Vue de la carte, nord en haut, à l'échelle (1 heure de route).</div>
+
+<svg id="zoom" viewBox="0 0 360 230" aria-label="Zoom sur le courant, vu depuis le bateau">
+<defs>
+<marker id="zrs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--rs)"/></marker>
+<marker id="zc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--c)"/></marker>
+</defs>
+<text x="340" y="30" font-size="12" text-anchor="end" style="fill:var(--mute)">bâbord ↑</text>
+<text x="340" y="215" font-size="12" text-anchor="end" style="fill:var(--mute)">tribord ↓</text>
+<g id="z0" class="g"><line x1="30" y1="150" x2="198" y2="150" style="stroke:var(--rs)" stroke-width="3" marker-end="url(#zrs)"/><line x1="200" y1="150" x2="340" y2="150" style="stroke:var(--mute)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="290" y="140" font-size="12" text-anchor="middle" style="fill:var(--mute)">avant = 0°</text><text x="100" y="140" font-size="13" text-anchor="middle" style="fill:var(--rs)">Rs</text></g>
+<g id="z1" class="g"><line id="zlc" style="stroke:var(--c)" stroke-width="3.5" marker-end="url(#zc)"/><text id="ztc" font-size="13" text-anchor="start" style="fill:var(--c)">0,8 nd</text></g>
+<g id="z2" class="g"><path id="zarc" fill="none" style="stroke:var(--arc)" stroke-width="2"/><text x="250" y="200" font-size="14" text-anchor="middle" style="fill:var(--arc)">a = 240,5°</text></g>
+<g id="z3" class="g"><line id="zax" style="stroke:var(--ink)" stroke-width="2" stroke-dasharray="5 3"/><text id="ztax" font-size="12" text-anchor="middle" style="fill:var(--ink)">axe −0,4 nd</text></g>
+<g id="z4" class="g"><line id="zco" style="stroke:var(--ink)" stroke-width="2" stroke-dasharray="5 3"/><text id="ztco" font-size="12" text-anchor="end" style="fill:var(--ink)">côté −0,7 nd</text></g>
+</svg>
+<div class="cap">Zoom ×2,7 sur le courant, vu depuis le bateau : l'avant est à droite, tribord en bas.</div>
+
+<div class="step" id="txt"></div>
+<div class="row"><button class="btn" id="prev">‹ Précédent</button><button class="btn p" id="auto">▶ Lecture</button><button class="btn" id="next">Suivant ›</button></div>
+<div class="dots" id="dots"></div>
+</div>
+
+<div class="card">
+<h2>Les formules à retenir</h2>
+<div class="f">1. a = direction du courant − Rs <span style="font-weight:400;font-size:14px">(+ 360 si négatif)</span></div>
+<div class="f">2. Vf ≈ Vs + Vc × cos a</div>
+<div class="f">3. Rf ≈ Rs + 57 × (Vc × sin a) ÷ Vf</div>
+<table>
+<tr><th>angle</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr>
+<tr><td>cos</td><td>1</td><td>0,87</td><td>0,7</td><td>0,5</td><td>0</td></tr>
+<tr><td>sin</td><td>0</td><td>0,5</td><td>0,7</td><td>0,87</td><td>1</td></tr>
+</table>
+<div class="tip"><b>Signes selon a :</b> 0 à 90° cos + sin + · 90 à 180° cos − sin + · 180 à 270° cos − sin − · 270 à 360° cos + sin −.<br><b>co</b>sinus = <b>co</b>llé à l'angle (dans l'axe → vitesse) · <b>s</b>inus = <b>s</b>ur le côté (→ route). Sinus positif = poussé vers tribord, Rf augmente.</div>
+<div class="tip">Vf exacte = √(axe² + côté²) avec axe = Vs + Vc × cos a et côté = Vc × sin a. Ici √(4,6² + 0,7²) = 4,65 nœuds. La formule rapide (4,6) suffit pour contrôler un tracé.</div>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const rad=d=>d*Math.PI/180;
+const D=[40,100],K=56,RS=99.5,VS=5,CA=340,VC=0.8;
+const P=(p,az,l)=>[p[0]+Math.sin(rad(az))*l*K,p[1]-Math.cos(rad(az))*l*K];
+const set=(id,a,b)=>{const e=$(id);e.setAttribute("x1",a[0]);e.setAttribute("y1",a[1]);e.setAttribute("x2",b[0]);e.setAttribute("y2",b[1]);};
+const at=(id,p)=>{$(id).setAttribute("x",p[0]);$(id).setAttribute("y",p[1]);};
+const T=P(D,RS,VS),E=P(T,CA,VC);
+set("lRs",D,T);at("tRs",[(D[0]+T[0])/2,(D[1]+T[1])/2+30]);
+set("lC",T,E);at("tC",[T[0]-14,T[1]+22]);
+set("lRf",D,E);at("tRf",[(D[0]+E[0])/2,(D[1]+E[1])/2-10]);
+const O=[200,150],Z=150,a=CA-RS,ca=Math.cos(rad(a)),sa=Math.sin(rad(a));
+const Ce=[O[0]+ca*VC*Z,O[1]+sa*VC*Z],Ax=[O[0]+ca*VC*Z,O[1]];
+set("zlc",O,Ce);at("ztc",[Ce[0]+20,Ce[1]+20]);
+set("zax",O,Ax);at("ztax",[(O[0]+Ax[0])/2-10,O[1]+52]);
+set("zco",Ax,Ce);at("ztco",[Ax[0]-8,(Ax[1]+Ce[1])/2]);
+const r=34;$("zarc").setAttribute("d",`M${O[0]+r} ${O[1]} A${r} ${r} 0 1 1 ${O[0]+r*ca} ${O[1]+r*sa}`);
+const S=[
+{s:["m0","z0"],t:`<b>1. Le bateau.</b> Il suit sa <span class="rs">route surface 099,5°</span> à <b>5 nœuds</b>. En 1 heure, il parcourt 5 milles <i>dans l'eau</i>. Dans le zoom, on tourne le dessin pour que l'avant du bateau soit à droite.`},
+{s:["m0","m1","z0","z1"],t:`<b>2. Le courant.</b> Il <b>porte au 340°</b> (il va vers le nord-nord-ouest) à <b>0,8 nœud</b>. On le dessine au bout de la <span class="rs">Rs</span>, dans le sens où il va.`},
+{s:["m0","m1","z0","z1","z2"],t:`<b>3. L'angle a.</b> On le mesure depuis l'avant du bateau, dans le sens des aiguilles d'une montre :<div class="calc">a = 340 − 099,5 = 240,5°</div>Entre 180° et 270° : le courant vient de l'avant et pousse sur bâbord.`},
+{s:["m0","m1","z0","z1","z2"],t:`<b>4. Lire le tableau.</b> On retire 180° : 240,5 − 180 = 60,5° ≈ <b>60°</b>. Entre 180° et 270°, cosinus et sinus sont tous les deux <b>négatifs</b>.<table style="margin-top:6px"><tr><th>angle</th><th>30°</th><th>45°</th><th class="h">60°</th></tr><tr><td>cos</td><td>0,87</td><td>0,7</td><td class="h">−0,5</td></tr><tr><td>sin</td><td>0,5</td><td>0,7</td><td class="h">−0,87</td></tr></table>`},
+{s:["m0","m1","z0","z1","z2","z3"],t:`<b>5. Dans l'axe (cosinus) → la vitesse.</b><div class="calc">Vc × cos a = 0,8 × (−0,5) = −0,4 nœud<br>Vf ≈ 5 − 0,4 = <b>4,6 nœuds</b></div>Signe moins : le courant <b>freine</b> le bateau.`},
+{s:["m0","m1","z0","z1","z2","z3","z4"],t:`<b>6. Sur le côté (sinus) → la route.</b><div class="calc">Vc × sin a = 0,8 × (−0,87) = −0,7 nœud</div>Signe moins : le courant pousse vers <b>bâbord</b>, donc la route va diminuer.`},
+{s:["m0","m1","m2","z0","z1","z2","z3","z4"],t:`<b>7. La route fond.</b><div class="calc">décalage = 57 × (−0,7) ÷ 4,6 = −8,7°<br>Rf ≈ 099,5 − 8,7 = 090,8° ≈ <b>091°</b></div>La <span class="rf">flèche verte</span> relie le départ à la pointe du courant. Corrigé : <b>091°</b> ✓`},
+{s:["m0","m1","m2","z0","z1","z2","z3","z4"],t:`<b>8. L'heure d'arrivée.</b> Avec Vf exacte = √(4,6² + 0,7²) = <b>4,65 nœuds</b> :<div class="calc">T = 5,9 ÷ 4,65 = 1,27 h = 1 h 16 min<br>Arrivée = 10 h 00 + 1 h 16 = <b>11 h 16</b></div>Corrigé : <b>4,65 nœuds et 11 h 16</b> ✓ (avec les coordonnées de la bouée, 5,84 milles, on trouve 11 h 15).`}
+];
+let i=0,timer=null;
+const dots=$("dots");S.forEach(()=>dots.appendChild(document.createElement("i")));
+function show(){const on=new Set(S[i].s);
+ ["m0","m1","m2","z0","z1","z2","z3","z4"].forEach(id=>$(id).classList.toggle("on",on.has(id)));
+ $("txt").innerHTML=S[i].t;[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i));
+ $("prev").disabled=i===0;$("next").disabled=i===S.length-1;}
+function stop(){clearInterval(timer);timer=null;$("auto").textContent="▶ Lecture";}
+$("prev").onclick=()=>{stop();if(i>0){i--;show();}};
+$("next").onclick=()=>{stop();if(i<S.length-1){i++;show();}};
+$("auto").onclick=()=>{if(timer){stop();return;}if(i===S.length-1)i=0;show();$("auto").textContent="❚❚ Pause";
+ timer=setInterval(()=>{if(i<S.length-1){i++;show();}else stop();},6000);};
+show();
+</script>
+</body></html>
