@@ -26,8 +26,18 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{border-bottom:1px
 .calc{font-family:ui-monospace,Menlo,monospace;font-size:15px;background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:8px;line-height:1.7}
 .tip{background:#fff6d6;color:#14213d;border-left:5px solid #b58a00;border-radius:0 10px 10px 0;padding:8px 10px;font-size:15px;margin-top:10px}
 .f{font-size:18px;font-weight:800;margin:8px 0}
+.fm{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fl{padding:7px 10px;border-bottom:1px solid var(--line);font-size:15px;color:var(--mute)}
+.fl:last-child{border-bottom:0}
+.fl .g{font-weight:800}.fl .vv{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--ink)}
+.fl .mm{display:block;font-size:13px;font-style:italic;color:#7a5600;margin-top:2px}
+.fl.done{color:var(--ink)}.fl.act{background:#fff6d6;color:#14213d;border-left:5px solid #b58a00}
+.fl.act .vv{color:#14213d}.fl.fut .vv,.fl.fut .mm,.fl.done .mm{display:none}
+.n{display:inline-block;min-width:22px;height:22px;border-radius:11px;background:var(--line);color:var(--ink);text-align:center;font-size:13px;line-height:22px;margin-right:6px;font-weight:800}
+.fl.act .n{background:#b58a00;color:#fff}
+.ca{color:var(--arc);font-weight:800}
 </style></head><body><a class="back" href="./hauturier-entrainement.html">‹ Retour</a><div class="w">
-<div class="v">Animation · version 1.1 · formules du courant : trouver le bon angle, 5 exemples dont l'examen blanc n°1 (Vagnon)</div>
+<div class="v">Animation · version 1.2 · formules du courant expliquées pendant l'animation, 5 exemples dont l'examen blanc n°1 (Vagnon)</div>
 <h1>Vérifier Rf et Vf par le calcul</h1>
 <p style="margin:0">On découpe le <span class="c">courant</span> en deux morceaux : ce qui pousse <b>dans l'axe</b> du bateau (→ la vitesse) et ce qui pousse <b>sur le côté</b> (→ la route). Toute la difficulté est de trouver <b>le bon angle</b>.</p>
 
@@ -65,9 +75,10 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{border-bottom:1px
 <div class="tabs" id="tabs"></div>
 <div class="data" id="data"></div>
 <svg id="sc" viewBox="0 0 360 350" aria-label="Animation des angles"></svg>
-<div class="step" id="txt"></div>
 <div class="row"><button class="btn" id="prev">‹ Précédent</button><button class="btn p" id="auto">▶ Lecture</button><button class="btn" id="next">Suivant ›</button></div>
 <div class="dots" id="dots"></div>
+<div class="step" id="txt" style="min-height:96px"></div>
+<div class="fm" id="fm"></div>
 </div>
 
 <div class="card">
@@ -144,21 +155,51 @@ function draw(e,k,st,off){
 }
 function steps(e,k){
  const L=[];
- L.push(`<b>1. Sur la carte, nord en haut.</b> La <span class="rs">route surface</span> se mesure depuis le <b>nord</b>, dans le sens des aiguilles d'une montre : <span class="rs">Rs = ${deg(e.rs)}°</span>.`);
+ L.push(`<b>1. Sur la carte, nord en haut.</b> La <span class="rs">route surface Rs</span> se mesure depuis le nord, dans le sens des aiguilles d'une montre : <span class="rs">${deg(e.rs)}°</span>.`);
  L.push(`<b>2. Le courant</b> se mesure aussi depuis le nord, dans le sens où il <b>va</b> (« il porte au… ») : <span class="c">${deg(e.cd)}°</span>.`);
- L.push(`<b>3. L'angle a</b> part de <span class="rs">Rs</span> et tourne dans le sens des aiguilles d'une montre jusqu'au <span class="c">courant</span> (arc <span class="ar">orange</span>). Pour l'avoir, on enlève la route au courant :<div class="calc">a = ${deg(e.cd)} − ${deg(e.rs)} = ${fr(k.raw,1).replace("-","−")}${k.raw<0?`<br>négatif → + 360 = <b>${fr(k.a,1)}°</b>`:"°"}</div>`);
- L.push(`<b>4. On tourne le dessin</b> pour mettre l'<b>avant du bateau en haut</b> (regardez le N bouger). Les angles ne changent pas : a vaut toujours <b>${fr(k.a,1)}°</b>. Mais on voit maintenant où va le courant <b>par rapport au bateau</b> : vers l'<b>${k.qn.split(" ")[0]}</b> et vers <b>${k.qn.split(" ")[1]}</b>.`);
- L.push(`<b>5. Le petit angle.</b> a = ${fr(k.a,1)}° tombe dans le quart <b>${k.qn}</b> (zone jaune). On mesure l'angle entre le courant et ${k.ref} du bateau (arc orange) :<div class="calc">${k.sub}</div>${k.t!==k.small?`Dans le tableau, on prend le plus proche : <b>${k.t}°</b>. `:""}Tableau : cos ${k.t}° = ${fr(COS[k.t],2)} · sin ${k.t}° = ${fr(SIN[k.t],2)}`);
- L.push(`<b>6. Les deux morceaux</b> (pointillés) :<div class="calc">axe = ${fr(e.vc,2)} × ${fr(COS[k.t],2)} = ${fr(k.ax,2)} nd → vers l'${k.sa>0?"avant : signe +":"arrière : signe −"}<br>côté = ${fr(e.vc,2)} × ${fr(SIN[k.t],2)} = ${fr(k.co,2)} nd → vers ${k.sc>0?"tribord : signe +":"bâbord : signe −"}</div>`);
- L.push(`<b>7. La vitesse fond</b> (axe) :<div class="calc">Vf ≈ ${fr(e.vs,2)} ${k.sa>0?"+":"−"} ${fr(k.ax,2)} = <b>${fr(k.vf,2)} nœuds</b></div>Le courant ${k.sa>0?"pousse : Vf est plus grande":"freine : Vf est plus petite"} que la vitesse du bateau (${fr(e.vs,2)}). Calcul exact : ${fr(k.vfx,2)} nœuds.`);
- L.push(`<b>8. La route fond</b> (côté) :<div class="calc">décalage = 57 × ${fr(k.co,2)} ÷ ${fr(k.vf,2)} = ${fr(k.dec,1)}°<br>Rf ≈ ${deg(e.rs)} ${k.sc>0?"+":"−"} ${fr(k.dec,1)} = ${deg(k.rf)}° ≈ <span class="rf">${deg(Math.round(k.rf),0)}°</span></div>Poussé vers ${k.sc>0?"tribord : Rf est plus grande":"bâbord : Rf est plus petite"} que Rs. Calcul exact : ${deg(k.rfx)}°.`);
- if(e.dist){const m=e.dist/k.vfx*60;L.push(`<b>9. L'heure d'arrivée</b> avec Vf = ${fr(k.vfx,2)} nœuds :<div class="calc">T = ${fr(e.dist,1)} ÷ ${fr(k.vfx,2)} = ${fr(e.dist/k.vfx,2)} h = ${hm(m)} min<br>Arrivée = 10 h 00 + ${hm(m)} = <b>${hm(e.dep+m)}</b></div>Corrigé : 091°, 4,65 nœuds, 11 h 16 ✓`);}
+ L.push(`<b>3. L'angle a</b> (arc <span class="ca">orange</span>) : on part de la <span class="rs">Rs</span> et on tourne dans le sens des aiguilles d'une montre jusqu'au <span class="c">courant</span>. C'est la formule <b>①</b>.`);
+ L.push(`<b>4. On tourne le dessin</b> pour mettre l'avant du bateau en haut (regardez le N bouger). a ne change pas, mais on voit où va le courant <b>par rapport au bateau</b> : vers l'<b>${k.qn.split(" ")[0]}</b> et vers <b>${k.qn.split(" ")[1]}</b>.`);
+ L.push(`<b>5. Le petit angle</b> (arc <span class="ca">orange</span>) : on le mesure depuis ${k.ref}, le plus proche du courant. Le quart (zone jaune) donne la soustraction : formule <b>②</b>.`);
+ L.push(`<b>6. On découpe le courant</b> en deux pointillés : la part <b>dans l'axe</b> (formule <b>③</b>) et la part <b>sur le côté</b> (formule <b>④</b>). Le sens de chaque pointillé donne le signe.`);
+ L.push(`<b>7. La vitesse fond.</b> Seule la part dans l'axe change la vitesse : formule <b>⑤</b>. Le courant ${k.sa>0?"pousse : Vf est plus grande":"freine : Vf est plus petite"} que ${fr(e.vs,2)} nœuds. Calcul exact : ${fr(k.vfx,2)} nœuds.`);
+ L.push(`<b>8. La route fond.</b> Seule la part sur le côté change la route : formule <b>⑥</b>. Poussé vers ${k.sc>0?"tribord : Rf est plus grande":"bâbord : Rf est plus petite"} que Rs. Calcul exact : ${deg(k.rfx)}°.`);
+ if(e.dist)L.push(`<b>9. L'heure d'arrivée</b> : formule <b>⑦</b>, avec la vitesse fond exacte. Corrigé du livre : 091°, 4,65 nœuds, 11 h 16 ✓`);
  return L;
 }
-let ex=2,i=0,timer=null,anim=null,E,K,S;
+function lines(e,k){
+ const q=["a","180 − a","a − 180","360 − a"][k.q];
+ const F=[
+ {s:2,e:3,g:`<span class="ca">a</span> = <span class="c">courant</span> − <span class="rs">Rs</span>`,
+  v:`= ${deg(e.cd)} − ${deg(e.rs)} = ${fr(k.raw,1).replace("-","−")}°${k.raw<0?` → + 360 = ${fr(k.a,1)}°`:""}`,
+  m:`Toujours dans ce sens : COURANT moins ROUTE. Négatif ? + 360.`},
+ {s:4,e:4,g:`<span class="ca">petit angle</span> = selon le quart`,
+  v:`quart ${k.qn} → ${q}<br>${k.sub.replace("petit = ","= ")}${k.t!==k.small?` ≈ ${k.t}°`:""}`,
+  m:`On se ramène à l'AVANT ou à l'ARRIÈRE, le plus proche : le petit angle fait toujours moins de 90°.`},
+ {s:5,e:5,g:`axe = <span class="c">Vc</span> × cos(<span class="ca">petit</span>)`,
+  v:`= ${fr(e.vc,2)} × ${fr(COS[k.t],2)} = ${fr(k.ax,2)} → vers l'${k.sa>0?"avant : +":"arrière : −"}`,
+  m:`COsinus = COllé : la part qui suit l'axe du bateau.`},
+ {s:5,e:5,g:`côté = <span class="c">Vc</span> × sin(<span class="ca">petit</span>)`,
+  v:`= ${fr(e.vc,2)} × ${fr(SIN[k.t],2)} = ${fr(k.co,2)} → vers ${k.sc>0?"tribord : +":"bâbord : −"}`,
+  m:`Sinus = Sur le côté : la part qui pousse le bateau de travers.`},
+ {s:6,e:6,g:`<span class="rf">Vf</span> ≈ Vs ± axe`,
+  v:`= ${fr(e.vs,2)} ${k.sa>0?"+":"−"} ${fr(k.ax,2)} = ${fr(k.vf,2)} nœuds`,
+  m:`L'AXE change la VITESSE (vers l'avant +, vers l'arrière −).`},
+ {s:7,e:7,g:`<span class="rf">Rf</span> ≈ <span class="rs">Rs</span> ± 57 × côté ÷ <span class="rf">Vf</span>`,
+  v:`= ${deg(e.rs)} ${k.sc>0?"+":"−"} 57 × ${fr(k.co,2)} ÷ ${fr(k.vf,2)}<br>= ${deg(e.rs)} ${k.sc>0?"+":"−"} ${fr(k.dec,1)} = ${deg(k.rf)}° ≈ ${deg(Math.round(k.rf),0)}°`,
+  m:`Le CÔTÉ change la ROUTE (tribord +, bâbord −). 57 change le résultat en degrés.`}];
+ if(e.dist){const m=e.dist/k.vfx*60;F.push({s:8,e:8,g:`Temps = distance ÷ <span class="rf">Vf</span>`,
+  v:`= ${fr(e.dist,1)} ÷ ${fr(k.vfx,2)} = ${fr(e.dist/k.vfx,2)} h = ${hm(m)} min<br>arrivée = 10 h 00 + ${hm(m)} = ${hm(e.dep+m)}`,
+  m:`Les décimales d'heure × 60 = minutes.`});}
+ return F;
+}
+function fmShow(){
+ $("fm").innerHTML=FL.map((l,j)=>{const st=i<l.s?"fut":i<=l.e?"act":"done";
+  return`<div class="fl ${st}"><span class="n">${"①②③④⑤⑥⑦"[j]}</span><span class="g">${l.g}</span><span class="vv">${l.v}</span><span class="mm">${l.m}</span></div>`}).join("");
+}
+let ex=2,i=0,timer=null,anim=null,E,K,S,FL;
 const tabs=$("tabs");EX.forEach((e,n)=>{const b=document.createElement("button");b.className="tab";b.innerHTML=e.n;b.onclick=()=>{stop();load(n)};tabs.appendChild(b)});
 const target=()=>((-E.rs+540)%360)-180;
-function load(n){ex=n;E=EX[n];K=calc(E);S=steps(E,K);i=0;
+function load(n){ex=n;E=EX[n];K=calc(E);S=steps(E,K);FL=lines(E,K);i=0;
  [...tabs.children].forEach((b,j)=>b.classList.toggle("on",j===n));
  $("data").innerHTML=`${E.src?E.src+" · ":""}Rs <b>${deg(E.rs)}°</b> · bateau <b>${fr(E.vs,2)} nd</b> · courant vers le <b>${deg(E.cd)}°</b> à <b>${fr(E.vc,2)} nd</b>${E.dist?` · ${fr(E.dist,1)} milles, départ 10 h 00`:""}`;
  const d=$("dots");d.innerHTML="";S.forEach(()=>d.appendChild(document.createElement("i")));show(false);}
@@ -166,13 +207,13 @@ function show(rotate){cancelAnimationFrame(anim);
  const tg=target();
  if(rotate&&i===3){const t0=performance.now(),dur=1600;const f=t=>{const p=Math.min(1,(t-t0)/dur),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;draw(E,K,3,tg*e);if(p<1)anim=requestAnimationFrame(f)};anim=requestAnimationFrame(f);}
  else draw(E,K,i,i>=3?tg:0);
- $("txt").innerHTML=S[i];[...$("dots").children].forEach((d,k)=>d.classList.toggle("on",k===i));
+ $("txt").innerHTML=S[i];fmShow();[...$("dots").children].forEach((d,k)=>d.classList.toggle("on",k===i));
  $("prev").disabled=i===0;$("next").disabled=i===S.length-1;}
 function stop(){clearInterval(timer);timer=null;$("auto").textContent="▶ Lecture";}
 $("prev").onclick=()=>{stop();if(i>0){i--;show(false)}};
 $("next").onclick=()=>{stop();if(i<S.length-1){i++;show(true)}};
 $("auto").onclick=()=>{if(timer){stop();return}if(i===S.length-1){i=0;show(false)}$("auto").textContent="❚❚ Pause";
- timer=setInterval(()=>{if(i<S.length-1){i++;show(true)}else stop()},6500)};
+ timer=setInterval(()=>{if(i<S.length-1){i++;show(true)}else stop()},8000)};
 load(2);
 </script>
 </body></html>
